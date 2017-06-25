@@ -1,4 +1,4 @@
-#' @inheritSection  summary.mmSAR2
+#' @inherit  summary.mmSAR2
 #' @export
 
 print.summary.mmSAR2 <- function(x, ...){

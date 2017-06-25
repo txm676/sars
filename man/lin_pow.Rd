@@ -22,11 +22,11 @@ one with the species richness of each island/site.}
 one of the islands has zero species}
 }
 \value{
-A list of class "mmSAR2" with three elements. The first element is an
+A list of class "mmSAR2" with four elements. The first element is an
   object of class 'summary.lm'. This is the summary of the linear model fit
   using the \link[stats]{lm} function and the user's data. The second element
-  is a numeric vector of the model's fitted values, and the third contains
-  the island areas.
+  is a numeric vector of the model's fitted values, and the third and fourth
+  contain the island areas and observed richness values, respectively.
 
   The \code{\link{summary.mmSAR2}} function returns a more useful summary of the
   model fit results, and the \code{\link{plot.}} plots the model.
