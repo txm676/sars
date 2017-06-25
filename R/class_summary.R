@@ -1,45 +1,33 @@
-#' Summarising the results of the five main NOSM functions
+#' Summarising the results of the model fitting functions
 #'
-#' @description S3 method for class 'NOSM'. summary.NOSM creates summary
-#'   statistics for objects of class NOSM. The exact summary statistics computed
-#'   depends on the 'Type' attribute (e.g. 'bip') of the NOSM object (see
-#'   below). The summary method generates more useful information for the user
-#'   than the standard NOSM functions. Another S3 method (print.summary.NOSM;
-#'   not documented) is used to print the output.
-#' @param object An object of class 'NOSM'.
-#' @param y (default of 3) The adjustment value for the computation of the z
-#'   value (see Strona & Veech, 2015).
+#' @description S3 method for class 'mmSAR2'. summary.mmSAR2 creates summary
+#'   statistics for objects of class mmSAR2. The exact summary statistics
+#'   computed depends on the 'Type' attribute (e.g. 'lin_pow') of the mmSAR2
+#'   object (see below). The summary method generates more useful information
+#'   for the user than the standard model fitting functions. Another S3 method
+#'   (print.summary.mmSAR2; not documented) is used to print the output.
+#' @param object An object of class 'mmSAR2'.
 #' @param ...	further arguments passed to or from other methods.
-#' @return Returns object of class 'summary.NOSM' with a Type attribute (e.g.
-#'   'bip') which is inherited. For NOSM objects of Type 'Pot_dir', 'bip' or
-#'   'Dir', the summary.NOSM method returns the mean of the overlap values for
-#'   the "in nodes" (NOS_In), the mean of the overlap values for the "out nodes"
-#'   (NOS_Out), the mean of Nos In and Nos Out (NOS), the standard
-#'   deviation of the overlap values for the "in nodes" (MOD_In), the SD of the
-#'   overlap values for the "out nodes" (MOD_Out), and the SD of the combined
-#'   set of overlap values (MOD; network modularity).
+#' @return The summary function returns an object of class "summary.mmSAR2". A
+#'   print function is used to obtain and print a summary of the model fit
+#'   results.
 #'
-#'   For NOSM objects of Type 'Dir' and 'Undir', the summary.NOSM method returns
-#'   just the NOS and MOD values (network modularity).
-#'
-#'   For all types of NOSM object, the z value and associated p value are also
-#'   provided (see Strona & Veech, 2015).
-#' @seealso \code{\link{NOSM_bip}}, \code{\link{NOSM_POT_dir}},
-#'   \code{\link{NOSM_POT_undir}}, \code{\link{NOSM_dir}},
-#'   \code{\link{NOSM_undir}}
-#' @references Strona, G. & Veech, J. A. (2015). A new measure of ecological
-#'   network structure based on node overlap and segregation. Methods in Ecology
-#'   and Evolution, 6(8), 907-915.
+#'   An object of class "summary.mmSAR2" is a list containing the following
+#'   components:
+#'   \itemize{
+#'     \item{"Summary"}{   A vector of model fit values (e.g. the c, z,
+#'     z-significance, and R2 value for the linear power model fit).}
+#'     \item{"df"}{   A dataframe containing the island areas and the models' fitted values.}
+#'    }
 #' @examples
-#' data(boreal)
-#' z <- boreal[sample(rownames(boreal), 200, FALSE),] #subset for speed
-#' x <- NOSM_bip(z, perc = 1, sl = 1)
-#' summary(x, y = 3)
+#' data(galap)
+#' fit <- lin_pow(galap, a = 1, s = 2, con = 1)
+#' summary(fit)
 #' @importFrom dplyr %>%
 #' @export
 
 
-summary.mmSAR2 <- function(object, ..., y = 3){
+summary.mmSAR2 <- function(object, ...){
 
   if (attributes(object)$Type == "lin_pow"){
     object2 <- object$Model

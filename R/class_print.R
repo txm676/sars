@@ -1,4 +1,4 @@
-
+#' @inheritSection  summary.mmSAR2
 #' @export
 
 print.summary.mmSAR2 <- function(x, ...){
@@ -9,7 +9,7 @@ print.summary.mmSAR2 <- function(x, ...){
   cat("z.sig =", x$Summary[3], "\n")
   cat("R2 =", x$Summary[4], "\n")
   cat("\n")
-  cat("Fitted values:", "\n", as.matrix(x$df))
+  #cat("Fitted values:", "\n", x$df)
 }
 
 

@@ -9,20 +9,26 @@
 #' @param x A dataset in the form of list. The first element of the list is
 #'   the name of the dataset (e.g. "galap"), and the second element is a
 #'   dataframe with a minimum of two columns: one with island/site areas, and
-#'   one with the species richness of each island/site.
-#' @param a The column number of the area values. The default is 1 (i.e. column 1)
-#' @param s The column number of the species richness values. The default is 2 (i.e. column 2)
-#' @param con The constant to add to the species richness values in cases where one of the islands has zero species
-#' @return A list with three elements. The first element is an object of class
-#'   'summary.lm'. This is the summary of the linear model fit using the
-#'   \link[stats]{lm} function and the user's data. The second element is a
-#'   numeric vector of the model's fitted values, and the third contains the island
-#'   areas.
+#' one with the species richness of each island/site.
+#' @param a The column number of the area values. The default is 1 (i.e. column
+#'   1)
+#' @param s The column number of the species richness values. The default is 2
+#'   (i.e. column 2)
+#' @param con The constant to add to the species richness values in cases where
+#'   one of the islands has zero species
+#' @return A list of class "mmSAR2" with three elements. The first element is an
+#'   object of class 'summary.lm'. This is the summary of the linear model fit
+#'   using the \link[stats]{lm} function and the user's data. The second element
+#'   is a numeric vector of the model's fitted values, and the third contains
+#'   the island areas.
 #'
-#'   The \code{\link{summary.}} method provides a more useful summary. The \code{\link{plot.}} plots the model.
+#'   The \code{\link{summary.mmSAR2}} function returns a more useful summary of the
+#'   model fit results, and the \code{\link{plot.}} plots the model.
 #' @examples
 #' data(galap)
 #' fit <- lin_pow(galap, a = 1, s = 2, con = 1)
+#' summary(fit)
+#' plot(fit)
 #' @export
 #' @importFrom stats lm
 
