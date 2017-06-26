@@ -4,36 +4,38 @@
 #'   objects of class mmSAR2, using the ggplot2 R package. The exact plot(s)
 #'   constructed depends on the 'Type' attribute (e.g. 'lin_pow') of the mmSAR2
 #'   object.
+#'
+#'   For an mmSAR2 object of Type 'lin_pow' (i.e. linear power model fit), the
+#'   plot.mmSAR2 function returns a plot of the model fit (black line) and the
+#'   observed richness values (coloured circles).
 #' @param object An object of class 'mmSAR2'.
-#' @param ...	further arguments passed to or from other methods.**see ggplot2 book for examples
-#' @references Chang.
+#' @param lsi Argument for line width (default = 3).
+#' @param ps Argument for point size (default = 1).
+#' @param pc Argument for point colour (default = darkgreen).
+#' @param ...	further arguments passed to or from other methods.
 #' @examples
 #' data(galap)
 #' fit <- lin_pow(galap, a = 1, s = 2, con = 1)
 #' plot(fit)
-#' @import ggplot2
 #' @export
 
-plot.mmSAR2 <- function(object, ...){
+plot.mmSAR2 <- function(object, lsi = 3, ps = 1, pc = "darkgreen", ...){
 
   if (attributes(object)$Type == "lin_pow"){
     logDat <- log(object$Area)
+    con <- attributes(object)$Constant
     if (any(object$Richness == 0)){
       lor = log(object$Richness + con)
     } else {
       lor = log(object$Richness)
     }
     gdf <- data.frame(Area = logDat, fit_ric = object$Fitted, obs_ric = lor)
-    g <- ggplot(data = gdf) + geom_line(aes(Area, fit_ric), size = 1.3) +
-      geom_point(aes(Area, obs_ric), size = 1.8, colour = "lightseagreen") +
-      ggtitle(attributes(object)$Dataset) +
-      theme_bw() + xlab("Area (log transformed)") + ylab("Richness (log transformed)") +
-      theme(axis.text = element_text(size = 13), axis.title = element_text(size = 15),
-            plot.title = element_text(size = 15))
+    plot(gdf$Area, gdf$fit_ric, col = "white", xlab = "Area (log transformed)",
+         ylab = "Richness (log transformed)", cex.lab = 1.3, main = attributes(object)$Dataset, ...)
+    lines(gdf$Area, gdf$fit_ric, lwd = lsi)
+    points(gdf$Area, gdf$obs_ric, pch = 16, col = pc, cex = ps)
   }
-  g
 }
-
 
 
 

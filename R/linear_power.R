@@ -56,6 +56,7 @@ lin_pow <- function(x, a = 1, s = 2, con = 1) {
   class(res) <- "mmSAR2"
   attr(res, "Type") <- "lin_pow"
   attr(res, "Dataset") <- x$Dataset
+  attr(res, "Constant") <- con
   return(res)
 }
 

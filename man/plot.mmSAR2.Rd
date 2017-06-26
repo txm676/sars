@@ -4,24 +4,31 @@
 \alias{plot.mmSAR2}
 \title{Plot Model Fits for an mmSAR2 Object}
 \usage{
-\method{plot}{mmSAR2}(object, ...)
+\method{plot}{mmSAR2}(object, lsi = 3, ps = 1, pc = "darkgreen", ...)
 }
 \arguments{
 \item{object}{An object of class 'mmSAR2'.}
 
-\item{...}{further arguments passed to or from other methods.**see ggplot2 book for examples}
+\item{lsi}{Argument for line width (default = 3).}
+
+\item{ps}{Argument for point size (default = 1).}
+
+\item{pc}{Argument for point colour (default = darkgreen).}
+
+\item{...}{further arguments passed to or from other methods.}
 }
 \description{
 S3 method for class 'mmSAR2'. plot.mmSAR2 creates plots for
   objects of class mmSAR2, using the ggplot2 R package. The exact plot(s)
   constructed depends on the 'Type' attribute (e.g. 'lin_pow') of the mmSAR2
   object.
+
+  For an mmSAR2 object of Type 'lin_pow' (i.e. linear power model fit), the
+  plot.mmSAR2 function returns a plot of the model fit (black line) and the
+  observed richness values (coloured circles).
 }
 \examples{
 data(galap)
 fit <- lin_pow(galap, a = 1, s = 2, con = 1)
 plot(fit)
-}
-\references{
-Chang.
 }
