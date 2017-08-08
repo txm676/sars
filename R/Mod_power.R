@@ -41,6 +41,6 @@ power <- function(data, custstart = NULL, normtest = "none"){
 
   fit <- rssoptim(model, data, custstart, normtest, algo = "Nelder-Mead")
 
-  class(fit) <- "mmsar2"
+  class(fit) <- "mmsar2_fit"
   return(fit)
 }
