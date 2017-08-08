@@ -1,4 +1,4 @@
-rssoptim <- function(model,data,custStart=NULL,algo="Nelder-Mead"){
+rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
 
   #paramters bounds
   parLim <- model$parLim
@@ -37,10 +37,10 @@ rssoptim <- function(model,data,custStart=NULL,algo="Nelder-Mead"){
   names(res1$par) <- model$parNames
 
   #calculating expected richness
-  S.calc <- model$mod.fun(data$data$A,res1$par)
+  S.calc <- model$mod.fun(data$A,res1$par)
 
   #residuals
-  residu  <-  as.vector(data$data$S - S.calc)
+  residu  <-  as.vector(data$S - S.calc)
 
   #second result
   res2  <-  list(startvalues=start,data=data,model=model,calculated=S.calc,residuals=residu)
@@ -59,7 +59,7 @@ rssoptim <- function(model,data,custStart=NULL,algo="Nelder-Mead"){
       }#eo if length
   }#eo if lillie
 
-  if(norTest=="shapiro"){
+  if(normtest=="shapiro"){
 
     if(length(l)<3) {
 
