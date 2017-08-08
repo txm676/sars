@@ -1,14 +1,45 @@
 # POWER MODEL (ARRHENIUS 1921)
 
-power <- list(
-  name = c("Power"),
-  formula = expression(s == c * a ^ z),
-  exp = expression(c * A ^ z),
-  shape = "convex",
-  asymp = function(pars)FALSE,
-  custStart = function(data) c(5, .25, 0),
-  #limits for parameters
-  parLim = c("R", "R"),
-  #initials values function
-  init=function(data){if(any(data$S==0)){log.data=data.frame(A=log(data$A),S=log(data$S+.5))}else{log.data=log(data)};res=lm(S~A,log.data)$coefficients;res = c(exp(res[1]),res[2]);names(res)=c("c","z");return(res)}
-)
+
+power <- function(data, custstart = NULL, normtest = "none"){
+
+  if (!(is.matrix(data) || is.data.frame(data))) stop("data must be a matrix or dataframe")
+  if (is.matrix(data)) data <- as.data.frame(data)
+  if (anyNA(data)) stop("NAs present in data")
+  normtest <- match.arg(normtest, c("none", "shapiro", "kolmo", "lillie"))
+
+  data <- data[order(data[,1]),]
+  colnames(data) <- c("A", "S")
+
+  model <- list(
+    name = c("Power"),
+    formula = expression(s == c * a ^ z),
+    exp = expression(c * A ^ z),
+    theor_shape = "convex",
+    parLim = c("R", "R"),
+    init = function(data){
+      if (any(data$S == 0)){
+        log.data = data.frame(A = log(data$A), S = log(data$S + .5))
+      } else {
+        log.data = log(data)
+      }
+      res = lm(S ~ A, log.data)$coefficients
+      res = c(exp(res[1]), res[2])
+      names(res) = c("c", "z")
+      return(res)
+    }
+  )
+
+  if (is.null(custstart)){
+    model$custstart <- function(data) c(5, .25, 0)
+  } else {
+    model$custstart <- custstart
+  }
+
+  model <- compmod(model)
+
+  fit <- rssoptim(model, data, custstart, normtest)
+
+  class(fit) <- "mmsar2"
+  return(fit)
+}
