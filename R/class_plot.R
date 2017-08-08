@@ -16,14 +16,14 @@
 #' @export
 
 
-plot.mmsar2 <- function(x, title = NULL, s1 = 2, s2 = 1, s3 = 14, s4 = 13, s5 = 15,
+plot.mmsar2 <- function(x, title = NULL, sh1 = 16, s1 = 2, s2 = 1, s3 = 14, s4 = 13, s5 = 15,
                         c1 = "darkred", c2 = "black", xl = "Area", yl = "Species richness",
                         p1 = 0)
 {
 
     if (is.null(title)) title <- object$model$name
 
-    g1 <- int_plot(x, title, s1, s2, s3, s4, s5,
+    g1 <- int_plot(x, title, sh1, s1, s2, s3, s4, s5,
                    c1, c2, xl, yl, p1)
 
     return(g1)
