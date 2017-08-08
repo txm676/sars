@@ -1,5 +1,6 @@
 # POWER MODEL (ARRHENIUS 1921)
 
+#' @export
 
 power <- function(data, custstart = NULL, normtest = "none"){
 
@@ -38,7 +39,7 @@ power <- function(data, custstart = NULL, normtest = "none"){
 
   model <- compmod(model)
 
-  fit <- rssoptim(model, data, custstart, normtest, algo="Nelder-Mead")
+  fit <- rssoptim(model, data, custstart, normtest, algo = "Nelder-Mead")
 
   class(fit) <- "mmsar2"
   return(fit)
