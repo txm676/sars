@@ -1,6 +1,6 @@
-#' mmSAR2: Fit and compare species-area relationship models using multimodel inference
+#' mmsar2: Fit and compare species-area relationship models using multimodel inference
 #'
-#' @name mmSAR2-package
+#' @name mmsar2-package
 #' @docType package
 
 #'
