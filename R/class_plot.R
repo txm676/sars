@@ -20,16 +20,17 @@ plot.mmsar2 <- function(x, title = NULL, sh1 = 16, s1 = 2, s2 = 1, s3 = 14, s4 =
                         c1 = "darkred", c2 = "black", xl = "Area", yl = "Species richness",
                         p1 = 0, dimen = NULL)
 {
-    if (class(x) == "mmsar2_fit"){
+    if (attributes(x)$type == "fit"){
       if (is.null(title)) title <- x$model$name
       g1 <- int_plot(x, title, sh1, s1, s2, s3, s4, s5,
                      c1, c2, xl, yl, p1)
     }
 
-    if (class(x) == "mmsar2_fitcollection"){
+    if (attributes(x)$type == "fitcollection"){
       if (is.null(dimen)) dimen <- c(grid::grid.layout(length(x))$nrow, grid::grid.layout(length(x))$ncol)
       fc2 <- list()
       for (i in seq_along(x)){
+        print(i)
         if (is.null(title)) {title2 <- x[[i]]$model$name} else{title2 <- title[i]}
         fc2[[i]] <- int_plot(x[[i]], title2, sh1, s1, s2, s3, s4, s5,
                              c1, c2, xl, yl, p1)
