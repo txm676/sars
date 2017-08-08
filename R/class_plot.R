@@ -1,4 +1,4 @@
-#'  Plot Model Fits for an mmSAR2 Object
+#'  Plot Model Fits for an mmsar2 Object
 #'
 #' @description S3 method for class 'mmSAR2'. plot.mmSAR2 creates plots for
 #'   objects of class mmSAR2, using the ggplot2 R package. The exact plot(s)
@@ -13,108 +13,21 @@
 #' @param ps Argument for point size (default = 1).
 #' @param pc Argument for point colour (default = darkgreen).
 #' @param ...	further arguments passed to or from other methods.
-#' @examples
-#' data(galap)
-#' fit <- lin_pow(galap, a = 1, s = 2, con = 1)
-#' plot(fit)
 #' @export
 
 
-
-
-plot.mmsar2 <- function(object, lsi = 3, ps = 1, pc = "darkgreen", title = NULL,...){
+plot.mmsar2 <- function(x, title = NULL, s1 = 2, s2 = 1, s3 = 14, s4 = 13, s5 = 15,
+                        c1 = "darkred", c2 = "black", xl = "Area", yl = "Species richness",
+                        p1 = 0)
+{
 
     if (is.null(title)) title <- object$model$name
 
+    g1 <- int_plot(x, s1, s2, s3, s4, s5,
+                   c1, c2, xl, yl, p1)
 
-
-
-  int_plot <- function(x, title, s1 = 2, s2 = 1, s3 = 14, s4 = 13, s5 = 15,
-                       c1 = "darkred", c2 = "black", xl = "Area", yl = "Species richness",
-                       p1 = 0){
-    df <- x$data
-    xx <- df$A
-    yy <- df$S
-    ff <- x$calculated
-
-    g <- ggplot2::ggplot(data = df) +
-      ggplot2::geom_point(ggplot2::aes(x = xx, y = yy), size = s1, col = c1) +
-      ggplot2::geom_line(ggplot2::aes(x = xx, y = ff), size = s2, col = c2) +
-      ggplot2::xlab(xl) + ggplot2::ylab(yl) +
-      ggplot2::ggtitle(title) + ggplot2::theme_bw() +
-      ggplot2::theme(axis.title = ggplot2::element_text(size = s3), axis.text =
-                       ggplot2::element_text(size = s4)) +
-      ggplot2::theme(plot.title = ggplot2::element_text(hjust = p1, size = s5))
-
-    return(g)
-  }
-
-
-
-  }
-
-
-
-
-
-
-
-
-
-  if (length(object == 1))
-
-
-
-
-
-  if (attributes(object)$Type == "lin_pow"){
-    logDat <- log(object$Area)
-    con <- attributes(object)$Constant
-    if (any(object$Richness == 0)){
-      lor = log(object$Richness + con)
-    } else {
-      lor = log(object$Richness)
-    }
-    gdf <- data.frame(Area = logDat, fit_ric = object$Fitted, obs_ric = lor)
-    plot(gdf$Area, gdf$fit_ric, col = "white", xlab = "Area (log transformed)",
-         ylab = "Richness (log transformed)", cex.lab = 1.3, main = attributes(object)$Dataset, ...)
-    lines(gdf$Area, gdf$fit_ric, lwd = lsi)
-    points(gdf$Area, gdf$obs_ric, pch = 16, col = pc, cex = ps)
-  }
+    return(g1)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-plot.mmSAR2 <- function(object, lsi = 3, ps = 1, pc = "darkgreen", ...){
-
-  if (attributes(object)$Type == "lin_pow"){
-    logDat <- log(object$Area)
-    con <- attributes(object)$Constant
-    if (any(object$Richness == 0)){
-      lor = log(object$Richness + con)
-    } else {
-      lor = log(object$Richness)
-    }
-    gdf <- data.frame(Area = logDat, fit_ric = object$Fitted, obs_ric = lor)
-    plot(gdf$Area, gdf$fit_ric, col = "white", xlab = "Area (log transformed)",
-         ylab = "Richness (log transformed)", cex.lab = 1.3, main = attributes(object)$Dataset, ...)
-    lines(gdf$Area, gdf$fit_ric, lwd = lsi)
-    points(gdf$Area, gdf$obs_ric, pch = 16, col = pc, cex = ps)
-  }
-}
-
 
 
 
