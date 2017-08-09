@@ -27,22 +27,22 @@
 #' @export
 
 
-summary.sars <- function(object, ...){
+summary.sars <- function(object){
 
   if (attributes(object)$type == "linpow"){
     object2 <- object$Model
-    c <- object2$coefficients[1, 1]
+    logc <- object2$coefficients[1, 1]
     z <- object2$coefficients[2, 1]
     z.sig = object2$coefficients[2, 4]
     r2 <- object2$r.squared
-    md_res <- c(c, z, z.sig, r2) %>% round(2)
-    names(md_res) <- c("c", "z", "z.sig", "r2")
+    md_res <- c(logc, z, z.sig, r2) %>% round(2)
+    names(md_res) <- c("logc", "z", "z.sig", "r2")
     fit_df <- round(data.frame(Area = object$Area, Fitted = object$Fitted), 2) 
     res <- list(Summary = md_res, df = fit_df)
     if(length(object) == 4){
       cp <- object[[4]]$par[1]
       zp <- object[[4]]$par[2]
-      res$power <- round(c("c" = exp(cp), "z" = zp), 2)
+      res$power <- round(c("logc" = cp, "z" = zp), 2)
     }
   }
   

@@ -4,7 +4,7 @@
 \alias{summary.sars}
 \title{Summarising the results of the model fitting functions}
 \usage{
-\method{summary}{sars}(object, ...)
+\method{summary}{sars}(object)
 }
 \arguments{
 \item{object}{An object of class 'mmSAR2'.}
