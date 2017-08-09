@@ -16,14 +16,14 @@
 #' @export
 
 
-plot.sars <- function(x, title = NULL, sh1 = 16, s1 = 2, s2 = 1, s3 = 14, s4 = 13, s5 = 15,
+plot.sars <- function(x, title = NULL, sh1 = 21, s1 = 2, s2 = 1, s3 = 14, s4 = 13, s5 = 15,
                         c1 = "darkred", c2 = "black", xl = "Area", yl = "Species richness",
-                        p1 = 0, dimen = NULL)
+                        p1 = 0, dimen = NULL, th = NULL)
 {
     if (attributes(x)$type == "fit"){
       if (is.null(title)) title <- x$model$name
       g1 <- int_plot(x, title, sh1, s1, s2, s3, s4, s5,
-                     c1, c2, xl, yl, p1)
+                     c1, c2, xl, yl, p1, th)
       return(g1)
     }
 
@@ -32,7 +32,7 @@ plot.sars <- function(x, title = NULL, sh1 = 16, s1 = 2, s2 = 1, s3 = 14, s4 = 1
       for (i in seq_along(x)){
         if (is.null(title)) {title2 <- x[[i]]$model$name} else{title2 <- title[i]}
         fc2[[i]] <- int_plot(x[[i]], title2, sh1, s1, s2, s3, s4, s5,
-                             c1, c2, xl, yl, p1)
+                             c1, c2, xl, yl, p1, th)
       }#eo for
       
       if (is.null(dimen)){
@@ -41,6 +41,14 @@ plot.sars <- function(x, title = NULL, sh1 = 16, s1 = 2, s2 = 1, s3 = 14, s4 = 1
           return(gridExtra::grid.arrange(grobs = fc2, nrow = dimen[1], ncol = dimen[2]))
       }
     }
+  
+  if (attributes(x)$type == "linpow"){
+    if (is.null(title)) title <- "Log-log power"
+    g1 <- int_plot(x, title, sh1, s1, s2, s3, s4, s5,
+                   c1, c2, xl, yl, p1, th)
+    return(g1)
+  }
 }
+
 
 

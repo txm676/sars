@@ -4,9 +4,10 @@
 \alias{plot.sars}
 \title{Plot Model Fits for an mmsar2 Object}
 \usage{
-\method{plot}{sars}(x, title = NULL, sh1 = 16, s1 = 2, s2 = 1,
+\method{plot}{sars}(x, title = NULL, sh1 = 21, s1 = 2, s2 = 1,
   s3 = 14, s4 = 13, s5 = 15, c1 = "darkred", c2 = "black",
-  xl = "Area", yl = "Species richness", p1 = 0, dimen = NULL)
+  xl = "Area", yl = "Species richness", p1 = 0, dimen = NULL,
+  th = NULL)
 }
 \arguments{
 \item{object}{An object of class 'mmSAR2'.}
