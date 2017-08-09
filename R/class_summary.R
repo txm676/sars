@@ -29,20 +29,34 @@
 
 summary.sars <- function(object, ...){
 
-  if (attributes(object)$Type == "lin_pow"){
+  if (attributes(object)$type == "linpow"){
     object2 <- object$Model
-    c = object2$coefficients[1, 1]
-    z = object2$coefficients[2, 1]
+    c <- object2$coefficients[1, 1]
+    z <- object2$coefficients[2, 1]
     z.sig = object2$coefficients[2, 4]
-    r2 = object2$r.squared
+    r2 <- object2$r.squared
     md_res <- c(c, z, z.sig, r2) %>% round(2)
     names(md_res) <- c("c", "z", "z.sig", "r2")
-    fit_df <- data.frame(Area = object$Area, Fitted = object$Fitted) %>% round(2)
+    fit_df <- round(data.frame(Area = object$Area, Fitted = object$Fitted), 2) 
     res <- list(Summary = md_res, df = fit_df)
+    if(length(object) == 4){
+      cp <- object[[4]]$par[1]
+      zp <- object[[4]]$par[2]
+      res$power <- round(c("c" = exp(cp), "z" = zp), 2)
+    }
   }
+  
+  
+  
+  
+  
+  
+  
+  
   class(res) <- "summary.sars"
-  attr(res, "Type") <- attributes(object)$Type
-  attr(res, "Dataset") <- attributes(object)$Dataset
+  attr(res, "type") <- attributes(object)$type
   return(res)
 }
+
+
 
