@@ -35,11 +35,11 @@ plot.mmsar2 <- function(x, title = NULL, sh1 = 16, s1 = 2, s2 = 1, s3 = 14, s4 =
         fc2[[i]] <- int_plot(x[[i]], title2, sh1, s1, s2, s3, s4, s5,
                              c1, c2, xl, yl, p1)
       }#eo for
-    g1 <- gridExtra::grid.arrange(unlist(fc2), nrow = dimen[1], ncol = dimen[2])
+  #  g1 <- gridExtra::grid.arrange(unlist(fc2), nrow = dimen[1], ncol = dimen[2])
 
     }
 
-return(g1)
+return(fc2)
 }
 
 
