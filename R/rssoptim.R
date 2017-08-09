@@ -47,6 +47,8 @@ rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
 
   #Residuals normality test
 
+  l <- data[[2]]
+
   if(normtest=="lillie"){
 
     if(length(l)<5) {
@@ -65,7 +67,7 @@ rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
     }#eo if length
   }#eo if shapiro
 
-  normaTest <- switch(normtest, "shapiro" = shapiro.test(residu) , "lillie" = lillie.test(residu) , "kolmo" = ks.test(residu, "pnorm"), "none" = list(statistic=NA,p.value=NA) )
+  normaTest <- switch(normtest, "shapiro" = shapiro.test(residu) , "lillie" = nortest::lillie.test(residu) , "kolmo" = ks.test(residu, "pnorm"), "none" = list(statistic=NA,p.value=NA) )
 
   #Homogeneity of variance
   homoTest  <-  tryCatch(list(cor.area = cor.test(residu,data$A),cor.fitted = cor.test(residu,S.calc)), error = function(e) list(cor.area = list(estimate=NA,p.value=NA),cor.fitted = list(estimate=NA,p.value=NA)))
@@ -129,8 +131,10 @@ rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
   # colnames(conf) <- c("2.5%","97.5%")
   #
   # sigConf <- cbind(param,conf)
+    sigConf <- matrix(NA,(P-1),6)
+    colnames(sigConf) <- c("Estimate", "Std. Error","t value", "Pr(>|t|)","2.5%","97.5%")
   #
-  # res <- c(res,sigConf)
+   res$sigConf <- sigConf
 
   invisible(res)
 

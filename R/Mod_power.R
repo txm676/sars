@@ -2,7 +2,7 @@
 
 #' @export
 
-power <- function(data, custstart = NULL, normtest = "none"){
+power <- function(data, custstart = NULL, normtest = "lillie"){
 
   if (!(is.matrix(data) || is.data.frame(data))) stop("data must be a matrix or dataframe")
   if (is.matrix(data)) data <- as.data.frame(data)
