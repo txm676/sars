@@ -1,6 +1,8 @@
 #' @export
 
 
+##return lm OBJECT
+
 print.summary.sars <- function(object){
   
   if (attributes(object)$type == "lin_pow"){
