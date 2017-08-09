@@ -1,8 +1,8 @@
 
 ##internal plot function (Not to be exported)
 
-int_plot <- function(x, title, sh1 = 21, s1 = 2, s2 = 1, s3 = 14, s4 = 13, s5 = 15,
-                     c1 = "darkred", c2 = "black", xl = "Area", yl = "Species richness",
+int_plot <- function(x, title, sh1 = 21, s1 = 3, s2 = 1, s3 = 14, s4 = 13, s5 = 15,
+                     c1 = "darkred", c2 = #5e5e5e, xl = "Area", yl = "Species richness",
                      p1 = 0, th = NULL)
 {
   df <- x$data
