@@ -5,6 +5,6 @@
 fit_collection <- function(..., fits = list(...)){
   #res <- list(...)
   class(fits) <- "sars"
-  attr(fits, "type") <- "fitcollection"
+  attr(fits, "type") <- "fit_collection"
   invisible(fits)
 }

@@ -60,6 +60,9 @@ multi_sars <- function(obj=c("sar_expo","sar_power"),data=galap,keep_fits=FALSE,
   
   if(keep_fits) res <- list(mmi=mmi,fits=as.list(fits))
   
+  class(res) <- "sars"
+  attr(res, "type") <- "multi_sars"
+  
   invisible(res)
   
 }#end of multi_sars
