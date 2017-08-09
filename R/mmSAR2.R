@@ -1,6 +1,6 @@
-#' mmsar2: Fit and compare species-area relationship models using multimodel inference
+#' sars: Fit and compare species-area relationship models using multimodel inference
 #'
-#' @name mmsar2-package
+#' @name sars-package
 #' @docType package
 
 #'
@@ -19,9 +19,9 @@
 #'   habitat islands and true islands. Global Ecology & Biogeography. DOI:
 #'   10.1111/geb.12269.
 #'
-#' @seealso \url{https://github.com/txm676/mmSAR2}
+#' @seealso \url{https://github.com/txm676/sars}
 #' @examples
-#' data(galap, package = "mmSAR2")
+#' data(galap, package = "sars")
 #' fit = (galap)
 #' summary(fit)
 #' plot(fit)
