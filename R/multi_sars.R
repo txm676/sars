@@ -1,4 +1,4 @@
-###empty multisar for now
+###multi model sars
 
 #' @export
 
@@ -27,6 +27,8 @@ multi_sars <- function(obj=c("sar_expo","sar_power"),data=galap,keep_fits=FALSE,
   }
   
   #if checks for normality and / or homoscedasticity enabled, then check and remove bad fits from fits
+  
+  #if length(fits) < 2 -> stop
   
   #setting variables
   nPoints <- length(fits[[1]]$data$A)
