@@ -16,7 +16,7 @@
 #' @export
 
 
-plot.mmsar2 <- function(x, title = NULL, sh1 = 16, s1 = 2, s2 = 1, s3 = 14, s4 = 13, s5 = 15,
+plot.sars <- function(x, title = NULL, sh1 = 16, s1 = 2, s2 = 1, s3 = 14, s4 = 13, s5 = 15,
                         c1 = "darkred", c2 = "black", xl = "Area", yl = "Species richness",
                         p1 = 0, dimen = NULL)
 {

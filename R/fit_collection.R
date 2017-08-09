@@ -4,7 +4,7 @@
 
 fit_collection <- function(...){
   res <- list(...)
-  class(res) <- "mmsar2"
+  class(res) <- "sars"
   attr(res, "type") <- "fitcollection"
   invisible(res)
 }
