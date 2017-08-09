@@ -1,8 +1,5 @@
 rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
 
-  #paramters bounds
-  parLim <- model$parLim
-
   #initial parameters
   if(is.null(custstart)){
     start <- model$init(data)
@@ -12,17 +9,17 @@ rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
 
   #if outside ranges : rescaling
   for (i in 1:length(start)) {
-    if(parLim[i]!="R"){
+    if(model$parLim[i]!="R"){
       if(start[i]<=0){ start[i] <- 0.1 }
     }
-    if(parLim[i]=="unif"){
+    if(model$parLim[i]=="unif"){
       if(start[i]>1){ start[i] <- .8 }
     }
   }#eo for
 
   #sarting values on the link function scale
-  startMod  <-  transLink(start,parLim)
-  names(startMod) <- model$parNames
+  startMod  <-  transLink(start,model$parLim)
+  names(startMod) <- names(start)
 
   #RSS function
   rssfun <- model$rss.fun
@@ -31,10 +28,10 @@ rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
   res1 <- optim(startMod,rssfun,hessian=F,data=data,method=algo,control=list(maxit=50000))
 
   #Backtransformation of parameters values
-  res1$par  <-  backLink(res1$par,parLim)
+  res1$par  <-  backLink(res1$par,model$parLim)
 
   #renaming the parameters vector
-  names(res1$par) <- model$parNames
+  names(res1$par) <- names(start)
 
   #calculating expected richness
   S.calc <- model$mod.fun(data$A,res1$par)
@@ -71,13 +68,13 @@ rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
   normaTest <- switch(normtest, "shapiro" = shapiro.test(residu) , "lillie" = lillie.test(residu) , "kolmo" = ks.test(residu, "pnorm"), "none" = list(statistic=NA,p.value=NA) )
 
   #Homogeneity of variance
-  homoTest  <-  tryCatch(list(cor.area = cor.test(residu,data$data$A),cor.fitted = cor.test(residu,S.calc)), error = function(e) list(cor.area = list(estimate=NA,p.value=NA),cor.fitted = list(estimate=NA,p.value=NA)))
+  homoTest  <-  tryCatch(list(cor.area = cor.test(residu,data$A),cor.fitted = cor.test(residu,S.calc)), error = function(e) list(cor.area = list(estimate=NA,p.value=NA),cor.fitted = list(estimate=NA,p.value=NA)))
 
   #R2, AIC, AICc, BIC
 
   #common vars
   n <- length(data$A)
-  P <- length(model$parNames) + 1  # + 1 for the estimated variance
+  P <- length(model$parLim) + 1  # + 1 for the estimated variance
 
   #R2 (Kvaleth, 1985, Am. Statistician)
   R2 <-  1 - ( (res1$value) /  sum((data$S - mean(data$S))^2) )
@@ -100,6 +97,40 @@ rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
   verge <- ifelse(R2<=0,71,69)
 
   res <- c(res1,list(verge=verge,normaTest=normaTest,homoTest=homoTest),res2,res3)
+
+  #estimates signifiance and confidence interval (95%)
+
+  #constructing a nlsModel object
+  # nMod <- nlsModel(model$formula,data,res1$par) #stats:::
+  #
+  # #number of parameters
+  # p <- length(model$parLim)
+  #
+  # #residuals degrees of freedom
+  # rdf <- n - p
+  #
+  # #residuals variance
+  # resvar <- res1$value / rdf
+  #
+  # #calculating the inverse of the upper triangular factor
+  # #of the gradient array at estimated parameter values
+  # XtXinv <- chol2inv(nMod$Rmat())
+  # dimnames(XtXinv) <- list(names(start), names(start))
+  #
+  # #formating the table of estimates, standard eroor, t value and significance of parameters
+  # se <- sqrt(diag(XtXinv) * resvar)
+  # tval <- res1$par/se
+  # param <- cbind(res1$par, se, tval, 2 * pt(abs(tval), rdf, lower.tail = FALSE))
+  # dimnames(param) <- list(model$paramnames, c("Estimate", "Std. Error",
+  #                                             "t value", "Pr(>|t|)"))
+  #
+  # #95% confidence interval
+  # conf <- matrix(c(param[,"Estimate"] - 2 * param[,"Std. Error"], param[,"Estimate"] + 2 * param[,"Std. Error"]),p,2)
+  # colnames(conf) <- c("2.5%","97.5%")
+  #
+  # sigConf <- cbind(param,conf)
+  #
+  # res <- c(res,sigConf)
 
   invisible(res)
 
