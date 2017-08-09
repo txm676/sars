@@ -29,7 +29,7 @@
 
 summary.sars <- function(object){
 
-  if (attributes(object)$type == "linpow"){
+  if (attributes(object)$type == "lin_pow"){
     object2 <- object$Model
     logc <- object2$coefficients[1, 1]
     z <- object2$coefficients[2, 1]

@@ -27,7 +27,7 @@ plot.sars <- function(x, title = NULL, sh1 = 21, s1 = 3, s2 = 1, s3 = 14, s4 = 1
       return(g1)
     }
 
-    if (attributes(x)$type == "fitcollection"){
+    if (attributes(x)$type == "fit_collection"){
       fc2 <- list()
       for (i in seq_along(x)){
         if (is.null(title)) {title2 <- x[[i]]$model$name} else{title2 <- title[i]}
@@ -42,7 +42,7 @@ plot.sars <- function(x, title = NULL, sh1 = 21, s1 = 3, s2 = 1, s3 = 14, s4 = 1
       }
     }
   
-  if (attributes(x)$type == "linpow"){
+  if (attributes(x)$type == "lin_pow"){
     if (is.null(title)) title <- "Log-log power"
     g1 <- int_plot(x, title, sh1, s1, s2, s3, s4, s5,
                    c1, c2, xl = "Log(area)", yl = "Log(species richness)", p1, th)

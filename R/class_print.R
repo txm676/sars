@@ -3,7 +3,7 @@
 
 print.summary.sars <- function(object){
   
-  if (attributes(object)$type == "linpow"){
+  if (attributes(object)$type == "lin_pow"){
     cat("Model = ","Log-log power", "\n", "Logc =", object$Summary[1], "\n", 
         "c =", exp(object$Summary[1]), "\n",
         "z =", object$Summary[2], "\n", "z.sig =", object$Summary[3], 
