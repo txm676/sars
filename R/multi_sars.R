@@ -51,12 +51,12 @@ multi_sars <- function(obj=c("sar_expo","sar_power"),data=galap,keep_fits=FALSE,
   weights_ICs <- exp(-0.5*delta_ICs) / akaikesum
   
   #produce weight averaged diversity measures
-  mmS <- vapply(fits,FUN=function(x){x$calculated},FUN.VALUE=double(nPoints))
-  mmS <- apply((mmS * weights_ICs), 1 , sum)
+  mmi <- vapply(fits,FUN=function(x){x$calculated},FUN.VALUE=double(nPoints))
+  mmi <- apply((mmi * weights_ICs), 1 , sum)
   
-  res <- mmS
+  res <- mmi
   
-  if(keep_fits) res <- list(mmS=mmS,fits=as.list(fits))
+  if(keep_fits) res <- list(mmi=mmi,fits=as.list(fits))
   
   invisible(res)
   
