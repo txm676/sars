@@ -2,13 +2,8 @@
 
 S3method(plot,coleman)
 S3method(plot,sars)
-<<<<<<< HEAD
 S3method(print,summary.sars)
 S3method(summary,sars)
-=======
-S3method(print,summary.mmSAR2)
-S3method(summary,mmSAR2)
->>>>>>> 92399ed7340623f4626c746475fe3a497d41d0f2
 export(coleman)
 export(fit_collection)
 export(lin_pow)
