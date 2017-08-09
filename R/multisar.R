@@ -1,6 +1,8 @@
 ###empty multisar for now
 
-multi_sar <- function(obj,data=NULL,crit="Info",normtest="lillie",homotest="cor.fitted",alpha_normtest=0.05,alpha_homotest=alpha_normtest){
+#' @export
+
+multi_sar <- function(obj,data=NULL,keep_fits=FALSE,crit="Info",normtest="lillie",homotest="cor.fitted",alpha_normtest=0.05,alpha_homotest=alpha_normtest){
   
   if (!(is.character(obj))  || (attributes(m)$type != "fitcollection") ) stop("obj must be a character or fitcollection")
   
@@ -29,6 +31,8 @@ multi_sar <- function(obj,data=NULL,crit="Info",normtest="lillie",homotest="cor.
   #setting variables
   nPoints <- length(fits[[1]]$data$A)
   nMods <- length(fits)
+  modNames <- vapply(fits, FUN = function(x){x$model$name}, FUN.VALUE = character(1))
+  if(is.character(obj)){  keep_fits <- TRUE }
   
   #choosing an IC criterion (AIC or AICc or BIC)
   IC <- switch(crit,
@@ -36,7 +40,19 @@ multi_sar <- function(obj,data=NULL,crit="Info",normtest="lillie",homotest="cor.
          Bayes= "BIC"
   )
   
-  #get akaike weights
+  #get delta ICs
+  delta_ICS <- ICs <- min(ICs)
   
+  #get akaike weights
+  akaikesum <- sum(exp( -0.5*(delta_ICs)))
+  weights_ICs <- exp(-0.5*delta_ICs) / akaikesum
+  
+  #produce weight averaged diversity measures
+  mmS <- vapply(fits,FUN=function(x){x$calculated},FUN.VALUE=double(nPoints))
+  mmS <- apply((mmS * weights_ICs), 1 , sum)
+  
+  res <- mmS
+  
+  if(keep_fits) res$fits <- as.list(fits)
   
 }#end of multisar
