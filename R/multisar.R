@@ -1,6 +1,6 @@
 ###empty multisar for now
 
-multi_sar <- function(obj,data=NULL){
+multi_sar <- function(obj,data=NULL,crit="Info",normtest="lillie",homotest="cor.fitted",alpha_normtest=0.05,alpha_homotest=alpha_normtest){
   
   if (!(is.character(obj))  || (attributes(m)$type != "fitcollection") ) stop("obj must be a character or fitcollection")
   
@@ -10,6 +10,9 @@ multi_sar <- function(obj,data=NULL){
     if(any(!(obj %in% paste0("sar_",c("linear","power","power_R","epm1","epm2","P1","P2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg"))))) stop("all model names should be ok")
   }
   
+  normtest <- match.arg(normtest, c("none", "shapiro", "kolmo", "lillie"))
+  homotest <- match.arg(homotest, c("none","cor.area","cor.fitted"))
+  
   #if not yet fitted, fit the models to the data
   if(is.character(obj)){
    
@@ -17,10 +20,23 @@ multi_sar <- function(obj,data=NULL){
       eval(parse(text=paste0(x,"(data)")))
     })
     
+    fits <- fit_collection(fits)
     
   }
   
+  #if checks for normality and / or homoscedasticity enabled, then check and remove bad fits from fits
   
+  #setting variables
+  nPoints <- length(fits[[1]]$data$A)
+  nMods <- length(fits)
+  
+  #choosing an IC criterion (AIC or AICc or BIC)
+  IC <- switch(crit,
+         Info= if ( (nPoints / 3) < 40 ) { "AICc" } else { "AIC"},
+         Bayes= "BIC"
+  )
+  
+  #get akaike weights
   
   
 }#end of multisar

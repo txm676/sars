@@ -10,7 +10,7 @@ Description: Implements the basic elements of the multimodel
 License: GPL-3
 URL: https://github.com/txm676/sars
 BugReports: https://github.com/txm676/sars/issues
-Imports: dplyr, stats, ggplot2, gridExtra, grid, nortest
+Imports: dplyr, numDeriv, stats, ggplot2, gridExtra, grid, nortest
 Depends: R(>= 3.0.0)
 Encoding: UTF-8
 LazyData: true
