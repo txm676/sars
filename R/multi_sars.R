@@ -1,10 +1,10 @@
-###empty multisar for now
+###multi model sars
 
 #' @export
 
-multi_sar <- function(obj,data=NULL,keep_fits=FALSE,crit="Info",normtest="lillie",homotest="cor.fitted",alpha_normtest=0.05,alpha_homotest=alpha_normtest){
+multi_sars <- function(obj=c("sar_expo","sar_power"),data=galap,keep_fits=FALSE,crit="Info",normtest="lillie",homotest="cor.fitted",alpha_normtest=0.05,alpha_homotest=alpha_normtest){
   
-  if (!(is.character(obj))  || (attributes(m)$type != "fitcollection") ) stop("obj must be a character or fitcollection")
+  if (!(is.character(obj))  || (class(obj) == "sars") ) stop("obj must be a character or fitcollection")
   
   if( is.character(obj) & is.null(data)) stop("if obj is character then data should be provided")
   
@@ -22,11 +22,13 @@ multi_sar <- function(obj,data=NULL,keep_fits=FALSE,crit="Info",normtest="lillie
       eval(parse(text=paste0(x,"(data)")))
     })
     
-    fits <- fit_collection(fits)
+    fits <- fit_collection(fits=fits)
     
   }
   
   #if checks for normality and / or homoscedasticity enabled, then check and remove bad fits from fits
+  
+  #if length(fits) < 2 -> stop
   
   #setting variables
   nPoints <- length(fits[[1]]$data$A)
@@ -40,19 +42,25 @@ multi_sar <- function(obj,data=NULL,keep_fits=FALSE,crit="Info",normtest="lillie
          Bayes= "BIC"
   )
   
+  #get ICs
+  ICs <- vapply(X = fits, FUN = function(x){x[[IC]]}, FUN.VALUE = double(1))
+  
   #get delta ICs
-  delta_ICS <- ICs <- min(ICs)
+  delta_ICs <- ICs <- min(ICs)
   
   #get akaike weights
   akaikesum <- sum(exp( -0.5*(delta_ICs)))
   weights_ICs <- exp(-0.5*delta_ICs) / akaikesum
   
   #produce weight averaged diversity measures
-  mmS <- vapply(fits,FUN=function(x){x$calculated},FUN.VALUE=double(nPoints))
-  mmS <- apply((mmS * weights_ICs), 1 , sum)
+  mmi <- vapply(fits,FUN=function(x){x$calculated},FUN.VALUE=double(nPoints))
+  mmi <- apply((mmi * weights_ICs), 1 , sum)
   
-  res <- mmS
+  res <- mmi
   
-  if(keep_fits) res$fits <- as.list(fits)
+  if(keep_fits) res <- list(mmi=mmi,fits=as.list(fits))
   
-}#end of multisar
+  invisible(res)
+  
+}#end of multi_sars
+
