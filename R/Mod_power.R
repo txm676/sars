@@ -2,7 +2,7 @@
 
 #' @export
 
-power <- function(data, custstart = NULL, normtest = "lillie"){
+sar_power <- function(data, custstart = NULL, normtest = "lillie"){
 
   if (!(is.matrix(data) || is.data.frame(data))) stop("data must be a matrix or dataframe")
   if (is.matrix(data)) data <- as.data.frame(data)
@@ -40,6 +40,8 @@ power <- function(data, custstart = NULL, normtest = "lillie"){
   model <- compmod(model)
 
   fit <- rssoptim(model, data, custstart, normtest, algo = "Nelder-Mead")
+  
+  fit$model <- model
 
   class(fit) <- "sars"
   attr(fit, "type") <- "fit"
