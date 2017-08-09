@@ -14,7 +14,7 @@ power <- function(data, custstart = NULL, normtest = "lillie"){
 
   model <- list(
     name = c("Power"),
-    formula = expression(s == c * a ^ z),
+    formula = expression(S == c * A ^ z),
     exp = expression(c * A ^ z),
     theor_shape = "convex",
     parLim = c("R", "R"),

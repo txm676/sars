@@ -103,36 +103,44 @@ rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
   #estimates signifiance and confidence interval (95%)
 
   #constructing a nlsModel object
-  # nMod <- nlsModel(model$formula,data,res1$par) #stats:::
-  #
-  # #number of parameters
-  # p <- length(model$parLim)
-  #
-  # #residuals degrees of freedom
-  # rdf <- n - p
-  #
-  # #residuals variance
-  # resvar <- res1$value / rdf
-  #
-  # #calculating the inverse of the upper triangular factor
-  # #of the gradient array at estimated parameter values
-  # XtXinv <- chol2inv(nMod$Rmat())
-  # dimnames(XtXinv) <- list(names(start), names(start))
-  #
-  # #formating the table of estimates, standard eroor, t value and significance of parameters
-  # se <- sqrt(diag(XtXinv) * resvar)
-  # tval <- res1$par/se
-  # param <- cbind(res1$par, se, tval, 2 * pt(abs(tval), rdf, lower.tail = FALSE))
-  # dimnames(param) <- list(model$paramnames, c("Estimate", "Std. Error",
-  #                                             "t value", "Pr(>|t|)"))
-  #
-  # #95% confidence interval
-  # conf <- matrix(c(param[,"Estimate"] - 2 * param[,"Std. Error"], param[,"Estimate"] + 2 * param[,"Std. Error"]),p,2)
-  # colnames(conf) <- c("2.5%","97.5%")
-  #
-  # sigConf <- cbind(param,conf)
-    sigConf <- matrix(NA,(P-1),6)
-    colnames(sigConf) <- c("Estimate", "Std. Error","t value", "Pr(>|t|)","2.5%","97.5%")
+
+  formul <- formula(gsub("==","~",as.character(model$formula)))
+  env <- environment(formul)
+  if (is.null(env)){
+    env <- parent.frame()
+    environment(formul) <- env
+  }
+
+  nMod <- stats:::nlsModel(formul,data,res1$par)
+
+  #number of parameters
+  p <- length(model$parLim)
+
+  #residuals degrees of freedom
+  rdf <- n - p
+
+  #residuals variance
+  resvar <- res1$value / rdf
+
+  #calculating the inverse of the upper triangular factor
+  #of the gradient array at estimated parameter values
+  XtXinv <- chol2inv(nMod$Rmat())
+  dimnames(XtXinv) <- list(names(start), names(start))
+
+  #formating the table of estimates, standard eroor, t value and significance of parameters
+  se <- sqrt(diag(XtXinv) * resvar)
+  tval <- res1$par/se
+  param <- cbind(res1$par, se, tval, 2 * pt(abs(tval), rdf, lower.tail = FALSE))
+  dimnames(param) <- list(model$paramnames, c("Estimate", "Std. Error",
+                                              "t value", "Pr(>|t|)"))
+
+  #95% confidence interval
+  conf <- matrix(c(param[,"Estimate"] - 2 * param[,"Std. Error"], param[,"Estimate"] + 2 * param[,"Std. Error"]),p,2)
+  colnames(conf) <- c("2.5%","97.5%")
+
+  sigConf <- cbind(param,conf)
+    #sigConf <- matrix(NA,(P-1),6)
+    #colnames(sigConf) <- c("Estimate", "Std. Error","t value", "Pr(>|t|)","2.5%","97.5%")
   #
    res$sigConf <- sigConf
 
