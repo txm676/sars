@@ -2,7 +2,7 @@
 
 multi_sar <- function(obj,data=NULL){
   
-  if (!(is.character(obj))  || (attr(m,"type") != "fitcollection") ) stop("obj must be a character or fitcollection")
+  if (!(is.character(obj))  || (attributes(m)$type != "fitcollection") ) stop("obj must be a character or fitcollection")
   
   if( is.character(obj) & is.null(data)) stop("if obj is character then data should be provided")
   

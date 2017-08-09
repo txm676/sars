@@ -2,9 +2,9 @@
 
 #' @export
 
-fit_collection <- function(...){
-  res <- list(...)
-  class(res) <- "sars"
-  attr(res, "type") <- "fitcollection"
-  invisible(res)
+fit_collection <- function(..., fits = list(...)){
+  #res <- list(...)
+  class(fits) <- "sars"
+  attr(fits, "type") <- "fitcollection"
+  invisible(fits)
 }
