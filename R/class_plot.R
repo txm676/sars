@@ -17,7 +17,7 @@
 
 
 plot.sars <- function(x, title = NULL, sh1 = 21, s1 = 3, s2 = 1, s3 = 14, s4 = 13, s5 = 15,
-                        c1 = "darkred", c2 = #5e5e5e, xl = "Area", yl = "Species richness",
+                        c1 = "darkred", c2 = "#5e5e5e", xl = "Area", yl = "Species richness",
                         p1 = 0, dimen = NULL, th = NULL)
 {
     if (attributes(x)$type == "fit"){
