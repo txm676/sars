@@ -27,7 +27,7 @@
 #' @export
 #' @importFrom stats lm
 
-lin_pow <- function(data, con = 1) {
+lin_pow <- function(data, con = 1, compare = F) {
 
   if (!(is.matrix(data) || is.data.frame(data))) stop("data must be a matrix or dataframe")
   if (is.matrix(data)) data <- as.data.frame(data)
@@ -46,6 +46,12 @@ lin_pow <- function(data, con = 1) {
   fv <- linearPower.fit$fitted.values
   linearPower.fit <- summary(linearPower.fit)
   res <- list(Model = linearPower.fit, calculated = fv, data = log.data)
+  
+  if (compare == T){
+    pow <- power(data)
+    res$power <- pow
+  }
+  
   class(res) <- "sars"
   attr(res, "type") <- "linpow"
   return(res)

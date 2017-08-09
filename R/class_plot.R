@@ -45,7 +45,7 @@ plot.sars <- function(x, title = NULL, sh1 = 21, s1 = 3, s2 = 1, s3 = 14, s4 = 1
   if (attributes(x)$type == "linpow"){
     if (is.null(title)) title <- "Log-log power"
     g1 <- int_plot(x, title, sh1, s1, s2, s3, s4, s5,
-                   c1, c2, xl, yl, p1, th)
+                   c1, c2, xl = "Log(area)", yl = "Log(species richness)", p1, th)
     return(g1)
   }
 }
