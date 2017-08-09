@@ -27,7 +27,7 @@
 #' @export
 
 
-summary.mmSAR2 <- function(object, ...){
+summary.sars <- function(object, ...){
 
   if (attributes(object)$Type == "lin_pow"){
     object2 <- object$Model
@@ -40,7 +40,7 @@ summary.mmSAR2 <- function(object, ...){
     fit_df <- data.frame(Area = object$Area, Fitted = object$Fitted) %>% round(2)
     res <- list(Summary = md_res, df = fit_df)
   }
-  class(res) <- "summary.mmSAR2"
+  class(res) <- "summary.sars"
   attr(res, "Type") <- attributes(object)$Type
   attr(res, "Dataset") <- attributes(object)$Dataset
   return(res)

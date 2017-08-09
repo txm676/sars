@@ -1,7 +1,7 @@
-#' @inherit  summary.mmSAR2
+#' @inherit  summary.sars
 #' @export
 
-print.summary.mmSAR2 <- function(x, ...){
+print.summary.sars <- function(x, ...){
   if (attributes(x)$Type == "lin_pow") cat(" Data = ",attributes(x)$Dataset, "\n",
                                            "Model = ", "log-log power", "\n")
   cat("c =", x$Summary[1], "\n")
