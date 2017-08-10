@@ -22,8 +22,8 @@ obs_shape <- function(x){
         }
           nMinMax <- length(sigCh)
         if (nMinMax != 0){
-          dc <- as.list(match.call()) 
-          if (dc == "d1") {
+          dc <- as.list(match.call())
+          if (as.character(dc$fun)[3] == "d1.fun") {
             if (nMinMax > 1){
               warning("more than one minimum and/or maximum in the derivative,
                       check the model plot to asses whether the model fit
