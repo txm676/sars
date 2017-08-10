@@ -22,14 +22,15 @@ obs_shape <- function(x){
         }
           nMinMax <- length(sigCh)
         if (nMinMax != 0){
-          if (func == "d1") {
+          dc <- as.list(match.call()) 
+          if (dc == "d1") {
             if (nMinMax > 1){
               warning("more than one minimum and/or maximum in the derivative,
                       check the model plot to asses whether the model fit
                       looks sensible")
               for (i in 1:nMinMax) {
                 sigBef <- signs[sigCh[i]]
-                sigAft <- signs[sigCh[i]+1]
+                sigAft <- signs[sigCh[i] + 1]
                 if (sigBef == -1 & sigAft == 1){
                   minMax[i] <- "minima"
                   }
@@ -37,7 +38,7 @@ obs_shape <- function(x){
                   minMax[i] <- "maxima"
                   }	
               }#eo for i
-            }else{
+            } else {
               sigBef <- signs[sigCh]
               sigAft <- signs[sigCh + 1]
               if (sigBef == -1 & sigAft == 1){
@@ -55,8 +56,6 @@ obs_shape <- function(x){
                             uniroot(fun, c(Areas[sigCh[x]], 
                                            Areas[sigCh[x] + 1]), par = pars)$root},
                             FUN.VALUE = double(1))
-  
-          
           res <- list(sigCh = sigCh, roots = roots, minMax = minMax)
           return(res)
         } else {
@@ -76,7 +75,7 @@ obs_shape <- function(x){
       dif <- vector()
       
       for (i in seq_along(ts)) {
-        dif[i] <- (model$mod.fun((ts[i]*min.area+(1-ts[i])*max.area),pars)) - (ts[i]*model$mod.fun(min.area,pars) + (1-ts[i])*model$mod.fun(max.area,pars))
+        dif[i] <- (model$mod.fun((ts[i]  * min.area + (1 - ts[i]) * max.area), pars)) - (ts[i]*model$mod.fun(min.area,pars) + (1-ts[i])*model$mod.fun(max.area,pars))
       }#eo for
       #is linear?
       if (sum(abs(dif) < 0.001) == length(ts)) possFits = c(1, 0, 0, 0)
