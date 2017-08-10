@@ -96,7 +96,7 @@ rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
   res3 = list(AIC=AIC, AICc=AICc, BIC=BIC, R2=R2, R2a=R2a)
 
   #convergence verif -> 71 is R2<=0
-  verge <- ifelse(res$convergence==0, TRUE, FALSE)
+  verge <- ifelse(res1$convergence==0, TRUE, FALSE)
   verge <- ifelse(R2 <= 0, FALSE, TRUE)
 
   res <- c(res1,list(verge=verge,normaTest=normaTest,homoTest=homoTest),res2,res3)
@@ -146,14 +146,14 @@ rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
    res$sigConf <- sigConf
    
    #nls type output
-   # info <- 1
-   # info.mess <- "Relative error in the sum of squares is at most `ftol'."
-   # #if(res1$convergence != 0) info <- 
-   # convinfo <- list(isConv = verge, finIter = res$counts[1], finTol = sqrt(.Machine$double.eps), 
-   #                  stopCode = NLS$info, stopMessage = NLS$message)
-   # nls.out <- list(m = nMod, convinfo = )
-   # 
-   
+   info <- 1
+   info.mess <- "Relative error in the sum of squares is at most `ftol'."
+   #if(res1$convergence != 0) info <-
+   convinfo <- list(isConv = verge, finIter = res$counts[1], finTol = sqrt(.Machine$double.eps),
+                    stopCode = info, stopMessage = info.mess)
+   #nls.out <- list(m = nMod, convinfo = convinfo)
+
+
    
    
    
