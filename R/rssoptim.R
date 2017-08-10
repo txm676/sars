@@ -143,23 +143,8 @@ rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
     #sigConf <- matrix(NA,(P-1),6)
     #colnames(sigConf) <- c("Estimate", "Std. Error","t value", "Pr(>|t|)","2.5%","97.5%")
   #
-   res$sigConf <- sigConf
+  res$sigConf <- sigConf
    
-   #nls type output
-   info <- 1
-   info.mess <- "Relative error in the sum of squares is at most `ftol'."
-   #if(res1$convergence != 0) info <-
-   convinfo <- list(isConv = verge, finIter = res$counts[1], finTol = sqrt(.Machine$double.eps),
-                    stopCode = info, stopMessage = info.mess)
-   #nls.out <- list(m = nMod, convinfo = convinfo)
-
-
-   
-   
-   
-   
-   
-
   invisible(res)
 
 }#eo rssoptim
