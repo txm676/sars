@@ -25,7 +25,7 @@ rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
   rssfun <- model$rss.fun
 
   #optimization (first result)
-  res1 <- optim(startMod,rssfun,hessian=F,data=data,method=algo,control=list(maxit=50000))
+  res1 <- optim(startMod, rssfun, hessian = TRUE, data = data, method = algo, control = list(maxit = 50000) )
 
   #Backtransformation of parameters values
   res1$par  <-  backLink(res1$par,model$parLim)
@@ -37,7 +37,7 @@ rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
   S.calc <- model$mod.fun(data$A,res1$par)
 
   #residuals
-  residu  <-  as.vector(data$S - S.calc)
+  residu  <-  as.vector(S.calc - data$S)
 
   #second result
   res2  <-  list(startvalues=start,data=data,model=model,calculated=S.calc,residuals=residu)
@@ -96,7 +96,8 @@ rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
   res3 = list(AIC=AIC, AICc=AICc, BIC=BIC, R2=R2, R2a=R2a)
 
   #convergence verif -> 71 is R2<=0
-  verge <- ifelse(R2<=0,71,69)
+  verge <- ifelse(res$convergence==0, TRUE, FALSE)
+  verge <- ifelse(R2 <= 0, FALSE, TRUE)
 
   res <- c(res1,list(verge=verge,normaTest=normaTest,homoTest=homoTest),res2,res3)
 
@@ -143,6 +144,21 @@ rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
     #colnames(sigConf) <- c("Estimate", "Std. Error","t value", "Pr(>|t|)","2.5%","97.5%")
   #
    res$sigConf <- sigConf
+   
+   #nls type output
+   # info <- 1
+   # info.mess <- "Relative error in the sum of squares is at most `ftol'."
+   # #if(res1$convergence != 0) info <- 
+   # convinfo <- list(isConv = verge, finIter = res$counts[1], finTol = sqrt(.Machine$double.eps), 
+   #                  stopCode = NLS$info, stopMessage = NLS$message)
+   # nls.out <- list(m = nMod, convinfo = )
+   # 
+   
+   
+   
+   
+   
+   
 
   invisible(res)
 

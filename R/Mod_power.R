@@ -2,7 +2,7 @@
 
 #' @export
 
-sar_power <- function(data, custstart = NULL, normtest = "lillie"){
+sar_power <- function(data=galap, custstart = NULL, normtest = "lillie"){
 
   if (!(is.matrix(data) || is.data.frame(data))) stop("data must be a matrix or dataframe")
   if (is.matrix(data)) data <- as.data.frame(data)
@@ -16,7 +16,8 @@ sar_power <- function(data, custstart = NULL, normtest = "lillie"){
     name = c("Power"),
     formula = expression(S == c * A ^ z),
     exp = expression(c * A ^ z),
-    theor_shape = "convex",
+    shape="convex",
+    asymp=function(pars)FALSE,
     parLim = c("R", "R"),
     init = function(data){
       if (any(data$S == 0)){
