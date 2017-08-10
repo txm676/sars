@@ -19,6 +19,7 @@ obs_shape <- function(x){
         
         for (i in 1:(length(signs)-1)) {
           if (sign(signs[i]) != sign(signs[i + 1])) sigCh <- c(sigCh, i)
+        }
           nMinMax <- length(sigCh)
         if (nMinMax != 0){
           if (func == "d1") {
@@ -50,13 +51,12 @@ obs_shape <- function(x){
           }#eo if
           
           #roots
-          roots = vector()
           roots <- vapply(seq_along(sigCh), FUN = function(x){
                             uniroot(fun, c(Areas[sigCh[x]], 
                                            Areas[sigCh[x] + 1]), par = pars)$root},
                             FUN.VALUE = double(1))
   
-          }
+          
           res <- list(sigCh = sigCh, roots = roots, minMax = minMax)
           return(res)
         } else {
@@ -82,8 +82,8 @@ obs_shape <- function(x){
       if (sum(abs(dif) < 0.001) == length(ts)) possFits = c(1, 0, 0, 0)
 
       #is it convex upward/downward?
-      if ((sum(abs(dif) < 0.001) != length(ts)) & (sum(dif <= 0) == length(dif))) possFits= c(0,0,1,0)
-      if ((sum(abs(dif)<0.001)!=length(ts))  & (sum(dif>=0) == length(dif))) possFits= c(0,1,0,0)
+      if ((sum(abs(dif) < 0.001) != length(ts)) & (sum(dif <= 0) == length(dif))) possFits = c(0,0,1,0)
+      if ((sum(abs(dif) < 0.001) !=length(ts))  & (sum(dif >= 0) == length(dif))) possFits = c(0,1,0,0)
       
       #is the asymptote reached?
       asymptote <- model$asymp(pars)
