@@ -36,8 +36,9 @@ sar_expo <- function(data, custstart = NULL, normtest = "lillie"){
   model <- compmod(model)
   
   fit <- rssoptim(model, data, custstart, normtest, algo = "Nelder-Mead")
-  
-  #fit$model <- model
+  obs <- obs_shape(fit)
+  fit$observed_shape <- obs$fitShape
+  fit$asymptote <- obs$asymp
   
   class(fit) <- "sars"
   attr(fit, "type") <- "fit"

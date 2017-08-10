@@ -21,21 +21,21 @@ obs_shape <- function(x){
           if (sign(signs[i]) != sign(signs[i + 1])) sigCh <- c(sigCh, i)
         }
           nMinMax <- length(sigCh)
-        if (nMinMax != 0){
-          dc <- as.list(match.call())
-          if (as.character(dc$fun)[3] == "d1.fun") {
-            if (nMinMax > 1){
-              warning("more than one minimum and/or maximum in the derivative,
+          if (nMinMax != 0){
+            dc <- as.list(match.call())
+            if (as.character(dc$fun)[3] == "d1.fun") {
+              if (nMinMax > 1){
+                warning("more than one minimum and/or maximum in the derivative,
                       check the model plot to asses whether the model fit
                       looks sensible")
-              for (i in 1:nMinMax) {
-                sigBef <- signs[sigCh[i]]
-                sigAft <- signs[sigCh[i] + 1]
-                if (sigBef == -1 & sigAft == 1){
-                  minMax[i] <- "minima"
+                for (i in 1:nMinMax) {
+                  sigBef <- signs[sigCh[i]]
+                  sigAft <- signs[sigCh[i] + 1]
+                  if (sigBef == -1 & sigAft == 1){
+                     minMax[i] <- "minima"
                   }
-                if (sigBef == 1 & sigAft == -1){
-                  minMax[i] <- "maxima"
+                  if (sigBef == 1 & sigAft == -1){
+                     minMax[i] <- "maxima"
                   }	
               }#eo for i
             } else {
@@ -74,9 +74,11 @@ obs_shape <- function(x){
       ts <- seq(0,1, .01)
       dif <- vector()
       
-      for (i in seq_along(ts)) {
-        dif[i] <- (model$mod.fun((ts[i]  * min.area + (1 - ts[i]) * max.area), pars)) - (ts[i]*model$mod.fun(min.area,pars) + (1-ts[i])*model$mod.fun(max.area,pars))
-      }#eo for
+      dif <- vapply(seq_along(ts), FUN = function(x){
+        model$mod.fun((ts[x]  * min.area + (1 - ts[x]) * max.area), pars) - 
+        (ts[x] * model$mod.fun(min.area, pars) + (1 - ts[x]) * model$mod.fun(max.area, pars))
+      }, FUN.VALUE = double(1))
+      
       #is linear?
       if (sum(abs(dif) < 0.001) == length(ts)) possFits = c(1, 0, 0, 0)
 
@@ -106,7 +108,7 @@ obs_shape <- function(x){
       
       #if the model is sigmoid but the shape study failed then we will said the fit to be sigmoid
       if (model$shape == "sigmoid" & sum(possFits) == 0) {
-          message("observed shape algorithm failed: observed shape (sigmoid) set to
+          message("observed shape algorithm failed: observed shape set to
                 theoretical shape (sigmoid)")
           possFits <- c(0, 0, 0, 1)
       }
