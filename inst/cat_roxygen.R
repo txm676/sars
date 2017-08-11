@@ -1,9 +1,17 @@
 
 
-cat_roxygen <- function(model){
+cat_roxygen <- function(model, funName, fileName){
   
-  cat(paste0("#' ",model$name,"\n"))
-  cat("\n")
+  cat1 <- function(...){cat(..., file = fileName, append = T)}
+  
+  cat1(paste0("#' ","Fit the ", model$name," model", "\n"))
+  cat1("\n")
+  cat1(paste0("#' @description ","Fit the ", model$name," model to SAR data", "\n"))
+  cat1(paste0("#' @usage ", funName,"(data, custstart = NULL, normtest = "'lillie'")", "\n"))
+  
+  
+  
+  
   
   cat("#@'export \n")
   
