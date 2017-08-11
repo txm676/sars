@@ -21,7 +21,7 @@ model_factory <- function(model,overwrite=FALSE){
   
   
   #cat the roxygen2 comments
-  cat_roxygen(model)
+  cat_roxygen(model, funName)
   
   
   
