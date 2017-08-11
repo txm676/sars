@@ -2,7 +2,7 @@
 
 #' @export
 
-sar_power <- function(data=galap, custstart = NULL, normtest = "lillie"){
+sar_power <- function(data=galap, start = NULL){
 
   if (!(is.matrix(data) || is.data.frame(data))) stop("data must be a matrix or dataframe")
   if (is.matrix(data)) data <- as.data.frame(data)
