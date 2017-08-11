@@ -6,6 +6,8 @@
 
 model_factory <- function(model,overwrite=FALSE){
   
+  cat1 <- function(...){cat(..., file = fileName, append = T)}
+  
   #construct model file/function name
   modName <- tolower(model$name)
   funName <- paste0("sar_",modName)
@@ -21,7 +23,7 @@ model_factory <- function(model,overwrite=FALSE){
   cat_roxygen(model, funName, fileName)
   
   #cat the function start
-  
+  cat1(paste0(funName," <- function(data=galap, start = NULL){","\n"))
   
   
 }#eo model_factory
