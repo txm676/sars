@@ -17,12 +17,10 @@ model_factory <- function(model,overwrite=FALSE){
   fExists <- file.exists(file.path(packRDir,fileName))
   if(fExists & !overwrite) stop("model already exists. If you know what you do, please set overwrite=TRUE")
   
-  
-  
-  
   #cat the roxygen2 comments
-  cat_roxygen(model, funName)
+  cat_roxygen(model, funName, fileName)
   
+  #cat the function start
   
   
   
