@@ -53,7 +53,7 @@ lin_pow <- function(data, con = 1, compare = F) {
   }
   
   class(res) <- "sars"
-  attr(res, "type") <- "linpow"
+  attr(res, "type") <- "lin_pow"
   return(res)
 }
 
