@@ -1,4 +1,4 @@
-rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
+rssoptim <- function(model,data,custstart=NULL,algo="Nelder-Mead"){
 
   #initial parameters
   if(is.null(custstart)){
@@ -49,23 +49,17 @@ rssoptim <- function(model,data,custstart=NULL,normtest,algo="Nelder-Mead"){
 
   l <- data[[2]]
 
-  if(normtest=="lillie"){
+  if(length(l)<5) {
 
-    if(length(l)<5) {
+      warning("The Lilliefors test cannot be used with less than 5 data points \n")
 
-      error("The Lilliefors test cannot be used with less than 5 data points -> switch to the Shapiro test (3 data points still required) \n")
+  }#eo if length
 
-      }#eo if length
-  }#eo if lillie
+  if(length(l)<3) {
 
-  if(normtest=="shapiro"){
+      warning("The Shapiro test cannot be used with less than 3 data points -> switch to 'kolmo' or 'none' \n")
 
-    if(length(l)<3) {
-
-      error("The Shapiro test cannot be used with less than 3 data points -> switch to 'kolmo' or 'none' \n")
-
-    }#eo if length
-  }#eo if shapiro
+  }#eo if length
 
   normaTest <- switch(normtest, "shapiro" = shapiro.test(residu) , "lillie" = nortest::lillie.test(residu) , "kolmo" = ks.test(residu, "pnorm"), "none" = list(statistic=NA,p.value=NA) )
 

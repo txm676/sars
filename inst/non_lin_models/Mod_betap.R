@@ -1,7 +1,5 @@
-
 #Beta-P function (cumulative)
-
-betap <- list(
+model <- list(
   name=c("Beta-P cumulative"),
   formula=expression(S == d*(1-(1+(A/c)^z)^-f) ),
   exp=expression(d*(1-(1+(A/c)^z)^-f)),

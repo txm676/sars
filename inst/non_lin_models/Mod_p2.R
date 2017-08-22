@@ -1,7 +1,5 @@
-
 # PERSISTENCE FUNCTION 2 (TJORVE 2009)
-
-P2 <- list(
+model <- list(
   name=c("Persistence function 2"),
   formula=expression(s == c*A^z * exp(-d/A)),
   exp=expression(c*A^z * exp(-d/A)),

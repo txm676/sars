@@ -1,7 +1,6 @@
 # POWER MODEL BIS (ROSENSWEIG 1995)
-
-power_R <- list(
-  name=c("Power_R"),
+model <- list(
+  name=c("PowerR"),
   formula=expression(s==f + c*a^z),
   exp=expression(f + c*A^z),
   shape="convex",

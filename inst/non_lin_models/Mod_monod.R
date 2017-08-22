@@ -1,7 +1,5 @@
-
 # MONOD CURVE (MONOD 1950, Willimas et al. 2009 formula)
-
-monod <- list(
+model <- list(
   name=c("monod"),
   formula=expression(s==over(d,1+c*a^(-1))),
   exp=expression(d/(1+c*A^(-1))),

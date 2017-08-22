@@ -1,6 +1,5 @@
 #NEGATIVE EXPONENTIAL (Holdridge et al. 1971)
-
-negexpo <- list(
+model <- list(
   name=c("Negative exponential"),
   formula=expression(s == d*(1 - exp(-z*a) )),
   exp=expression(d*(1-exp(-z*A))),

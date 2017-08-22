@@ -1,6 +1,5 @@
 #Asymptotic Regression
-
-asymp <- list(
+model <- list(
   name=c("Asymptotic regression"),
   formula=expression(S == d - c*z^A),
   exp=expression(d - c*z^A),

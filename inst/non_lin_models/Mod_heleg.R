@@ -1,7 +1,5 @@
-
 #LOGISTIC FUNCTION (HE & LEGENDRE 1996)
-
-heleg <- list(
+model <- list(
   name=c("Logistic (He & Legendre)"),
   formula=expression(S == over( c , (f + A^(-z)) ) ),
   exp=expression(c/(f + A^(-z))),

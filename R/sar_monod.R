@@ -1,0 +1,49 @@
+#' Fit the Asymptotic regression model
+
+#' @description Fit the Asymptotic regression model to SAR data
+#' @usage sar_monod(data, custstart = NULL, normtest = 'lillie')
+#' @param data A dataset in the form of a dataframe with two columns: 
+#'   the first with island/site areas, and the second with the species richness
+#'   of each island/site.
+#' @return 
+#' @examples
+#' data(galap)
+#' fit <- sar_monod(galap)
+#' summary(fit)
+#' plot(fit)
+#' @export
+
+sar_monod <- function(data=galap, start = NULL){
+if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe') 
+if (is.matrix(data)) data <- as.data.frame(data) 
+if (anyNA(data)) stop('NAs present in data') 
+data <- data[order(data[,1]),] 
+colnames(data) <- c('A','S') 
+# MONOD CURVE (MONOD 1950, Willimas et al. 2009 formula)
+model <- list(
+  name=c("monod"),
+  formula=expression(s==over(d,1+c*a^(-1))),
+  exp=expression(d/(1+c*A^(-1))),
+  shape="convex",
+  asymp=function(pars)pars["d"],
+  #limits for parameters
+  parLim = c("Rplus","Rplus"),
+  custStart=function(data)c(quantile(data$A,c(0.25)),max(data$S)),
+  #initials values function
+  init=function(data){
+    if(any(data$S==0)){data=data[data$S!=0,]}
+    d=as.real(max(data$A)+max(data$S)/4)
+    c=data[[1]]*(d/data$S - 1)
+    c(d,quantile(c,c(0.25)))
+  }
+)
+
+model <- compmod(model) 
+fit <- rssoptim(model = model, data = data, custstart = start, normtest = 'lillie', algo = 'Nelder-Mead') 
+obs <- obs_shape(fit) 
+fit$observed_shape <- obs$fitShape 
+fit$asymptote <- obs$asymp 
+class(fit) <- 'sars' 
+attr(fit, 'type') <- 'fit' 
+return(fit) 
+}#end of sar_monod

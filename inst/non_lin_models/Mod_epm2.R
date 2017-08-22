@@ -1,6 +1,5 @@
 # EXTENDED POWER MODEL 2 (TJORVE 2009)
-
-epm2 <- list(
+model <- list(
   name=c("Extended Power model 2"),
   formula=expression(s==c*a^(z-(d/a))),
   exp=expression(c*A^(z-(d/A))),

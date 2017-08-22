@@ -1,19 +1,5 @@
 # EXPONENTIAL MODEL (GLEASON 1922)
-
-#' @export
-
-sar_expo <- function(data, custstart = NULL, normtest = "lillie"){
-  
-  if (!(is.matrix(data) || is.data.frame(data))) stop("data must be a matrix or dataframe")
-  if (is.matrix(data)) data <- as.data.frame(data)
-  if (anyNA(data)) stop("NAs present in data")
-  normtest <- match.arg(normtest, c("none", "shapiro", "kolmo", "lillie"))
-  
-  data <- data[order(data[,1]),]
-  colnames(data) <- c("A", "S")
-  
-
-  model <- list(
+model <- list(
     name=c("Exponential"),
     formula=expression(S==c+z*log(A)),
     exp=expression(c+z*log(A)),
@@ -30,18 +16,4 @@ sar_expo <- function(data, custstart = NULL, normtest = "lillie"){
       names(par)=c("c","z")
       par
     }
-  )
-  
-  
-  model <- compmod(model)
-  
-  fit <- rssoptim(model, data, custstart, normtest, algo = "Nelder-Mead")
-  obs <- obs_shape(fit)
-  fit$observed_shape <- obs$fitShape
-  fit$asymptote <- obs$asymp
-  
-  class(fit) <- "sars"
-  attr(fit, "type") <- "fit"
-  return(fit)
-}
-
+)

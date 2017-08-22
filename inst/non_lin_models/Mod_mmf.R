@@ -1,8 +1,5 @@
-
-
 #"Morgan Mercier Family" curve (Williams et al. 2009 formula)
-
-mmf <- list(
+model <- list(
   name=c("MMF"),
   formula=expression(s==over(d,1+c*a^(-z))),
   exp=expression(d/(1+c*A^(-z))),

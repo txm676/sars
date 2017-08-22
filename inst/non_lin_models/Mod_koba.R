@@ -1,7 +1,5 @@
-
 # Kobayashi logarithmic (KOBAYASHI 1975), convex upward, no asymptote
-
-koba <- list(
+model <- list(
   name=c("Kobayashi"),
   formula=expression(s==c*log(1+ a/z)),
   exp=expression(c*log(1+ A/z)),

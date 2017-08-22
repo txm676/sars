@@ -1,7 +1,5 @@
-
 #CUMULATIVE WEIBULL DISTRIBUTION with 3 parameters
-
-weibull3 <- list(
+model <- list(
   name=c("Cumulative Weibull 3 par."),
   formula=expression(S == d(1 - exp(-c*A^z)) ),
   exp=expression(d*(1 - exp(-c*A^z)) ),

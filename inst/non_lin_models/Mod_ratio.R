@@ -1,7 +1,5 @@
-
 #RATIONAL FUNCITON ratkowski (1990)
-
-list(
+model <- list(
   name=c("Rational function"),
   formula=expression(S == over( (c + z*A) , (1+d*A) ) ),
   exp=expression((c + z*A)/(1+d*A)),
