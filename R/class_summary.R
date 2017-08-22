@@ -33,7 +33,7 @@ summary.sars <- function(object){
     object2 <- object$Model
     logc <- object2$coefficients[1, 1]
     z <- object2$coefficients[2, 1]
-    z.sig = object2$coefficients[2, 4]
+    z.sig <- object2$coefficients[2, 4]
     r2 <- object2$r.squared
     md_res <- c(logc, z, z.sig, r2) %>% round(2)
     names(md_res) <- c("logc", "z", "z.sig", "r2")
@@ -46,15 +46,20 @@ summary.sars <- function(object){
     }
   }
   
-  
-  
-  
-  
-  
-  
+  if (attributes(object)$type == "fit"){
+    name <- object$model$name
+    resid <- object$residuals
+    pars <- object$par
+    ic <- object$AIC
+    R2 <- object$R2
+    shape <- object$observed_shape
+    asymp <- object$asymptote
+    res <- list("name" = name, "residuals" = round(resid, 1), "par" = round(pars, 2), "AIC" = round(ic, 2),
+                "R2" = round(R2, 2), "observed_shape" = shape, "asymptote" = asymp)
+  }
   
   class(res) <- "summary.sars"
-  attr(res, "type") <- attributes(object)$type
+  attr(res, "type") <- attr(object, "type")
   return(res)
 }
 

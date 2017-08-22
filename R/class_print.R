@@ -1,7 +1,6 @@
 #' @export
 
 
-##return lm OBJECT
 
 print.summary.sars <- function(object){
   
@@ -17,5 +16,15 @@ print.summary.sars <- function(object){
           "z =", object$power[2])
     }
   }
+  
+  if (attributes(object)$type == "fit"){
+    cat("\n", "Model:","\n", paste(object$name), "\n", sep = "")
+    cat("\n", "Residuals: ","\n", paste(object$residuals), "\n", sep = "")
+    cat("\n", "Parameters: ","\n", paste(object$par), "\n", sep = "")
+  
+  
+  }
+  
+  
 }
   
