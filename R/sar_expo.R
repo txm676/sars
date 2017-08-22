@@ -1,6 +1,6 @@
-#' Fit the Asymptotic regression model
+#' Fit the Exponential model
 
-#' @description Fit the Asymptotic regression model to SAR data
+#' @description Fit the Exponential model to SAR data
 #' @usage sar_expo(data, custstart = NULL, normtest = 'lillie')
 #' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness

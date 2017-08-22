@@ -2,7 +2,7 @@
 % Please edit documentation in R/sar_betap.R
 \name{sar_betap}
 \alias{sar_betap}
-\title{Fit the Asymptotic regression model}
+\title{Fit the Beta-P cumulative model}
 \usage{
 sar_betap(data, custstart = NULL, normtest = 'lillie')
 }
@@ -12,7 +12,7 @@ the first with island/site areas, and the second with the species richness
 of each island/site.}
 }
 \description{
-Fit the Asymptotic regression model to SAR data
+Fit the Beta-P cumulative model to SAR data
 }
 \examples{
 data(galap)

@@ -1,6 +1,6 @@
-#' Fit the Asymptotic regression model
+#' Fit the Persistence function 2 model
 
-#' @description Fit the Asymptotic regression model to SAR data
+#' @description Fit the Persistence function 2 model to SAR data
 #' @usage sar_p2(data, custstart = NULL, normtest = 'lillie')
 #' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness
@@ -22,7 +22,7 @@ colnames(data) <- c('A','S')
 # PERSISTENCE FUNCTION 2 (TJORVE 2009)
 model <- list(
   name=c("Persistence function 2"),
-  formula=expression(s == c*A^z * exp(-d/A)),
+  formula=expression(S == c*A^z * exp(-d/A)),
   exp=expression(c*A^z * exp(-d/A)),
   mod=s~c*a^z * exp(-d/a),
   shape="sigmoid",

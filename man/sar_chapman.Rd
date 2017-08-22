@@ -2,7 +2,7 @@
 % Please edit documentation in R/sar_chapman.R
 \name{sar_chapman}
 \alias{sar_chapman}
-\title{Fit the Asymptotic regression model}
+\title{Fit the Chapman Richards model}
 \usage{
 sar_chapman(data, custstart = NULL, normtest = 'lillie')
 }
@@ -12,7 +12,7 @@ the first with island/site areas, and the second with the species richness
 of each island/site.}
 }
 \description{
-Fit the Asymptotic regression model to SAR data
+Fit the Chapman Richards model to SAR data
 }
 \examples{
 data(galap)

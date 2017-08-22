@@ -1,6 +1,6 @@
-#' Fit the Asymptotic regression model
+#' Fit the Gompertz model
 
-#' @description Fit the Asymptotic regression model to SAR data
+#' @description Fit the Gompertz model to SAR data
 #' @usage sar_gompertz(data, custstart = NULL, normtest = 'lillie')
 #' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness

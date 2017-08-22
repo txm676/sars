@@ -2,7 +2,7 @@
 % Please edit documentation in R/sar_ratio.R
 \name{sar_ratio}
 \alias{sar_ratio}
-\title{Fit the Asymptotic regression model}
+\title{Fit the Rational function model}
 \usage{
 sar_ratio(data, custstart = NULL, normtest = 'lillie')
 }
@@ -12,7 +12,7 @@ the first with island/site areas, and the second with the species richness
 of each island/site.}
 }
 \description{
-Fit the Asymptotic regression model to SAR data
+Fit the Rational function model to SAR data
 }
 \examples{
 data(galap)

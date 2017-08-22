@@ -1,6 +1,6 @@
-#' Fit the Asymptotic regression model
+#' Fit the Cumulative Weibull 4 par. model
 
-#' @description Fit the Asymptotic regression model to SAR data
+#' @description Fit the Cumulative Weibull 4 par. model to SAR data
 #' @usage sar_weibull4(data, custstart = NULL, normtest = 'lillie')
 #' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness

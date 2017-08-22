@@ -2,7 +2,7 @@
 % Please edit documentation in R/sar_powerR.R
 \name{sar_powerR}
 \alias{sar_powerR}
-\title{Fit the Asymptotic regression model}
+\title{Fit the PowerR model}
 \usage{
 sar_powerR(data, custstart = NULL, normtest = 'lillie')
 }
@@ -12,7 +12,7 @@ the first with island/site areas, and the second with the species richness
 of each island/site.}
 }
 \description{
-Fit the Asymptotic regression model to SAR data
+Fit the PowerR model to SAR data
 }
 \examples{
 data(galap)

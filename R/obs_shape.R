@@ -89,7 +89,7 @@ obs_shape <- function(x){
       #is the asymptote reached?
       asymptote <- model$asymp(pars)
       if (asymptote){
-        if (asymptote > range(data$data$S)[1] & asymptote < range(data$data$S)[2]) asymp = T
+        if (asymptote > range(data$S)[1] & asymptote < range(data$S)[2]) asymp = T
       }#eo if 
       
       roots.d1 <- tryCatch(getRoots(model$d1.fun, Areas, pars), error = function(e) list(sigCh = NA, roots = NA, minMax = NA))

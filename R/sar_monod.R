@@ -1,6 +1,6 @@
-#' Fit the Asymptotic regression model
+#' Fit the Monod model
 
-#' @description Fit the Asymptotic regression model to SAR data
+#' @description Fit the Monod model to SAR data
 #' @usage sar_monod(data, custstart = NULL, normtest = 'lillie')
 #' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness
@@ -21,8 +21,8 @@ data <- data[order(data[,1]),]
 colnames(data) <- c('A','S') 
 # MONOD CURVE (MONOD 1950, Willimas et al. 2009 formula)
 model <- list(
-  name=c("monod"),
-  formula=expression(s==over(d,1+c*a^(-1))),
+  name=c("Monod"),
+  formula=expression(S==d/(1+c*A^(-1))),
   exp=expression(d/(1+c*A^(-1))),
   shape="convex",
   asymp=function(pars)pars["d"],
@@ -32,7 +32,7 @@ model <- list(
   #initials values function
   init=function(data){
     if(any(data$S==0)){data=data[data$S!=0,]}
-    d=as.real(max(data$A)+max(data$S)/4)
+    d=as.double(max(data$A)+max(data$S)/4)
     c=data[[1]]*(d/data$S - 1)
     c(d,quantile(c,c(0.25)))
   }

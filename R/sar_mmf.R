@@ -1,6 +1,6 @@
-#' Fit the Asymptotic regression model
+#' Fit the MMF model
 
-#' @description Fit the Asymptotic regression model to SAR data
+#' @description Fit the MMF model to SAR data
 #' @usage sar_mmf(data, custstart = NULL, normtest = 'lillie')
 #' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness
@@ -22,7 +22,7 @@ colnames(data) <- c('A','S')
 #"Morgan Mercier Family" curve (Williams et al. 2009 formula)
 model <- list(
   name=c("MMF"),
-  formula=expression(s==over(d,1+c*a^(-z))),
+  formula=expression(S==d/(1+c*A^(-z))),
   exp=expression(d/(1+c*A^(-z))),
   shape="sigmoid",
   asymp=function(pars)pars["d"],

@@ -1,6 +1,6 @@
-#' Fit the Asymptotic regression model
+#' Fit the Rational function model
 
-#' @description Fit the Asymptotic regression model to SAR data
+#' @description Fit the Rational function model to SAR data
 #' @usage sar_ratio(data, custstart = NULL, normtest = 'lillie')
 #' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness
@@ -22,7 +22,7 @@ colnames(data) <- c('A','S')
 #RATIONAL FUNCITON ratkowski (1990)
 model <- list(
   name=c("Rational function"),
-  formula=expression(S == over( (c + z*A) , (1+d*A) ) ),
+  formula=expression(S == (c + z*A)/(1+d*A)),
   exp=expression((c + z*A)/(1+d*A)),
   shape="convex",
   asymp=function(pars)pars["z"]/pars["d"],

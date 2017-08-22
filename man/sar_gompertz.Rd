@@ -2,7 +2,7 @@
 % Please edit documentation in R/sar_gompertz.R
 \name{sar_gompertz}
 \alias{sar_gompertz}
-\title{Fit the Asymptotic regression model}
+\title{Fit the Gompertz model}
 \usage{
 sar_gompertz(data, custstart = NULL, normtest = 'lillie')
 }
@@ -12,7 +12,7 @@ the first with island/site areas, and the second with the species richness
 of each island/site.}
 }
 \description{
-Fit the Asymptotic regression model to SAR data
+Fit the Gompertz model to SAR data
 }
 \examples{
 data(galap)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/sar_expo.R
 \name{sar_expo}
 \alias{sar_expo}
-\title{Fit the Asymptotic regression model}
+\title{Fit the Exponential model}
 \usage{
 sar_expo(data, custstart = NULL, normtest = 'lillie')
 }
@@ -12,7 +12,7 @@ the first with island/site areas, and the second with the species richness
 of each island/site.}
 }
 \description{
-Fit the Asymptotic regression model to SAR data
+Fit the Exponential model to SAR data
 }
 \examples{
 data(galap)

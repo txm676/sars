@@ -1,7 +1,7 @@
 # PERSISTENCE FUNCTION 2 (TJORVE 2009)
 model <- list(
   name=c("Persistence function 2"),
-  formula=expression(s == c*A^z * exp(-d/A)),
+  formula=expression(S == c*A^z * exp(-d/A)),
   exp=expression(c*A^z * exp(-d/A)),
   mod=s~c*a^z * exp(-d/a),
   shape="sigmoid",

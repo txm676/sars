@@ -1,7 +1,7 @@
 # EXTENDED POWER MODEL 1 (TJORVE 2009)
 model <- list(
   name=c("Extended Power model 1"),
-  formula=expression(s==c*a^(z*a^-d)),
+  formula=expression(S==c*A^(z*A^-d)),
   exp=expression(c*A^(z*A^-d)),
   shape="sigmoid",
   asymp=function(pars)FALSE,

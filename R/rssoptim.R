@@ -99,7 +99,7 @@ rssoptim <- function(model,data,custstart=NULL,algo="Nelder-Mead"){
   verge <- ifelse(res1$convergence==0, TRUE, FALSE)
   verge <- ifelse(R2 <= 0, FALSE, TRUE)
 
-  res <- c(res1,list(verge=verge,normaTest=normaTest,homoTest=homoTest),res2,res3)
+  res <- c(res1,list(verge=verge),res2,res3)
 
   #estimates signifiance and confidence interval (95%)
 

@@ -1,6 +1,6 @@
-#' Fit the Asymptotic regression model
+#' Fit the Extended Power model 1 model
 
-#' @description Fit the Asymptotic regression model to SAR data
+#' @description Fit the Extended Power model 1 model to SAR data
 #' @usage sar_epm1(data, custstart = NULL, normtest = 'lillie')
 #' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness
@@ -22,7 +22,7 @@ colnames(data) <- c('A','S')
 # EXTENDED POWER MODEL 1 (TJORVE 2009)
 model <- list(
   name=c("Extended Power model 1"),
-  formula=expression(s==c*a^(z*a^-d)),
+  formula=expression(S==c*A^(z*A^-d)),
   exp=expression(c*A^(z*A^-d)),
   shape="sigmoid",
   asymp=function(pars)FALSE,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/sar_epm1.R
 \name{sar_epm1}
 \alias{sar_epm1}
-\title{Fit the Asymptotic regression model}
+\title{Fit the Extended Power model 1 model}
 \usage{
 sar_epm1(data, custstart = NULL, normtest = 'lillie')
 }
@@ -12,7 +12,7 @@ the first with island/site areas, and the second with the species richness
 of each island/site.}
 }
 \description{
-Fit the Asymptotic regression model to SAR data
+Fit the Extended Power model 1 model to SAR data
 }
 \examples{
 data(galap)

@@ -1,7 +1,7 @@
 #LOGISTIC FUNCTION (HE & LEGENDRE 1996)
 model <- list(
   name=c("Logistic (He & Legendre)"),
-  formula=expression(S == over( c , (f + A^(-z)) ) ),
+  formula=expression(S == c/(f + A^(-z))),
   exp=expression(c/(f + A^(-z))),
   shape="sigmoid",
   asymp=function(pars)pars["c"]/pars["f"],

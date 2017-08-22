@@ -1,6 +1,6 @@
-#' Fit the Asymptotic regression model
+#' Fit the Kobayashi model
 
-#' @description Fit the Asymptotic regression model to SAR data
+#' @description Fit the Kobayashi model to SAR data
 #' @usage sar_koba(data, custstart = NULL, normtest = 'lillie')
 #' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness
@@ -22,7 +22,7 @@ colnames(data) <- c('A','S')
 # Kobayashi logarithmic (KOBAYASHI 1975), convex upward, no asymptote
 model <- list(
   name=c("Kobayashi"),
-  formula=expression(s==c*log(1+ a/z)),
+  formula=expression(S==c*log(1+ A/z)),
   exp=expression(c*log(1+ A/z)),
   shape="convex",
   asymp=function(pars)FALSE,

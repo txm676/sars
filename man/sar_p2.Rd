@@ -2,7 +2,7 @@
 % Please edit documentation in R/sar_p2.R
 \name{sar_p2}
 \alias{sar_p2}
-\title{Fit the Asymptotic regression model}
+\title{Fit the Persistence function 2 model}
 \usage{
 sar_p2(data, custstart = NULL, normtest = 'lillie')
 }
@@ -12,7 +12,7 @@ the first with island/site areas, and the second with the species richness
 of each island/site.}
 }
 \description{
-Fit the Asymptotic regression model to SAR data
+Fit the Persistence function 2 model to SAR data
 }
 \examples{
 data(galap)

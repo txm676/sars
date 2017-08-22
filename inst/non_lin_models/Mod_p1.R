@@ -1,7 +1,7 @@
 # PERSISTENCE FUNCTION 1 (TJORVE 2009)
 model <- list(
   name=c("Persistence function 1"),
-  formula=expression(s == c*a^z * exp(-d*a)),
+  formula=expression(S == c*A^z * exp(-d*A)),
   exp=expression(c*A^z * exp(-d*A)),
   mod=s~c*a^z * exp(-d*a),
   shape="convex",

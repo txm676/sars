@@ -2,7 +2,7 @@
 % Please edit documentation in R/sar_weibull3.R
 \name{sar_weibull3}
 \alias{sar_weibull3}
-\title{Fit the Asymptotic regression model}
+\title{Fit the Cumulative Weibull 3 par. model}
 \usage{
 sar_weibull3(data, custstart = NULL, normtest = 'lillie')
 }
@@ -12,7 +12,7 @@ the first with island/site areas, and the second with the species richness
 of each island/site.}
 }
 \description{
-Fit the Asymptotic regression model to SAR data
+Fit the Cumulative Weibull 3 par. model to SAR data
 }
 \examples{
 data(galap)

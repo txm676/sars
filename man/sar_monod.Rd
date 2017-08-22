@@ -2,7 +2,7 @@
 % Please edit documentation in R/sar_monod.R
 \name{sar_monod}
 \alias{sar_monod}
-\title{Fit the Asymptotic regression model}
+\title{Fit the Monod model}
 \usage{
 sar_monod(data, custstart = NULL, normtest = 'lillie')
 }
@@ -12,7 +12,7 @@ the first with island/site areas, and the second with the species richness
 of each island/site.}
 }
 \description{
-Fit the Asymptotic regression model to SAR data
+Fit the Monod model to SAR data
 }
 \examples{
 data(galap)

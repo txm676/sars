@@ -2,7 +2,7 @@
 % Please edit documentation in R/sar_negexpo.R
 \name{sar_negexpo}
 \alias{sar_negexpo}
-\title{Fit the Asymptotic regression model}
+\title{Fit the Negative exponential model}
 \usage{
 sar_negexpo(data, custstart = NULL, normtest = 'lillie')
 }
@@ -12,7 +12,7 @@ the first with island/site areas, and the second with the species richness
 of each island/site.}
 }
 \description{
-Fit the Asymptotic regression model to SAR data
+Fit the Negative exponential model to SAR data
 }
 \examples{
 data(galap)

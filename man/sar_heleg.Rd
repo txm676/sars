@@ -2,7 +2,7 @@
 % Please edit documentation in R/sar_heleg.R
 \name{sar_heleg}
 \alias{sar_heleg}
-\title{Fit the Asymptotic regression model}
+\title{Fit the Logistic (He & Legendre) model}
 \usage{
 sar_heleg(data, custstart = NULL, normtest = 'lillie')
 }
@@ -12,7 +12,7 @@ the first with island/site areas, and the second with the species richness
 of each island/site.}
 }
 \description{
-Fit the Asymptotic regression model to SAR data
+Fit the Logistic (He & Legendre) model to SAR data
 }
 \examples{
 data(galap)

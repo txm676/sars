@@ -31,6 +31,10 @@ model_factory <- function(f, overwrite = FALSE){
   #helper function
   cat1 <- function(...){cat(..., file = file.path("R",fileName), append = T)}
   
+  #sourcing the model file
+  #source(file.path(system.file(package="sars"),"non_lin_models",f))
+  source(file.path(getwd(),"inst","non_lin_models",f))
+  
   #construct R function name 
   funName <- paste0("sar_",substr(f,5,(nchar(f)-2)))
   
@@ -68,7 +72,7 @@ model_factory <- function(f, overwrite = FALSE){
   
   #model definition (Appending it)
   #dump("model", file = filePath, append = TRUE) #THE DUMP IS NOT PASTING THE MODEL LIST
-  file.append(file.path("R",fileName), file.path(system.file(package="sars"),"non_lin_models",f))
+  file.append(file.path("R",fileName), file.path(getwd(),"inst","non_lin_models",f))
                 
   
   cat1("\n")
@@ -92,7 +96,7 @@ model_factory <- function(f, overwrite = FALSE){
 
 #using it
 
-modFiles <- list.files(file.path(system.file(package="sars"),"non_lin_models"))
+modFiles <- list.files(file.path(getwd(),"inst","non_lin_models"))
 
 lapply(modFiles,model_factory,overwrite=TRUE)
 

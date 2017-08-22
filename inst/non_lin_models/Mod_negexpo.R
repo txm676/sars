@@ -1,7 +1,7 @@
 #NEGATIVE EXPONENTIAL (Holdridge et al. 1971)
 model <- list(
   name=c("Negative exponential"),
-  formula=expression(s == d*(1 - exp(-z*a) )),
+  formula=expression(S == d*(1 - exp(-z*A) )),
   exp=expression(d*(1-exp(-z*A))),
   shape="convex",
   asymp=function(pars)pars["d"],

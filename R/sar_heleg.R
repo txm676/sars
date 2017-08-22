@@ -1,6 +1,6 @@
-#' Fit the Asymptotic regression model
+#' Fit the Logistic (He & Legendre) model
 
-#' @description Fit the Asymptotic regression model to SAR data
+#' @description Fit the Logistic (He & Legendre) model to SAR data
 #' @usage sar_heleg(data, custstart = NULL, normtest = 'lillie')
 #' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness
@@ -22,7 +22,7 @@ colnames(data) <- c('A','S')
 #LOGISTIC FUNCTION (HE & LEGENDRE 1996)
 model <- list(
   name=c("Logistic (He & Legendre)"),
-  formula=expression(S == over( c , (f + A^(-z)) ) ),
+  formula=expression(S == c/(f + A^(-z))),
   exp=expression(c/(f + A^(-z))),
   shape="sigmoid",
   asymp=function(pars)pars["c"]/pars["f"],

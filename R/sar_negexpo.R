@@ -1,6 +1,6 @@
-#' Fit the Asymptotic regression model
+#' Fit the Negative exponential model
 
-#' @description Fit the Asymptotic regression model to SAR data
+#' @description Fit the Negative exponential model to SAR data
 #' @usage sar_negexpo(data, custstart = NULL, normtest = 'lillie')
 #' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness
@@ -22,7 +22,7 @@ colnames(data) <- c('A','S')
 #NEGATIVE EXPONENTIAL (Holdridge et al. 1971)
 model <- list(
   name=c("Negative exponential"),
-  formula=expression(s == d*(1 - exp(-z*a) )),
+  formula=expression(S == d*(1 - exp(-z*A) )),
   exp=expression(d*(1-exp(-z*A))),
   shape="convex",
   asymp=function(pars)pars["d"],
