@@ -1,10 +1,35 @@
+########################
+#function to cat rOxygen comments
+########################
 
+cat_roxygen <- function(model, funName, fileName){
+  
+  cat1 <- function(...){cat(..., file = fileName, append = TRUE)}
+  #cat1 <- function(...){cat(...)}
+  
+  cat1(paste0("#' ","Fit the ", model$name," model", "\n"))
+  cat1("\n")
+  cat1(paste0("#' @description ","Fit the ", model$name," model to SAR data", "\n"))
+  cat1(paste0("#' @usage ", funName,"(data, custstart = NULL, normtest = 'lillie')", "\n"))
+  cat1(paste0("#' @param ", "data ", "A dataset in the form of a dataframe with two columns: ", "\n"))
+  cat1(paste0("#'   the first with island/site areas, and the second with the species richness", "\n")) 
+  cat1(paste0("#'   of each island/site.", "\n"))
+  cat1(paste0("#' @return ", "\n"))
+  
+  cat1(paste0("#' @examples", "\n", "#' data(galap)", "\n", "#' fit <- ", funName,
+              "(galap)", "\n", "#' summary(fit)","\n", "#' plot(fit)", "\n"))
+  
+  cat1(paste0("#' @export"))
+  
+}#eo cat_roxygen
 
+########################
 #model factory function
-model_factory <- function(f,overwrite=FALSE){
+########################
+model_factory <- function(f, overwrite = FALSE){
   
   #helper function
-  cat1 <- function(...){cat(..., file = filePath, append = T)}
+  cat1 <- function(...){cat(..., file = file.path("R",fileName), append = T)}
   
   #construct R function name 
   funName <- paste0("sar_",substr(f,5,(nchar(f)-2)))
@@ -15,14 +40,16 @@ model_factory <- function(f,overwrite=FALSE){
   fileName <- paste0(funName,".R")
   
   #check if file already exists
-  packRoot <- system.file(package="sars")
-  packRDir <- file.path(substr(packRoot,1,(nchar(packRoot)-5)),"R")
-  filePath <- file.path(packRDir,fileName)
-  fExists <- file.exists(filePath)
-  if(fExists & !overwrite) stop("a model function '", funName, "' already exists. If you know what you do, please set overwrite=TRUE")
-  if(!(fExists) | overwrite) file.create(file.path("R",fileName), overwrite = TRUE, showWarnings = FALSE)
+  #packRoot <- system.file(package="sars")
+  # packRDir <- file.path(substr(packRoot,1,(nchar(packRoot)-5)),"R")
+  # filePath <- file.path(packRDir,fileName)
+  # fExists <- file.exists(filePath)
+  # if(fExists & !overwrite) stop("a model function '", funName, "' already exists. If you know what you do, please set overwrite=TRUE")
+  #if(!(fExists) | overwrite)
+  
+  file.create(file.path("R",fileName), overwrite = overwrite, showWarnings = FALSE)
   #cat the roxygen2 comments
-  cat_roxygen(model, funName, filePath)
+  cat_roxygen(model, funName, file.path("R",fileName))
   cat1("\n")
   cat1("\n")
   
@@ -41,14 +68,14 @@ model_factory <- function(f,overwrite=FALSE){
   
   #model definition (Appending it)
   #dump("model", file = filePath, append = TRUE) #THE DUMP IS NOT PASTING THE MODEL LIST
-  file.append(filePath, file.path(system.file(package="sars"),"non_lin_models",f))
+  file.append(file.path("R",fileName), file.path(system.file(package="sars"),"non_lin_models",f))
                 
   
   cat1("\n")
   
   cat1("model <- compmod(model)","\n")
   
-  cat1("fit <- rssoptim(model = model, data = data, custstart = start, normtest = 'lillie', algo = 'Nelder-Mead')","\n")
+  cat1("fit <- rssoptim(model = model, data = data, custstart = start, algo = 'Nelder-Mead')","\n")
   cat1("obs <- obs_shape(fit)","\n")
   cat1("fit$observed_shape <- obs$fitShape","\n")
   cat1("fit$asymptote <- obs$asymp","\n")
@@ -67,7 +94,7 @@ model_factory <- function(f,overwrite=FALSE){
 
 modFiles <- list.files(file.path(system.file(package="sars"),"non_lin_models"))
 
-lapply(modFiles,model_factory)
+lapply(modFiles,model_factory,overwrite=TRUE)
 
 
 

@@ -19,7 +19,7 @@ rssoptim <- function(model,data,custstart=NULL,algo="Nelder-Mead"){
 
   #sarting values on the link function scale
   startMod  <-  transLink(start,model$parLim)
-  names(startMod) <- names(start)
+  names(startMod) <- model$parNames
 
   #RSS function
   rssfun <- model$rss.fun
@@ -31,7 +31,7 @@ rssoptim <- function(model,data,custstart=NULL,algo="Nelder-Mead"){
   res1$par  <-  backLink(res1$par,model$parLim)
 
   #renaming the parameters vector
-  names(res1$par) <- names(start)
+  names(res1$par) <- model$parNames
 
   #calculating expected richness
   S.calc <- model$mod.fun(data$A,res1$par)
@@ -51,25 +51,31 @@ rssoptim <- function(model,data,custstart=NULL,algo="Nelder-Mead"){
 
   if(length(l)<5) {
 
-      warning("The Lilliefors test cannot be used with less than 5 data points \n")
+      warning("The Lilliefors test cannot be performed with less than 5 data points \n")
 
   }#eo if length
 
   if(length(l)<3) {
 
-      warning("The Shapiro test cannot be used with less than 3 data points -> switch to 'kolmo' or 'none' \n")
+      warning("The Shapiro test cannot be performed with less than 3 data points \n")
 
   }#eo if length
 
-  normaTest <- switch(normtest, "shapiro" = shapiro.test(residu) , "lillie" = nortest::lillie.test(residu) , "kolmo" = ks.test(residu, "pnorm"), "none" = list(statistic=NA,p.value=NA) )
-
+  normaTest <- list(shapiro = tryCatch(shapiro.test(residu), error = function(e)NA),
+                     lillie = tryCatch(nortest::lillie.test(residu), error = function(e)NA),
+                      kolmo = tryCatch(ks.test(residu, "pnorm"), error = function(e)NA)
+                    )
+  
   #Homogeneity of variance
-  homoTest  <-  tryCatch(list(cor.area = cor.test(residu,data$A),cor.fitted = cor.test(residu,S.calc)), error = function(e) list(cor.area = list(estimate=NA,p.value=NA),cor.fitted = list(estimate=NA,p.value=NA)))
+  
+  homoTest  <- list(cor.area = tryCatch(cor.test(residu,data$A), error = function(e)list(estimate=NA,p.value=NA)),
+                    cor.fitted = tryCatch(cor.test(residu,S.calc), error = function(e)list(estimate=NA,p.value=NA))
+  )
 
   #R2, AIC, AICc, BIC
 
   #common vars
-  n <- length(data$A)
+  n <- length(l)
   P <- length(model$parLim) + 1  # + 1 for the estimated variance
 
   #R2 (Kvaleth, 1985, Am. Statistician)
