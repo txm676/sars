@@ -31,11 +31,11 @@ model <- list(
   #limits for parameters
   parLim = c("Rplus","Rplus","Rplus"),
   #initials values function
-  init=function(data){if(any(data$S==0)){log.data=data.frame(A=log(data$A),S=log(data$S+.5))}else{log.data=log(data)};res=lm(S~A,log.data)$coefficients;res=c(res[1],res[2],1);names(res)=P1$paramnames;return(res)}
+  init=function(data){if(any(data$S==0)){log.data=data.frame(A=log(data$A),S=log(data$S+.5))}else{log.data=log(data)};res=stats::lm(S~A,log.data)$coefficients;res=c(res[1],res[2],1);names(res)=P1$paramnames;return(res)}
 )
 
 model <- compmod(model) 
-fit <- rssoptim(model = model, data = data, custstart = start, algo = 'Nelder-Mead') 
+fit <- rssoptim(model = model, data = data, start = start, algo = 'Nelder-Mead') 
 obs <- obs_shape(fit) 
 fit$observed_shape <- obs$fitShape 
 fit$asymptote <- obs$asymp 

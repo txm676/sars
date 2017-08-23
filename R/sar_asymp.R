@@ -36,13 +36,13 @@ model <- list(
     Z=log(d-data$S)
     #we have also Z=log(c)+Xlog(z) -> linear regression
     dat=data.frame("a"=data$A,"Z"=Z)
-    zf=lm(Z~a,dat)$coefficients
+    zf=stats::lm(Z~a,dat)$coefficients
     c(d,exp(zf[1]),exp(zf[2]))
   }
 )
 
 model <- compmod(model) 
-fit <- rssoptim(model = model, data = data, custstart = start, algo = 'Nelder-Mead') 
+fit <- rssoptim(model = model, data = data, start = start, algo = 'Nelder-Mead') 
 obs <- obs_shape(fit) 
 fit$observed_shape <- obs$fitShape 
 fit$asymptote <- obs$asymp 

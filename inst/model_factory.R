@@ -79,7 +79,7 @@ model_factory <- function(f, overwrite = FALSE){
   
   cat1("model <- compmod(model)","\n")
   
-  cat1("fit <- rssoptim(model = model, data = data, custstart = start, algo = 'Nelder-Mead')","\n")
+  cat1("fit <- rssoptim(model = model, data = data, start = start, algo = 'Nelder-Mead')","\n")
   cat1("obs <- obs_shape(fit)","\n")
   cat1("fit$observed_shape <- obs$fitShape","\n")
   cat1("fit$asymptote <- obs$asymp","\n")
@@ -98,7 +98,7 @@ model_factory <- function(f, overwrite = FALSE){
 
 modFiles <- list.files(file.path(getwd(),"inst","non_lin_models"))
 
-lapply(modFiles,model_factory,overwrite=TRUE)
+lapply(modFiles, model_factory, overwrite = TRUE)
 
 
 

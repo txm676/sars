@@ -37,7 +37,7 @@ model <- list(
     Z=log(-log(data$S/d))
     #we have also Z=-kT + kt0 -> linear regression
     dat=data.frame("a"=data$A,"Z"=Z)
-    reg=lm(Z~a,dat)$coefficients
+    reg=stats::lm(Z~a,dat)$coefficients
     #transformations of coeficients
     k.first<--reg[2]
     k.second<-reg[1]/t.0
@@ -56,7 +56,7 @@ model <- list(
     Z=log(-log(data$S/d))
     #we have also Z=-kT + kt0 -> linear regression
     dat=data.frame("a"=data$A,"Z"=Z)
-    reg=lm(Z~a,dat)$coefficients
+    reg=stats::lm(Z~a,dat)$coefficients
     #transformations of coeficients
     k.first<--reg[2]
     k.second<-reg[1]/t.0
@@ -68,7 +68,7 @@ model <- list(
 
 
 model <- compmod(model) 
-fit <- rssoptim(model = model, data = data, custstart = start, algo = 'Nelder-Mead') 
+fit <- rssoptim(model = model, data = data, start = start, algo = 'Nelder-Mead') 
 obs <- obs_shape(fit) 
 fit$observed_shape <- obs$fitShape 
 fit$asymptote <- obs$asymp 

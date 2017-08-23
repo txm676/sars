@@ -38,15 +38,15 @@ model <- list(
     Z[][Z == Inf]=NA
     c=exp(min(Z))
     dat=data.frame("A"=log(data[[1]]),"S"=Z)
-    c=exp(lm(S~A,dat)$coefficients[[1]])
+    c=exp(stats::lm(S~A,dat)$coefficients[[1]])
     #f calculation
-    z=lm(S~A,dat)$coefficients[[2]]
+    z=stats::lm(S~A,dat)$coefficients[[2]]
     c(d,c,z,1)
   }
 )
 
 model <- compmod(model) 
-fit <- rssoptim(model = model, data = data, custstart = start, algo = 'Nelder-Mead') 
+fit <- rssoptim(model = model, data = data, start = start, algo = 'Nelder-Mead') 
 obs <- obs_shape(fit) 
 fit$observed_shape <- obs$fitShape 
 fit$asymptote <- obs$asymp 
