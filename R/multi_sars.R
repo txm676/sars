@@ -44,7 +44,7 @@ multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","P1
   
   #choosing an IC criterion (AIC or AICc or BIC)
   IC <- switch(crit,
-         Info= if ( (nPoints / 3) < 40 ) { "AICc" } else { "AIC"},
+         Info= if ( (nPoints / 3) < 40 ) { "AICc" } else { "AIC" },
          Bayes= "BIC"
   )
   
