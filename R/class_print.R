@@ -1,3 +1,4 @@
+#' @importFrom stats printCoefmat
 #' @export
 
 
@@ -18,11 +19,15 @@ print.summary.sars <- function(object){
   }
   
   if (attributes(object)$type == "fit"){
-    cat("\n", "Model:","\n", paste(object$name), "\n", sep = "")
-    cat("\n", "Residuals: ","\n", paste(object$residuals), "\n", sep = "")
-    cat("\n", "Parameters: ","\n", paste(object$par), "\n", sep = "")
-  
-  
+    cat("\n", "Model:","\n", object$Model, "\n", sep = "")
+    mm <- matrix(object$Parameters, nrow = 1, ncol = length(object$par))
+    colnames(mm) <- object$parNames
+    rownames(mm) <- "Value"
+    cat("\n", "Parameters: ", "\n", sep = "")
+    printCoefmat(mm)
+    cat("\n", "R-squared: ", object$R2 , ", Adjusted R-squared: ", object$R2a, "\n", sep = "")
+    cat("AIC: ", object$AIC , ", AICc: ", object$AICc, ", BIC: ", object$BIC, "\n", sep = "")
+    cat("Observed shape: ", object$observed_shape, ", Asymptote: ", object$asymptote, "\n", "\n", sep = "")
   }
   
   

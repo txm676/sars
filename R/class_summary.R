@@ -23,7 +23,6 @@
 #' data(galap)
 #' fit <- lin_pow(galap, a = 1, s = 2, con = 1)
 #' summary(fit)
-#' @importFrom dplyr %>%
 #' @export
 
 
@@ -35,7 +34,7 @@ summary.sars <- function(object){
     z <- object2$coefficients[2, 1]
     z.sig <- object2$coefficients[2, 4]
     r2 <- object2$r.squared
-    md_res <- c(logc, z, z.sig, r2) %>% round(2)
+    md_res <- round(c(logc, z, z.sig, r2), 2) 
     names(md_res) <- c("logc", "z", "z.sig", "r2")
     fit_df <- round(data.frame(Area = object$Area, Fitted = object$Fitted), 2) 
     res <- list(Summary = md_res, df = fit_df)
@@ -50,12 +49,17 @@ summary.sars <- function(object){
     name <- object$model$name
     resid <- object$residuals
     pars <- object$par
+    parN <- object$model$parNames
     ic <- object$AIC
+    ic2 <- object$AICc
+    bi <- object$BIC
     R2 <- object$R2
+    R2a <- object$R2a
     shape <- object$observed_shape
     asymp <- object$asymptote
-    res <- list("name" = name, "residuals" = round(resid, 1), "par" = round(pars, 2), "AIC" = round(ic, 2),
-                "R2" = round(R2, 2), "observed_shape" = shape, "asymptote" = asymp)
+    res <- list("Model" = name, "residuals" = round(resid, 1), "Parameters" = round(pars, 2), 
+                "parNames" = parN, "AIC" = round(ic, 2), "AICc" = round(ic2, 2), "BIC" = round(bi, 2),
+                "R2" = round(R2, 2), "R2a" = round(R2a, 2), "observed_shape" = shape, "asymptote" = asymp)
   }
   
   class(res) <- "summary.sars"
