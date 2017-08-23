@@ -22,7 +22,7 @@ print.summary.sars <- function(object){
     cat("\n", "Model:","\n", object$Model, "\n", sep = "")
     mm <- matrix(object$Parameters, nrow = 1, ncol = length(object$par))
     colnames(mm) <- object$parNames
-    rownames(mm) <- "Value"
+    rownames(mm) <- "Estimates"
     cat("\n", "Parameters: ", "\n", sep = "")
     printCoefmat(mm)
     cat("\n", "R-squared: ", object$R2 , ", Adjusted R-squared: ", object$R2a, "\n", sep = "")
