@@ -25,7 +25,7 @@
 #' summary(fit)
 #' plot(fit)
 #' @export
-#' @importFrom stats lm
+
 
 lin_pow <- function(data, con = 1, compare = F) {
 
@@ -41,10 +41,10 @@ lin_pow <- function(data, con = 1, compare = F) {
   } else {
        log.data = data.frame(A = log(data$A), S = log(data$S))
   }
-  linearPower.fit = lm(S ~ A, data = log.data)
+  linearPower.fit = stats::lm(S ~ A, data = log.data)
 
   fv <- linearPower.fit$fitted.values
-  linearPower.fit <- summary(linearPower.fit)
+  linearPower.fit <- stats::summary.lm(linearPower.fit)
   res <- list(Model = linearPower.fit, calculated = fv, data = log.data)
   
   if (compare == T){

@@ -1,4 +1,4 @@
-#' @importFrom stats printCoefmat
+
 #' @export
 
 
@@ -24,7 +24,7 @@ print.summary.sars <- function(object){
     colnames(mm) <- object$parNames
     rownames(mm) <- "Estimates"
     cat("\n", "Parameters: ", "\n", sep = "")
-    printCoefmat(mm)
+    stats::printCoefmat(mm)
     cat("\n", "R-squared: ", object$R2 , ", Adjusted R-squared: ", object$R2a, "\n", sep = "")
     cat("AIC: ", object$AIC , ", AICc: ", object$AICc, ", BIC: ", object$BIC, "\n", sep = "")
     cat("Observed shape: ", object$observed_shape, ", Asymptote: ", object$asymptote, "\n", "\n", sep = "")
