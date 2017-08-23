@@ -32,7 +32,7 @@ print.summary.sars <- function(object){
     cat("AIC: ", object$AIC , ", AICc: ", object$AICc, ", BIC: ", object$BIC, "\n", sep = "")
     cat("Observed shape: ", object$observed_shape, ", Asymptote: ", object$asymptote, "\n", "\n", sep = "")
   }
-  
+
   
 }
   
@@ -49,4 +49,22 @@ print.sars <- function(object){
     print(object$par)
     cat("\n")
   }
+  
+  if (attributes(object)$type == "fit_collection"){ 
+    cat("\n", "This is a fit collection", "\n", sep = "")
+    cat("\n", length(object), " models contained in the fit collection: ","\n", sep = "")
+    cat(unlist(lapply(ff, function(x) x$model$name)), "\n", "\n")
+
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 }

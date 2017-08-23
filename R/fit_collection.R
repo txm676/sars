@@ -8,5 +8,5 @@ fit_collection <- function(..., fits = list(...)){
   
   class(fits) <- "sars"
   attr(fits, "type") <- "fit_collection"
-  invisible(fits)
+  return(fits)
 }#eo fit_collection
