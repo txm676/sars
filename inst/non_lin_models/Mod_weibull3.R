@@ -16,9 +16,9 @@ model <- list(
     Z[][Z == Inf]=NA
     c=exp(min(Z))
     dat=data.frame("A"=log(data$A),"S"=Z)
-    c=exp(lm(S~A,dat)$coefficients[[1]])
+    c=exp(stats::lm(S~A,dat)$coefficients[[1]])
     #f calculation
-    z=lm(S~A,dat)$coefficients[[2]]
+    z=stats::lm(S~A,dat)$coefficients[[2]]
     c(d,c,z)
   }
 )

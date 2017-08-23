@@ -10,5 +10,5 @@ model <- list(
   #limits for parameters
   parLim = c("Rplus","Rplus","Rplus"),
   #initials values function
-  init=function(data){if(any(data$S==0)){log.data=data.frame(A=log(data$A),S=log(data$S+.5))}else{log.data=log(data)};res=lm(S~A,log.data)$coefficients;res=c(res[1],res[2],1);names(res)=P1$paramnames;return(res)}
+  init=function(data){if(any(data$S==0)){log.data=data.frame(A=log(data$A),S=log(data$S+.5))}else{log.data=log(data)};res=stats::lm(S~A,log.data)$coefficients;res=c(res[1],res[2],1);names(res)=P1$paramnames;return(res)}
 )

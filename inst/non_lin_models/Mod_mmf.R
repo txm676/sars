@@ -12,7 +12,7 @@ model <- list(
     if(any(data$S==0)){data=data[data$S!=0,]}
     d=as.real(max(data$S)*4)
     newVar = log((d/data$S) - 1)
-    reg = lm(newVar~log(data$A))
+    reg = stats::lm(newVar~log(data$A))
     c=exp(reg$coefficients[1])
     z=-reg$coefficients[2]
     c(d,c,z)

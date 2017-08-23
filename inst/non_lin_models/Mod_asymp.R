@@ -15,7 +15,7 @@ model <- list(
     Z=log(d-data$S)
     #we have also Z=log(c)+Xlog(z) -> linear regression
     dat=data.frame("a"=data$A,"Z"=Z)
-    zf=lm(Z~a,dat)$coefficients
+    zf=stats::lm(Z~a,dat)$coefficients
     c(d,exp(zf[1]),exp(zf[2]))
   }
 )

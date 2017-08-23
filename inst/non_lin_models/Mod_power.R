@@ -13,7 +13,7 @@ model <- list(
       } else {
         log.data = log(data)
       }
-      res = lm(S ~ A, log.data)$coefficients
+      res = stats::lm(S ~ A, log.data)$coefficients
       res = c(exp(res[1]), res[2])
       names(res) = c("c", "z")
       return(res)

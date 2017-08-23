@@ -12,7 +12,7 @@ model <- list(
     init=function(data){
       semilog.data = data.frame(log(data$A),data$S)
       names(semilog.data)=c("A","S")
-      par=lm(S~A,semilog.data)$coefficients
+      par=stats::lm(S~A,semilog.data)$coefficients
       names(par)=c("c","z")
       par
     }
