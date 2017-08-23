@@ -33,14 +33,14 @@ model <- list(
     init=function(data){
       semilog.data = data.frame(log(data$A),data$S)
       names(semilog.data)=c("A","S")
-      par=lm(S~A,semilog.data)$coefficients
+      par=stats::lm(S~A,semilog.data)$coefficients
       names(par)=c("c","z")
       par
     }
 )
 
 model <- compmod(model) 
-fit <- rssoptim(model = model, data = data, custstart = start, algo = 'Nelder-Mead') 
+fit <- rssoptim(model = model, data = data, start = start, algo = 'Nelder-Mead') 
 obs <- obs_shape(fit) 
 fit$observed_shape <- obs$fitShape 
 fit$asymptote <- obs$asymp 

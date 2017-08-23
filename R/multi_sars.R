@@ -11,27 +11,32 @@ multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","P1
                        alpha_normtest = 0.05,
                        alpha_homotest = alpha_normtest){
   
-  if (!(is.character(obj))  || (class(obj) == "sars") ) stop("obj must be a character or fitcollection")
+  if (!(is.character(obj))  || (class(obj) == "sars") ) stop("obj must be of class character or sars")
   
-  if( is.character(obj) & is.null(data)) stop("if obj is character then data should be provided")
+  if (is.character(obj) & is.null(data)) stop("if obj is character then data should be provided")
   
-  if(is.character(obj)){
-    if(any(!(obj %in% paste0("sar_",c("linear","power","powerR","epm1","epm2","P1","P2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg"))))) stop("all model names should be ok")
+  if (is.character(obj)) {
+    if (any(!(obj %in% paste0("sar_",c("linear","power","powerR","epm1","epm2","P1","P2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg"))))) stop("all model names should be ok")
   }
+  
+  if (length(obj) < 2) stop("more than 1 fit is required to construct a multi_sar")
   
   normtest <- match.arg(normtest, c("none", "shapiro", "kolmo", "lillie"))
   homotest <- match.arg(homotest, c("none","cor.area","cor.fitted"))
   
   #if not yet fitted, fit the models to the data
-  if(is.character(obj)){
+  if (is.character(obj)) {
    
-    fits <- lapply(obj,function(x){
-      eval(parse(text=paste0(x,"(data)")))
+    fits <- lapply(obj, function(x){
+      eval(parse(text = paste0(x,"(data)")))
     })
     
-    fits <- fit_collection(fits=fits)
+    fits <- fit_collection(fits = fits)
     
   }
+  
+  if (class(obj) == "sars" & attributes(x)$type == "fit_collection") fits <- obj
+  
   
   #if checks for normality and / or homoscedasticity enabled, then check and remove bad fits from fits
   #if length(fits) < 2 -> stop

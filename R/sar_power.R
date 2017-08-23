@@ -34,14 +34,14 @@ model <- list(
       } else {
         log.data = log(data)
       }
-      res = lm(S ~ A, log.data)$coefficients
+      res = stats::lm(S ~ A, log.data)$coefficients
       res = c(exp(res[1]), res[2])
       names(res) = c("c", "z")
       return(res)
     }
 )
 model <- compmod(model) 
-fit <- rssoptim(model = model, data = data, custstart = start, algo = 'Nelder-Mead') 
+fit <- rssoptim(model = model, data = data, start = start, algo = 'Nelder-Mead') 
 obs <- obs_shape(fit) 
 fit$observed_shape <- obs$fitShape 
 fit$asymptote <- obs$asymp 

@@ -1,10 +1,10 @@
-rssoptim <- function(model,data,custstart=NULL,algo="Nelder-Mead"){
+rssoptim <- function(model,data,start=NULL,algo="Nelder-Mead"){
 
   #initial parameters
-  if(is.null(custstart)){
+  if(is.null(start)){
     start <- model$init(data)
   }else{
-    start <- custstart
+    start <- start
   }
 
   #if outside ranges : rescaling

@@ -28,18 +28,18 @@ model <- list(
   asymp=function(pars)pars["d"],
   #limits for parameters
   parLim = c("Rplus","Rplus"),
-  custStart=function(data)c(quantile(data$A,c(0.25)),max(data$S)),
+  custStart=function(data)c(stats::quantile(data$A,c(0.25)),max(data$S)),
   #initials values function
   init=function(data){
     if(any(data$S==0)){data=data[data$S!=0,]}
     d=as.double(max(data$A)+max(data$S)/4)
     c=data[[1]]*(d/data$S - 1)
-    c(d,quantile(c,c(0.25)))
+    c(d,stats::quantile(c,c(0.25)))
   }
 )
 
 model <- compmod(model) 
-fit <- rssoptim(model = model, data = data, custstart = start, algo = 'Nelder-Mead') 
+fit <- rssoptim(model = model, data = data, start = start, algo = 'Nelder-Mead') 
 obs <- obs_shape(fit) 
 fit$observed_shape <- obs$fitShape 
 fit$asymptote <- obs$asymp 

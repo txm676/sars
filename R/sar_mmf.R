@@ -33,7 +33,7 @@ model <- list(
     if(any(data$S==0)){data=data[data$S!=0,]}
     d=as.real(max(data$S)*4)
     newVar = log((d/data$S) - 1)
-    reg = lm(newVar~log(data$A))
+    reg = stats::lm(newVar~log(data$A))
     c=exp(reg$coefficients[1])
     z=-reg$coefficients[2]
     c(d,c,z)
@@ -41,7 +41,7 @@ model <- list(
 )
 
 model <- compmod(model) 
-fit <- rssoptim(model = model, data = data, custstart = start, algo = 'Nelder-Mead') 
+fit <- rssoptim(model = model, data = data, start = start, algo = 'Nelder-Mead') 
 obs <- obs_shape(fit) 
 fit$observed_shape <- obs$fitShape 
 fit$asymptote <- obs$asymp 
