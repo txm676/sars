@@ -2,6 +2,7 @@
 
 S3method(plot,coleman)
 S3method(plot,sars)
+S3method(print,sars)
 S3method(print,summary.sars)
 S3method(summary,sars)
 export(coleman)

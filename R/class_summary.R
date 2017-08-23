@@ -48,8 +48,9 @@ summary.sars <- function(object){
   if (attributes(object)$type == "fit"){
     name <- object$model$name
     resid <- object$residuals
-    pars <- object$par
+    pars_tab <- object$sigConf
     parN <- object$model$parNames
+    formula <- object$model$formula
     ic <- object$AIC
     ic2 <- object$AICc
     bi <- object$BIC
@@ -57,9 +58,10 @@ summary.sars <- function(object){
     R2a <- object$R2a
     shape <- object$observed_shape
     asymp <- object$asymptote
-    res <- list("Model" = name, "residuals" = round(resid, 1), "Parameters" = round(pars, 2), 
-                "parNames" = parN, "AIC" = round(ic, 2), "AICc" = round(ic2, 2), "BIC" = round(bi, 2),
-                "R2" = round(R2, 2), "R2a" = round(R2a, 2), "observed_shape" = shape, "asymptote" = asymp)
+    conv <- object$verge
+    res <- list("Model" = name, "residuals" = round(resid, 1), "Parameters" = pars_tab, 
+                "parNames" = parN, "formula" = formula, "AIC" = round(ic, 2), "AICc" = round(ic2, 2), "BIC" = round(bi, 2),
+                "R2" = round(R2, 2), "R2a" = round(R2a, 2), "observed_shape" = shape, "asymptote" = asymp, "convergence" = conv)
   }
   
   class(res) <- "summary.sars"

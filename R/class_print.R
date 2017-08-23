@@ -19,11 +19,14 @@ print.summary.sars <- function(object){
   }
   
   if (attributes(object)$type == "fit"){
-    cat("\n", "Model:","\n", object$Model, "\n", sep = "")
-    mm <- matrix(object$Parameters, nrow = 1, ncol = length(object$par))
-    colnames(mm) <- object$parNames
-    rownames(mm) <- "Estimates"
+    cat("\n", "Model: ","\n", object$Model, "\n", sep = "")
+    cat("\n", "Call: ","\n", as.character(object$formula), "\n", sep = "")
+    cat("\n", "Did the model converge: ", object$convergence , "\n", sep = "")
+    cat("\n", "Residuals: ", "\n", sep = "")
+    print(stats::quantile(object$residuals))
     cat("\n", "Parameters: ", "\n", sep = "")
+    mm <- object$Parameters
+    rownames(mm) <- object$parNames
     stats::printCoefmat(mm)
     cat("\n", "R-squared: ", object$R2 , ", Adjusted R-squared: ", object$R2a, "\n", sep = "")
     cat("AIC: ", object$AIC , ", AICc: ", object$AICc, ", BIC: ", object$BIC, "\n", sep = "")
@@ -33,3 +36,17 @@ print.summary.sars <- function(object){
   
 }
   
+
+#' @export
+#' 
+
+print.sars <- function(object){
+  
+  if (attributes(object)$type == "fit"){ 
+    cat("\n", "Model: ","\n", object$model$name, "\n", sep = "")
+    cat("\n", "Call: ","\n", as.character(object$model$formula), "\n", sep = "")
+    cat("\n", "Coefficients: ", "\n", sep = "")
+    print(object$par)
+    cat("\n")
+  }
+}
