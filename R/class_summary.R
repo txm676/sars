@@ -64,6 +64,23 @@ summary.sars <- function(object){
                 "R2" = round(R2, 2), "R2a" = round(R2a, 2), "observed_shape" = shape, "asymptote" = asymp, "convergence" = conv)
   }
   
+  
+  if (attributes(object)$type == "multi_sars"){
+  
+
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   class(res) <- "summary.sars"
   attr(res, "type") <- attr(object, "type")
   return(res)

@@ -16,7 +16,7 @@ multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","P1
   if (is.character(obj) & is.null(data)) stop("if obj is character then data should be provided")
   
   if (is.character(obj)) {
-    if (any(!(obj %in% paste0("sar_",c("linear","power","powerR","epm1","epm2","P1","P2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg"))))) stop("all model names should be ok")
+    if (any(!(obj %in% paste0("sar_",c("linear","power","powerR","epm1","epm2","P1","P2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg"))))) stop("provided model names do not match with model functions")
   }
   
   if (length(obj) < 2) stop("more than 1 fit is required to construct a multi_sar")

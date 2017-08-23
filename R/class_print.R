@@ -33,7 +33,13 @@ print.summary.sars <- function(object){
     cat("Observed shape: ", object$observed_shape, ", Asymptote: ", object$asymptote, "\n", "\n", sep = "")
   }
 
-  
+  if (attributes(object)$type == "multi_sar"){ 
+    #Multi_sar object
+    # N models fitted; x passed test
+    #Model table: All fitted models, sum of sq (deviance), R2, AIC, BIC, AICc, delta, weights
+    #NA for models that did not pass
+    #sort table based on weights - with NAs at bottom
+  }
 }
   
 
@@ -53,11 +59,14 @@ print.sars <- function(object){
   if (attributes(object)$type == "fit_collection"){ 
     cat("\n", "This is a fit collection", "\n", sep = "")
     cat("\n", length(object), " models contained in the fit collection: ","\n", sep = "")
-    cat(unlist(lapply(ff, function(x) x$model$name)), "\n", "\n")
-
+    cat(unlist(lapply(object, function(x) x$model$name)), "\n", "\n")
   }
   
-  
+  if (attributes(object)$type == "multi_sar"){ 
+    cat("\n", "This is a multi_sar fit object", "\n", sep = "")
+    ##n models in the multi_sar object:
+    ##list N models attempted to fit; x have passed
+  } 
   
   
   
