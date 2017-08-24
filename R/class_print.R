@@ -67,13 +67,16 @@ print.sars <- function(object){
     ##n models in the multi_sar object:
     ##list N models attempted to fit; x have passed
   } 
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
 }
+
+
+
+#print.gdm.sars <- function(object){
+
+#}
+  
+  
+  
+  
+  

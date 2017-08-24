@@ -70,17 +70,6 @@ summary.sars <- function(object){
 
   }
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   class(res) <- "summary.sars"
   attr(res, "type") <- attr(object, "type")
   return(res)
