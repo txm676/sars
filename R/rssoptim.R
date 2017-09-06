@@ -1,7 +1,7 @@
-rssoptim <- function(model,data,start=NULL,algo="Nelder-Mead"){
+rssoptim <- function(model,data,start=NULL, algo = "Nelder-Mead"){
 
   #initial parameters
-  if(is.null(start)){
+  if (is.null(start)) {
     start <- model$init(data)
   }else{
     start <- start
@@ -9,11 +9,11 @@ rssoptim <- function(model,data,start=NULL,algo="Nelder-Mead"){
 
   #if outside ranges : rescaling
   for (i in 1:length(start)) {
-    if(model$parLim[i]!="R"){
-      if(start[i]<=0){ start[i] <- 0.1 }
+    if (model$parLim[i] != "R") {
+      if (start[i] <= 0) { start[i] <- 0.1 }
     }
-    if(model$parLim[i]=="unif"){
-      if(start[i]>1){ start[i] <- .8 }
+    if (model$parLim[i] == "unif") {
+      if (start[i] > 1) { start[i] <- .8 }
     }
   }#eo for
 
@@ -25,7 +25,9 @@ rssoptim <- function(model,data,start=NULL,algo="Nelder-Mead"){
   rssfun <- model$rss.fun
 
   #optimization (first result)
-  res1 <- optim(startMod, rssfun, hessian = TRUE, data = data, method = algo, control = list(maxit = 50000) )
+  res1 <- tryCatch(optim(startMod, rssfun, hessian = TRUE, data = data, method = algo, control = list(maxit = 50000) ),
+                   error = function(e){e}
+                   )
 
   #Backtransformation of parameters values
   res1$par  <-  backLink(res1$par,model$parLim)

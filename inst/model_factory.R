@@ -36,7 +36,7 @@ model_factory <- function(f, overwrite = FALSE){
   source(file.path(getwd(),"inst","non_lin_models",f))
   
   #construct R function name 
-  funName <- paste0("sar_",substr(f,5,(nchar(f)-2)))
+  funName <- paste0("sar_",substr(f,5,(nchar(f) - 2)))
   
   #construct model file/function name
   #modName <- tolower(model$name)

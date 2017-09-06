@@ -2,21 +2,22 @@
 
 #' @export
 
-multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","P1","P2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg")),
+multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg")),
                        data = galap,
                        keep_fits = FALSE,
                        crit = "Info",
                        normtest = "lillie",
                        homotest = "cor.fitted",
                        alpha_normtest = 0.05,
-                       alpha_homotest = alpha_normtest){
+                       alpha_homotest = alpha_normtest,
+                       verb = TRUE){
   
   if (!(is.character(obj))  || (class(obj) == "sars") ) stop("obj must be of class character or sars")
   
   if (is.character(obj) & is.null(data)) stop("if obj is character then data should be provided")
   
   if (is.character(obj)) {
-    if (any(!(obj %in% paste0("sar_",c("linear","power","powerR","epm1","epm2","P1","P2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg"))))) stop("provided model names do not match with model functions")
+    if (any(!(obj %in% paste0("sar_",c("linear","power","powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg"))))) stop("provided model names do not match with model functions")
   }
   
   if (length(obj) < 2) stop("more than 1 fit is required to construct a multi_sar")
@@ -28,6 +29,9 @@ multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","P1
   if (is.character(obj)) {
    
     fits <- lapply(obj, function(x){
+      
+      if (verb) cat("-- fitting model: ", x, "\n")
+      
       eval(parse(text = paste0(x,"(data)")))
     })
     
