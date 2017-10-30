@@ -13,7 +13,7 @@
 #' @param ps Argument for point size (default = 1).
 #' @param pc Argument for point colour (default = darkgreen).
 #' @param ...	further arguments passed to or from other methods.
-#' @param th additional ggplot2 themes and instructions can be passed.
+#' @param th an additional ggplot2 theme can be added and instructions can be passed.
 #'    As ggplot2 is not *loaded*, th needs to use ggplot2::, e.g. ggplot2::theme_bw
 #' @export
 
@@ -45,8 +45,8 @@ plot.sars <- function(x, title = NULL, sh1 = 21, s1 = 3, s2 = 1, s3 = 14, s4 = 1
   }
   
   if (attributes(x)$type == "lin_pow"){
-    #if (is.null(title)) title <- "Log-log power"
-    g1 <- int_plot(x, title = "Log-log power", sh1, s1, s2, s3, s4, s5,
+    if (is.null(title)) title <- "Log-log power"
+    g1 <- int_plot(x, title = title, sh1, s1, s2, s3, s4, s5,
                    c1, c2, xl = "Log(area)", yl = "Log(species richness)", p1, th)
     return(g1)
   }
