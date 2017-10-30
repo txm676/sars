@@ -27,7 +27,7 @@
 
 
 summary.sars <- function(object){
-
+  
   if (attributes(object)$type == "lin_pow"){
     object2 <- object$Model
     logc <- object2$coefficients[1, 1]
@@ -36,7 +36,7 @@ summary.sars <- function(object){
     r2 <- object2$r.squared
     md_res <- round(c(logc, z, z.sig, r2), 2) 
     names(md_res) <- c("logc", "z", "z.sig", "r2")
-    fit_df <- round(data.frame(Area = object$Area, Fitted = object$Fitted), 2) 
+    fit_df <- round(data.frame(Area = object$data$A, Fitted = object$calculated), 2) 
     res <- list(Summary = md_res, df = fit_df)
     if(length(object) == 4){
       cp <- object[[4]]$par[1]
@@ -66,14 +66,13 @@ summary.sars <- function(object){
   
   
   if (attributes(object)$type == "multi_sars"){
-  
-
+    
+    
   }
   
   class(res) <- "summary.sars"
   attr(res, "type") <- attr(object, "type")
   return(res)
 }
-
 
 

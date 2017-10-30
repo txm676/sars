@@ -13,38 +13,40 @@
 #' @param ps Argument for point size (default = 1).
 #' @param pc Argument for point colour (default = darkgreen).
 #' @param ...	further arguments passed to or from other methods.
+#' @param th additional ggplot2 themes and instructions can be passed.
+#'    As ggplot2 is not *loaded*, th needs to use ggplot2::, e.g. ggplot2::theme_bw
 #' @export
 
 
 plot.sars <- function(x, title = NULL, sh1 = 21, s1 = 3, s2 = 1, s3 = 14, s4 = 13, s5 = 15,
-                        c1 = "darkred", c2 = "#5e5e5e", xl = "Area", yl = "Species richness",
-                        p1 = 0, dimen = NULL, th = NULL)
+                      c1 = "darkred", c2 = "#5e5e5e", xl = "Area", yl = "Species richness",
+                      p1 = 0, dimen = NULL, th = NULL)
 {
-    if (attributes(x)$type == "fit"){
-      if (is.null(title)) title <- x$model$name
-      g1 <- int_plot(x, title, sh1, s1, s2, s3, s4, s5,
-                     c1, c2, xl, yl, p1, th)
-      return(g1)
+  if (attributes(x)$type == "fit"){
+    if (is.null(title)) title <- x$model$name
+    g1 <- int_plot(x, title, sh1, s1, s2, s3, s4, s5,
+                   c1, c2, xl, yl, p1, th)
+    return(g1)
+  }
+  
+  if (attributes(x)$type == "fit_collection"){
+    fc2 <- list()
+    for (i in seq_along(x)){
+      if (is.null(title)) {title2 <- x[[i]]$model$name} else{title2 <- title[i]}
+      fc2[[i]] <- int_plot(x[[i]], title2, sh1, s1, s2, s3, s4, s5,
+                           c1, c2, xl, yl, p1, th)
+    }#eo for
+    
+    if (is.null(dimen)){
+      return(gridExtra::grid.arrange(grobs = fc2))
+    } else {
+      return(gridExtra::grid.arrange(grobs = fc2, nrow = dimen[1], ncol = dimen[2]))
     }
-
-    if (attributes(x)$type == "fit_collection"){
-      fc2 <- list()
-      for (i in seq_along(x)){
-        if (is.null(title)) {title2 <- x[[i]]$model$name} else{title2 <- title[i]}
-        fc2[[i]] <- int_plot(x[[i]], title2, sh1, s1, s2, s3, s4, s5,
-                             c1, c2, xl, yl, p1, th)
-      }#eo for
-      
-      if (is.null(dimen)){
-        return(gridExtra::grid.arrange(grobs = fc2))
-      } else {
-          return(gridExtra::grid.arrange(grobs = fc2, nrow = dimen[1], ncol = dimen[2]))
-      }
-    }
+  }
   
   if (attributes(x)$type == "lin_pow"){
-    if (is.null(title)) title <- "Log-log power"
-    g1 <- int_plot(x, title, sh1, s1, s2, s3, s4, s5,
+    #if (is.null(title)) title <- "Log-log power"
+    g1 <- int_plot(x, title = "Log-log power", sh1, s1, s2, s3, s4, s5,
                    c1, c2, xl = "Log(area)", yl = "Log(species richness)", p1, th)
     return(g1)
   }
