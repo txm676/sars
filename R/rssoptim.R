@@ -30,7 +30,7 @@ rssoptim <- function(model,data,start=NULL, algo = "Nelder-Mead"){
                    )
 
   #Backtransformation of parameters values
-  res1$par  <-  backLink(res1$par,model$parLim)
+  res1$par  <-  sars:::backLink(res1$par,model$parLim)
 
   #renaming the parameters vector
   names(res1$par) <- model$parNames
