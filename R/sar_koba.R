@@ -31,7 +31,7 @@ model <- list(
   custStart = function(data) c(5,0.1),
   #initials values function
   init = function(data){
-    c(max(data$S),30)
+    c(max(data$S),300)
   }
 )
 
