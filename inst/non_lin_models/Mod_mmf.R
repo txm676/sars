@@ -10,7 +10,7 @@ model <- list(
   custStart=function(data)c(max(data$S),5,.25),
   init=function(data){
     if(any(data$S==0)){data=data[data$S!=0,]}
-    d=as.real(max(data$S)*4)
+    d=(max(data$S)*4)
     newVar = log((d/data$S) - 1)
     reg = stats::lm(newVar~log(data$A))
     c=exp(reg$coefficients[1])

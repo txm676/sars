@@ -10,6 +10,9 @@
   th = NULL)
 }
 \arguments{
+\item{th}{an additional ggplot2 theme can be added and instructions can be passed.
+As ggplot2 is not *loaded*, th needs to use ggplot2::, e.g. ggplot2::theme_bw}
+
 \item{object}{An object of class 'mmSAR2'.}
 
 \item{lsi}{Argument for line width (default = 3).}
