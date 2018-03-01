@@ -30,9 +30,18 @@ multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","p1
    
     fits <- lapply(obj, function(x){
       
-      if (verb) cat("-- fitting model: ", x, "\n")
+      f <- eval(parse(text = paste0(x,"(data)")))
       
-      eval(parse(text = paste0(x,"(data)")))
+      if (verb) {
+        if(is.na(f)) {
+          failed("-- fitting model: ", x)
+        }else{
+          passed("-- fitting model: ", x)
+        }
+      }
+      
+      f
+      
     })
     
     if(all(is.na(fits))){
