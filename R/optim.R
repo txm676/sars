@@ -216,6 +216,7 @@ get_fit <- function(model = model, data = data, start = NULL, grid_start = NULL,
         if(grid_start != FALSE){
           n <- min(grid_start,1000)
           fit <- grid_start_fit(model = model, data = data, n = n, algo = algo, verb = verb)
+          grid_start <- NULL
         }
       }
     }
@@ -233,7 +234,7 @@ get_fit <- function(model = model, data = data, start = NULL, grid_start = NULL,
   
   if(is.na(fit$value)){
     warning("The model could not be fitted :(\n")
-    return(NA)
+    return(list(value = NA))
   }else{
     return(fit)
   }
