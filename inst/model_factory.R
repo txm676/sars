@@ -14,6 +14,8 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#' @param ", "data ", "A dataset in the form of a dataframe with two columns: ", "\n"))
   cat1(paste0("#'   the first with island/site areas, and the second with the species richness", "\n")) 
   cat1(paste0("#'   of each island/site.", "\n"))
+  cat1(paste0("#' @param ", "grid_start ", "NULL or the number of points sampled in the model parameter space", "\n"))
+  cat1(paste0("#'   to run a grid search.", "\n"))
   cat1(paste0("#' @return ", "\n"))
   
   cat1(paste0("#' @examples", "\n", "#' data(galap)", "\n", "#' fit <- ", funName,
@@ -58,7 +60,7 @@ model_factory <- function(f, overwrite = FALSE){
   cat1("\n")
   
   #function definition
-  cat1(paste0(funName," <- function(data=galap, start = NULL){","\n"))
+  cat1(paste0(funName," <- function(data = galap, start = NULL, grid_start = NULL){","\n"))
   
   #checks
   cat1("if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe')","\n")
@@ -79,20 +81,22 @@ model_factory <- function(f, overwrite = FALSE){
   
   cat1("model <- compmod(model)","\n")
   
-  cat1("fit <- rssoptim(model = model, data = data, start = start, algo = 'Nelder-Mead')","\n")
-  cat1("obs <- obs_shape(fit)","\n")
-  cat1("fit$observed_shape <- obs$fitShape","\n")
-  cat1("fit$asymptote <- obs$asymp","\n")
-  
-  cat1("class(fit) <- 'sars'","\n")
-  cat1("attr(fit, 'type') <- 'fit'","\n")
-  cat1("return(fit)","\n")
+  cat1("fit <- get_fit(model = model, data = data, start = start, grid_start = grid_start, algo = 'Nelder-Mead', verb = TRUE)","\n")
+  cat1("if(is.na(fit$value)){","\n")
+  cat1("  return(NA)","\n")
+  cat1("}else{","\n")
+  cat1("  obs <- obs_shape(fit)","\n")
+  cat1("  fit$observed_shape <- obs$fitShape","\n")
+  cat1("  fit$asymptote <- obs$asymp","\n")
+  cat1("  class(fit) <- 'sars'","\n")
+  cat1("  attr(fit, 'type') <- 'fit'","\n")
+  cat1("  return(fit)","\n")
+  cat1("}","\n")
   
   #function end
   cat1(paste0("}#end of ",funName,"\n"))
   
 }#eo model_factory
-
 
 #using it
 

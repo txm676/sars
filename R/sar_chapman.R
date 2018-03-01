@@ -5,6 +5,8 @@
 #' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness
 #'   of each island/site.
+#' @param grid_start NULL or the number of points sampled in the model parameter space
+#'   to run a grid search.
 #' @return 
 #' @examples
 #' data(galap)
@@ -13,7 +15,7 @@
 #' plot(fit)
 #' @export
 
-sar_chapman <- function(data=galap, start = NULL){
+sar_chapman <- function(data = galap, start = NULL, grid_start = NULL){
 if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe') 
 if (is.matrix(data)) data <- as.data.frame(data) 
 if (anyNA(data)) stop('NAs present in data') 
@@ -34,11 +36,15 @@ model <- list(
 )
 
 model <- compmod(model) 
-fit <- rssoptim(model = model, data = data, start = start, algo = 'Nelder-Mead') 
-obs <- obs_shape(fit) 
-fit$observed_shape <- obs$fitShape 
-fit$asymptote <- obs$asymp 
-class(fit) <- 'sars' 
-attr(fit, 'type') <- 'fit' 
-return(fit) 
+fit <- get_fit(model = model, data = data, start = start, grid_start = grid_start, algo = 'Nelder-Mead', verb = TRUE) 
+if(is.na(fit$value)){ 
+  return(NA) 
+}else{ 
+  obs <- obs_shape(fit) 
+  fit$observed_shape <- obs$fitShape 
+  fit$asymptote <- obs$asymp 
+  class(fit) <- 'sars' 
+  attr(fit, 'type') <- 'fit' 
+  return(fit) 
+} 
 }#end of sar_chapman

@@ -4,7 +4,7 @@
 
 multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg")),
                        data = galap,
-                       keep_fits = FALSE,
+                       keep_details = TRUE,
                        crit = "Info",
                        normtest = "lillie",
                        homotest = "cor.fitted",
@@ -35,11 +35,27 @@ multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","p1
       eval(parse(text = paste0(x,"(data)")))
     })
     
+    if(all(is.na(fits))){
+      stop("No model could be fitted, aborting multi_sars\n")
+    }
+    
+    if(any(is.na(fits))){
+      warning("One or more models could not be fitted and have been excluded from the multi SAR\n")
+      fits <- fits[!is.na(fits)]
+    }
+    
     fits <- fit_collection(fits = fits)
     
-  }
-  
-  if (class(obj) == "sars" & attributes(x)$type == "fit_collection") fits <- obj
+  }else{
+    if (attributes(obj)$type == "fit_collection"){
+      fits <- obj
+      if(all(is.na(fits))){
+        stop("The fit collection had no fits, aborting multi_sars\n")
+      }
+    }else{
+      stop("an object of class 'sars' is passed but not of type 'fit_collection':(")
+    }
+  }#eo if else is.character(obj)
   
   
   #if checks for normality and / or homoscedasticity enabled, then check and remove bad fits from fits
@@ -73,7 +89,26 @@ multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","p1
   
   res <- mmi
   
-  if(keep_fits) res <- list(mmi=mmi,fits=as.list(fits))
+  if(keep_details){
+    
+    details <- list(
+      mod_names = modNames,
+      fits = fits,
+      crit = crit,
+      ic = IC,
+      norm_test = normtest,
+      homo_test = homotest,
+      alpha_norm_test = alpha_normtest,
+      alpha_homo_test = alpha_homotest,
+      ics = ICs,
+      delta_ics = delta_ICs,
+      weights_ics = weights_ICs,
+      n_points = nPoints,
+      n_mods = nMods
+    )
+    
+    res <- list(mmi = mmi, details = details)
+  }#eo if keep_details 
   
   class(res) <- "sars"
   attr(res, "type") <- "multi_sars"
