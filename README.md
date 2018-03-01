@@ -1,3 +1,4 @@
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 The 'sars' R Package <img src="man/figures/sars_logo.png" align="right" />
 ==========================================================================

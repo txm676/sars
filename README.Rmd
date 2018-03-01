@@ -2,7 +2,7 @@
 output:
   md_document:
     variant: markdown_github
-bibliography: inst/REFERENCES.bib
+bibliography: "`r here::here('inst/REFERENCES.bib')`"
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->

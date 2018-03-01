@@ -2,9 +2,11 @@ Package: sars
 Type: Package
 Title: Fit and compare species-area relationship models using multimodel inference
 Version: 0.1.0
-Author: Thomas J. Matthews & Francois Guilhaumon 
-Maintainer: Thomas J. Matthews <txm676@gmail.com>
-Description: Implements the basic elements of the multimodel 
+Authors@R: c(person("Thomas J.", "Matthews", email = "txm676@gmail.com",
+                  role = c("aut", "cre")),
+            person("François", "Guilhaumon", email = "francois.guilhaumon@ird.fr",
+                  role = c("aut")))
+Description: Implements the basic elements of the multi-model 
     inference paradigm (Burnham & Anderson, 2002) with simple R list-objects 
     and functions. The package is scalable and users can easily create their own model and data objects. 
 License: GPL-3
