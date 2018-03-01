@@ -158,7 +158,7 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead"){
 }#eo rssoptim
 
 ######################################## Multiple starting values optimization function
-grid_start_fit <- function(model, data, n = 100, algo = "Nelder-Mead", verb = FALSE) {
+grid_start_fit <- function(model, data, n, algo = "Nelder-Mead", verb = TRUE) {
   
   if(length(model$parNames)<4){
     ns <- 100
@@ -195,13 +195,11 @@ grid_start_fit <- function(model, data, n = 100, algo = "Nelder-Mead", verb = FA
   min <- which.min(values)
   
   if(length(min) != 0) {
-    fit <- fit.list[[min]]
+    fit.list[[min]]
   }else{
-    fit <- NA
+    list(value = NA)
   }
-  
-  return(fit)
-  
+
 }#eo grid_start_fit
 
 ######################################## optimization wrapper
@@ -211,16 +209,26 @@ get_fit <- function(model = model, data = data, start = NULL, grid_start = NULL,
     stop("You must choose between 'start' and 'grid_start', but choose wisely\n")
   }
   
-  if(is.null(start) & is.null(grid_start)){
-    fit <- tryCatch(rssoptim(model, data, algo = algo),error=function(e) list(value = NA))
+  if(is.null(start)){
+    fit <- tryCatch(rssoptim(model = model, data = data, algo = algo),error=function(e) list(value = NA))
+    if(is.na(fit$value)){
+      if(!is.null(grid_start)){
+        if(grid_start != FALSE){
+          n <- min(grid_start,1000)
+          fit <- grid_start_fit(model = model, data = data, n = n, algo = algo, verb = verb)
+        }
+      }
+    }
   }
   
   if(!is.null(start)){
-    fit <- tryCatch(rssoptim(model, data, start = start, algo = algo), error = function(e) list(value = NA))
+    fit <- tryCatch(rssoptim(model = model, data = data, start = start, algo = algo), error = function(e) list(value = NA))
   } 
   
   if(!is.null(grid_start)) {
-    fit <- grid_start_fit(model, data, n = grid_start, algo = algo, verb = verb)
+    if (grid_start != FALSE){
+      fit <- grid_start_fit(model = model, data = data, n = grid_start, algo = algo, verb = verb)
+    }#eo if (grid_start != FALSE)
   }#eo if(!is.null(grid_start))
   
   if(is.na(fit$value)){
