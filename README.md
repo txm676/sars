@@ -1,6 +1,6 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-The 'sars' R Package
-====================
+The 'sars' R Package <img src="man/figures/sars_logo.png" align="right" />
+==========================================================================
 
 [![Build Status](https://travis-ci.org/txm676/gambin.svg?branch=master)](https://travis-ci.org/txm676/gambin) [![Downloads](https://cranlogs.r-pkg.org/badges/gambin?color=brightgreen)](https://cran.r-project.org/package=gambin) [![CRAN](https://www.r-pkg.org/badges/version/gambin)](https://cran.r-project.org/package=gambin)
 
