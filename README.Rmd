@@ -1,0 +1,61 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# sars
+
+The goal of sars is to fit and compare species-area relationship models using multimodel inference.
+
+## Installation
+
+You can install the released version of sars from [CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("sars")
+```
+
+And the development version from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("txm676/sars")
+```
+## Example
+
+Basic usage of sars will result in using to types of functions:
+
+```{r example}
+library(sars)
+
+#fitting the power sar model (Arrhenius, 1921) to the 'galapagos' data set
+fit_pow <- sar_power(data = galap)
+
+#attempting to fit all 20 sar models to the 'galapagos' data set and generate a multimodel inference
+mm_galap <- multi_sars(data = galap)
+
+```
+
+Most of 'fitting' functions have corresponding plot methods
+
+```{r plot}
+#fitting the exponential sar model (Gleason, 1922) to the 'galapagos' data set
+fit_expo <- sar_expo(data = galap)
+
+#plot it
+plot(fit_expo)
+
+```
+
+## Troubleshoutting
+
+If, despite the :heart: brought during the programming of this R package and writing of this documentation, you have difficulties to install or run sars, if you have questions about the procedures or calculations, or if you want to report bugs :beetle:, do not hesitate to consult the official sars documentation above or on [CRAN](https://CRAN.R-project.org/package=sars) or connect with us on [GitHub](https://github.com/txm676/sars).
