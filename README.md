@@ -3,7 +3,9 @@
 sars
 ====
 
-The goal of sars is to fit and compare species-area relationship models using multimodel inference.
+> *fit and compare species-area relationship models using multimodel inference*
+
+**sars** provides functionality to fit twenty SAR model using non-linear regression, and to calculate multi-model averaged curves using various information criteria. The software also provides easy to use functionality to plot multi-model SAR curves and to generate confidence intervals using bootstrapping.
 
 Installation
 ------------
@@ -75,7 +77,7 @@ plot(fit_expo)
 
 <img src="man/figures/README-plot-1.png" width="100%" />
 
-Troubleshoutting
-----------------
+Troubleshoutting :bomb:
+-----------------------
 
-If, despite the :heart: brought during the programming of this R package and writing of this documentation, you have difficulties to install or run sars, if you have questions about the procedures or calculations, or if you want to report bugs :beetle:, do not hesitate to consult the official sars documentation above or on [CRAN](https://CRAN.R-project.org/package=sars) or connect with us on [GitHub](https://github.com/txm676/sars).
+If, despite the :heart: brought during the programming of this R :package: and writing of this documentation, you have difficulties to install or run sars, if you have questions about the procedures or calculations, or if you want to report bugs :beetle:, do not hesitate to connect with us on [GitHub](https://github.com/txm676/sars).
