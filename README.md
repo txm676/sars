@@ -28,13 +28,15 @@ Example
 
 Basic usage of sars will result in using to types of functions:
 
+Fitting the power sar model (Arrhenius 1921) to the 'galapagos' data set
+
 ``` r
-library(sars)
-
-#fitting the power sar model (Arrhenius, 1921) to the 'galapagos' data set
 fit_pow <- sar_power(data = galap)
+```
 
-#attempting to fit all 20 sar models to the 'galapagos' data set and generate a multimodel inference
+Attempting to fit all 20 sar models to the 'galapagos' data set and generate a multimodel inference
+
+``` r
 mm_galap <- multi_sars(data = galap)
 #> -- fitting model:  sar_power 
 #> -- fitting model:  sar_powerR 
@@ -47,37 +49,36 @@ mm_galap <- multi_sars(data = galap)
 #> -- fitting model:  sar_mmf 
 #> -- fitting model:  sar_monod 
 #> -- fitting model:  sar_negexpo 
-#> -- fitting model:  sar_chapman
-#> Warning: Chapman Richards: singular gradient matrix at parameter estimates.
-#> Could not compute parameters significance and conf intervals.
-#> -- fitting model:  sar_weibull3
-#> Warning: Cumulative Weibull 3 par.: singular gradient matrix at parameter
-#> estimates. Could not compute parameters significance and conf intervals.
+#> -- fitting model:  sar_chapman 
+#> -- fitting model:  sar_weibull3 
 #> -- fitting model:  sar_asymp 
 #> -- fitting model:  sar_ratio 
-#> -- fitting model:  sar_gompertz
-#> Warning: Gompertz: singular gradient matrix at parameter estimates. Could
-#> not compute parameters significance and conf intervals.
+#> -- fitting model:  sar_gompertz 
 #> -- fitting model:  sar_weibull4 
-#> -- fitting model:  sar_betap
-#> Warning: Beta-P cumulative: singular gradient matrix at parameter
-#> estimates. Could not compute parameters significance and conf intervals.
+#> -- fitting model:  sar_betap 
 #> -- fitting model:  sar_heleg
 ```
 
-Most of 'fitting' functions have corresponding plot methods
+Most of 'fitting' functions have corresponding plot methods.
+
+Fitting the exponential sar model (Gleason 1922) to the 'galapagos' data set and plot it
 
 ``` r
-#fitting the exponential sar model (Gleason, 1922) to the 'galapagos' data set
 fit_expo <- sar_expo(data = galap)
 
-#plot it
 plot(fit_expo)
 ```
 
-<img src="man/figures/README-plot-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
 Troubleshoutting :bomb:
 -----------------------
 
 If, despite the :heart: brought during the programming of this R :package: and writing of this documentation, you have difficulties to install or run sars, if you have questions about the procedures or calculations, or if you want to report bugs :beetle:, do not hesitate to connect with us on [GitHub](https://github.com/txm676/sars).
+
+References
+==========
+
+Arrhenius, Olof. 1921. “Species and Area.” *The Journal of Ecology* 9 (1). British Ecological Society: 95. doi:[10.2307/2255763](https://doi.org/10.2307/2255763).
+
+Gleason, Henry Allan. 1922. “On the Relation Between Species and Area.” *Ecology* 3 (2). Ecological Society of America: 158–62. doi:[10.2307/1929150](https://doi.org/10.2307/1929150).

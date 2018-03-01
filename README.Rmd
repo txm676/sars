@@ -1,5 +1,6 @@
 ---
 output: github_document
+bibliography: inst/REFERENCES.bib
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -36,28 +37,32 @@ devtools::install_github("txm676/sars")
 
 Basic usage of sars will result in using to types of functions:
 
-```{r example}
+```{r include = FALSE}
 library(sars)
+```
 
-#fitting the power sar model (Arrhenius, 1921) to the 'galapagos' data set
+Fitting the power sar model [@Arrhenius1921] to the 'galapagos' data set
+```{r}
 fit_pow <- sar_power(data = galap)
+```
 
-#attempting to fit all 20 sar models to the 'galapagos' data set and generate a multimodel inference
+Attempting to fit all 20 sar models to the 'galapagos' data set and generate a multimodel inference
+```{r warning = FALSE}
 mm_galap <- multi_sars(data = galap)
 
 ```
 
-Most of 'fitting' functions have corresponding plot methods
+Most of 'fitting' functions have corresponding plot methods.
 
-```{r plot}
-#fitting the exponential sar model (Gleason, 1922) to the 'galapagos' data set
+Fitting the exponential sar model [@Gleason1922] to the 'galapagos' data set and plot it
+```{r}
 fit_expo <- sar_expo(data = galap)
 
-#plot it
 plot(fit_expo)
-
 ```
 
 ## Troubleshoutting :bomb:
 
 If, despite the :heart: brought during the programming of this R :package: and writing of this documentation, you have difficulties to install or run sars, if you have questions about the procedures or calculations, or if you want to report bugs :beetle:, do not hesitate to connect with us on [GitHub](https://github.com/txm676/sars).
+
+# References
