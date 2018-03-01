@@ -6,6 +6,7 @@
 #'   the first with island/site areas, and the second with the species richness
 #'   of each island/site.
 #' @param grid_start NULL or the number of points sampled in the model parameter space
+#'   or FALSE to prevent any grid start after a fail in optim
 #'   to run a grid search.
 #' @return 
 #' @examples
