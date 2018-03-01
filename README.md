@@ -39,25 +39,25 @@ Attempting to fit all 20 sar models to the 'galapagos' data set and generate a m
 
 ``` r
 mm_galap <- multi_sars(data = galap)
-#> -- fitting model:  sar_power 
-#> -- fitting model:  sar_powerR 
-#> -- fitting model:  sar_epm1 
-#> -- fitting model:  sar_epm2 
-#> -- fitting model:  sar_p1 
-#> -- fitting model:  sar_p2 
-#> -- fitting model:  sar_expo 
-#> -- fitting model:  sar_koba 
-#> -- fitting model:  sar_mmf 
-#> -- fitting model:  sar_monod 
-#> -- fitting model:  sar_negexpo 
-#> -- fitting model:  sar_chapman 
-#> -- fitting model:  sar_weibull3 
-#> -- fitting model:  sar_asymp 
-#> -- fitting model:  sar_ratio 
-#> -- fitting model:  sar_gompertz 
-#> -- fitting model:  sar_weibull4 
-#> -- fitting model:  sar_betap 
-#> -- fitting model:  sar_heleg
+#> ✔ -- fitting model: sar_power
+#> ✔ -- fitting model: sar_powerR
+#> ✔ -- fitting model: sar_epm1
+#> ✔ -- fitting model: sar_epm2
+#> ✔ -- fitting model: sar_p1
+#> ✔ -- fitting model: sar_p2
+#> ✔ -- fitting model: sar_expo
+#> ✔ -- fitting model: sar_koba
+#> ✔ -- fitting model: sar_mmf
+#> ✔ -- fitting model: sar_monod
+#> ✔ -- fitting model: sar_negexpo
+#> ✔ -- fitting model: sar_chapman
+#> ✔ -- fitting model: sar_weibull3
+#> ✔ -- fitting model: sar_asymp
+#> ✔ -- fitting model: sar_ratio
+#> ✔ -- fitting model: sar_gompertz
+#> ✔ -- fitting model: sar_weibull4
+#> ✔ -- fitting model: sar_betap
+#> ✔ -- fitting model: sar_heleg
 ```
 
 Most of 'fitting' functions have corresponding plot methods.

@@ -55,7 +55,6 @@ fit_pow <- sar_power(data = galap)
 Attempting to fit all 20 sar models to the 'galapagos' data set and generate a multimodel inference
 ```{r warning = FALSE}
 mm_galap <- multi_sars(data = galap)
-
 ```
 
 Most of 'fitting' functions have corresponding plot methods.
