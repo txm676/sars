@@ -26,7 +26,7 @@ devtools::install_github("txm676/sars")
 Example
 -------
 
-Basic usage of sars will result in using to types of functions:
+Basic usage of **sars** will result in using two types of functions:
 
 Fitting the power sar model (Arrhenius 1921) to the 'galapagos' data set
 
