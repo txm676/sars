@@ -15,6 +15,7 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#'   the first with island/site areas, and the second with the species richness", "\n")) 
   cat1(paste0("#'   of each island/site.", "\n"))
   cat1(paste0("#' @param ", "grid_start ", "NULL or the number of points sampled in the model parameter space", "\n"))
+  cat1(paste0("#'   or FALSE to prevent any grid start after a fail in optim", "\n"))
   cat1(paste0("#'   to run a grid search.", "\n"))
   cat1(paste0("#' @return ", "\n"))
   
