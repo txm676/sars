@@ -15,7 +15,7 @@ Matthews et al. 2015. i
 data(cole_sim)
 }
 \description{
-A l dataset in the correct mmSAR2 format:
+A dataset in the correct mmSAR2 format:
 }
 \examples{
 data(cole_sim)
