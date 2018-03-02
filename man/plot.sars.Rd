@@ -4,9 +4,9 @@
 \alias{plot.sars}
 \title{Plot Model Fits for a 'sars' Object}
 \usage{
-\method{plot}{sars}(x, xlab = NULL, ylab = NULL, pch = 16, type = "o",
-  cex = 1.2, pcol = "dodgerblue2", ModTitle = NULL, TiAdj = 0,
-  TiLine = 0.5, cex.main = 1.5, cex.lab = 1.3, cex.axis = 1, lwd = 2,
+\method{plot}{sars}(x, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
+  pcol = "dodgerblue2", ModTitle = NULL, TiAdj = 0, TiLine = 0.5,
+  cex.main = 1.5, cex.lab = 1.3, cex.axis = 1, lwd = 2,
   lcol = "dodgerblue2", di = NULL, ...)
 }
 \arguments{

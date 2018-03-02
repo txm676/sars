@@ -50,7 +50,7 @@
 #' @export
 
 
-plot.sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, type = "o", cex = 1.2, 
+plot.sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
                       pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
                       cex.lab = 1.3, cex.axis = 1,
                       lwd = 2, lcol = 'dodgerblue2', di = NULL, ...)
@@ -115,7 +115,7 @@ plot.sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, type = "o", cex = 1
       
       plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
            cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ...)
-      title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main, ...)
+      title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
       lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
     })
   }
