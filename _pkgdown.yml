@@ -2,13 +2,14 @@ url: https://txm676.github.io/sars/
 
 template:
   params:
-    bootswatch: united
+    bootswatch: yeti
 
 navbar:
   title: "sars"
   type: inverse
   left:
     - text: "Home"
+      icon: fa-home
       href: index.html
     - text: "Articles"
       menu:
