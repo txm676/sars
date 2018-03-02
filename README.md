@@ -1,11 +1,11 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-The 'sars' R Package <img src="man/figures/sars_logo.png" align="right" />
-==========================================================================
+The **'sars'** R Package <img src="man/figures/sars_logo.png" align="right" width="10%"/>
+=========================================================================================
 
 [![Build Status](https://travis-ci.org/txm676/gambin.svg?branch=master)](https://travis-ci.org/txm676/gambin) [![Downloads](https://cranlogs.r-pkg.org/badges/gambin?color=brightgreen)](https://cran.r-project.org/package=gambin) [![CRAN](https://www.r-pkg.org/badges/version/gambin)](https://cran.r-project.org/package=gambin)
 
-> *fit and compare species-area relationship models using multimodel inference*
+> *fit and compare **Species-Area Relationship (SAR)** models using multi-model inference*
 
 **sars** provides functionality to fit twenty SAR model using non-linear regression, and to calculate multi-model averaged curves using various information criteria. The software also provides easy to use functionality to plot multi-model SAR curves and to generate confidence intervals using bootstrapping.
 
@@ -25,45 +25,47 @@ And the development version from [GitHub](https://github.com/) with:
 devtools::install_github("txm676/sars")
 ```
 
-Example
--------
+Example usage
+-------------
 
 Basic usage of **sars** will result in using two types of functions:
 
-Fitting the power sar model (Arrhenius 1921) to the 'galapagos' data set
+To fit the power sar model (Arrhenius 1921) to the 'galapagos' (Preston 1962) data set:
 
 ``` r
 fit_pow <- sar_power(data = galap)
 ```
 
-Attempting to fit all 20 sar models to the 'galapagos' data set and generate a multimodel inference
+Attempting to fit all 20 sar models to the 'galapagos' (Preston 1962) data set and get a multi-model SAR:
 
 ``` r
 mm_galap <- multi_sars(data = galap)
-#> ✔ -- fitting model: sar_power
-#> ✔ -- fitting model: sar_powerR
-#> ✔ -- fitting model: sar_epm1
-#> ✔ -- fitting model: sar_epm2
-#> ✔ -- fitting model: sar_p1
-#> ✔ -- fitting model: sar_p2
-#> ✔ -- fitting model: sar_expo
-#> ✔ -- fitting model: sar_koba
-#> ✔ -- fitting model: sar_mmf
-#> ✔ -- fitting model: sar_monod
-#> ✔ -- fitting model: sar_negexpo
-#> ✔ -- fitting model: sar_chapman
-#> ✔ -- fitting model: sar_weibull3
-#> ✔ -- fitting model: sar_asymp
-#> ✔ -- fitting model: sar_ratio
-#> ✔ -- fitting model: sar_gompertz
-#> ✔ -- fitting model: sar_weibull4
-#> ✔ -- fitting model: sar_betap
-#> ✔ -- fitting model: sar_heleg
+#> ● multi_sars: multi-model SAR
+#> ● opt. | sig. : model
+#> → ✔ | ✔ : sar_power
+#> → ✔ | ✔ : sar_powerR
+#> → ✔ | ✔ : sar_epm1
+#> → ✔ | ✔ : sar_epm2
+#> → ✔ | ✔ : sar_p1
+#> → ✔ | ✔ : sar_p2
+#> → ✔ | ✔ : sar_expo
+#> → ✔ | ✔ : sar_koba
+#> → ✔ | ✔ : sar_mmf
+#> → ✔ | ✔ : sar_monod
+#> → ✔ | ✔ : sar_negexpo
+#> → ✔ | ✖ : sar_chapman
+#> → ✔ | ✔ : sar_weibull3
+#> → ✔ | ✔ : sar_asymp
+#> → ✔ | ✔ : sar_ratio
+#> → ✔ | ✔ : sar_gompertz
+#> → ✔ | ✔ : sar_weibull4
+#> → ✔ | ✖ : sar_betap
+#> → ✔ | ✔ : sar_heleg
 ```
 
-Most of 'fitting' functions have corresponding plot methods.
+Most of 'fitted' objects have corresponding plot methods:
 
-Fitting the exponential sar model (Gleason 1922) to the 'galapagos' data set and plot it
+to fit the exponential SAR model (Gleason 1922) to the 'galapagos' data set and plot it
 
 ``` r
 fit_expo <- sar_expo(data = galap)
@@ -84,3 +86,5 @@ References
 Arrhenius, Olof. 1921. “Species and Area.” *The Journal of Ecology* 9 (1). British Ecological Society: 95. doi:[10.2307/2255763](https://doi.org/10.2307/2255763).
 
 Gleason, Henry Allan. 1922. “On the Relation Between Species and Area.” *Ecology* 3 (2). Ecological Society of America: 158–62. doi:[10.2307/1929150](https://doi.org/10.2307/1929150).
+
+Preston, F. W. 1962. “The Canonical Distribution of Commonness and Rarity: Part I.” *Ecology* 43 (2). Ecological Society of America: 185. doi:[10.2307/1931976](https://doi.org/10.2307/1931976).

@@ -25,32 +25,42 @@ multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","p1
   normtest <- match.arg(normtest, c("none", "shapiro", "kolmo", "lillie"))
   homotest <- match.arg(homotest, c("none","cor.area","cor.fitted"))
   
-  #if not yet fitted, fit the models to the data
+  if (verb) bullet("multi_sars: multi-model SAR", bullet = crayon::cyan(clisymbols::symbol$bullet))
+  if (verb) bullet("opt. | sig. : model", bullet = crayon::cyan(clisymbols::symbol$bullet))
+  
+  #if not yet fitted, fit the models to the datasquare_small_filled
   if (is.character(obj)) {
    
-    fits <- lapply(obj, function(x){
+    fits <- suppressWarnings(lapply(obj, function(x){
       
       f <- eval(parse(text = paste0(x,"(data)")))
       
       if (verb) {
-        if(is.na(f)) {
-          failed("-- fitting model: ", x)
+        if(is.na(f$value)) {
+          cat_line(blue_arrow()," ",failed()," | ",failed()," : ", x)
         }else{
-          passed("-- fitting model: ", x)
+          
+          if (!is.matrix(f$sigConf)){
+            cat_line(blue_arrow()," ",passed()," | ",failed()," : ", x)
+          }else{
+            cat_line(blue_arrow()," ",passed()," | ",passed()," : ", x)
+          }
         }
       }
       
       f
       
-    })
+    }))#eo suppressWarnings(lapply)
     
-    if(all(is.na(fits))){
+    f_nas <- unlist(lapply(fits,function(b)b$value))
+    
+    if(all(is.na(f_nas))){
       stop("No model could be fitted, aborting multi_sars\n")
     }
     
-    if(any(is.na(fits))){
-      warning("One or more models could not be fitted and have been excluded from the multi SAR\n")
-      fits <- fits[!is.na(fits)]
+    if(any(is.na(f_nas))){
+      warning(warned()," One or more models could not be fitted and have been excluded from the multi SAR", call. = FALSE)
+      fits <- fits[!is.na(f_nas)]
     }
     
     fits <- fit_collection(fits = fits)

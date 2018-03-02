@@ -1,4 +1,21 @@
+url: https://txm676.github.io/sars/
+
 template:
   params:
     bootswatch: united
-    
+
+navbar:
+  title: "sars"
+  type: inverse
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Articles"
+      menu:
+        - text: "package manuscript"
+          href: articles/sars_ms.html
+    - text: "Reference"
+      href: reference/index.html
+  right:
+   - icon: fa-github
+     href: https://github.com/txm676/sars

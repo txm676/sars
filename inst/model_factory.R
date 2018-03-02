@@ -15,7 +15,7 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#'   the first with island/site areas, and the second with the species richness", "\n")) 
   cat1(paste0("#'   of each island/site.", "\n"))
   cat1(paste0("#' @param ", "grid_start ", "NULL or the number of points sampled in the model parameter space", "\n"))
-  cat1(paste0("#'   or FALSE to prevent any grid start after a fail in optim", "\n"))
+  cat1(paste0("#'   or FALSE to prevent any grid start after a fail in inital optimization", "\n"))
   cat1(paste0("#'   to run a grid search.", "\n"))
   cat1(paste0("#' @return ", "\n"))
   
@@ -66,7 +66,7 @@ model_factory <- function(f, overwrite = FALSE){
   #checks
   cat1("if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe')","\n")
   cat1("if (is.matrix(data)) data <- as.data.frame(data)","\n")
-  cat1("if (anyNA(data)) stop('NAs present in data')","\n")
+  cat1("if (base::anyNA(data)) stop('NAs present in data')","\n")
   #cat1("normtest <- match.arg(normtest, c('none', 'shapiro', 'kolmo', 'lillie'))","\n")
   
   #data ordering and column naming (assuming Area then Species Richness)
@@ -84,7 +84,7 @@ model_factory <- function(f, overwrite = FALSE){
   
   cat1("fit <- get_fit(model = model, data = data, start = start, grid_start = grid_start, algo = 'Nelder-Mead', verb = TRUE)","\n")
   cat1("if(is.na(fit$value)){","\n")
-  cat1("  return(NA)","\n")
+  cat1("  return(list(value = NA))","\n")
   cat1("}else{","\n")
   cat1("  obs <- obs_shape(fit)","\n")
   cat1("  fit$observed_shape <- obs$fitShape","\n")

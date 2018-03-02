@@ -5,12 +5,20 @@ bullet <- function(lines, bullet) {
   cat_line(lines)
 }
 
-failed <- function(...) {
-  bullet(paste0(...), bullet = crayon::red(clisymbols::symbol$bullet))
+failed <- function() {
+  crayon::red(clisymbols::symbol$cross)
 }
 
-passed <- function(...) {
-  bullet(paste0(...), bullet = crayon::green(clisymbols::symbol$tick))
+warned <- function() {
+  crayon::yellow(clisymbols::symbol$square_small_filled)
+}
+
+passed <- function() {
+  crayon::green(clisymbols::symbol$tick)
+}
+
+blue_arrow <- function() {
+  crayon::cyan(clisymbols::symbol$arrow_right)
 }
 
 cat_line <- function(...) {

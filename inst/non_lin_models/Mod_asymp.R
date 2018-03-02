@@ -1,12 +1,10 @@
 #Asymptotic Regression
 model <- list(
   name=c("Asymptotic regression"),
-  formula=expression(S == d - c*z^A),
   exp=expression(d - c*z^A),
   shape="convex",
   asymp=function(pars)pars["d"],
   parLim = c("Rplus","R","R"),
-  custStart=function(data)c(1,1,max(data$S)*2),
   #initial values function
   init=function(data){#Ratkowsky 1983 p178
     #d determination (asymptote)

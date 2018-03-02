@@ -108,7 +108,7 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead"){
 
   #constructing a nlsModel object
 
-  formul <- formula(gsub("==","~",as.character(model$formula)))
+  formul <- formula(paste("S ~",as.character(model$exp)))
   env <- environment(formul)
   if (is.null(env)){
     env <- parent.frame()
@@ -118,7 +118,8 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead"){
   nMod <- tryCatch(stats:::nlsModel(formul,data,res1$par), error = function(e)NA)
   
   if(class(nMod) != "nlsModel"){
-    warning(model$name,": singular gradient matrix at parameter estimates. Could not compute parameters significance and conf intervals.", call. = FALSE)
+    warning(model$name,": singular gradient at parameter estimates:
+   no parameters significance and conf. intervals.", call. = FALSE)
     res$sigConf <- NA
   }else{
     #number of parameters

@@ -6,7 +6,7 @@
 #'   the first with island/site areas, and the second with the species richness
 #'   of each island/site.
 #' @param grid_start NULL or the number of points sampled in the model parameter space
-#'   or FALSE to prevent any grid start after a fail in optim
+#'   or FALSE to prevent any grid start after a fail in inital optimization
 #'   to run a grid search.
 #' @return 
 #' @examples
@@ -19,18 +19,16 @@
 sar_asymp <- function(data = galap, start = NULL, grid_start = NULL){
 if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe') 
 if (is.matrix(data)) data <- as.data.frame(data) 
-if (anyNA(data)) stop('NAs present in data') 
+if (base::anyNA(data)) stop('NAs present in data') 
 data <- data[order(data[,1]),] 
 colnames(data) <- c('A','S') 
 #Asymptotic Regression
 model <- list(
   name=c("Asymptotic regression"),
-  formula=expression(S == d - c*z^A),
   exp=expression(d - c*z^A),
   shape="convex",
   asymp=function(pars)pars["d"],
   parLim = c("Rplus","R","R"),
-  custStart=function(data)c(1,1,max(data$S)*2),
   #initial values function
   init=function(data){#Ratkowsky 1983 p178
     #d determination (asymptote)
@@ -47,7 +45,7 @@ model <- list(
 model <- compmod(model) 
 fit <- get_fit(model = model, data = data, start = start, grid_start = grid_start, algo = 'Nelder-Mead', verb = TRUE) 
 if(is.na(fit$value)){ 
-  return(NA) 
+  return(list(value = NA)) 
 }else{ 
   obs <- obs_shape(fit) 
   fit$observed_shape <- obs$fitShape 

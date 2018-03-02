@@ -21,7 +21,7 @@
 </head>
 <body>
     <div class="container template-vignette">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -34,13 +34,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fa fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="reference/index.html">Reference</a>
+  <a href="index.html">Home</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -50,15 +44,18 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/sars_ms.html">sars: an R package for fitting, comparing and evaluating species-area relationship [models]</a>
+      <a href="articles/sars_ms.html">package manuscript</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="reference/index.html">Reference</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/txm676/sars">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -81,11 +78,11 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <div id="the-sars-r-package" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#the-sars-r-package" class="anchor"></a>The ‘sars’ R Package <img src="reference/figures/sars_logo.png" align="right">
+<a href="#the-sars-r-package" class="anchor"></a>The <strong>‘sars’</strong> R Package <img src="reference/figures/sars_logo.png" align="right" width="10%">
 </h1></div>
 
 <blockquote>
-<p><em>fit and compare species-area relationship models using multimodel inference</em></p>
+<p><em>fit and compare <strong>Species-Area Relationship (SAR)</strong> models using multi-model inference</em></p>
 </blockquote>
 <p><strong>sars</strong> provides functionality to fit twenty SAR model using non-linear regression, and to calculate multi-model averaged curves using various information criteria. The software also provides easy to use functionality to plot multi-model SAR curves and to generate confidence intervals using bootstrapping.</p>
 <div id="installation" class="section level2">
@@ -97,35 +94,37 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
 devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"txm676/sars"</span>)</code></pre></div>
 </div>
-<div id="example" class="section level2">
+<div id="example-usage" class="section level2">
 <h2 class="hasAnchor">
-<a href="#example" class="anchor"></a>Example</h2>
+<a href="#example-usage" class="anchor"></a>Example usage</h2>
 <p>Basic usage of <strong>sars</strong> will result in using two types of functions:</p>
-<p>Fitting the power sar model <span class="citation">(Arrhenius 1921)</span> to the ‘galapagos’ data set</p>
+<p>To fit the power sar model <span class="citation">(Arrhenius 1921)</span> to the ‘galapagos’ <span class="citation">(Preston 1962)</span> data set:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit_pow &lt;-<span class="st"> </span><span class="kw"><a href="reference/sar_power.html">sar_power</a></span>(<span class="dt">data =</span> galap)</code></pre></div>
-<p>Attempting to fit all 20 sar models to the ‘galapagos’ data set and generate a multimodel inference</p>
+<p>Attempting to fit all 20 sar models to the ‘galapagos’ <span class="citation">(Preston 1962)</span> data set and get a multi-model SAR:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mm_galap &lt;-<span class="st"> </span><span class="kw">multi_sars</span>(<span class="dt">data =</span> galap)
-<span class="co">#&gt; ✔ -- fitting model: sar_power</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_powerR</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_epm1</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_epm2</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_p1</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_p2</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_expo</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_koba</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_mmf</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_monod</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_negexpo</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_chapman</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_weibull3</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_asymp</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_ratio</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_gompertz</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_weibull4</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_betap</span>
-<span class="co">#&gt; ✔ -- fitting model: sar_heleg</span></code></pre></div>
-<p>Most of ‘fitting’ functions have corresponding plot methods.</p>
-<p>Fitting the exponential sar model <span class="citation">(Gleason 1922)</span> to the ‘galapagos’ data set and plot it</p>
+<span class="co">#&gt; ● multi_sars: multi-model SAR</span>
+<span class="co">#&gt; ● opt. | sig. : model</span>
+<span class="co">#&gt; → ✔ | ✔ : sar_power</span>
+<span class="co">#&gt; → ✔ | ✔ : sar_powerR</span>
+<span class="co">#&gt; → ✔ | ✔ : sar_epm1</span>
+<span class="co">#&gt; → ✔ | ✔ : sar_epm2</span>
+<span class="co">#&gt; → ✔ | ✔ : sar_p1</span>
+<span class="co">#&gt; → ✔ | ✔ : sar_p2</span>
+<span class="co">#&gt; → ✔ | ✔ : sar_expo</span>
+<span class="co">#&gt; → ✔ | ✔ : sar_koba</span>
+<span class="co">#&gt; → ✔ | ✔ : sar_mmf</span>
+<span class="co">#&gt; → ✔ | ✔ : sar_monod</span>
+<span class="co">#&gt; → ✔ | ✔ : sar_negexpo</span>
+<span class="co">#&gt; → ✔ | ✖ : sar_chapman</span>
+<span class="co">#&gt; → ✔ | ✔ : sar_weibull3</span>
+<span class="co">#&gt; → ✔ | ✔ : sar_asymp</span>
+<span class="co">#&gt; → ✔ | ✔ : sar_ratio</span>
+<span class="co">#&gt; → ✔ | ✔ : sar_gompertz</span>
+<span class="co">#&gt; → ✔ | ✔ : sar_weibull4</span>
+<span class="co">#&gt; → ✔ | ✖ : sar_betap</span>
+<span class="co">#&gt; → ✔ | ✔ : sar_heleg</span></code></pre></div>
+<p>Most of ‘fitted’ objects have corresponding plot methods:</p>
+<p>to fit the exponential SAR model <span class="citation">(Gleason 1922)</span> to the ‘galapagos’ data set and plot it</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit_expo &lt;-<span class="st"> </span><span class="kw"><a href="reference/sar_expo.html">sar_expo</a></span>(<span class="dt">data =</span> galap)
 
 <span class="kw">plot</span>(fit_expo)</code></pre></div>
@@ -146,6 +145,9 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 </div>
 <div id="ref-Gleason1922">
 <p>Gleason, Henry Allan. 1922. “On the Relation Between Species and Area.” <em>Ecology</em> 3 (2). Ecological Society of America: 158–62. doi:<a href="https://doi.org/10.2307/1929150">10.2307/1929150</a>.</p>
+</div>
+<div id="ref-Preston1962">
+<p>Preston, F. W. 1962. “The Canonical Distribution of Commonness and Rarity: Part I.” <em>Ecology</em> 43 (2). Ecological Society of America: 185. doi:<a href="https://doi.org/10.2307/1931976">10.2307/1931976</a>.</p>
 </div>
 </div>
 </div>
