@@ -1,26 +1,59 @@
-#'  Plot Model Fits for an mmsar2 Object
+#'  Plot Model Fits for a 'sars' Object
 #'
-#' @description S3 method for class 'mmSAR2'. plot.mmSAR2 creates plots for
-#'   objects of class mmSAR2, using the ggplot2 R package. The exact plot(s)
-#'   constructed depends on the 'Type' attribute (e.g. 'lin_pow') of the mmSAR2
-#'   object.
+#' @description S3 method for class 'sars'. \code{plot.sars} creates plots for
+#'   objects of class sars, using the R base plotting framework. The exact
+#'   plot(s) constructed depends on the 'Type' attribute of the sars object.For
+#'   example, for a sars object of Type 'fit', the \code{plot.sars} function
+#'   returns a plot of the model fit (line) and the observed richness values
+#'   (points).
+#' @param x An object of class 'sars'.
+#' @param xlab Title for the x-axis (default depends on the Type attribute).
+#' @param ylab Title for the y-axis (default depends on the Type attribute).
+#' @param pch Plotting character (for points).
+#' @param cex A numerical vector giving the amount by which plotting symbols
+#'   (points) should be scaled relative to the default.
+#' @param pcol Colour of the points.
+#' @param ModTitle Plot title (default is null, which reverts to the model
+#'   name). For no title, use ModTitle = "". For a sars object of type
+#'   fit_collection, a vector of names can be provided (e.g. \code{letters[1:3]}).
+#' @param TiAdj Which way the plot title is justified.
+#' @param TiLine Places the plot title this many lines outwards from the plot
+#'   edge.
+#' @param cex.main The amount by which the the plot title should be scaled
+#'   relative to the default.
+#' @param cex.lab The amount by which the the axis titles should be scaled
+#'   relative to the default.
+#' @param cex.axis The amount by which the the axis labels should be scaled
+#'   relative to the default.
+#' @param lwd Line width.
+#' @param lcol Line colour.
+#' @param di Dimensions to be passed to \code{par(mfrow=())} to specify the size
+#'   of the plotting window, when plotting multiple plots from a sars object of
+#'   Type fit_collection. For example, \code{di = c(1, 3)} creates a plotting
+#'   window with 1 row and 3 columns. The default (null) creates a square
+#'   plotting window of the correct size.
+#' @param \dots Further graphical parameters (see \code{\link[graphics]{par}},
+#'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
+#'   \code{\link[graphics]{lines}}) may be supplied as arguments.
+#' @importFrom graphics plot lines title
+#' @examples
+#' data(galap)
+#' #fit and plot a sars object of Type fit.
+#' fit <- sar_power(galap)
+#' plot(fit, ModTitle = "A)", lcol = "blue")
 #'
-#'   For an mmSAR2 object of Type 'lin_pow' (i.e. linear power model fit), the
-#'   plot.mmSAR2 function returns a plot of the model fit (black line) and the
-#'   observed richness values (coloured circles).
-#' @param object An object of class 'mmSAR2'.
-#' @param lsi Argument for line width (default = 3).
-#' @param ps Argument for point size (default = 1).
-#' @param pc Argument for point colour (default = darkgreen).
-#' @param ...	further arguments passed to or from other methods.
-#' @param th an additional ggplot2 theme can be added and instructions can be passed.
-#'    As ggplot2 is not *loaded*, th needs to use ggplot2::, e.g. ggplot2::theme_bw
+#' #fit and plot a sars object of Type fit_collection.
+#' fit2 <- sar_expo(galap)
+#' fit3 <- sar_epm1(galap)
+#' fc <- fit_collection(fit, fit2, fit3)
+#' plot(fc, ModTitle = letters[1:3], xlab = "Size of island")
 #' @export
 
 
-plot.sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
-                      pcol = "black", ModTitle = NULL, TiAdj = 0, TiLine = 0.5, lwd = 2,
-                      lcol = "black", di = NULL, ...)
+plot.sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, type = "o", cex = 1.2, 
+                      pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
+                      cex.lab = 1.3, cex.axis = 1,
+                      lwd = 2, lcol = 'dodgerblue2', di = NULL, ...)
 {
   
   if (is.null(xlab)){
@@ -49,14 +82,23 @@ plot.sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
     yy <- df$S
     ff <- x$calculated
     
-    plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, cex = cex, ...)
-    title(main = ModTitle, adj = TiAdj, line = TiLine, ...)
+    plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ...)
+    title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
     lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
     
   }
   
   if (attributes(x)$type == "fit_collection"){
 
+    if (!is.null(ModTitle)){
+      if (length(ModTitle) == 1 && ModTitle == "") ModTitle <- rep("", length(x))
+      if (length(ModTitle) != length(x)) stop("The length of ModTitle does not match the length of x")
+      for (i in seq_along(x)){
+        x[[i]]$model$name <- ModTitle[i]
+      }
+    }
+    
     if (is.null(di)) {
       di <- ceiling(length(x) / 2)
       par(mfrow = c(di, di))
@@ -71,8 +113,9 @@ plot.sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
       ff <- x$calculated
       ModTitle <- x$model$name 
       
-      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, cex = cex, ...)
-      title(main = ModTitle, adj = TiAdj, line = TiLine, ...)
+      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ...)
+      title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main, ...)
       lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
     })
   }
@@ -85,8 +128,9 @@ plot.sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
     yy <- df$S
     ff <- x$calculated
     
-    plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, cex = cex, ...)
-    title(main = ModTitle, adj = TiAdj, line = TiLine, ...)
+    plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ...)
+    title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
     lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
   }
 }
