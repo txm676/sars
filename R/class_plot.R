@@ -18,37 +18,76 @@
 #' @export
 
 
-plot.sars <- function(x, title = NULL, sh1 = 21, s1 = 3, s2 = 1, s3 = 14, s4 = 13, s5 = 15,
-                      c1 = "darkred", c2 = "#5e5e5e", xl = "Area", yl = "Species richness",
-                      p1 = 0, dimen = NULL, th = NULL)
+plot.sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
+                      pcol = "black", ModTitle = NULL, TiAdj = 0, TiLine = 0.5, lwd = 2,
+                      lcol = "black", di = NULL, ...)
 {
-  if (attributes(x)$type == "fit"){
-    if (is.null(title)) title <- x$model$name
-    g1 <- int_plot(x, title, sh1, s1, s2, s3, s4, s5,
-                   c1, c2, xl, yl, p1, th)
-    return(g1)
-  }
   
-  if (attributes(x)$type == "fit_collection"){
-    fc2 <- list()
-    for (i in seq_along(x)){
-      if (is.null(title)) {title2 <- x[[i]]$model$name} else{title2 <- title[i]}
-      fc2[[i]] <- int_plot(x[[i]], title2, sh1, s1, s2, s3, s4, s5,
-                           c1, c2, xl, yl, p1, th)
-    }#eo for
-    
-    if (is.null(dimen)){
-      return(gridExtra::grid.arrange(grobs = fc2))
+  if (is.null(xlab)){
+    if (attributes(x)$type == "fit" || attributes(x)$type == "fit_collection"){
+        xlab = "Area"
+    } else if (attributes(x)$type == "lin_pow"){
+      xlab = "Log(Area)"
     } else {
-      return(gridExtra::grid.arrange(grobs = fc2, nrow = dimen[1], ncol = dimen[2]))
+      stop ("Type attribute not recognised")
     }
   }
   
+  if (is.null(ylab)){
+    if (attributes(x)$type == "fit" || attributes(x)$type == "fit_collection"){
+      ylab = "Species richness"
+    } else if (attributes(x)$type == "lin_pow"){
+      ylab = "Log(Species richness)"
+    }
+  }
+  
+  if (attributes(x)$type == "fit"){
+    if (is.null(ModTitle)) ModTitle <- x$model$name
+    
+    df <- x$data
+    xx <- df$A
+    yy <- df$S
+    ff <- x$calculated
+    
+    plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, cex = cex, ...)
+    title(main = ModTitle, adj = TiAdj, line = TiLine, ...)
+    lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
+    
+  }
+  
+  if (attributes(x)$type == "fit_collection"){
+
+    if (is.null(di)) {
+      di <- ceiling(length(x) / 2)
+      par(mfrow = c(di, di))
+    } else {
+      par(mfrow = di)
+    }
+      lapply(x, function(x){
+      
+      df <- x$data
+      xx <- df$A
+      yy <- df$S
+      ff <- x$calculated
+      ModTitle <- x$model$name 
+      
+      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, cex = cex, ...)
+      title(main = ModTitle, adj = TiAdj, line = TiLine, ...)
+      lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
+    })
+  }
+  
   if (attributes(x)$type == "lin_pow"){
-    if (is.null(title)) title <- "Log-log power"
-    g1 <- int_plot(x, title = title, sh1, s1, s2, s3, s4, s5,
-                   c1, c2, xl = "Log(area)", yl = "Log(species richness)", p1, th)
-    return(g1)
+    if (is.null(ModTitle)) ModTitle <- "Log-log power"
+ 
+    df <- x$data
+    xx <- df$A
+    yy <- df$S
+    ff <- x$calculated
+    
+    plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, cex = cex, ...)
+    title(main = ModTitle, adj = TiAdj, line = TiLine, ...)
+    lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
   }
 }
 
