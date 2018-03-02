@@ -136,30 +136,50 @@ plot.sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
   
   
   
-  #if (attributes(x)$type == "multi_sars"){
-   # if (is.null(ModTitle)) ModTitle <- "Multimodel SAR Curves"
-    
-  #dat <- x$details$fits
+  if (attributes(x)$type == "multi_sars"){
+
+  ic <- x[[2]]$ic 
+  dat <- x$details$fits
   
   #filter out bad models
- # bad <- vapply(dat, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
- # dat2 <- dat[-which(bad)]
+  bad <- vapply(dat, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
+  dat2 <- dat[-which(bad)]
   
   #observed data
- # df <- dat[[1]]$data 
- # xx <- df$A
- # yy <- df$S
+  df <- dat[[1]]$data 
+  xx <- df$A
+  yy <- df$S
+  nams <-  vapply(dat2, function(x) x$model$name, FUN.VALUE = character(1))
   
+  #fitted values for each model
+  mf <- lapply(dat2, function(x) x$calculated)
+  mf2 <- matrix(unlist(mf), ncol = length(dat2), byrow = FALSE)
+  mf2 <- as.data.frame(mf2)
+  colnames(mf2) <- nams
+  
+  #get correct IC info
+  wh <- which(names(dat2[[1]]) == ic)
+  icv <- vapply(dat2, function(x) unlist(x[wh]), FUN.VALUE = double(1))
+  #delta
+  delt <- icv - min(icv)
+  #weight
+  akaikesum <- sum(exp( -0.5*(delt)))
+  aw <- exp(-0.5*delt) / akaikesum
+  if (sum(aw) != 1) stop("IC weights do not sum to 1")
+  
+  par(mfrow = c(1, 2))
   #first plot with all curves
-  #plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-     #  cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ...)
-  #title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main, ...)
+  plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+       cex = cex, cex.lab = cex.lab, cex.axis = cex.axis)
+  matlines(xx, mf2, lwd = lwd)
+  legend("top", legend = nams, inset=c(-0.2,0), lty = 1:ncol(mf2), col=1:ncol(mf2)) 
+  title(main = "MultiModel Fits", adj = TiAdj, line = TiLine,cex.main = cex.main)
   
-  #lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
-  
-  
-  
- # }
+  ##barplot of IC weights
+  barplot(aw, ylim=c(0, max(aw) + 0.05), cex.names=.68, ylab="IC weights", cex.lab = 1, 
+          names.arg = nams)
+  title(main = "Model weights", cex.main = 1.5, adj = 0, line = 0.5)
+  }
   
   
 }
