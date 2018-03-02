@@ -25,6 +25,14 @@ knitr::opts_chunk$set(
 
 **sars** provides functionality to fit twenty SAR model using non-linear regression, and to calculate multi-model averaged curves using various information criteria. The software also provides easy to use functionality to plot multi-model SAR curves and to generate confidence intervals using bootstrapping.
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Example](#example-usage)
+- [troubleshoutting](#troubleshoutting)
+- [References](#References)
+
+
 ## Installation
 
 You can install the released version of sars from [CRAN](https://CRAN.R-project.org) with:
@@ -70,4 +78,4 @@ plot(fit_expo)
 
 If, despite the :heart: brought during the programming of this R :package: and writing of this documentation, you have difficulties to install or run sars, if you have questions about the procedures or calculations, or if you want to report bugs :beetle:, do not hesitate to connect with us on [GitHub](https://github.com/txm676/sars).
 
-# References
+## References

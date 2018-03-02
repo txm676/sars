@@ -9,6 +9,14 @@ The **'sars'** R Package <img src="man/figures/sars_logo.png" align="right" widt
 
 **sars** provides functionality to fit twenty SAR model using non-linear regression, and to calculate multi-model averaged curves using various information criteria. The software also provides easy to use functionality to plot multi-model SAR curves and to generate confidence intervals using bootstrapping.
 
+Table of Contents
+-----------------
+
+-   [Installation](#installation)
+-   [Example](#example-usage)
+-   [troubleshoutting](#troubleshoutting)
+-   [References](#References)
+
 Installation
 ------------
 
@@ -81,7 +89,7 @@ Troubleshoutting
 If, despite the :heart: brought during the programming of this R :package: and writing of this documentation, you have difficulties to install or run sars, if you have questions about the procedures or calculations, or if you want to report bugs :beetle:, do not hesitate to connect with us on [GitHub](https://github.com/txm676/sars).
 
 References
-==========
+----------
 
 Arrhenius, Olof. 1921. “Species and Area.” *The Journal of Ecology* 9 (1). British Ecological Society: 95. doi:[10.2307/2255763](https://doi.org/10.2307/2255763).
 
