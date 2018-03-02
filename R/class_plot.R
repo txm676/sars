@@ -133,6 +133,35 @@ plot.sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, type = "o", cex = 1
     title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
     lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
   }
+  
+  
+  
+  #if (attributes(x)$type == "multi_sars"){
+   # if (is.null(ModTitle)) ModTitle <- "Multimodel SAR Curves"
+    
+  #dat <- x$details$fits
+  
+  #filter out bad models
+ # bad <- vapply(dat, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
+ # dat2 <- dat[-which(bad)]
+  
+  #observed data
+ # df <- dat[[1]]$data 
+ # xx <- df$A
+ # yy <- df$S
+  
+  #first plot with all curves
+  #plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+     #  cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ...)
+  #title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main, ...)
+  
+  #lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
+  
+  
+  
+ # }
+  
+  
 }
 
 

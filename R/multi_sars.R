@@ -83,7 +83,7 @@ multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","p1
   #setting variables
   nPoints <- length(fits[[1]]$data$A)
   nMods <- length(fits)
-  modNames <- vapply(fits, FUN = function(x){x$model$name}, FUN.VALUE = character(1))
+  modNames <- as.vector(vapply(fits, FUN = function(x){x$model$name}, FUN.VALUE = character(1)))
   if(is.character(obj)){  keep_fits <- TRUE }
   
   #choosing an IC criterion (AIC or AICc or BIC)
