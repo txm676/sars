@@ -14,8 +14,8 @@ Table of Contents
 
 -   [Installation](#installation)
 -   [Example](#example-usage)
--   [troubleshoutting](#troubleshoutting)
--   [References](#References)
+-   [Troubleshoutting](#troubleshoutting)
+-   [References](#references)
 
 Installation
 ------------
