@@ -11,7 +11,7 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/united/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -45,7 +45,7 @@
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -63,9 +63,6 @@
      
   </a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Articles
@@ -74,16 +71,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/sars_ms.html">sars: an R package for fitting, comparing and evaluating species-area relationship [models]</a>
+      <a href="../articles/sars_ms.html">package manuscript</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/txm676/sars">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -121,7 +121,8 @@ of each island/site.</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>galap</span>)
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>sar_weibull3</span>(<span class='no'>galap</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Cumulative Weibull 3 par.: singular gradient matrix at parameter estimates. Could not compute parameters significance and conf intervals.</span></div><div class='input'><span class='fu'>summary</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; 
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>sar_weibull3</span>(<span class='no'>galap</span>)
+<span class='fu'>summary</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; 
 #&gt; Model: 
 #&gt; Cumulative Weibull 3 par.
 #&gt; 
@@ -134,7 +135,16 @@ of each island/site.</p></td>
 #&gt;      0%     25%     50%     75%    100% 
 #&gt; -137.40  -40.35   -0.50   16.10  127.60 
 #&gt; 
-#&gt; Parameters: </div><div class='output co'>#&gt; <span class='error'>Error in `rownames&lt;-`(`*tmp*`, value = object$parNames): attempt to set 'rownames' on an object with no dimensions</span></div><div class='input'><span class='fu'>plot</span>(<span class='no'>fit</span>)</div><div class='img'><img src='sar_weibull3-1.png' alt='' width='700' height='432.632880098887' /></div></pre>
+#&gt; Parameters: 
+#&gt;      Estimate  Std. Error     t value    Pr(&gt;|t|)        2.5%    97.5%
+#&gt; d  2.0802e+02  3.7660e+01  5.5234e+00  9.8163e-05  1.3269e+02 283.3361
+#&gt; c  6.4753e-02  9.2670e-02  6.9875e-01  4.9702e-01 -1.2059e-01   0.2501
+#&gt; z  8.3218e-01  4.9890e-01  1.6680e+00  1.1921e-01 -1.6563e-01   1.8300
+#&gt; 
+#&gt; R-squared: 0.56, Adjusted R-squared: 0.45
+#&gt; AIC: 141.28, AICc: 144.92, BIC: 144.37
+#&gt; Observed shape: convex up, Asymptote: TRUE
+#&gt; </div><div class='input'><span class='fu'>plot</span>(<span class='no'>fit</span>)</div><div class='img'><img src='sar_weibull3-1.png' alt='' width='700' height='432.632880098887' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

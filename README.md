@@ -75,8 +75,8 @@ plot(fit_expo)
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
-Troubleshoutting :bomb:
------------------------
+Troubleshoutting
+----------------
 
 If, despite the :heart: brought during the programming of this R :package: and writing of this documentation, you have difficulties to install or run sars, if you have questions about the procedures or calculations, or if you want to report bugs :beetle:, do not hesitate to connect with us on [GitHub](https://github.com/txm676/sars).
 

@@ -8,8 +8,7 @@ navbar:
   title: "sars"
   type: inverse
   left:
-    - text: "Home"
-      icon: fa-home
+    - icon: fa-home fa-lg
       href: index.html
     - text: "Articles"
       menu:
