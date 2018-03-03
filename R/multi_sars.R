@@ -129,8 +129,8 @@ multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","p1
     res <- list(mmi = mmi, details = details)
   }#eo if keep_details 
   
-  class(res) <- "sars"
-  attr(res, "type") <- "multi_sars"
+  class(res) <- c("multi_sars", "sars")
+  attr(res, "type") <- "multi"
   
   invisible(res)
   

@@ -50,11 +50,15 @@
 #' @export
 
 
-plot.sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
+plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
                       pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
                       cex.lab = 1.3, cex.axis = 1,
                       lwd = 2, lcol = 'dodgerblue2', di = NULL, ...)
 {
+  
+  
+  if (mfplot && attributes(x)$type != "fit_collection") stop("mfplot argument only for use with Type 'fit_collection'")
+  
   
   if (is.null(xlab)){
     if (attributes(x)$type == "fit" || attributes(x)$type == "fit_collection"){
@@ -90,6 +94,8 @@ plot.sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
   }
   
   if (attributes(x)$type == "fit_collection"){
+    
+    if (!mfplot){
 
     if (!is.null(ModTitle)){
       if (length(ModTitle) == 1 && ModTitle == "") ModTitle <- rep("", length(x))
@@ -118,7 +124,31 @@ plot.sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
       title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
       lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
     })
-  }
+    }# !mfplot
+    
+    if (mfplot){
+      #observed data
+      df <- x[[1]]$data 
+      xx <- df$A
+      yy <- df$S
+      nams <-  vapply(x, function(x) x$model$name, FUN.VALUE = character(1))
+      
+      #fitted values for each model
+      mf <- lapply(x, function(x) x$calculated)
+      mf2 <- matrix(unlist(mf), ncol = length(x), byrow = FALSE)
+      mf2 <- as.data.frame(mf2)
+      colnames(mf2) <- nams
+     
+      #plot with all curves
+      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, bty = "L")
+      matlines(xx, mf2, lwd = lwd)
+      title(main = "MultiModel Fits", adj = TiAdj, line = TiLine,cex.main = cex.main)
+      #par(xpd=TRUE)
+      legend(max(xx), max(yy), legend = nams, horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2), xpd=TRUE)
+    }#eo mfplot
+  
+  }#eo if fit_collection
   
   if (attributes(x)$type == "lin_pow"){
     if (is.null(ModTitle)) ModTitle <- "Log-log power"
@@ -133,11 +163,20 @@ plot.sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
     title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
     lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
   }
-  
-  
-  
-  if (attributes(x)$type == "multi_sars"){
+ }
 
+#'  Plot Model Fits for a 'multi_sars' Object
+#' @importFrom graphics plot lines title
+#' @export
+
+#NOT FINISHED
+
+
+plot.multi_sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
+                      pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
+                      cex.lab = 1.3, cex.axis = 1,
+                      lwd = 2, lcol = 'dodgerblue2', di = NULL, ...)
+{
   ic <- x[[2]]$ic 
   dat <- x$details$fits
   
@@ -179,10 +218,16 @@ plot.sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
   barplot(aw, ylim=c(0, max(aw) + 0.05), cex.names=.68, ylab="IC weights", cex.lab = 1, 
           names.arg = nams)
   title(main = "Model weights", cex.main = 1.5, adj = 0, line = 0.5)
-  }
-  
+
   
 }
+
+
+
+
+
+
+
 
 
 
