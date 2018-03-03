@@ -4,10 +4,11 @@
 \alias{plot.multi_sars}
 \title{Plot Model Fits for a 'multi_sars' Object}
 \usage{
-\method{plot}{multi_sars}(x, xlab = NULL, ylab = NULL, pch = 16,
-  cex = 1.2, pcol = "dodgerblue2", ModTitle = NULL, TiAdj = 0,
-  TiLine = 0.5, cex.main = 1.5, cex.lab = 1.3, cex.axis = 1, lwd = 2,
-  lcol = "dodgerblue2", di = NULL, ...)
+\method{plot}{multi_sars}(x, type = "both", allCurves = TRUE, xlab = NULL,
+  ylab = NULL, pch = 16, cex = 1.2, pcol = "dodgerblue2",
+  ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
+  cex.lab = 1.3, cex.axis = 1, lwd = 2, lcol = "dodgerblue2",
+  di = NULL, ...)
 }
 \description{
 Plot Model Fits for a 'multi_sars' Object

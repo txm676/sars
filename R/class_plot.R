@@ -165,6 +165,9 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
   }
  }
 
+
+
+
 #'  Plot Model Fits for a 'multi_sars' Object
 #' @importFrom graphics plot lines title
 #' @export
@@ -172,7 +175,8 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 #NOT FINISHED
 
 
-plot.multi_sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
+plot.multi_sars <- function(x, type = "both", allCurves = TRUE,
+                            xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
                       pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
                       cex.lab = 1.3, cex.axis = 1,
                       lwd = 2, lcol = 'dodgerblue2', di = NULL, ...)
@@ -206,20 +210,42 @@ plot.multi_sars <- function(x, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
   aw <- exp(-0.5*delt) / akaikesum
   if (sum(aw) != 1) stop("IC weights do not sum to 1")
   
-  par(mfrow = c(1, 2))
-  #first plot with all curves
-  plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-       cex = cex, cex.lab = cex.lab, cex.axis = cex.axis)
-  matlines(xx, mf2, lwd = lwd)
-  legend("top", legend = nams, inset=c(-0.2,0), lty = 1:ncol(mf2), col=1:ncol(mf2)) 
-  title(main = "MultiModel Fits", adj = TiAdj, line = TiLine,cex.main = cex.main)
+  #get weighted fitted values for each model
+  mf3 <- matrix(nrow = nrow(mf2), ncol = ncol(mf2))
+  for (i in seq_along(aw)) {mf3[ ,i] <- mf2[ ,i] * aw[i]}
+  wfv <- rowSums(mf3)
+
+  if (allCurves){
+    mf2$MultiModel <- wfv
+    nams2 <- c(nams, "MultiModel")
+  }
   
+  if (type == "both") par(mfrow = c(1, 2))
+  
+  if (type == "both" || type == "multi"){
+  #first plot with all curves
+  if (allCurves){
+      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+      cex = cex, cex.lab = cex.lab, cex.axis = cex.axis)
+      matlines(xx, mf2, lwd = lwd)
+      legend("top", legend = nams2, inset=c(-0.2,0), lty = 1:ncol(mf2), col=1:ncol(mf2)) 
+      title(main = "MultiModel Fits", adj = TiAdj, line = TiLine,cex.main = cex.main)
+  } else if (!allCurves){
+    #multimodel SAR curve
+    plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis)
+    title(main = "MultiModel Fits", adj = TiAdj, line = TiLine, cex.main = cex.main)
+    lines(x = xx, y = wfv, lwd = lwd, col = lcol)
+  }
+  }
+  
+  if (type == "both" || type == "bar"){  
   ##barplot of IC weights
   barplot(aw, ylim=c(0, max(aw) + 0.05), cex.names=.68, ylab="IC weights", cex.lab = 1, 
           names.arg = nams)
   title(main = "Model weights", cex.main = 1.5, adj = 0, line = 0.5)
+  }
 
-  
 }
 
 

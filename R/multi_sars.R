@@ -2,8 +2,8 @@
 
 #' @export
 
-multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg")),
-                       data = galap,
+multi_sars <- function(data = galap,
+                       obj = paste0("sar_",c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg")),
                        keep_details = TRUE,
                        crit = "Info",
                        normtest = "lillie",
