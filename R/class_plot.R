@@ -179,7 +179,7 @@ plot.multi_sars <- function(x, type = "both", allCurves = TRUE,
                             xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
                       pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
                       cex.lab = 1.3, cex.axis = 1,
-                      lwd = 2, lcol = 'dodgerblue2', di = NULL, ...)
+                      lwd = 2, lcol = 'dodgerblue2', di = c(1, 2), ...)
 {
   ic <- x[[2]]$ic 
   dat <- x$details$fits
@@ -220,7 +220,7 @@ plot.multi_sars <- function(x, type = "both", allCurves = TRUE,
     nams2 <- c(nams, "MultiModel")
   }
   
-  if (type == "both") par(mfrow = c(1, 2))
+  if (type == "both") par(mfrow = di)
   
   if (type == "both" || type == "multi"){
   #first plot with all curves
