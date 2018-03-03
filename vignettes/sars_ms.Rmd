@@ -76,8 +76,14 @@ state that it is mmSAR but is for fitting multi-model diversity area relationshi
 
 # Authors’ contributions
 
+TJM and FG wrote the R package. KT contributed datasets. TJM and FG wrote the paper with contributions from RJW and KT. All authors read and commented on the manuscript.
+
 # Acknowledgements 
 
-# Data accessibility 
+The College of Life and Environmental Sciences (University of Birmingham) kindly provided funding for TJM to visit the University of Athens to work on the paper.
+
+# Data accessibility
+
+All datasets used in the paper are provided within the ‘sars’ R package. 
 
 # References 
