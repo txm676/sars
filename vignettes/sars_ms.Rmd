@@ -1,5 +1,5 @@
 ---
-title: "sars: an R package for fitting, comparing and evaluating species-area relationship [models]"
+title: "sars: an R package for fitting, comparing and evaluating species-area relationship models"
 author: "Thomas J. Matthews* (1,2), Kostas Triantis, Robert J. Whittaker & Francois Guilhaumon"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
