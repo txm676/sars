@@ -129,7 +129,7 @@ multi_sars <- function(data = galap,
     res <- list(mmi = mmi, details = details)
   }#eo if keep_details 
   
-  class(res) <- c("multi_sars", "sars")
+  class(res) <- c("multi.sars", "sars")
   attr(res, "type") <- "multi"
   
   invisible(res)

@@ -175,7 +175,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 #NOT FINISHED
 
 
-plot.multi_sars <- function(x, type = "both", allCurves = TRUE,
+plot.multi.sars <- function(x, type = "both", allCurves = TRUE,
                             xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
                       pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
                       cex.lab = 1.3, cex.axis = 1,
