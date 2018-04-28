@@ -37,13 +37,13 @@ multi_sars <- function(data = galap,
       
       if (verb) {
         if(is.na(f$value)) {
-          cat_line(blue_arrow()," ",x," : ",crayon::red(cli::symbol$cross))
+          cat_line(crayon::cyan(cli::symbol$arrow_right)," ",x," : ",crayon::red(cli::symbol$cross))
         }else{
           
           if (!is.matrix(f$sigConf)){
-            cat_line(blue_arrow()," ",x," : ",crayon::yellow(cli::symbol$circle_filled)," | warning: could not compute parameters statistics")
+            cat_line(crayon::cyan(cli::symbol$arrow_right)," ",x," : ",crayon::yellow(cli::symbol$circle_filled)," | warning: could not compute parameters statistics")
           }else{
-            cat_line(blue_arrow()," ",x," : ",crayon::green(cli::symbol$tick))
+            cat_line(crayon::cyan(cli::symbol$arrow_right)," ",x," : ",crayon::green(cli::symbol$tick))
           }
         }
       }
