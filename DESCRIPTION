@@ -15,6 +15,7 @@ BugReports: https://github.com/txm676/sars/issues
 Imports: 
     dplyr,
     ggplot2,
+    graphics,
     grid,
     gridExtra,
     nortest,

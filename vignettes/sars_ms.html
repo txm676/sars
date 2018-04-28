@@ -12,9 +12,9 @@
 
 <meta name="author" content="Thomas J. Matthews* (1,2), Kostas Triantis, Robert J. Whittaker &amp; Francois Guilhaumon" />
 
-<meta name="date" content="2017-08-23" />
+<meta name="date" content="2018-03-03" />
 
-<title>sars: an R package for fitting, comparing and evaluating species-area relationship [models]</title>
+<title>sars: an R package for fitting, comparing and evaluating species-area relationship models</title>
 
 
 
@@ -30,9 +30,9 @@
 
 
 
-<h1 class="title toc-ignore">sars: an R package for fitting, comparing and evaluating species-area relationship [models]</h1>
+<h1 class="title toc-ignore">sars: an R package for fitting, comparing and evaluating species-area relationship models</h1>
 <h4 class="author"><em>Thomas J. Matthews* (1,2), Kostas Triantis, Robert J. Whittaker &amp; Francois Guilhaumon</em></h4>
-<h4 class="date"><em>2017-08-23</em></h4>
+<h4 class="date"><em>2018-03-03</em></h4>
 
 
 
@@ -61,16 +61,14 @@
 </div>
 <div id="summary" class="section level1">
 <h1>Summary</h1>
-<p>**sar function in BAT package – but only fits 3 models (6 variants), and no mm averaging</p>
-<p>*add in random placement model and GDM – to introduction</p>
-<p>*previous version was specialist on mm, whereas this new version is general SAR package that provides mm inference, but also other SAR related functionality and is more general and programmed using standard S3 methods and thus people can easily add in their own models (e.g. new wave of countryside SAR models) and integrate these into the comparison and mm functions.</p>
-<p>state that it is mmSAR but is for fitting multi-model diversity area relationships, a la Mazel.</p>
 </div>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>The species–area relationship (herein, ‘SAR’) describes the near universally observed pattern whereby the number of species increases with the area sampled, and it has been described as one of ecology’s few laws (Rosenzweig, 1995; Lawton, 1999). The SAR is a fundamental component of myriad ecological and biogeographical theories, such as the equilibrium theory of island biogeography (MacArthur &amp; Wilson, 1967). In addition, SAR models have been widely used in applied ecology and conservation biogeography; for example, to predict the number of extinctions due to habitat loss (Whittaker et al., 2005). Numerous types of SAR have been described (see Scheiner, xxxx), and one primary dichotomy employed is the split of SAR into island SARs (ISARs) and species accumulation curves (SACs; Gray, Matthews et al.). ISARs characterise .. , whilst SACs describe … Whilst the remainder of the paper and the described R package are generally focused on ISARs, the models and the model fitting procedure can equally be applied to SACs (see Matthews et al.), although *it should be noted that in SACs the data points are not independent.</p>
-<p>Over twenty SAR models have been described in the literature (Tjorve, Triantis) <strong>and these models</strong> can be grouped into three <strong>SAR shapes<em>: linear, convex and sigmoidal, <strong> and those with or without an asymptote (Triantis et al. 2012). However, despite this wide range of models, the majority of SAR studies are based exclusively on the power model (Arrhenius, other refs), which is given by the formula </strong></em>. In the past, due to </strong>, the log-log interpretation of the power model has generally been employed, as it can be fitted using standard linear regression; however, it has been found that the linear implementation does not produce identical parameter estimates to the non-linear implementation of the model (Triantis). Whilst the power model has been found to provide a good fit to a wide range of datasets (Triantis, Troussellier et al. 2017), it is not universally the best model, and a number of studies have reported other models, and perhaps more importantly, other model shapes, to provide better fits to empirical data than the convex power model (e.g. Benchimol &amp; Peres, 2013; Matthews et al. 2015). For example, the scale dependency of the SAR has long been recognised, such that at smaller scales the form is predicted to be <strong>, whilst at larger spatial scales the form of the SAR is theorised to be sigmoidal (He &amp; Legendre, </strong>). In sum, there is considerable model uncertainty with regards to the form of the SAR (Guilhaumon et al. 2008).</p>
-<p>In response to the <em>reported</em> model uncertainty in SAR studies, a number of recent studies have employed a multi-model inference approach (Burnham &amp; Anderson, 2002) in the analysis of SARs, whereby either (1) multiple SAR models are compared using various criteria (e.g. AIC) and a best model is chosen (e.g. Benchimol &amp; Peres, 2013), or (2) multiple SAR models are fitted and a multi-model averaged curve is calculated using, for example, AIC weights (see Burnham &amp; Anderson, 2002). For example, Guilhaumon et al. (2008) constructed multi-model averaged SAR curves using N models and used a bootstrap methodology to <em>locate biodiversity hotspots</em>. These N models were later incorporated into an R package (‘mmSAR’; Guilhaumon et al. 2010). However, as the mmSAR package only contains N models, it does not include a large number of models that have been found to provide the best fits to several empirical datasets (see Triantis et al. 2012; Matthews et al. 2015). In addition, the mmSAR package <em>old mmSAR package no longer complies with recent programming good practices and is not on CRAN, is not user friendly (e.g. requires the user to load individual models prior to fitting), and since 2010 there have been many advances in R packages and functionality (see Wickham, 2015) that are lacking in mmSAR, such that there is the need for a new package to be designed from scratch. To address these concerns, we have developed the R package ‘mmSAR2’ (available on CRAN; version 1.</em>), that provides functionality to fit twenty SAR model using non-linear regression, and to calculate multi-model averaged curves using various information criteria. The software also provides easy to use functionality to plot multi-model SAR curves and to generate confidence intervals using bootstrapping.</p>
+<p>The species–area relationship (SAR) describes the near universally observed pattern whereby the number of species increases with the area sampled, and it has been described as one of ecology’s few laws (Rosenzweig, 1995). The SAR is a fundamental component of myriad ecological and biogeographical theories, such as the equilibrium theory of island biogeography (MacArthur &amp; Wilson, 1967). In addition, SAR models have been widely used in applied ecology and conservation biogeography; for example, to predict the number of extinctions due to habitat loss (He &amp; Hubbell, 2011). Numerous types of SAR have been described, and one primary dichotomy employed is the split of SARs into island SARs (ISARs), whereby each data point is an individual island or isolated sample, and species accumulation curves (SACs), that represent cumulative counts of increased species number with sampling area (Gray et al., 2004). Whilst the remainder of the paper and the described R package are focused on ISARs, the models and the model fitting procedure can equally be applied to SACs (see Matthews et al., 2016), although it should be noted that in SACs the data points are not independent of one another.</p>
+<p>Over twenty SAR models have been described in the literature (Tjørve, 2003, Triantis et al., 2012). However, despite this wide range of models, the majority of SAR studies are still based exclusively on the power model (Arrhenius, 1921). Often, the log-log interpretation of the power model is used as it can be fitted using standard linear regression, and its parameters are more easily interpretable (Rosenzweig, 1995). However, whilst the power model has been found to provide a reasonable fit to a wide range of datasets (Triantis et al., 2012), it is not universally the best model, and a number of studies have reported other models, and perhaps more importantly, other model shapes, to provide better fits to empirical data than the convex power model (e.g. Triantis et al., 2012; Benchimol &amp; Peres, 2013; Matthews et al., 2015). For example, the scale dependency of the SAR has long been recognised, such that at intermediate scales the form is predicted to be approximated by a power model, whilst at larger spatial scales the form of the SAR is theorised to be sigmoidal (He &amp; Legendre, 1996).</p>
+<p>Due to the increased recognition of model uncertainty in SAR research, a number of recent studies have employed a multi-model inference approach (Burnham &amp; Anderson, 2002) in the analysis of SARs, whereby either (1) multiple SAR models are compared using various criteria (e.g. AIC) and a best model is chosen (e.g. Benchimol &amp; Peres, 2013), or (2) multiple SAR models are fitted and a multi-model averaged curve is calculated using, for example, AIC weights (e.g. Guilhaumon et al., 2008). However, no software package exists that enables users to fit, and create multi-model averaged curves using, more than eight SAR models.</p>
+<p>To address these concerns, we have developed the R package ‘sars’ that provides a wide variety of SAR related functionality. The package provides functions to fit twenty SAR model using non-linear and linear regression, calculate multi-model averaged curves using various information criteria, and generate confidence intervals using bootstrapping. In regards to other available software, the BAT R package (Cardoso et al., 2014) provides functions to fit three SAR models (linear, power and exponential); however, this package is focused on general biodiversity assessment and thus does not provide any additional SAR functionality. The main SAR software currently available is the mmSAR R package (Guilhaumon et al., 2010), which allows user to fit eight SAR models using an information theoretic framework. Thus, it does not include a large number of models that have been found to provide the best fits to several empirical datasets (Matthews et al., 2015). In addition to allowing users to fit up to twenty competing SAR models, the ‘sars’ package has more additional user-friendly functions, e.g. for plotting (can now plot multimodel SAR curve with the other individual SAR model curves and confidence intervals) than mmSAR, and provides additional SAR functionality, such as functions to fit, plot and evaluate Coleman’s (1982) random placement model using a species-site abundance matrix (/code{function}), and to fit the general dynamic model (GDM) of island biogeography (Borregaard et al., 2017) using any of 20 SAR models (/code{function}). In addition, the mmSAR package (which will be deprecated) no longer complies with recent programming good practices, is not on CRAN (the main repository of R package), is not user friendly (e.g. it requires the user to load individual models prior to fitting), and since it was published in 2010 there have been many advances in R packages and functionality (see Wickham, 2015) that are lacking in mmSAR. As such, there is the need for a new package to be designed from scratch.</p>
+<p>‘sars’ has been programmed using standard S3 methods and is available on CRAN (version 1.0.0; R Core Team, 2017) and GitHub (txm676/sars), meaning researchers can easily add in their own models and functions (e.g. recently developed countryside biogeography SAR models; Pereira et al., 2014) and integrate these into the multi-model inference framework. Thus, the package represents a resource for future SAR work that can be built on and expanded by workers in the field.</p>
 </div>
 <div id="package-description" class="section level1">
 <h1>Package description</h1>
@@ -100,16 +98,19 @@
 </div>
 <div id="conclusions" class="section level1">
 <h1>Conclusions</h1>
-<p>Done in general way so people can add new models etc</p>
+<p>Done in general way so people can add new models etc state that it is mmSAR but is for fitting multi-model diversity area relationships, a la Mazel.</p>
 </div>
 <div id="authors-contributions" class="section level1">
 <h1>Authors’ contributions</h1>
+<p>TJM and FG wrote the R package. KT contributed datasets. TJM and FG wrote the paper with contributions from RJW and KT. All authors read and commented on the manuscript.</p>
 </div>
 <div id="acknowledgements" class="section level1">
 <h1>Acknowledgements</h1>
+<p>The College of Life and Environmental Sciences (University of Birmingham) kindly provided funding for TJM to visit the University of Athens to work on the paper.</p>
 </div>
 <div id="data-accessibility" class="section level1">
 <h1>Data accessibility</h1>
+<p>All datasets used in the paper are provided within the ‘sars’ R package.</p>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>

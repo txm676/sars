@@ -2,8 +2,8 @@
 
 #' @export
 
-multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg")),
-                       data = galap,
+multi_sars <- function(data = galap,
+                       obj = paste0("sar_",c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg")),
                        keep_details = TRUE,
                        crit = "Info",
                        normtest = "lillie",
@@ -83,8 +83,10 @@ multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","p1
   #setting variables
   nPoints <- length(fits[[1]]$data$A)
   nMods <- length(fits)
+
   modNames <- vapply(fits, FUN = function(x){x$model$name}, FUN.VALUE = character(1))
   if(is.character(obj)){  keep_details <- TRUE }
+
   
   #choosing an IC criterion (AIC or AICc or BIC)
   IC <- switch(crit,
@@ -129,8 +131,8 @@ multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","p1
     res <- list(mmi = mmi, details = details)
   }#eo if keep_details 
   
-  class(res) <- "sars"
-  attr(res, "type") <- "multi_sars"
+  class(res) <- c("multi.sars", "sars")
+  attr(res, "type") <- "multi"
   
   invisible(res)
   

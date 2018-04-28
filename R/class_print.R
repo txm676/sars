@@ -64,7 +64,7 @@ print.sars <- function(object){
   if (attributes(object)$type == "fit_collection"){ 
     cat("\n", "This is a fit collection", "\n", sep = "")
     cat("\n", length(object), " models contained in the fit collection: ","\n", sep = "")
-    cat(unlist(lapply(object, function(x) x$model$name)), "\n", "\n")
+    cat( "\n", unlist(lapply(object, function(x) x$model$name)), "\n", "\n")
   }
   
   if (attributes(object)$type == "multi_sar"){ 

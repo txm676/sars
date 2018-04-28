@@ -2,34 +2,76 @@
 % Please edit documentation in R/class_plot.R
 \name{plot.sars}
 \alias{plot.sars}
-\title{Plot Model Fits for an mmsar2 Object}
+\title{Plot Model Fits for a 'sars' Object}
 \usage{
-\method{plot}{sars}(x, title = NULL, sh1 = 21, s1 = 3, s2 = 1,
-  s3 = 14, s4 = 13, s5 = 15, c1 = "darkred", c2 = "#5e5e5e",
-  xl = "Area", yl = "Species richness", p1 = 0, dimen = NULL,
-  th = NULL)
+\method{plot}{sars}(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
+  pch = 16, cex = 1.2, pcol = "dodgerblue2", ModTitle = NULL,
+  TiAdj = 0, TiLine = 0.5, cex.main = 1.5, cex.lab = 1.3,
+  cex.axis = 1, lwd = 2, lcol = "dodgerblue2", di = NULL, ...)
 }
 \arguments{
-\item{th}{an additional ggplot2 theme can be added and instructions can be passed.
-As ggplot2 is not *loaded*, th needs to use ggplot2::, e.g. ggplot2::theme_bw}
+\item{x}{An object of class 'sars'.}
 
-\item{object}{An object of class 'mmSAR2'.}
+\item{xlab}{Title for the x-axis (default depends on the Type attribute).}
 
-\item{lsi}{Argument for line width (default = 3).}
+\item{ylab}{Title for the y-axis (default depends on the Type attribute).}
 
-\item{ps}{Argument for point size (default = 1).}
+\item{pch}{Plotting character (for points).}
 
-\item{pc}{Argument for point colour (default = darkgreen).}
+\item{cex}{A numerical vector giving the amount by which plotting symbols
+(points) should be scaled relative to the default.}
 
-\item{...}{further arguments passed to or from other methods.}
+\item{pcol}{Colour of the points.}
+
+\item{ModTitle}{Plot title (default is null, which reverts to the model
+name). For no title, use ModTitle = "". For a sars object of type
+fit_collection, a vector of names can be provided (e.g. \code{letters[1:3]}).}
+
+\item{TiAdj}{Which way the plot title is justified.}
+
+\item{TiLine}{Places the plot title this many lines outwards from the plot
+edge.}
+
+\item{cex.main}{The amount by which the the plot title should be scaled
+relative to the default.}
+
+\item{cex.lab}{The amount by which the the axis titles should be scaled
+relative to the default.}
+
+\item{cex.axis}{The amount by which the the axis labels should be scaled
+relative to the default.}
+
+\item{lwd}{Line width.}
+
+\item{lcol}{Line colour.}
+
+\item{di}{Dimensions to be passed to \code{par(mfrow=())} to specify the size
+of the plotting window, when plotting multiple plots from a sars object of
+Type fit_collection. For example, \code{di = c(1, 3)} creates a plotting
+window with 1 row and 3 columns. The default (null) creates a square
+plotting window of the correct size.}
+
+\item{\dots}{Further graphical parameters (see \code{\link[graphics]{par}},
+\code{\link[graphics]{plot}},\code{\link[graphics]{title}},
+\code{\link[graphics]{lines}}) may be supplied as arguments.}
 }
 \description{
-S3 method for class 'mmSAR2'. plot.mmSAR2 creates plots for
-  objects of class mmSAR2, using the ggplot2 R package. The exact plot(s)
-  constructed depends on the 'Type' attribute (e.g. 'lin_pow') of the mmSAR2
-  object.
+S3 method for class 'sars'. \code{plot.sars} creates plots for
+  objects of class sars, using the R base plotting framework. The exact
+  plot(s) constructed depends on the 'Type' attribute of the sars object.For
+  example, for a sars object of Type 'fit', the \code{plot.sars} function
+  returns a plot of the model fit (line) and the observed richness values
+  (points).
+}
+\examples{
+data(galap)
+#fit and plot a sars object of Type fit.
+fit <- sar_power(galap)
+plot(fit, ModTitle = "A)", lcol = "blue")
 
-  For an mmSAR2 object of Type 'lin_pow' (i.e. linear power model fit), the
-  plot.mmSAR2 function returns a plot of the model fit (black line) and the
-  observed richness values (coloured circles).
+#fit and plot a sars object of Type fit_collection.
+fit2 <- sar_expo(galap)
+fit3 <- sar_epm1(galap)
+fc <- fit_collection(fit, fit2, fit3)
+plot(fc, ModTitle = letters[1:3], xlab = "Size of island")
 }
