@@ -25,8 +25,8 @@ multi_sars <- function(data = galap,
   normtest <- match.arg(normtest, c("none", "shapiro", "kolmo", "lillie"))
   homotest <- match.arg(homotest, c("none","cor.area","cor.fitted"))
   
-  if (verb) bullet("multi_sars: multi-model SAR", bullet = crayon::cyan(clisymbols::symbol$bullet))
-  if (verb) bullet("opt. | sig. : model", bullet = crayon::cyan(clisymbols::symbol$bullet))
+  if (verb) cat_line(cli::rule(left = paste0(crayon::cyan(clisymbols::symbol$bullet)," multi_sars: multi-model SAR")))
+  #if (verb) bullet("O | S : model", bullet = blue_arrow())
   
   #if not yet fitted, fit the models to the datasquare_small_filled
   if (is.character(obj)) {
@@ -37,13 +37,16 @@ multi_sars <- function(data = galap,
       
       if (verb) {
         if(is.na(f$value)) {
-          cat_line(blue_arrow()," ",failed()," | ",failed()," : ", x)
+          #cat_line(blue_arrow()," ",x," : ",failed()," | ",failed())
+          cat_line(blue_arrow()," ",x," : ",failed())
         }else{
           
           if (!is.matrix(f$sigConf)){
-            cat_line(blue_arrow()," ",passed()," | ",failed()," : ", x)
+            #cat_line(blue_arrow()," ",x," : ",passed()," | ",failed())
+            cat_line(blue_arrow()," ",x," : ",warned()," | warning: could not compute parameters statistics")
           }else{
-            cat_line(blue_arrow()," ",passed()," | ",passed()," : ", x)
+            #cat_line(blue_arrow()," ",x," : ",passed()," | ",passed())
+            cat_line(blue_arrow()," ",x," : ",passed())
           }
         }
       }
