@@ -84,7 +84,7 @@ multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","p1
   nPoints <- length(fits[[1]]$data$A)
   nMods <- length(fits)
   modNames <- vapply(fits, FUN = function(x){x$model$name}, FUN.VALUE = character(1))
-  if(is.character(obj)){  keep_fits <- TRUE }
+  if(is.character(obj)){  keep_details <- TRUE }
   
   #choosing an IC criterion (AIC or AICc or BIC)
   IC <- switch(crit,
@@ -96,7 +96,7 @@ multi_sars <- function(obj = paste0("sar_",c("power", "powerR","epm1","epm2","p1
   ICs <- vapply(X = fits, FUN = function(x){x[[IC]]}, FUN.VALUE = double(1))
   
   #get delta ICs
-  delta_ICs <- ICs <- min(ICs)
+  delta_ICs <- ICs - min(ICs)
   
   #get akaike weights
   akaikesum <- sum(exp( -0.5*(delta_ICs)))
