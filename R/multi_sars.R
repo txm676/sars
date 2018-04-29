@@ -3,7 +3,7 @@
 #' @export
 
 multi_sars <- function(data = galap,
-                       obj = paste0("sar_",c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg")),
+                       obj = c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg"),
                        keep_details = TRUE,
                        crit = "Info",
                        normtest = "lillie",
@@ -17,7 +17,7 @@ multi_sars <- function(data = galap,
   if (is.character(obj) & is.null(data)) stop("if obj is character then data should be provided")
   
   if (is.character(obj)) {
-    if (any(!(obj %in% paste0("sar_",c("linear","power","powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg"))))) stop("provided model names do not match with model functions")
+    if (any(!(obj %in% c("linear","power","powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg")))) stop("provided model names do not match with model functions")
   }
   
   if (length(obj) < 2) stop("more than 1 fit is required to construct a multi_sar")
@@ -25,25 +25,31 @@ multi_sars <- function(data = galap,
   normtest <- match.arg(normtest, c("none", "shapiro", "kolmo", "lillie"))
   homotest <- match.arg(homotest, c("none","cor.area","cor.fitted"))
   
-  if (verb) cat_line(cli::rule(left = paste0(crayon::cyan(cli::symbol$bullet)," multi_sars: multi-model SAR")))
+  #if (verb) cat_line(cli::rule(left = paste0(crayon::cyan(cli::symbol$bullet),crayon::bold(" multi_sars")),right="multi-model SAR"))
+  if (verb) cat_line(cli::rule(left = crayon::bold(" multi_sars"),right="multi-model SAR"))
+  #if (verb) cat_line(crayon::magenta(cli::symbol$arrow_right)," Data set is: ")
+  #if (verb) cat_line(cli::rule(left = paste0(crayon::magenta(cli::symbol$bullet))))
   #if (verb) bullet("O | S : model", bullet = blue_arrow())
   
   #if not yet fitted, fit the models to the datasquare_small_filled
   if (is.character(obj)) {
    
+    mods <- paste0("sar_",obj)
+    names(mods) <- obj
+    
     fits <- suppressWarnings(lapply(obj, function(x){
       
-      f <- eval(parse(text = paste0(x,"(data)")))
+      f <- eval(parse(text = paste0(mods[x],"(data)")))
       
       if (verb) {
         if(is.na(f$value)) {
-          cat_line(crayon::cyan(cli::symbol$arrow_right)," ",x," : ",crayon::red(cli::symbol$cross))
+          cat_line( paste0(crayon::red(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ", crayon::red(cli::symbol$cross)))
         }else{
           
           if (!is.matrix(f$sigConf)){
-            cat_line(crayon::cyan(cli::symbol$arrow_right)," ",x," : ",crayon::yellow(cli::symbol$circle_filled)," | warning: could not compute parameters statistics")
+            cat_line( paste0(crayon::yellow(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : Warning: could not compute parameters statistics"))
           }else{
-            cat_line(crayon::cyan(cli::symbol$arrow_right)," ",x," : ",crayon::green(cli::symbol$tick))
+            cat_line( paste0(crayon::cyan(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ",crayon::green(cli::symbol$tick)))
           }
         }
       }
@@ -59,7 +65,7 @@ multi_sars <- function(data = galap,
     }
     
     if(any(is.na(f_nas))){
-      warning(warned()," One or more models could not be fitted and have been excluded from the multi SAR", call. = FALSE)
+      warning(" One or more models could not be fitted and have been excluded from the multi SAR", call. = FALSE)
       fits <- fits[!is.na(f_nas)]
     }
     
@@ -134,7 +140,8 @@ multi_sars <- function(data = galap,
   class(res) <- c("multi.sars", "sars")
   attr(res, "type") <- "multi"
   
-  if (verb) cat_line(cli::rule(left = crayon::cyan(cli::symbol$bullet)))
+  #if (verb) cat_line(cli::rule(left = crayon::cyan(cli::symbol$bullet)))
+  if (verb) cat_line(cli::rule())
   
   invisible(res)
   
