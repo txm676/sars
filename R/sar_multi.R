@@ -2,7 +2,7 @@
 
 #' @export
 
-multi_sars <- function(data = galap,
+sar_multi <- function(data = galap,
                        obj = c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg"),
                        keep_details = TRUE,
                        crit = "Info",
@@ -20,7 +20,7 @@ multi_sars <- function(data = galap,
     if (any(!(obj %in% c("linear","power","powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg")))) stop("provided model names do not match with model functions")
   }
   
-  if (length(obj) < 2) stop("more than 1 fit is required to construct a multi_sar")
+  if (length(obj) < 2) stop("more than 1 fit is required to construct a sar_multi")
   
   normtest <- match.arg(normtest, c("none", "shapiro", "kolmo", "lillie"))
   homotest <- match.arg(homotest, c("none","cor.area","cor.fitted"))
@@ -137,7 +137,7 @@ multi_sars <- function(data = galap,
     res <- list(mmi = mmi, details = details)
   }#eo if keep_details 
   
-  class(res) <- c("multi.sars", "sars")
+  class(res) <- c("sars.multi", "sars")
   attr(res, "type") <- "multi"
   
   #if (verb) cat_line(cli::rule(left = crayon::cyan(cli::symbol$bullet)))
