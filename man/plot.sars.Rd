@@ -7,10 +7,13 @@
 \method{plot}{sars}(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
   pch = 16, cex = 1.2, pcol = "dodgerblue2", ModTitle = NULL,
   TiAdj = 0, TiLine = 0.5, cex.main = 1.5, cex.lab = 1.3,
-  cex.axis = 1, lwd = 2, lcol = "dodgerblue2", di = NULL, ...)
+  cex.axis = 1, yRange = NULL, lwd = 2, lcol = "dodgerblue2",
+  di = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class 'sars'.}
+
+\item{mfplot}{***}
 
 \item{xlab}{Title for the x-axis (default depends on the Type attribute).}
 
@@ -40,6 +43,8 @@ relative to the default.}
 
 \item{cex.axis}{The amount by which the the axis labels should be scaled
 relative to the default.}
+
+\item{yRange}{The range of the y-axis.}
 
 \item{lwd}{Line width.}
 

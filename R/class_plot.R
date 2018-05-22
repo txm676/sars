@@ -7,6 +7,7 @@
 #'   returns a plot of the model fit (line) and the observed richness values
 #'   (points).
 #' @param x An object of class 'sars'.
+#' @param mfplot ***
 #' @param xlab Title for the x-axis (default depends on the Type attribute).
 #' @param ylab Title for the y-axis (default depends on the Type attribute).
 #' @param pch Plotting character (for points).
@@ -25,6 +26,7 @@
 #'   relative to the default.
 #' @param cex.axis The amount by which the the axis labels should be scaled
 #'   relative to the default.
+#' @param yRange The range of the y-axis.
 #' @param lwd Line width.
 #' @param lcol Line colour.
 #' @param di Dimensions to be passed to \code{par(mfrow=())} to specify the size
@@ -52,7 +54,7 @@
 
 plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
                       pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
-                      cex.lab = 1.3, cex.axis = 1,
+                      cex.lab = 1.3, cex.axis = 1, yRange = NULL,
                       lwd = 2, lcol = 'dodgerblue2', di = NULL, ...)
 {
   
@@ -85,11 +87,15 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
     xx <- df$A
     yy <- df$S
     ff <- x$calculated
+    if (is.null(yRange)){
+    yMax <- max(c(yy,ff))#fitted line can be above the largest observed data point
+    yMin <- 0
+    }
     
     plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ...)
+         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = c(yMin, yMax), ...)
     title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
-    lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
+    lines(x = xx, y = ff, lwd = lwd, col = lcol,  ...)
     
   }
   
@@ -118,9 +124,13 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
       yy <- df$S
       ff <- x$calculated
       ModTitle <- x$model$name 
+      if (is.null(yRange)){
+        yMax <- max(c(yy,ff))#fitted line can be above the largest observed data point
+        yMin <- 0
+      }
       
       plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ...)
+           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,ylim = c(yMin, yMax), ...)
       title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
       lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
     })
@@ -138,10 +148,15 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
       mf2 <- matrix(unlist(mf), ncol = length(x), byrow = FALSE)
       mf2 <- as.data.frame(mf2)
       colnames(mf2) <- nams
-     
+      ###
+      if (is.null(yRange)){
+        yMax <- max(c(yy,unlist(mf)))#fitted line can be above the largest observed data point
+        yMin <- 0
+      }
+      
       #plot with all curves
       plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, bty = "L")
+           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,ylim = c(yMin, yMax), bty = "L")
       matlines(xx, mf2, lwd = lwd)
       title(main = "MultiModel Fits", adj = TiAdj, line = TiLine,cex.main = cex.main)
       #par(xpd=TRUE)
@@ -157,9 +172,13 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
     xx <- df$A
     yy <- df$S
     ff <- x$calculated
+    if (is.null(yRange)){
+      yMax <- max(c(yy,ff))#fitted line can be above the largest observed data point
+      yMin <- 0
+    }
     
     plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ...)
+         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,ylim = c(yMin, yMax), ...)
     title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
     lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
   }
@@ -173,6 +192,8 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 #' @export
 
 #NOT FINISHED
+
+#need to add in ylim argument
 
 
 plot.sar.multi <- function(x, type = "both", allCurves = TRUE,
