@@ -59,15 +59,6 @@
 #' @export
 
 
-
-#xlab = NULL; ylab = NULL; pch = 16; cex = 1.2; 
-#pcol = 'dodgerblue2'; ModTitle = NULL; TiAdj = 0; TiLine = 0.5; cex.main = 1.5;
-#cex.lab = 1.3; cex.axis = 1; yRange = NULL;
-#lwd = 2; lcol = 'dodgerblue2'; di = NULL
-
-
-
-
 plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
                       pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
                       cex.lab = 1.3, cex.axis = 1, yRange = NULL,
@@ -105,7 +96,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
     ff <- x$calculated
     if (is.null(yRange)){
     yMax <- max(c(yy,ff))#fitted line can be above the largest observed data point
-    yMin <- 0
+    yMin <- min(c(yy,ff))
     yRange = c(yMin, yMax)
     }
     
@@ -147,7 +138,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
       ModTitle <- x$model$name 
       if (is.null(yRange)){
         yMax <- max(c(yy,ff))#fitted line can be above the largest observed data point
-        yMin <- 0
+        yMin <- min(c(yy,ff))
         yRange = c(yMin, yMax)
       }
       
@@ -174,7 +165,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
       ###
       if (is.null(yRange)){
         yMax <- max(c(yy,unlist(mf)))#fitted line can be above the largest observed data point
-        yMin <- 0
+        yMin <- min(c(yy,unlist(mf)))
         yRange = c(yMin, yMax)
       }
       
@@ -208,7 +199,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
     ff <- x$calculated
     if (is.null(yRange)){
       yMax <- max(c(yy,ff))#fitted line can be above the largest observed data point
-      yMin <- 0
+      yMin <- min(c(yy,ff))
       yRange = c(yMin, yMax)
     }
     
@@ -228,13 +219,29 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 
 #NOT FINISHED
 
-#need to add in ylim argument
+#all on one with or without mminference line
+#CIs
+
+#currently lines in plot don't match legend
+#need to finish the y-axis range fit with legend issue (take largest of legend height and observed range)
+
+
+
+#type = "both"; allCurves = TRUE;
+#xlab = NULL; ylab = NULL; pch = 16; cex = 1.2; 
+#pcol = 'dodgerblue2'; ModTitle = NULL; TiAdj = 0; TiLine = 0.5; cex.main = 1.5;
+#cex.lab = 1.3; cex.axis = 1;yRange = NULL;
+#lwd = 2; lcol = 'dodgerblue2'; di = c(1, 2)
+
+
+
+
 
 
 plot.sar.multi <- function(x, type = "both", allCurves = TRUE,
                             xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
                       pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
-                      cex.lab = 1.3, cex.axis = 1,
+                      cex.lab = 1.3, cex.axis = 1, yRange = NULL,
                       lwd = 2, lcol = 'dodgerblue2', di = c(1, 2), ...)
 {
   ic <- x[[2]]$ic 
@@ -257,8 +264,7 @@ plot.sar.multi <- function(x, type = "both", allCurves = TRUE,
   colnames(mf2) <- nams
   
   #get correct IC info
-  wh <- which(names(dat2[[1]]) == ic)
-  icv <- vapply(dat2, function(x) unlist(x[wh]), FUN.VALUE = double(1))
+  icv <- vapply(dat2, function(x) unlist(x[[ic]]), FUN.VALUE = double(1))
   #delta
   delt <- icv - min(icv)
   #weight
@@ -279,17 +285,44 @@ plot.sar.multi <- function(x, type = "both", allCurves = TRUE,
   if (type == "both") par(mfrow = di)
   
   if (type == "both" || type == "multi"){
+    
+    #set y axis range
+    if (is.null(yRange)){
+      if (allCurves){
+        yMax <- max(c(yy,unlist(mf2)))#fitted line can be above the largest observed data point
+        yMin <- min(c(yy,unlist(mf2)))
+      } else{
+        yMax <- max(c(yy,wfv))#fitted line can be above the largest observed data point
+        yMin <- min(c(yy,wfv))
+      }
+      yRange = c(yMin, yMax)
+    }
+    
+    
   #first plot with all curves
   if (allCurves){
+    #if legend to be included, work out size of plot
+    if (pLeg == TRUE){
+      xMax <- max(xx)*0.05
+      lSiz <- legend(max(xx) + xMax, max(c(yy,unlist(mf2))), legend = nams2, horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2), plot = F)
+      legWid <- lSiz$rect$left + lSiz$rect$w
+      xMAX <- legWid + (legWid * 0.01)
+      legHeight <- lSiz$rect$h 
+      yMAX <- legHeight + (legHeight * 0.3)
+      yRange <- c(yMin, yMAX)
       plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-      cex = cex, cex.lab = cex.lab, cex.axis = cex.axis)
+           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,xlim = c(min(xx), xMAX), ylim = yRange)
+    } else{ #no legend
+      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+      cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
+    }
       matlines(xx, mf2, lwd = lwd)
-      legend("top", legend = nams2, inset=c(-0.2,0), lty = 1:ncol(mf2), col=1:ncol(mf2)) 
+      if (pLeg == TRUE) legend(max(xx) + xMax, yMAX, legend = nams2,horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2)) 
       title(main = "MultiModel Fits", adj = TiAdj, line = TiLine,cex.main = cex.main)
   } else if (!allCurves){
     #multimodel SAR curve
     plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis)
+         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
     title(main = "MultiModel Fits", adj = TiAdj, line = TiLine, cex.main = cex.main)
     lines(x = xx, y = wfv, lwd = lwd, col = lcol)
   }
@@ -297,11 +330,15 @@ plot.sar.multi <- function(x, type = "both", allCurves = TRUE,
   
   if (type == "both" || type == "bar"){  
   ##barplot of IC weights
-  barplot(aw, ylim=c(0, max(aw) + 0.05), cex.names=.68, ylab="IC weights", cex.lab = 1, 
-          names.arg = nams)
+    
+  #often many have very low weight (near 0), so filter out main ones. 
+  aw2 <- aw[aw > 0.05]
+    
+  barplot(aw2, ylim=c(0, max(aw) + 0.05), cex.names=.68, ylab="IC weights", cex.lab = 1, 
+          names.arg = names(aw2))
   title(main = "Model weights", cex.main = 1.5, adj = 0, line = 0.5)
   }
-
+  par(mfrow = c(1,1))#revert to default
 }
 
 

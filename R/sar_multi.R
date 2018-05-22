@@ -137,7 +137,7 @@ sar_multi <- function(data = galap,
     res <- list(mmi = mmi, details = details)
   }#eo if keep_details 
   
-  class(res) <- c("sars.multi", "sars")
+  class(res) <- c("sar.multi", "sars")
   attr(res, "type") <- "multi"
   
   #if (verb) cat_line(cli::rule(left = crayon::cyan(cli::symbol$bullet)))
