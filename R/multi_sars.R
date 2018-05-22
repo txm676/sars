@@ -43,13 +43,13 @@ multi_sars <- function(data = galap,
       
       if (verb) {
         if(is.na(f$value)) {
-          cat_line( paste0(crayon::red(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ", crayon::red(cli::symbol$cross)))
+          cat_line( paste0(crayon::red(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ", crayon::red(cli::symbol$cross)," could not fit the model >_<"))
         }else{
           
           if (!is.matrix(f$sigConf)){
-            cat_line( paste0(crayon::yellow(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : Warning: could not compute parameters statistics"))
+            cat_line( paste0(crayon::yellow(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ",crayon::yellow(cli::symbol$warning)," could not compute parameters statistics"))
           }else{
-            cat_line( paste0(crayon::cyan(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ",crayon::green(cli::symbol$tick)))
+            cat_line( paste0(crayon::green(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ",crayon::green(cli::symbol$tick)))
           }
         }
       }
