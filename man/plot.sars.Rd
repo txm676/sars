@@ -8,12 +8,14 @@
   pch = 16, cex = 1.2, pcol = "dodgerblue2", ModTitle = NULL,
   TiAdj = 0, TiLine = 0.5, cex.main = 1.5, cex.lab = 1.3,
   cex.axis = 1, yRange = NULL, lwd = 2, lcol = "dodgerblue2",
-  di = NULL, ...)
+  di = NULL, pLeg = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class 'sars'.}
 
-\item{mfplot}{***}
+\item{mfplot}{Logical argument specifying whether the model fits in a
+fit_collection should be plotted on one single plot (\code{mfplot = TRUE}) or
+separate plots (\code{mfplot = FALSE}; the default).}
 
 \item{xlab}{Title for the x-axis (default depends on the Type attribute).}
 
@@ -55,6 +57,11 @@ of the plotting window, when plotting multiple plots from a sars object of
 Type fit_collection. For example, \code{di = c(1, 3)} creates a plotting
 window with 1 row and 3 columns. The default (null) creates a square
 plotting window of the correct size.}
+
+\item{pLeg}{Logical argument specifying whether or not the legend should be
+plotted for fit_collection plots (when \code{mfplot = TRUE}) or sar_multi
+plots. When a large number of model fits are plotted the legend takes up a
+lot of space, and thus the default is \code{pLeg = FALSE}.}
 
 \item{\dots}{Further graphical parameters (see \code{\link[graphics]{par}},
 \code{\link[graphics]{plot}},\code{\link[graphics]{title}},

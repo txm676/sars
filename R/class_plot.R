@@ -7,7 +7,9 @@
 #'   returns a plot of the model fit (line) and the observed richness values
 #'   (points).
 #' @param x An object of class 'sars'.
-#' @param mfplot ***
+#' @param mfplot Logical argument specifying whether the model fits in a
+#'   fit_collection should be plotted on one single plot (\code{mfplot = TRUE}) or
+#'   separate plots (\code{mfplot = FALSE}; the default).
 #' @param xlab Title for the x-axis (default depends on the Type attribute).
 #' @param ylab Title for the y-axis (default depends on the Type attribute).
 #' @param pch Plotting character (for points).
@@ -34,6 +36,10 @@
 #'   Type fit_collection. For example, \code{di = c(1, 3)} creates a plotting
 #'   window with 1 row and 3 columns. The default (null) creates a square
 #'   plotting window of the correct size.
+#' @param pLeg Logical argument specifying whether or not the legend should be
+#'   plotted for fit_collection plots (when \code{mfplot = TRUE}) or sar_multi
+#'   plots. When a large number of model fits are plotted the legend takes up a
+#'   lot of space, and thus the default is \code{pLeg = FALSE}.
 #' @param \dots Further graphical parameters (see \code{\link[graphics]{par}},
 #'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
@@ -49,13 +55,23 @@
 #' fit3 <- sar_epm1(galap)
 #' fc <- fit_collection(fit, fit2, fit3)
 #' plot(fc, ModTitle = letters[1:3], xlab = "Size of island")
+#' @rdname plot.sars
 #' @export
+
+
+
+#xlab = NULL; ylab = NULL; pch = 16; cex = 1.2; 
+#pcol = 'dodgerblue2'; ModTitle = NULL; TiAdj = 0; TiLine = 0.5; cex.main = 1.5;
+#cex.lab = 1.3; cex.axis = 1; yRange = NULL;
+#lwd = 2; lcol = 'dodgerblue2'; di = NULL
+
+
 
 
 plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
                       pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
                       cex.lab = 1.3, cex.axis = 1, yRange = NULL,
-                      lwd = 2, lcol = 'dodgerblue2', di = NULL, ...)
+                      lwd = 2, lcol = 'dodgerblue2', di = NULL, pLeg = FALSE, ...)
 {
   
   
@@ -90,10 +106,11 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
     if (is.null(yRange)){
     yMax <- max(c(yy,ff))#fitted line can be above the largest observed data point
     yMin <- 0
+    yRange = c(yMin, yMax)
     }
     
     plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = c(yMin, yMax), ...)
+         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange, ...)
     title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
     lines(x = xx, y = ff, lwd = lwd, col = lcol,  ...)
     
@@ -112,11 +129,15 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
     }
     
     if (is.null(di)) {
+      if (length(x) == 2){ #of length(x) = 2 the dividing by two does not work
+        par(mfrow = c(1, 2))
+      }else{
       di <- ceiling(length(x) / 2)
       par(mfrow = c(di, di))
+      }#eo if x==2
     } else {
       par(mfrow = di)
-    }
+    }#eo is.null if
       lapply(x, function(x){
       
       df <- x$data
@@ -127,13 +148,15 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
       if (is.null(yRange)){
         yMax <- max(c(yy,ff))#fitted line can be above the largest observed data point
         yMin <- 0
+        yRange = c(yMin, yMax)
       }
       
       plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,ylim = c(yMin, yMax), ...)
+           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,ylim = yRange, ...)
       title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
       lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
     })
+     par(mfrow = c(1,1))#change par back to default
     }# !mfplot
     
     if (mfplot){
@@ -152,15 +175,26 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
       if (is.null(yRange)){
         yMax <- max(c(yy,unlist(mf)))#fitted line can be above the largest observed data point
         yMin <- 0
+        yRange = c(yMin, yMax)
       }
       
-      #plot with all curves
+      #if legend to be included, work out size of plot
+      if (pLeg == TRUE){
+        xMax <- max(xx)*0.05
+        lSiz <- legend(max(xx) +xMax, max(yy), legend = nams, horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2), plot = F)
+        legWid <- lSiz$rect$left + lSiz$rect$w
+        xMAX <- legWid + (legWid * 0.01)
+        plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+             cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, xlim = c(min(xx), xMAX),
+             ylim = yRange, bty = "L")
+      } else {
       plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,ylim = c(yMin, yMax), bty = "L")
+           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,ylim = yRange, bty = "L")
+      }
       matlines(xx, mf2, lwd = lwd)
       title(main = "MultiModel Fits", adj = TiAdj, line = TiLine,cex.main = cex.main)
-      #par(xpd=TRUE)
-      legend(max(xx), max(yy), legend = nams, horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2), xpd=TRUE)
+     if (pLeg == TRUE) legend(max(xx) + xMax, max(yy), legend = nams, horiz = F, lty = 1:ncol(mf2), 
+                              col=1:ncol(mf2))
     }#eo mfplot
   
   }#eo if fit_collection
@@ -175,10 +209,11 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
     if (is.null(yRange)){
       yMax <- max(c(yy,ff))#fitted line can be above the largest observed data point
       yMin <- 0
+      yRange = c(yMin, yMax)
     }
     
     plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,ylim = c(yMin, yMax), ...)
+         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,ylim = yRange, ...)
     title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
     lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
   }
