@@ -33,7 +33,7 @@ print.summary.sars <- function(object){
     cat("Observed shape: ", object$observed_shape, ", Asymptote: ", object$asymptote, "\n", "\n", sep = "")
   }
   
-  if (attributes(object)$type == "multi_sar"){ 
+  if (attributes(object)$type == "multi"){ 
     #Multi_sar object
     # N models fitted; x passed test
     #Model table: All fitted models, sum of sq (deviance), R2, AIC, BIC, AICc, delta, weights
@@ -67,7 +67,7 @@ print.sars <- function(object){
     cat( "\n", unlist(lapply(object, function(x) x$model$name)), "\n", "\n")
   }
   
-  if (attributes(object)$type == "multi_sar"){ 
+  if (attributes(object)$type == "multi"){ 
     cat("\n", "This is a multi_sar fit object", "\n", sep = "")
     ##n models in the multi_sar object:
     ##list N models attempted to fit; x have passed

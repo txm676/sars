@@ -65,7 +65,7 @@ summary.sars <- function(object){
   }
   
   
-  if (attributes(object)$type == "multi_sars"){
+  if (attributes(object)$type == "multi"){
     
     
   }
