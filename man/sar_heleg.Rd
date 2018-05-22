@@ -10,6 +10,10 @@ sar_heleg(data, custstart = NULL, normtest = 'lillie')
 \item{data}{A dataset in the form of a dataframe with two columns: 
 the first with island/site areas, and the second with the species richness
 of each island/site.}
+
+\item{grid_start}{NULL or the number of points sampled in the model parameter space
+or FALSE to prevent any grid start after a fail in inital optimization
+to run a grid search.}
 }
 \description{
 Fit the Logistic (He & Legendre) model to SAR data
