@@ -1,6 +1,14 @@
 ###multi model sars
 
 #' @export
+#' 
+#' 
+#' 
+#' 
+#' 
+#' 
+
+
 
 sar_multi <- function(data = galap,
                        obj = c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg", "linear"),
@@ -43,13 +51,13 @@ sar_multi <- function(data = galap,
       
       if (verb) {
         if(is.na(f$value)) {
-          cat_line( paste0(crayon::red(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ", crayon::red(cli::symbol$cross)))
+          sars:::cat_line( paste0(crayon::red(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ", crayon::red(cli::symbol$cross)))
         }else{
           
           if (!is.matrix(f$sigConf)){
-            cat_line( paste0(crayon::yellow(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : Warning: could not compute parameters statistics"))
+            sars::: cat_line( paste0(crayon::yellow(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : Warning: could not compute parameters statistics"))
           }else{
-            cat_line( paste0(crayon::cyan(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ",crayon::green(cli::symbol$tick)))
+            sars:::cat_line( paste0(crayon::cyan(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ",crayon::green(cli::symbol$tick)))
           }
         }
       }
@@ -59,8 +67,9 @@ sar_multi <- function(data = galap,
     }))#eo suppressWarnings(lapply)
     
     f_nas <- unlist(lapply(fits,function(b)b$value))
+
     
-    if(all(is.na(f_nas))){
+    if(all(is.na(f_nas)) || all(is.na(sigC))){
       stop("No model could be fitted, aborting multi_sars\n")
     }
     
@@ -69,6 +78,14 @@ sar_multi <- function(data = galap,
       fits <- fits[!is.na(f_nas)]
     }
     
+    #remove models with no parameter estimates
+    sigC <- vapply(fits, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
+    
+    if(any(sigC)){
+      warning("Could not compute parameter statistics for one or models and these ave been excluded from the multi SAR", call. = FALSE)
+      fits <- fits[!sigC]
+    }
+  
     fits <- fit_collection(fits = fits)
     
   }else{
@@ -110,10 +127,16 @@ sar_multi <- function(data = galap,
   akaikesum <- sum(exp( -0.5*(delta_ICs)))
   weights_ICs <- exp(-0.5*delta_ICs) / akaikesum
   
+  #ERROR: produce weight averaged diversity measures
+ # mmi <- vapply(fits,FUN=function(x){x$calculated},FUN.VALUE=double(nPoints))
+ # mmi <- apply((mmi * weights_ICs), 1 , sum)
+  
   #produce weight averaged diversity measures
   mmi <- vapply(fits,FUN=function(x){x$calculated},FUN.VALUE=double(nPoints))
-  mmi <- apply((mmi * weights_ICs), 1 , sum)
-  
+  wm <- matrix(nrow = nPoints, ncol = length(fits))
+  for (i in seq_along(weights_ICs)) {wm[ ,i] <- mmi[ ,i] * weights_ICs[i]}
+  mmi <- apply(wm, 1 , sum)
+
   res <- mmi
   
   if(keep_details){
@@ -137,7 +160,7 @@ sar_multi <- function(data = galap,
     res <- list(mmi = mmi, details = details)
   }#eo if keep_details 
   
-  class(res) <- c("sar.multi", "sars")
+  class(res) <- c("multi", "sars")
   attr(res, "type") <- "multi"
   
   #if (verb) cat_line(cli::rule(left = crayon::cyan(cli::symbol$bullet)))

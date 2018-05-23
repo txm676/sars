@@ -171,20 +171,20 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
       
       #if legend to be included, work out size of plot
       if (pLeg == TRUE){
-        xMax <- max(xx)*0.05
-        lSiz <- legend(max(xx) +xMax, max(yy), legend = nams, horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2), plot = F)
-        legWid <- lSiz$rect$left + lSiz$rect$w
-        xMAX <- legWid + (legWid * 0.01)
-        plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+        #xMax <- max(xx)*0.05
+        #lSiz <- legend(max(xx) +xMax, max(yy), legend = nams, horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2), plot = F)
+        #legWid <- lSiz$rect$left + lSiz$rect$w
+        xMAX <- max(xx) + max(xx) * 0.5
+        matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
              cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, xlim = c(min(xx), xMAX),
              ylim = yRange, bty = "L")
       } else {
       plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
            cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,ylim = yRange, bty = "L")
       }
-      matlines(xx, mf2, lwd = lwd)
+      matlines(xx, mf2, lwd = lwd, lty = 1:ncol(mf2), col=1:ncol(mf2))
       title(main = "MultiModel Fits", adj = TiAdj, line = TiLine,cex.main = cex.main)
-     if (pLeg == TRUE) legend(max(xx) + xMax, max(yy), legend = nams, horiz = F, lty = 1:ncol(mf2), 
+     if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax, legend = nams, horiz = F, lty = 1:ncol(mf2), 
                               col=1:ncol(mf2))
     }#eo mfplot
   
@@ -215,22 +215,20 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 
 #'  Plot Model Fits for a 'multi_sars' Object
 #' @importFrom graphics plot lines title
+#' @rdname plot.multi
 #' @export
 
 #NOT FINISHED
 
-#all on one with or without mminference line
+
 #CIs
 
-#currently lines in plot don't match legend
-#need to finish the y-axis range fit with legend issue (take largest of legend height and observed range)
-
-
+#state in documentation that multicurve removes  na par models 
 
 #type = "both"; allCurves = TRUE;
 #xlab = NULL; ylab = NULL; pch = 16; cex = 1.2; 
 #pcol = 'dodgerblue2'; ModTitle = NULL; TiAdj = 0; TiLine = 0.5; cex.main = 1.5;
-#cex.lab = 1.3; cex.axis = 1;yRange = NULL;
+#cex.lab = 1.3; cex.axis = 1;yRange = NULL;pLeg = TRUE;
 #lwd = 2; lcol = 'dodgerblue2'; di = c(1, 2)
 
 
@@ -238,18 +236,19 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 
 
 
-plot.sar.multi <- function(x, type = "both", allCurves = TRUE,
+plot.multi <- function(x, type = "multi", allCurves = TRUE,
                             xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
                       pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
-                      cex.lab = 1.3, cex.axis = 1, yRange = NULL,
-                      lwd = 2, lcol = 'dodgerblue2', di = c(1, 2), ...)
+                      cex.lab = 1.3, cex.axis = 1, yRange = NULL, pLeg = TRUE,
+                      lwd = 2, lcol = 'dodgerblue2', modNames = NULL, cex.names=.88, ...)
 {
   ic <- x[[2]]$ic 
   dat <- x$details$fits
   
   #filter out bad models
-  bad <- vapply(dat, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
-  dat2 <- dat[-which(bad)]
+  #bad <- vapply(dat, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
+  #dat2 <- dat[-which(bad)]
+  dat2 <- dat
   
   #observed data
   df <- dat[[1]]$data 
@@ -270,21 +269,27 @@ plot.sar.multi <- function(x, type = "both", allCurves = TRUE,
   #weight
   akaikesum <- sum(exp( -0.5*(delt)))
   aw <- exp(-0.5*delt) / akaikesum
-  if (sum(aw) != 1) stop("IC weights do not sum to 1")
+  if (round(sum(aw), 0) != 1) stop("IC weights do not sum to 1")#have to round as sometimes fractionally different to 1
   
   #get weighted fitted values for each model
   mf3 <- matrix(nrow = nrow(mf2), ncol = ncol(mf2))
   for (i in seq_along(aw)) {mf3[ ,i] <- mf2[ ,i] * aw[i]}
   wfv <- rowSums(mf3)
+  
+  #this is a test error for development: remove the mmi fitted code from this function before release
+  if (!all(round(wfv) == round(x$mmi))) stop("MultiModel fitted values do not match between functions")
 
   if (allCurves){
     mf2$MultiModel <- wfv
     nams2 <- c(nams, "MultiModel")
   }
   
-  if (type == "both") par(mfrow = di)
-  
-  if (type == "both" || type == "multi"){
+  if (type == "multi"){
+    
+    #set axis names
+    if (is.null(xlab)) xlab <- "Area"
+    if (is.null(ylab)) ylab <- "Species richness"
+    
     
     #set y axis range
     if (is.null(yRange)){
@@ -303,24 +308,28 @@ plot.sar.multi <- function(x, type = "both", allCurves = TRUE,
   if (allCurves){
     #if legend to be included, work out size of plot
     if (pLeg == TRUE){
-      xMax <- max(xx)*0.05
-      lSiz <- legend(max(xx) + xMax, max(c(yy,unlist(mf2))), legend = nams2, horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2), plot = F)
-      legWid <- lSiz$rect$left + lSiz$rect$w
-      xMAX <- legWid + (legWid * 0.01)
-      legHeight <- lSiz$rect$h 
-      yMAX <- legHeight + (legHeight * 0.3)
-      yRange <- c(yMin, yMAX)
-      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+     # xMax <- max(xx)*0.05
+      #plot(x = xx, y = yy, xlim = c(min(xx), xMAX), ylim = yRange)
+     # lSiz <- legend(max(xx) + xMax, max(c(yy,unlist(mf2))), legend = nams2, horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2), plot = F)
+     # legWid <- lSiz$rect$left + lSiz$rect$w
+      #xMAX <- legWid + (legWid * 0.01)
+      
+      xMAX <- max(xx) + max(xx) * 0.5
+      
+     # legHeight <- lSiz$rect$h 
+    #  yMAX <- legHeight + (legHeight * 0.3)
+     # yRange <- c(yMin, yMAX)
+      matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
            cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,xlim = c(min(xx), xMAX), ylim = yRange)
     } else{ #no legend
       plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
       cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
     }
-      matlines(xx, mf2, lwd = lwd)
-      if (pLeg == TRUE) legend(max(xx) + xMax, yMAX, legend = nams2,horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2)) 
+      matlines(xx, mf2, lwd = lwd, lty = 1:ncol(mf2), col=1:ncol(mf2))
+      if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax, legend = nams2,horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2)) 
       title(main = "MultiModel Fits", adj = TiAdj, line = TiLine,cex.main = cex.main)
   } else if (!allCurves){
-    #multimodel SAR curve
+    #just multimodel SAR curve
     plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
          cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
     title(main = "MultiModel Fits", adj = TiAdj, line = TiLine, cex.main = cex.main)
@@ -328,17 +337,21 @@ plot.sar.multi <- function(x, type = "both", allCurves = TRUE,
   }
   }
   
-  if (type == "both" || type == "bar"){  
+  if (type == "bar"){  
   ##barplot of IC weights
     
   #often many have very low weight (near 0), so filter out main ones. 
   aw2 <- aw[aw > 0.05]
+  
+  if (is.null(ylab)) ylab <- "IC weights"
+  if (is.null(ModTitle)) ModTitle <- "Model weights"
+  if (is.null(modNames)) modNames <- names(aw2)
     
-  barplot(aw2, ylim=c(0, max(aw) + 0.05), cex.names=.68, ylab="IC weights", cex.lab = 1, 
-          names.arg = names(aw2))
-  title(main = "Model weights", cex.main = 1.5, adj = 0, line = 0.5)
+  barplot(aw2, ylim=c(0, max(aw) + 0.05), cex.names= cex.names, ylab = ylab, cex.lab = cex.lab, 
+          names.arg = modNames)
+  title(main = ModTitle, cex.main = cex.main, adj = TiAdj, line = TiLine)
   }
-  par(mfrow = c(1,1))#revert to default
+
 }
 
 
