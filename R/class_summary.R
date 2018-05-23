@@ -66,8 +66,10 @@ summary.sars <- function(object){
   
   
   if (attributes(object)$type == "multi"){
-    
-    
+    Mods <- as.vector(object$details$mod_names)
+    cri <- object$details$ic
+    ranks <- round(sort(object$details$weights_ics, decreasing = TRUE), 2)
+    res <- list("Models" = Mods, "Criterion" = cri, "Model_Ranks" = ranks)
   }
   
   class(res) <- "summary.sars"
