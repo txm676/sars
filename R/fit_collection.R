@@ -1,6 +1,19 @@
-######Fit Collection########
+#' Create a Collection of SAR Model Fits
 
+#' @description Creates a fit collection of SAR model fits, which can then be
+#'   plotted using \code{\link{plot.sars}}.
+#' @usage fit_collection(...)
+#' @param ... A set of one or more SAR model fits (all of class 'sars').
+#' @return A list of class 'sars' with n elements, corresponding to the
+#'   n individual SAR model fits.
+#' @examples
+#' data(galap)
+#' fit <- sar_linear(galap)
+#' fit2 <- sar_power(galap)
+#' fitC <- fit_collection(fit, fit2)
+#' plot(fitC)
 #' @export
+
 
 fit_collection <- function(..., fits = list(...)){
   if (all(is.na(fits))) stop("all fits where NA :(, cannot create the 'fit_collection'")

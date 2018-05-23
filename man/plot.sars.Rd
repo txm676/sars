@@ -70,11 +70,14 @@ lot of space, and thus the default is \code{pLeg = FALSE}.}
 }
 \description{
 S3 method for class 'sars'. \code{plot.sars} creates plots for
-  objects of class sars (type = 'fit', "lin_pow' and 'fit_collection'), using
-  the R base plotting framework. The exact plot(s) constructed depends on the
-  'Type' attribute of the sars object.For example, for a sars object of Type
-  'fit', the \code{plot.sars} function returns a plot of the model fit (line)
-  and the observed richness values (points).
+  objects of class 'sars' (type = 'fit', "lin_pow' and 'fit_collection'),
+  using the R base plotting framework. The exact plot(s) constructed depends
+  on the 'Type' attribute of the 'sars' object. For example, for a 'sars'
+  object of Type 'fit', the \code{plot.sars} function returns a plot of the
+  model fit (line) and the observed richness values (points). For a 'sars'
+  object of Type 'fit_collection' the \code{plot.sars} function returns
+  either a grid with n individual plots (corresponding to the n model fits in
+  the fit_collection), or a single plot with all n model fits included.
 }
 \examples{
 data(galap)
