@@ -14,8 +14,8 @@
 \item{x}{An object of class 'sars'.}
 
 \item{mfplot}{Logical argument specifying whether the model fits in a
-fit_collection should be plotted on one single plot (\code{mfplot = TRUE}) or
-separate plots (\code{mfplot = FALSE}; the default).}
+fit_collection should be plotted on one single plot (\code{mfplot = TRUE})
+or separate plots (\code{mfplot = FALSE}; the default).}
 
 \item{xlab}{Title for the x-axis (default depends on the Type attribute).}
 
@@ -28,23 +28,24 @@ separate plots (\code{mfplot = FALSE}; the default).}
 
 \item{pcol}{Colour of the points.}
 
-\item{ModTitle}{Plot title (default is null, which reverts to the model
-name). For no title, use ModTitle = "". For a sars object of type
-fit_collection, a vector of names can be provided (e.g. \code{letters[1:3]}).}
+\item{ModTitle}{PPlot title (default is \code{ModTitle = NULL}, which reverts
+to "MultiModel Fits"). For no title, use \code{ModTitle = ""}. For a sars
+object of type fit_collection, a vector of names can be provided (e.g.
+\code{letters[1:3]}).}
 
 \item{TiAdj}{Which way the plot title is justified.}
 
 \item{TiLine}{Places the plot title this many lines outwards from the plot
 edge.}
 
-\item{cex.main}{The amount by which the the plot title should be scaled
-relative to the default.}
+\item{cex.main}{The amount by which the plot title should be scaled relative
+to the default.}
 
-\item{cex.lab}{The amount by which the the axis titles should be scaled
-relative to the default.}
+\item{cex.lab}{The amount by which the axis titles should be scaled relative
+to the default.}
 
-\item{cex.axis}{The amount by which the the axis labels should be scaled
-relative to the default.}
+\item{cex.axis}{The amount by which the axis labels should be scaled relative
+to the default.}
 
 \item{yRange}{The range of the y-axis.}
 
@@ -69,11 +70,11 @@ lot of space, and thus the default is \code{pLeg = FALSE}.}
 }
 \description{
 S3 method for class 'sars'. \code{plot.sars} creates plots for
-  objects of class sars, using the R base plotting framework. The exact
-  plot(s) constructed depends on the 'Type' attribute of the sars object.For
-  example, for a sars object of Type 'fit', the \code{plot.sars} function
-  returns a plot of the model fit (line) and the observed richness values
-  (points).
+  objects of class sars (type = 'fit', "lin_pow' and 'fit_collection'), using
+  the R base plotting framework. The exact plot(s) constructed depends on the
+  'Type' attribute of the sars object.For example, for a sars object of Type
+  'fit', the \code{plot.sars} function returns a plot of the model fit (line)
+  and the observed richness values (points).
 }
 \examples{
 data(galap)

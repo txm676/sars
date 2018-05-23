@@ -2,14 +2,95 @@
 % Please edit documentation in R/class_plot.R
 \name{plot.multi}
 \alias{plot.multi}
-\title{Plot Model Fits for a 'multi_sars' Object}
+\title{Plot Model Fits for a 'multi' Object}
 \usage{
 \method{plot}{multi}(x, type = "multi", allCurves = TRUE, xlab = NULL,
   ylab = NULL, pch = 16, cex = 1.2, pcol = "dodgerblue2",
   ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
-  cex.lab = 1.3, cex.axis = 1, yRange = NULL, pLeg = TRUE, lwd = 2,
-  lcol = "dodgerblue2", modNames = NULL, cex.names = 0.88, ...)
+  cex.lab = 1.3, cex.axis = 1, yRange = NULL, lwd = 2,
+  lcol = "dodgerblue2", pLeg = TRUE, modNames = NULL, cex.names = 0.88,
+  ...)
+}
+\arguments{
+\item{x}{An object of class 'multi'.}
+
+\item{type}{The type of plot to be constructed: either \code{type = multi}
+for a plot of the multimodel SAR curve, or \code{type = bar} for a barplot
+of the information criterion weights of each model.}
+
+\item{allCurves}{A logical argument for use with \code{type = multi} that
+specifies whether all the model fits should be plotted with the multimodel
+SAR curve (\code{allCurves = TRUE}; the default) or that only the
+multimodel SAR curve should be plotted (\code{allCurves = FALSE}).}
+
+\item{xlab}{Title for the x-axis. Only for use with \code{type = multi}.}
+
+\item{ylab}{Title for the y-axis.}
+
+\item{pch}{Plotting character (for points). Only for use with \code{type =
+multi}.}
+
+\item{cex}{A numerical vector giving the amount by which plotting symbols
+(points) should be scaled relative to the default.}
+
+\item{pcol}{Colour of the points. Only for use with \code{type = multi}.}
+
+\item{ModTitle}{Plot title (default is \code{ModTitle = NULL}, which reverts
+to "MultiModel Fits"). For no title, use \code{ModTitle = ""}.}
+
+\item{TiAdj}{Which way the plot title is justified.}
+
+\item{TiLine}{Places the plot title this many lines outwards from the plot
+edge.}
+
+\item{cex.main}{The amount by which the plot title should be scaled relative
+to the default.}
+
+\item{cex.lab}{The amount by which the axis titles should be scaled relative
+to the default.}
+
+\item{cex.axis}{The amount by which the axis labels should be scaled relative
+to the default.}
+
+\item{yRange}{The range of the y-axis. Only for use with \code{type = multi}.}
+
+\item{lwd}{Line width. Only for use with \code{type = multi}.}
+
+\item{lcol}{Line colour. Only for use with \code{type = multi}.}
+
+\item{pLeg}{Logical argument specifying whether or not the legend should be
+plotted  (when \code{type = multi} and \code{allCurves = TRUE}).}
+
+\item{modNames}{A vector of model names for the barplot of weights (when
+\code{type = bar}). The default (\code{modNames = NULL}) uses the names
+from the \code{sar_multi} function.}
+
+\item{cex.names}{The amount by which the axis labels (model names) should be
+scaled relative to the default. Only for use with \code{type = bar}.}
+
+\item{\dots}{Further graphical parameters (see \code{\link[graphics]{par}},
+\code{\link[graphics]{plot}},\code{\link[graphics]{title}},
+\code{\link[graphics]{lines}}) may be supplied as arguments.}
 }
 \description{
-Plot Model Fits for a 'multi_sars' Object
+S3 method for class 'multi'. \code{plot.multi} creates plots for
+  objects of class multi, using the R base plotting framework. Plots of all
+  model fits, the multimodel SAR curve (with confidence intervals) and a
+  barplot of the information criterion weights of the different models can be
+  constructed.
+}
+\examples{
+data(galap)
+#plot a multimodel SAR curve with all model fits included
+fit <- sar_multi(galap)
+plot(fit)
+
+#remove the legend
+plot(fit, pLeg = F)
+
+#plot just the multimodel curve
+plot(fit, allCurves = FALSE, ModTitle = "", lcol = "black")
+
+#Plot a barplot of the model weights
+plot(fit, type = "bar")
 }

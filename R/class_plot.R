@@ -1,33 +1,34 @@
 #'  Plot Model Fits for a 'sars' Object
 #'
 #' @description S3 method for class 'sars'. \code{plot.sars} creates plots for
-#'   objects of class sars, using the R base plotting framework. The exact
-#'   plot(s) constructed depends on the 'Type' attribute of the sars object.For
-#'   example, for a sars object of Type 'fit', the \code{plot.sars} function
-#'   returns a plot of the model fit (line) and the observed richness values
-#'   (points).
+#'   objects of class sars (type = 'fit', "lin_pow' and 'fit_collection'), using
+#'   the R base plotting framework. The exact plot(s) constructed depends on the
+#'   'Type' attribute of the sars object.For example, for a sars object of Type
+#'   'fit', the \code{plot.sars} function returns a plot of the model fit (line)
+#'   and the observed richness values (points).
 #' @param x An object of class 'sars'.
 #' @param mfplot Logical argument specifying whether the model fits in a
-#'   fit_collection should be plotted on one single plot (\code{mfplot = TRUE}) or
-#'   separate plots (\code{mfplot = FALSE}; the default).
+#'   fit_collection should be plotted on one single plot (\code{mfplot = TRUE})
+#'   or separate plots (\code{mfplot = FALSE}; the default).
 #' @param xlab Title for the x-axis (default depends on the Type attribute).
 #' @param ylab Title for the y-axis (default depends on the Type attribute).
 #' @param pch Plotting character (for points).
 #' @param cex A numerical vector giving the amount by which plotting symbols
 #'   (points) should be scaled relative to the default.
 #' @param pcol Colour of the points.
-#' @param ModTitle Plot title (default is null, which reverts to the model
-#'   name). For no title, use ModTitle = "". For a sars object of type
-#'   fit_collection, a vector of names can be provided (e.g. \code{letters[1:3]}).
+#' @param ModTitle PPlot title (default is \code{ModTitle = NULL}, which reverts
+#'   to "MultiModel Fits"). For no title, use \code{ModTitle = ""}. For a sars
+#'   object of type fit_collection, a vector of names can be provided (e.g.
+#'   \code{letters[1:3]}).
 #' @param TiAdj Which way the plot title is justified.
 #' @param TiLine Places the plot title this many lines outwards from the plot
 #'   edge.
-#' @param cex.main The amount by which the the plot title should be scaled
-#'   relative to the default.
-#' @param cex.lab The amount by which the the axis titles should be scaled
-#'   relative to the default.
-#' @param cex.axis The amount by which the the axis labels should be scaled
-#'   relative to the default.
+#' @param cex.main The amount by which the plot title should be scaled relative
+#'   to the default.
+#' @param cex.lab The amount by which the axis titles should be scaled relative
+#'   to the default.
+#' @param cex.axis The amount by which the axis labels should be scaled relative
+#'   to the default.
 #' @param yRange The range of the y-axis.
 #' @param lwd Line width.
 #' @param lcol Line colour.
@@ -212,35 +213,76 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 
 
 
-
-#'  Plot Model Fits for a 'multi_sars' Object
+#' Plot Model Fits for a 'multi' Object
+#'
+#' @description S3 method for class 'multi'. \code{plot.multi} creates plots for
+#'   objects of class multi, using the R base plotting framework. Plots of all
+#'   model fits, the multimodel SAR curve (with confidence intervals) and a
+#'   barplot of the information criterion weights of the different models can be
+#'   constructed.
+#' @param x An object of class 'multi'.
+#' @param type The type of plot to be constructed: either \code{type = multi}
+#'   for a plot of the multimodel SAR curve, or \code{type = bar} for a barplot
+#'   of the information criterion weights of each model.
+#' @param allCurves A logical argument for use with \code{type = multi} that
+#'   specifies whether all the model fits should be plotted with the multimodel
+#'   SAR curve (\code{allCurves = TRUE}; the default) or that only the
+#'   multimodel SAR curve should be plotted (\code{allCurves = FALSE}).
+#' @param xlab Title for the x-axis. Only for use with \code{type = multi}.
+#' @param ylab Title for the y-axis.
+#' @param pch Plotting character (for points). Only for use with \code{type =
+#'   multi}.
+#' @param cex A numerical vector giving the amount by which plotting symbols
+#'   (points) should be scaled relative to the default.
+#' @param pcol Colour of the points. Only for use with \code{type = multi}.
+#' @param ModTitle Plot title (default is \code{ModTitle = NULL}, which reverts
+#'   to "MultiModel Fits"). For no title, use \code{ModTitle = ""}.
+#' @param TiAdj Which way the plot title is justified.
+#' @param TiLine Places the plot title this many lines outwards from the plot
+#'   edge.
+#' @param cex.main The amount by which the plot title should be scaled relative
+#'   to the default.
+#' @param cex.lab The amount by which the axis titles should be scaled relative
+#'   to the default.
+#' @param cex.axis The amount by which the axis labels should be scaled relative
+#'   to the default.
+#' @param yRange The range of the y-axis. Only for use with \code{type = multi}.
+#' @param lwd Line width. Only for use with \code{type = multi}.
+#' @param lcol Line colour. Only for use with \code{type = multi}.
+#' @param pLeg Logical argument specifying whether or not the legend should be
+#'   plotted  (when \code{type = multi} and \code{allCurves = TRUE}).
+#' @param modNames A vector of model names for the barplot of weights (when
+#'   \code{type = bar}). The default (\code{modNames = NULL}) uses the names
+#'   from the \code{sar_multi} function.
+#' @param cex.names The amount by which the axis labels (model names) should be
+#'   scaled relative to the default. Only for use with \code{type = bar}.
+#' @param \dots Further graphical parameters (see \code{\link[graphics]{par}},
+#'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
+#'   \code{\link[graphics]{lines}}) may be supplied as arguments.
 #' @importFrom graphics plot lines title
+#' @examples
+#' data(galap)
+#' #plot a multimodel SAR curve with all model fits included
+#' fit <- sar_multi(galap)
+#' plot(fit)
+#' 
+#' #remove the legend
+#' plot(fit, pLeg = F)
+#' 
+#' #plot just the multimodel curve
+#' plot(fit, allCurves = FALSE, ModTitle = "", lcol = "black")
+#' 
+#' #Plot a barplot of the model weights
+#' plot(fit, type = "bar")
 #' @rdname plot.multi
 #' @export
-
-#NOT FINISHED
-
-
-#CIs
-
-#state in documentation that multicurve removes  na par models 
-
-#type = "both"; allCurves = TRUE;
-#xlab = NULL; ylab = NULL; pch = 16; cex = 1.2; 
-#pcol = 'dodgerblue2'; ModTitle = NULL; TiAdj = 0; TiLine = 0.5; cex.main = 1.5;
-#cex.lab = 1.3; cex.axis = 1;yRange = NULL;pLeg = TRUE;
-#lwd = 2; lcol = 'dodgerblue2'; di = c(1, 2)
-
-
-
-
 
 
 plot.multi <- function(x, type = "multi", allCurves = TRUE,
                             xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
                       pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
-                      cex.lab = 1.3, cex.axis = 1, yRange = NULL, pLeg = TRUE,
-                      lwd = 2, lcol = 'dodgerblue2', modNames = NULL, cex.names=.88, ...)
+                      cex.lab = 1.3, cex.axis = 1, yRange = NULL, 
+                      lwd = 2, lcol = 'dodgerblue2', pLeg = TRUE, modNames = NULL, cex.names=.88, ...)
 {
   ic <- x[[2]]$ic 
   dat <- x$details$fits
