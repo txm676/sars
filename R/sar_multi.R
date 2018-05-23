@@ -9,7 +9,7 @@
 
 
  #state in documentation that multicurve removes  na par models as well as na RSS models. And that model fits should
-## still be checked for sense 
+## still be checked for sens 
 
 sar_multi <- function(data = galap,
                        obj = c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg", "linear"),
