@@ -68,9 +68,11 @@ sar_multi <- function(data = galap,
     }))#eo suppressWarnings(lapply)
     
     f_nas <- unlist(lapply(fits,function(b)b$value))
-
     
-    if(all(is.na(f_nas)) || all(is.na(sigC))){
+    #remove models with no parameter estimates
+    sigC <- vapply(fits, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
+    
+    if(all(is.na(f_nas)) || all(sigC)){
       stop("No model could be fitted, aborting multi_sars\n")
     }
     
@@ -78,9 +80,6 @@ sar_multi <- function(data = galap,
       warning(" One or more models could not be fitted and have been excluded from the multi SAR", call. = FALSE)
       fits <- fits[!is.na(f_nas)]
     }
-    
-    #remove models with no parameter estimates
-    sigC <- vapply(fits, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
     
     if(any(sigC)){
       warning("Could not compute parameter statistics for one or models and these ave been excluded from the multi SAR", call. = FALSE)
