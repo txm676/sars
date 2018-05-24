@@ -1,19 +1,9 @@
 ###multi model sars
 
 #' @export
-#' 
-#' 
-#' 
-#' 
-#' 
 
- #state in documentation that multicurve removes  na par models as well as na RSS models. And that model fits should
-## still be checked for sens 
-#https://help.github.com/articles/caching-your-github-password-in-git/
-
-
-sar_multi <- function(data = galap,
-                       obj = c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg", "linear"),
+multi_sars <- function(data = galap,
+                       obj = c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg"),
                        keep_details = TRUE,
                        crit = "Info",
                        normtest = "lillie",
@@ -30,7 +20,7 @@ sar_multi <- function(data = galap,
     if (any(!(obj %in% c("linear","power","powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg")))) stop("provided model names do not match with model functions")
   }
   
-  if (length(obj) < 2) stop("more than 1 fit is required to construct a sar_multi")
+  if (length(obj) < 2) stop("more than 1 fit is required to construct a multi_sar")
   
   normtest <- match.arg(normtest, c("none", "shapiro", "kolmo", "lillie"))
   homotest <- match.arg(homotest, c("none","cor.area","cor.fitted"))
@@ -74,30 +64,11 @@ sar_multi <- function(data = galap,
       stop("No model could be fitted, aborting multi_sars\n")
     }
     
-    badMods <- 0
-    
     if(any(is.na(f_nas))){
       warning(" One or more models could not be fitted and have been excluded from the multi SAR", call. = FALSE)
-      badNames <- is.na(f_nas)
-      badMods <- obj[badNames] #extract the bad model names from the obj vector (not from fits, as no model name if NA)
       fits <- fits[!is.na(f_nas)]
     }
     
-    #remove models with no parameter estimates
-    sigC <- vapply(fits, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
-    if(all(sigC)) stop("No model could be fitted, aborting multi_sars\n")
-  
-    if (any(sigC)){
-      warning("Could not compute parameter statistics for one or more models and these have been excluded from the multi SAR", call. = FALSE)
-      badNames2 <- vapply(fits[sigC], FUN = function(x){x$model$name}, FUN.VALUE = character(1))
-      if (badMods != 0) {
-        badMods <- c(badMods, badNames2)
-      } else{
-        badMods <- badNames2
-      }
-      fits <- fits[!sigC]
-    }
-  
     fits <- fit_collection(fits = fits)
     
   }else{
@@ -139,16 +110,10 @@ sar_multi <- function(data = galap,
   akaikesum <- sum(exp( -0.5*(delta_ICs)))
   weights_ICs <- exp(-0.5*delta_ICs) / akaikesum
   
-  #ERROR: produce weight averaged diversity measures
- # mmi <- vapply(fits,FUN=function(x){x$calculated},FUN.VALUE=double(nPoints))
- # mmi <- apply((mmi * weights_ICs), 1 , sum)
-  
   #produce weight averaged diversity measures
   mmi <- vapply(fits,FUN=function(x){x$calculated},FUN.VALUE=double(nPoints))
-  wm <- matrix(nrow = nPoints, ncol = length(fits))
-  for (i in seq_along(weights_ICs)) {wm[ ,i] <- mmi[ ,i] * weights_ICs[i]}
-  mmi <- apply(wm, 1 , sum)
-
+  mmi <- apply((mmi * weights_ICs), 1 , sum)
+  
   res <- mmi
   
   if(keep_details){
@@ -166,14 +131,13 @@ sar_multi <- function(data = galap,
       delta_ics = delta_ICs,
       weights_ics = weights_ICs,
       n_points = nPoints,
-      n_mods = nMods,
-      no_fit = badMods
+      n_mods = nMods
     )
     
     res <- list(mmi = mmi, details = details)
   }#eo if keep_details 
   
-  class(res) <- c("multi", "sars")
+  class(res) <- c("multi.sars", "sars")
   attr(res, "type") <- "multi"
   
   #if (verb) cat_line(cli::rule(left = crayon::cyan(cli::symbol$bullet)))
