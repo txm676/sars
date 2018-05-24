@@ -7,12 +7,10 @@
 #' 
 #' 
 
-
  #state in documentation that multicurve removes  na par models as well as na RSS models. And that model fits should
 ## still be checked for sens 
 #https://help.github.com/articles/caching-your-github-password-in-git/
 
-#work out why badfits returning wrong name (data = aegean)
 
 sar_multi <- function(data = galap,
                        obj = c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg", "linear"),
@@ -72,33 +70,35 @@ sar_multi <- function(data = galap,
     
     f_nas <- unlist(lapply(fits,function(b)b$value))
     
-    #remove models with no parameter estimates
-    sigC <- vapply(fits, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
-    
-    if(all(is.na(f_nas)) || all(sigC)){
+    if(all(is.na(f_nas))){
       stop("No model could be fitted, aborting multi_sars\n")
     }
     
-    #create blank vector to add names of bad model fits too
-    if (any(is.na(f_nas)) || any(sigC)) badMods <- c()
+    badMods <- 0
     
     if(any(is.na(f_nas))){
       warning(" One or more models could not be fitted and have been excluded from the multi SAR", call. = FALSE)
+      badNames <- is.na(f_nas)
+      badMods <- obj[badNames] #extract the bad model names from the obj vector (not from fits, as no model name if NA)
       fits <- fits[!is.na(f_nas)]
-      badNames <- vapply(fits[is.na(f_nas)], FUN = function(x){x$model$name}, FUN.VALUE = character(1))
-      badMods <- c(badMods, badNames)
     }
     
-    if(any(sigC)){
-      warning("Could not compute parameter statistics for one or models and these ave been excluded from the multi SAR", call. = FALSE)
-      fits <- fits[!sigC]
+    #remove models with no parameter estimates
+    sigC <- vapply(fits, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
+    if(all(sigC)) stop("No model could be fitted, aborting multi_sars\n")
+  
+    if (any(sigC)){
+      warning("Could not compute parameter statistics for one or more models and these have been excluded from the multi SAR", call. = FALSE)
       badNames2 <- vapply(fits[sigC], FUN = function(x){x$model$name}, FUN.VALUE = character(1))
-      badMods <- c(badMods, badNames2)
+      if (badMods != 0) {
+        badMods <- c(badMods, badNames2)
+      } else{
+        badMods <- badNames2
+      }
+      fits <- fits[!sigC]
     }
   
     fits <- fit_collection(fits = fits)
-    
-     
     
   }else{
     if (attributes(obj)$type == "fit_collection"){

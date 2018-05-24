@@ -65,11 +65,20 @@ summary.sars <- function(object){
   }
   
   
+  if (attributes(object)$type == "fit_collection"){ 
+    return(cat("\n", "No summary method for fit_collection", "\n", sep = ""))
+    
+  }
+  
   if (attributes(object)$type == "multi"){
     Mods <- as.vector(object$details$mod_names)
+    nf <- as.vector(object$details$no_fit)
     cri <- object$details$ic
-    ranks <- round(sort(object$details$weights_ics, decreasing = TRUE), 2)
-    res <- list("Models" = Mods, "Criterion" = cri, "Model_Ranks" = ranks)
+    ranks <- sort(object$details$weights_ics, decreasing = TRUE)
+    df <- data.frame("Model" = names(ranks), "Weights" = as.vector(ranks))
+    df$Weights <- round(df$Weights, 3)
+    res <- list("Models" = Mods, "Criterion" = cri, "Model_weights" = round(ranks, 2),
+                "Model_table" = df, "no_fit" = nf)
   }
   
   class(res) <- "summary.sars"

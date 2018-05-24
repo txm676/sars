@@ -36,12 +36,16 @@ print.summary.sars <- function(object){
   if (attributes(object)$type == "multi"){ 
     cat("\n", "Multi_sar object summary: ", "\n", sep = "")
     cat("\n", paste(length(object$Models), " models successfully fitted"), "\n", sep = "")
-    cat("\n", paste(object$Criterion, "used to rank models"), "\n", sep = "")
-    cat("\n", paste("Ranked models based on", object$Criterion, " weights: ", object$Model_Ranks), "\n", sep = "")
+    if (length(object$no_fit) > 1) cat("\n", paste("The following models could not be fitted:", 
+                                                           object$no_fit), "\n", sep = "")
+    if (length(object$no_fit) == 1) cat("\n", paste("The following model could not be fitted:", 
+                                                            object$no_fit), "\n", sep = "")
+    cat("\n", paste("Ranked models based on", object$Criterion, " weights:"), "\n", "\n" ,sep = "")
+    print(object$Model_table)
+    
     
     #Model table: All fitted models, sum of sq (deviance), R2, AIC, BIC, AICc, delta, weights
-    #NA for models that did not pass
-    #sort table based on weights - with NAs at bottom
+    #sort table based on weights 
   }
 }
 
