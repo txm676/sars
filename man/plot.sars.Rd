@@ -7,10 +7,15 @@
 \method{plot}{sars}(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
   pch = 16, cex = 1.2, pcol = "dodgerblue2", ModTitle = NULL,
   TiAdj = 0, TiLine = 0.5, cex.main = 1.5, cex.lab = 1.3,
-  cex.axis = 1, lwd = 2, lcol = "dodgerblue2", di = NULL, ...)
+  cex.axis = 1, yRange = NULL, lwd = 2, lcol = "dodgerblue2",
+  di = NULL, pLeg = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class 'sars'.}
+
+\item{mfplot}{Logical argument specifying whether the model fits in a
+fit_collection should be plotted on one single plot (\code{mfplot = TRUE})
+or separate plots (\code{mfplot = FALSE}; the default).}
 
 \item{xlab}{Title for the x-axis (default depends on the Type attribute).}
 
@@ -23,23 +28,26 @@
 
 \item{pcol}{Colour of the points.}
 
-\item{ModTitle}{Plot title (default is null, which reverts to the model
-name). For no title, use ModTitle = "". For a sars object of type
-fit_collection, a vector of names can be provided (e.g. \code{letters[1:3]}).}
+\item{ModTitle}{PPlot title (default is \code{ModTitle = NULL}, which reverts
+to "MultiModel Fits"). For no title, use \code{ModTitle = ""}. For a sars
+object of type fit_collection, a vector of names can be provided (e.g.
+\code{letters[1:3]}).}
 
 \item{TiAdj}{Which way the plot title is justified.}
 
 \item{TiLine}{Places the plot title this many lines outwards from the plot
 edge.}
 
-\item{cex.main}{The amount by which the the plot title should be scaled
-relative to the default.}
+\item{cex.main}{The amount by which the plot title should be scaled relative
+to the default.}
 
-\item{cex.lab}{The amount by which the the axis titles should be scaled
-relative to the default.}
+\item{cex.lab}{The amount by which the axis titles should be scaled relative
+to the default.}
 
-\item{cex.axis}{The amount by which the the axis labels should be scaled
-relative to the default.}
+\item{cex.axis}{The amount by which the axis labels should be scaled relative
+to the default.}
+
+\item{yRange}{The range of the y-axis.}
 
 \item{lwd}{Line width.}
 
@@ -51,17 +59,25 @@ Type fit_collection. For example, \code{di = c(1, 3)} creates a plotting
 window with 1 row and 3 columns. The default (null) creates a square
 plotting window of the correct size.}
 
+\item{pLeg}{Logical argument specifying whether or not the legend should be
+plotted for fit_collection plots (when \code{mfplot = TRUE}) or sar_multi
+plots. When a large number of model fits are plotted the legend takes up a
+lot of space, and thus the default is \code{pLeg = FALSE}.}
+
 \item{\dots}{Further graphical parameters (see \code{\link[graphics]{par}},
 \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 \code{\link[graphics]{lines}}) may be supplied as arguments.}
 }
 \description{
 S3 method for class 'sars'. \code{plot.sars} creates plots for
-  objects of class sars, using the R base plotting framework. The exact
-  plot(s) constructed depends on the 'Type' attribute of the sars object.For
-  example, for a sars object of Type 'fit', the \code{plot.sars} function
-  returns a plot of the model fit (line) and the observed richness values
-  (points).
+  objects of class 'sars' (type = 'fit', "lin_pow' and 'fit_collection'),
+  using the R base plotting framework. The exact plot(s) constructed depends
+  on the 'Type' attribute of the 'sars' object. For example, for a 'sars'
+  object of Type 'fit', the \code{plot.sars} function returns a plot of the
+  model fit (line) and the observed richness values (points). For a 'sars'
+  object of Type 'fit_collection' the \code{plot.sars} function returns
+  either a grid with n individual plots (corresponding to the n model fits in
+  the fit_collection), or a single plot with all n model fits included.
 }
 \examples{
 data(galap)

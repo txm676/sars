@@ -1,9 +1,21 @@
 ###multi model sars
 
 #' @export
+#' 
+#' 
+#' 
+#' 
+#' 
+
+
+ #state in documentation that multicurve removes  na par models as well as na RSS models. And that model fits should
+## still be checked for sens 
+#https://help.github.com/articles/caching-your-github-password-in-git/
+
+#work out why badfits returning wrong name (data = aegean)
 
 sar_multi <- function(data = galap,
-                       obj = c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg"),
+                       obj = c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg", "linear"),
                        keep_details = TRUE,
                        crit = "Info",
                        normtest = "lillie",
@@ -60,16 +72,33 @@ sar_multi <- function(data = galap,
     
     f_nas <- unlist(lapply(fits,function(b)b$value))
     
-    if(all(is.na(f_nas))){
+    #remove models with no parameter estimates
+    sigC <- vapply(fits, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
+    
+    if(all(is.na(f_nas)) || all(sigC)){
       stop("No model could be fitted, aborting multi_sars\n")
     }
+    
+    #create blank vector to add names of bad model fits too
+    if (any(is.na(f_nas)) || any(sigC)) badMods <- c()
     
     if(any(is.na(f_nas))){
       warning(" One or more models could not be fitted and have been excluded from the multi SAR", call. = FALSE)
       fits <- fits[!is.na(f_nas)]
+      badNames <- vapply(fits[is.na(f_nas)], FUN = function(x){x$model$name}, FUN.VALUE = character(1))
+      badMods <- c(badMods, badNames)
     }
     
+    if(any(sigC)){
+      warning("Could not compute parameter statistics for one or models and these ave been excluded from the multi SAR", call. = FALSE)
+      fits <- fits[!sigC]
+      badNames2 <- vapply(fits[sigC], FUN = function(x){x$model$name}, FUN.VALUE = character(1))
+      badMods <- c(badMods, badNames2)
+    }
+  
     fits <- fit_collection(fits = fits)
+    
+     
     
   }else{
     if (attributes(obj)$type == "fit_collection"){
@@ -110,10 +139,16 @@ sar_multi <- function(data = galap,
   akaikesum <- sum(exp( -0.5*(delta_ICs)))
   weights_ICs <- exp(-0.5*delta_ICs) / akaikesum
   
+  #ERROR: produce weight averaged diversity measures
+ # mmi <- vapply(fits,FUN=function(x){x$calculated},FUN.VALUE=double(nPoints))
+ # mmi <- apply((mmi * weights_ICs), 1 , sum)
+  
   #produce weight averaged diversity measures
   mmi <- vapply(fits,FUN=function(x){x$calculated},FUN.VALUE=double(nPoints))
-  mmi <- apply((mmi * weights_ICs), 1 , sum)
-  
+  wm <- matrix(nrow = nPoints, ncol = length(fits))
+  for (i in seq_along(weights_ICs)) {wm[ ,i] <- mmi[ ,i] * weights_ICs[i]}
+  mmi <- apply(wm, 1 , sum)
+
   res <- mmi
   
   if(keep_details){
@@ -131,13 +166,14 @@ sar_multi <- function(data = galap,
       delta_ics = delta_ICs,
       weights_ics = weights_ICs,
       n_points = nPoints,
-      n_mods = nMods
+      n_mods = nMods,
+      no_fit = badMods
     )
     
     res <- list(mmi = mmi, details = details)
   }#eo if keep_details 
   
-  class(res) <- c("sars.multi", "sars")
+  class(res) <- c("multi", "sars")
   attr(res, "type") <- "multi"
   
   #if (verb) cat_line(cli::rule(left = crayon::cyan(cli::symbol$bullet)))

@@ -34,8 +34,11 @@ print.summary.sars <- function(object){
   }
   
   if (attributes(object)$type == "multi"){ 
-    #Multi_sar object
-    # N models fitted; x passed test
+    cat("\n", "Multi_sar object summary: ", "\n", sep = "")
+    cat("\n", paste(length(object$Models), " models successfully fitted"), "\n", sep = "")
+    cat("\n", paste(object$Criterion, "used to rank models"), "\n", sep = "")
+    cat("\n", paste("Ranked models based on", object$Criterion, " weights: ", object$Model_Ranks), "\n", sep = "")
+    
     #Model table: All fitted models, sum of sq (deviance), R2, AIC, BIC, AICc, delta, weights
     #NA for models that did not pass
     #sort table based on weights - with NAs at bottom
@@ -68,9 +71,11 @@ print.sars <- function(object){
   }
   
   if (attributes(object)$type == "multi"){ 
-    cat("\n", "This is a multi_sar fit object", "\n", sep = "")
-    ##n models in the multi_sar object:
-    ##list N models attempted to fit; x have passed
+    cat("\n", "This is a multi_sar fit object:", "\n", sep = "")
+    cat("\n", paste(length(object$details$mod_names), "models successfully fitted"), "\n", sep = "")
+    if (length(object$details$no_fit) > 1) cat("\n", paste(length(object$details$no_fit), "models were unable to be fitted"), "\n", sep = "")
+    if (length(object$details$no_fit) == 1) cat("\n", paste(length(object$details$no_fit), "model was unable to be fitted"), "\n", sep = "")
+     cat("\n", paste(object$details$ic, "used to rank models"), "\n", sep = "")
   } 
   
 }
