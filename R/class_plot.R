@@ -398,14 +398,15 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   ##barplot of IC weights
     
   #often many have very low weight (near 0), so filter out main ones. 
-  aw2 <- aw[aw > 0.05]
+  #aw2 <- aw[aw > 0.05]
   
   if (is.null(ylab)) ylab <- "IC weights"
   if (is.null(ModTitle)) ModTitle <- "Model weights"
-  if (is.null(modNames)) modNames <- names(aw2)
-    
-  barplot(aw2, ylim=c(0, max(aw) + 0.05), cex.names= cex.names, ylab = ylab, cex.lab = cex.lab, 
-          names.arg = modNames)
+  if (is.null(modNames)) modNames <- names(aw)
+  
+
+  barplot(aw, xlim=c(0, max(aw) + 0.05), cex.names= cex.names, ylab = ylab, cex.lab = cex.lab, 
+          names.arg = modNames, horiz = TRUE)
   title(main = ModTitle, cex.main = cex.main, adj = TiAdj, line = TiLine)
   }
 

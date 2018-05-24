@@ -16,7 +16,8 @@
 #' plot(fit)
 #' @export
 
-sar_betap <- function(data = galap, start = NULL, grid_start = NULL){
+sar_betap <- function(data = galap, start = NULL, grid_start = NULL, normaTest =  "lillie",
+              homoTest = "cor.fitted"){
 if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe') 
 if (is.matrix(data)) data <- as.data.frame(data) 
 if (base::anyNA(data)) stop('NAs present in data') 
@@ -35,7 +36,8 @@ model <- list(
 
 
 model <- compmod(model) 
-fit <- get_fit(model = model, data = data, start = start, grid_start = grid_start, algo = 'Nelder-Mead', verb = TRUE) 
+fit <- get_fit(model = model, data = data, start = start, grid_start = grid_start, algo = 'Nelder-Mead', 
+       normaTest =  normaTest, homoTest = homoTest, verb = TRUE) 
 if(is.na(fit$value)){ 
   return(list(value = NA)) 
 }else{ 

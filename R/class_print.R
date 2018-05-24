@@ -31,6 +31,10 @@ print.summary.sars <- function(object){
     cat("\n", "R-squared: ", object$R2 , ", Adjusted R-squared: ", object$R2a, "\n", sep = "")
     cat("AIC: ", object$AIC , ", AICc: ", object$AICc, ", BIC: ", object$BIC, "\n", sep = "")
     cat("Observed shape: ", object$observed_shape, ", Asymptote: ", object$asymptote, "\n", "\n", sep = "")
+    if (object$Normality_test_P < 0.05 ){
+      cat("\n", "Warning: The normality test selected indicated the model residuals are
+          not normally distributed (i.e. P < 0.05)", "\n", sep = "")
+    }
   }
   
   if (attributes(object)$type == "multi"){ 
@@ -42,10 +46,6 @@ print.summary.sars <- function(object){
                                                             object$no_fit), "\n", sep = "")
     cat("\n", paste("Ranked models based on", object$Criterion, " weights:"), "\n", "\n" ,sep = "")
     print(object$Model_table)
-    
-    
-    #Model table: All fitted models, sum of sq (deviance), R2, AIC, BIC, AICc, delta, weights
-    #sort table based on weights 
   }
 }
 

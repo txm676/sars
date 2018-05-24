@@ -1,5 +1,6 @@
 ######################################## optimization function
-rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead"){
+rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
+                     normaTest = "lillie", homoTest = "cor.fitted"){
 
   #initial parameters
   if (is.null(start)) {
@@ -63,17 +64,31 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead"){
       warning("The Shapiro test cannot be performed with less than 3 data points \n")
 
   }#eo if length
-
-  normaTest <- list(shapiro = tryCatch(shapiro.test(residu), error = function(e)NA),
-                     lillie = tryCatch(nortest::lillie.test(residu), error = function(e)NA),
-                      kolmo = tryCatch(ks.test(residu, "pnorm"), error = function(e)NA)
-                    )
+  
+  normaTest <- match.arg(normaTest, c("none", "shapiro", "kolmo", "lillie"))
+  homoTest <- match.arg(homoTest, c("none","cor.area","cor.fitted"))
+  
+  #normality of residuals
+  if (normaTest == "shapiro") {
+    normaTest <- list("test" = "shapiro", tryCatch(shapiro.test(residu), error = function(e)NA))
+    } else if (normaTest == "lillie"){ 
+      normaTest <- list("test" = "lillie", tryCatch(nortest::lillie.test(residu), error = function(e)NA))
+    } else if (normaTest == "kolmo"){ 
+      normaTest <- list("test" = "kolmo", tryCatch(ks.test(residu, "pnorm"), error = function(e)NA))
+      } else{
+        normaTest <- "none"
+        }
   
   #Homogeneity of variance
   
-  homoTest  <- list(cor.area = tryCatch(cor.test(residu,data$A), error = function(e)list(estimate=NA,p.value=NA)),
-                    cor.fitted = tryCatch(cor.test(residu,S.calc), error = function(e)list(estimate=NA,p.value=NA))
-  )
+  if (homoTest == "cor.area"){
+    homoTest  <- list("test" = "cor.area", tryCatch(cor.test(residu,data$A), error = function(e)list(estimate=NA,p.value=NA)))
+  } else if (homoTest == "cor.fitted"){
+    homoTest  <- list("test" = "cor.fitted", tryCatch(cor.test(residu,S.calc), error = function(e)list(estimate=NA,p.value=NA)))
+  } else {
+    homoTest = "none"
+  }
+  
 
   #R2, AIC, AICc, BIC
 
@@ -154,12 +169,16 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead"){
   }#eo if else is.na(nMod)
   
    
+  res$normaTest <- normaTest
+  res$homoTest <- homoTest
+  
   invisible(res)
 
 }#eo rssoptim
 
 ######################################## Multiple starting values optimization function
-grid_start_fit <- function(model, data, n, algo = "Nelder-Mead", verb = TRUE) {
+grid_start_fit <- function(model, data, n, algo = "Nelder-Mead", normaTest = "lillie", homoTest = "cor.fitted",
+                           verb = TRUE) {
   
   if(length(model$parNames)<4){
     ns <- 100
@@ -186,7 +205,8 @@ grid_start_fit <- function(model, data, n, algo = "Nelder-Mead", verb = TRUE) {
   
   fit.list <- apply(grid.start, 1, function(x){
     if (verb) cat(".")
-    tryCatch(rssoptim(model, data , start = x, algo = algo), error = function(e) list(value = NA))
+    tryCatch(rssoptim(model, data , start = x, algo = algo, normaTest = normaTest, homoTest = homoTest)
+             , error = function(e) list(value = NA))
   })
   
   fit.list <- as.list(fit.list)
@@ -204,19 +224,22 @@ grid_start_fit <- function(model, data, n, algo = "Nelder-Mead", verb = TRUE) {
 }#eo grid_start_fit
 
 ######################################## optimization wrapper
-get_fit <- function(model = model, data = data, start = NULL, grid_start = NULL, algo = "Nelder-Mead", verb = TRUE){
+get_fit <- function(model = model, data = data, start = NULL, grid_start = NULL, algo = "Nelder-Mead", 
+                    normaTest = "lillie", homoTest = "cor.fitted", verb = TRUE){
   
   if(!is.null(start) & !is.null(grid_start)){
     stop("You must choose between 'start' and 'grid_start', but choose wisely\n")
   }
   
   if(is.null(start)){
-    fit <- tryCatch(rssoptim(model = model, data = data, algo = algo),error=function(e) list(value = NA))
+    fit <- tryCatch(rssoptim(model = model, data = data, algo = algo, normaTest = normaTest, homoTest = homoTest)
+                    ,error=function(e) list(value = NA))
     if(is.na(fit$value)){
       if(!is.null(grid_start)){
         if(grid_start != FALSE){
           n <- min(grid_start,1000)
-          fit <- grid_start_fit(model = model, data = data, n = n, algo = algo, verb = verb)
+          fit <- grid_start_fit(model = model, data = data, n = n, algo = algo, normaTest = normaTest, homoTest = homoTest,
+                                verb = verb)
           grid_start <- NULL
         }
       }
@@ -224,12 +247,14 @@ get_fit <- function(model = model, data = data, start = NULL, grid_start = NULL,
   }
   
   if(!is.null(start)){
-    fit <- tryCatch(rssoptim(model = model, data = data, start = start, algo = algo), error = function(e) list(value = NA))
+    fit <- tryCatch(rssoptim(model = model, data = data, start = start, algo = algo, 
+                             normaTest = normaTest, homoTest = homoTest), error = function(e) list(value = NA))
   } 
   
   if(!is.null(grid_start)) {
     if (grid_start != FALSE){
-      fit <- grid_start_fit(model = model, data = data, n = grid_start, algo = algo, verb = verb)
+      fit <- grid_start_fit(model = model, data = data, n = grid_start, algo = algo, normaTest = normaTest,
+                            homoTest = homoTest, verb = verb)
     }#eo if (grid_start != FALSE)
   }#eo if(!is.null(grid_start))
   

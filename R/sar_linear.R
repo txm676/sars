@@ -13,7 +13,7 @@
 #' plot(fit)
 #' @export 
 
-sar_linear <- function(data = galap){
+sar_linear <- function(data = galap, normaTest =  "lillie", homoTest = "cor.fitted"){
   if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe') 
   if (is.matrix(data)) data <- as.data.frame(data) 
   if (base::anyNA(data)) stop('NAs present in data') 
@@ -21,7 +21,7 @@ sar_linear <- function(data = galap){
   colnames(data) <- c('A','S') 
   #standard linear regression
   mod <- lm(S ~ A, data = data)
-  fit <- vector("list", length = 13)
+  fit <- list()
   fit$par <- mod$coefficients
   names(fit$par) <- c("c", "m")
   res <- as.vector(mod$residuals)
@@ -51,6 +51,30 @@ sar_linear <- function(data = galap){
   fit$sigConf <- cbind(summary(mod)$coefficients, confint(mod))#confidence intervals calculated using in built function
   fit$observed_shape <- "linear" 
   fit$asymptote <- FALSE
+  #normality and homogeneity tests
+  normaTest <- match.arg(normaTest, c("none", "shapiro", "kolmo", "lillie"))
+  homoTest <- match.arg(homoTest, c("none","cor.area","cor.fitted"))
+  #normality of residuals
+  if (normaTest == "shapiro") {
+    normaTest <- list("test" = "shapiro", tryCatch(shapiro.test(res), error = function(e)NA))
+  } else if (normaTest == "lillie"){ 
+    normaTest <- list("test" = "lillie", tryCatch(nortest::lillie.test(res), error = function(e)NA))
+  } else if (normaTest == "kolmo"){ 
+    normaTest <- list("test" = "kolmo", tryCatch(ks.test(res, "pnorm"), error = function(e)NA))
+  } else{
+    normaTest <- "none"
+  }
+  #Homogeneity of variance
+  if (homoTest == "cor.area"){
+    homoTest  <- list("test" = "cor.area", tryCatch(cor.test(res,data$A), error = function(e)list(estimate=NA,p.value=NA)))
+  } else if (homoTest == "cor.fitted"){
+    homoTest  <- list("test" = "cor.fitted", tryCatch(cor.test(res,as.vector(mod$fitted.values)), 
+                                                   error = function(e)list(estimate=NA,p.value=NA)))
+  } else {
+    homoTest = "none"
+  }
+  fit$normaTest <- normaTest
+  fit$homoTest <- homoTest
   class(fit) <- 'sars' 
   attr(fit, 'type') <- 'fit' 
   return(fit) 

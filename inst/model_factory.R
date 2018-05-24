@@ -61,7 +61,8 @@ model_factory <- function(f, overwrite = FALSE){
   cat1("\n")
   
   #function definition
-  cat1(paste0(funName," <- function(data = galap, start = NULL, grid_start = NULL){","\n"))
+  cat1(paste0(funName,' <- function(data = galap, start = NULL, grid_start = NULL, normaTest =  "lillie",
+              homoTest = "cor.fitted"){',"\n"))
   
   #checks
   cat1("if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe')","\n")
@@ -82,7 +83,8 @@ model_factory <- function(f, overwrite = FALSE){
   
   cat1("model <- compmod(model)","\n")
   
-  cat1("fit <- get_fit(model = model, data = data, start = start, grid_start = grid_start, algo = 'Nelder-Mead', verb = TRUE)","\n")
+  cat1("fit <- get_fit(model = model, data = data, start = start, grid_start = grid_start, algo = 'Nelder-Mead', 
+       normaTest =  normaTest, homoTest = homoTest, verb = TRUE)","\n")
   cat1("if(is.na(fit$value)){","\n")
   cat1("  return(list(value = NA))","\n")
   cat1("}else{","\n")

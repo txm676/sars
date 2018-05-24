@@ -58,9 +58,23 @@ summary.sars <- function(object){
     shape <- object$observed_shape
     asymp <- object$asymptote
     conv <- object$verge
+    #normality
+    if (object$normaTest$test == "shapiro"|| object$normaTest$test == "lillie" ||
+        object$normaTest$test == "kolmo"){
+      normP <- object$normaTest[[2]]$p.value
+    } else{
+      normP <- "No normality test undertaken"
+    }
+    #homogeneity
+    if (object$homoTest$test == "cor.area" || object$homoTest$test == "cor.fitted"){
+      homoP <- object$homoTest[[2]]$p.value
+    } else{
+      homoP <- "No homogeneity test undertaken"
+    }
     res <- list("Model" = name, "residuals" = round(resid, 1), "Parameters" = pars_tab, 
                 "parNames" = parN, "formula" = formula, "AIC" = round(ic, 2), "AICc" = round(ic2, 2), "BIC" = round(bi, 2),
-                "R2" = round(R2, 2), "R2a" = round(R2a, 2), "observed_shape" = shape, "asymptote" = asymp, "convergence" = conv)
+                "R2" = round(R2, 2), "R2a" = round(R2a, 2), "observed_shape" = shape, "asymptote" = asymp, 
+                "convergence" = conv, "Normality_test_P" = normP, "Homogeneity_test_P" = homoP)
   }
   
   

@@ -2,7 +2,7 @@
 % Please edit documentation in R/sar_heleg.R
 \name{sar_heleg}
 \alias{sar_heleg}
-\title{Fit the Logistic (He & Legendre) model}
+\title{Fit the Heleg(Logistic) model}
 \usage{
 sar_heleg(data, custstart = NULL, normtest = 'lillie')
 }
@@ -16,7 +16,7 @@ or FALSE to prevent any grid start after a fail in inital optimization
 to run a grid search.}
 }
 \description{
-Fit the Logistic (He & Legendre) model to SAR data
+Fit the Heleg(Logistic) model to SAR data
 }
 \examples{
 data(galap)

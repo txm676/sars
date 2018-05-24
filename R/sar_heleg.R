@@ -1,6 +1,6 @@
-#' Fit the Logistic (He & Legendre) model
+#' Fit the Heleg(Logistic) model
 
-#' @description Fit the Logistic (He & Legendre) model to SAR data
+#' @description Fit the Heleg(Logistic) model to SAR data
 #' @usage sar_heleg(data, custstart = NULL, normtest = 'lillie')
 #' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness
@@ -16,7 +16,8 @@
 #' plot(fit)
 #' @export
 
-sar_heleg <- function(data = galap, start = NULL, grid_start = NULL){
+sar_heleg <- function(data = galap, start = NULL, grid_start = NULL, normaTest =  "lillie",
+              homoTest = "cor.fitted"){
 if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe') 
 if (is.matrix(data)) data <- as.data.frame(data) 
 if (base::anyNA(data)) stop('NAs present in data') 
@@ -47,7 +48,8 @@ model <- list(
 )
 
 model <- compmod(model) 
-fit <- get_fit(model = model, data = data, start = start, grid_start = grid_start, algo = 'Nelder-Mead', verb = TRUE) 
+fit <- get_fit(model = model, data = data, start = start, grid_start = grid_start, algo = 'Nelder-Mead', 
+       normaTest =  normaTest, homoTest = homoTest, verb = TRUE) 
 if(is.na(fit$value)){ 
   return(list(value = NA)) 
 }else{ 
