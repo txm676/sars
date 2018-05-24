@@ -74,11 +74,18 @@ summary.sars <- function(object){
     Mods <- as.vector(object$details$mod_names)
     nf <- as.vector(object$details$no_fit)
     cri <- object$details$ic
-    ranks <- sort(object$details$weights_ics, decreasing = TRUE)
-    df <- data.frame("Model" = names(ranks), "Weights" = as.vector(ranks))
-    df$Weights <- round(df$Weights, 3)
-    res <- list("Models" = Mods, "Criterion" = cri, "Model_weights" = round(ranks, 2),
-                "Model_table" = df, "no_fit" = nf)
+    ranks <- object$details$weights_ics
+    df <- data.frame("Model" = names(ranks), "Weight" = as.vector(ranks))
+    df$IC <- vapply(object$details$fits, function(x){x[[cri]]}, FUN.VALUE = numeric(1))
+    colnames(df)[3] <- paste(cri)
+    df$R2 <- vapply(object$details$fits, function(x){x$R2}, FUN.VALUE = numeric(1))
+    df$R2a <- vapply(object$details$fits, function(x){x$R2a}, FUN.VALUE = numeric(1))
+    df$Shape <- vapply(object$details$fits, function(x){x$observed_shape}, FUN.VALUE = character(1))
+    df$Asymptote <- vapply(object$details$fits, function(x){x$asymptote}, FUN.VALUE = logical(1))
+    df <- df[order(-df$Weight),]
+    df[, 2:5] <- round(df[, 2:5], 3)
+    rownames(df) <- NULL
+    res <- list("Models" = Mods, "Criterion" = cri, "Model_table" = df, "no_fit" = nf)
   }
   
   class(res) <- "summary.sars"
