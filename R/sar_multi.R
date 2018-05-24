@@ -36,7 +36,7 @@ sar_multi <- function(data = galap,
   homotest <- match.arg(homotest, c("none","cor.area","cor.fitted"))
   
   #if (verb) cat_line(cli::rule(left = paste0(crayon::cyan(cli::symbol$bullet),crayon::bold(" multi_sars")),right="multi-model SAR"))
-  if (verb) cat_line(cli::rule(left = crayon::bold(" multi_sars"),right="multi-model SAR"))
+  if (verb) sars:::cat_line(cli::rule(left = crayon::bold(" multi_sars"),right="multi-model SAR"))
   #if (verb) cat_line(crayon::magenta(cli::symbol$arrow_right)," Data set is: ")
   #if (verb) cat_line(cli::rule(left = paste0(crayon::magenta(cli::symbol$bullet))))
   #if (verb) bullet("O | S : model", bullet = blue_arrow())
@@ -53,13 +53,13 @@ sar_multi <- function(data = galap,
       
       if (verb) {
         if(is.na(f$value)) {
-          cat_line( paste0(crayon::red(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ", crayon::red(cli::symbol$cross)," could not fit the model >_<"))
+          sars:::cat_line( paste0(crayon::red(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ", crayon::red(cli::symbol$cross)))
         }else{
           
           if (!is.matrix(f$sigConf)){
-            cat_line( paste0(crayon::yellow(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ",crayon::yellow(cli::symbol$warning)," could not compute parameters statistics"))
+            sars::: cat_line( paste0(crayon::yellow(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : Warning: could not compute parameters statistics"))
           }else{
-            cat_line( paste0(crayon::green(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ",crayon::green(cli::symbol$tick)))
+            sars:::cat_line( paste0(crayon::cyan(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ",crayon::green(cli::symbol$tick)))
           }
         }
       }
@@ -84,19 +84,19 @@ sar_multi <- function(data = galap,
     }
     
     #remove models with no parameter estimates
-    sigC <- vapply(fits, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
-    if(all(sigC)) stop("No model could be fitted, aborting multi_sars\n")
+  #  sigC <- vapply(fits, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
+    #if(all(sigC)) stop("No model could be fitted, aborting multi_sars\n")
   
-    if (any(sigC)){
-      warning("Could not compute parameter statistics for one or more models and these have been excluded from the multi SAR", call. = FALSE)
-      badNames2 <- vapply(fits[sigC], FUN = function(x){x$model$name}, FUN.VALUE = character(1))
-      if (badMods != 0) {
-        badMods <- c(badMods, badNames2)
-      } else{
-        badMods <- badNames2
-      }
-      fits <- fits[!sigC]
-    }
+   # if (any(sigC)){
+    #  warning("Could not compute parameter statistics for one or more models and these have been excluded from the multi SAR", call. = FALSE)
+    #  badNames2 <- vapply(fits[sigC], FUN = function(x){x$model$name}, FUN.VALUE = character(1))
+    #  if (badMods != 0) {
+    #    badMods <- c(badMods, badNames2)
+    #  } else{
+     #   badMods <- badNames2
+      #}
+      #fits <- fits[!sigC]
+   #}
   
     fits <- fit_collection(fits = fits)
     
@@ -177,7 +177,7 @@ sar_multi <- function(data = galap,
   attr(res, "type") <- "multi"
   
   #if (verb) cat_line(cli::rule(left = crayon::cyan(cli::symbol$bullet)))
-  if (verb) cat_line(cli::rule())
+  if (verb) sars:::cat_line(cli::rule())
   
   invisible(res)
   
