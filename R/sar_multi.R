@@ -1,5 +1,13 @@
 ###multi model sars
 
+
+#' @note Occasionally a model fit will converge and pass the model fitting
+#'   checks (e.g. residual normality) but the resulting fit is nonsensical (e.g.
+#'   a horizontal line with intercept at zero). Thus, it can be useful to plot
+#'   the resultant 'multi' object to check the individual model fits. To re-run
+#'   the \code{sar_multi} function without a particular model, simply remove it
+#'   from the \code{obj} argument.
+
 #' @export
 #' 
 #' 
@@ -7,7 +15,7 @@
 #' 
 #' 
 
- #state in documentation that multicurve removes  na par models as well as na RSS models. And that model fits should
+ #state in documentation that multicurve removes  s na RSS models. And that model fits should
 ## still be checked for sens 
 #https://help.github.com/articles/caching-your-github-password-in-git/
 

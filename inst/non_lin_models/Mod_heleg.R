@@ -1,6 +1,6 @@
 #LOGISTIC FUNCTION (HE & LEGENDRE 1996)
 model <- list(
-  name=c("Logistic (He & Legendre)"),
+  name=c("Heleg(Logistic)"),
   formula=expression(S == c/(f + A^(-z))),
   exp=expression(c/(f + A^(-z))),
   shape="sigmoid",

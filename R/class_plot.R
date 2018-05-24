@@ -263,6 +263,18 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 #'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
 #' @importFrom graphics plot lines title
+#' @note When plotting all model fits on the same plot with a legend it is
+#'   necessary to manually extend your plotting window (height and width; e.g.
+#'   the 'Plots' window of R studio) before plotting to ensure the legend fits
+#'   in the plot. Extending the plotting window after plotting simply stretches
+#'   the legend.
+#'   
+#'   Occasionally a model fit will converge and pass the model fitting
+#'   checks (e.g. residual normality) but the resulting fit is nonsensical (e.g.
+#'   a horizontal line with intercept at zero). Thus, it can be useful to plot
+#'   the resultant 'multi' object to check the individual model fits. To re-run
+#'   the \code{sar_multi} function without a particular model, simply remove it
+#'   from the \code{obj} argument.
 #' @examples
 #' data(galap)
 #' #plot a multimodel SAR curve with all model fits included
