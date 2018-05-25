@@ -111,9 +111,6 @@
 #'
 #' @export
 
-#https://help.github.com/articles/caching-your-github-password-in-git/
-
-
 sar_multi <- function(data = galap,
                        obj = c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg", "linear"),
                        keep_details = TRUE,
