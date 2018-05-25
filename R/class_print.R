@@ -31,11 +31,37 @@ print.summary.sars <- function(object){
     cat("\n", "R-squared: ", object$R2 , ", Adjusted R-squared: ", object$R2a, "\n", sep = "")
     cat("AIC: ", object$AIC , ", AICc: ", object$AICc, ", BIC: ", object$BIC, "\n", sep = "")
     cat("Observed shape: ", object$observed_shape, ", Asymptote: ", object$asymptote, "\n", "\n", sep = "")
-    if (object$Normality_test_P < 0.05 ){
+    #normality
+    if (object$Normality_test$test == "shapiro"|| object$Normality_test$test == "lillie" ||
+        object$Normality_test$test == "kolmo"){
+      normP <- object$Normality_test[[2]]$p.value
+    } else{
+      normP <- "No normality test undertaken"
+    }
+    #homogeneity
+    if (object$Homogeneity_test$test == "cor.area" || object$Homogeneity_test$test == "cor.fitted"){
+      homoP <- object$Homogeneity_test[[2]]$p.value
+    } else{
+      homoP <- "No homogeneity test undertaken"
+    }
+
+    if (is.numeric(normP) && normP < 0.05 ){
       cat("\n", "Warning: The normality test selected indicated the model residuals are
           not normally distributed (i.e. P < 0.05)", "\n", sep = "")
     }
-  }
+    if (is.numeric(homoP) && homoP < 0.05){
+      tr <- ifelse(object$Homogeneity_test$test == "cor.area", "area values", "fitted values")
+      cat("\n", paste("Warning: The homogeneity test selected indicated a signficant correlation
+          between the residuals and the",tr, "(i.e. P < 0.05)"), "\n", sep = "")
+    }
+    #negative values check
+    if (object$Negative_values == 1){
+      cat("\n", "Warning: The fitted values of the model contain negative values (i.e. negative 
+          species richness values)", "\n", sep = "")
+      }
+  }#eo if fit
+  
+
   
   if (attributes(object)$type == "multi"){ 
     cat("\n", "Multi_sar object summary: ", "\n", sep = "")

@@ -20,14 +20,19 @@
 #https://help.github.com/articles/caching-your-github-password-in-git/
 
 
+
+
+
+
 sar_multi <- function(data = galap,
                        obj = c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg", "linear"),
                        keep_details = TRUE,
                        crit = "Info",
-                       normtest = "lillie",
-                       homotest = "cor.fitted",
+                       normaTest = "lillie",
+                       homoTest = "cor.fitted",
+                       neg_check = TRUE,
                        alpha_normtest = 0.05,
-                       alpha_homotest = alpha_normtest,
+                       alpha_homotest = 0.05,
                        verb = TRUE){
   
   if (!(is.character(obj))  || (class(obj) == "sars") ) stop("obj must be of class character or sars")
@@ -40,8 +45,8 @@ sar_multi <- function(data = galap,
   
   if (length(obj) < 2) stop("more than 1 fit is required to construct a sar_multi")
   
-  normtest <- match.arg(normtest, c("none", "shapiro", "kolmo", "lillie"))
-  homotest <- match.arg(homotest, c("none","cor.area","cor.fitted"))
+  normaTest <- match.arg(normaTest, c("none", "shapiro", "kolmo", "lillie"))
+  homoTest <- match.arg(homoTest, c("none","cor.area","cor.fitted"))
   
   #if (verb) cat_line(cli::rule(left = paste0(crayon::cyan(cli::symbol$bullet),crayon::bold(" multi_sars")),right="multi-model SAR"))
   if (verb) sars:::cat_line(cli::rule(left = crayon::bold(" multi_sars"),right="multi-model SAR"))
@@ -57,7 +62,7 @@ sar_multi <- function(data = galap,
     
     fits <- suppressWarnings(lapply(obj, function(x){
       
-      f <- eval(parse(text = paste0(mods[x],"(data)")))
+      f <- eval(parse(text = paste0(mods[x],"(data", ", normaTest = ", paste0("'", normaTest, "'"), ", homoTest = ", paste0("'", homoTest, "'"), ")")))
       
       if (verb) {
         if(is.na(f$value)) {
@@ -75,21 +80,7 @@ sar_multi <- function(data = galap,
       f
       
     }))#eo suppressWarnings(lapply)
-    
-    f_nas <- unlist(lapply(fits,function(b)b$value))
-    
-    if(all(is.na(f_nas))){
-      stop("No model could be fitted, aborting multi_sars\n")
-    }
-    
-    badMods <- 0
-    
-    if(any(is.na(f_nas))){
-      warning(" One or more models could not be fitted and have been excluded from the multi SAR", call. = FALSE)
-      badNames <- is.na(f_nas)
-      badMods <- obj[badNames] #extract the bad model names from the obj vector (not from fits, as no model name if NA)
-      fits <- fits[!is.na(f_nas)]
-    }
+  
     
     #remove models with no parameter estimates
   #  sigC <- vapply(fits, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
@@ -119,9 +110,63 @@ sar_multi <- function(data = galap,
     }
   }#eo if else is.character(obj)
   
+  #####BAD MODEL CHECKS#######################
+  
+  #NA CHECKS
+  f_nas <- unlist(lapply(fits,function(b)b$value))
+  
+  if(all(is.na(f_nas))){
+    stop("No model could be fitted, aborting multi_sars\n")
+  }
+  
+  badMods <- c()
+  
+  if(any(is.na(f_nas))){
+    badNames <- is.na(f_nas)
+    warning(paste(length(which(is.na(f_nas))), "models could not be fitted and have been excluded from the multi SAR"), call. = FALSE)
+    badMods <- obj[badNames] #extract the bad model names from the obj vector (not from fits, as no model name if NA)
+    fits <- fits[!is.na(f_nas)]
+  }
   
   #if checks for normality and / or homoscedasticity enabled, then check and remove bad fits from fits
-  #if length(fits) < 2 -> stop
+
+  if (normaTest != "none") {
+    np <- vapply(fits, function(x) x$normaTest[[2]]$p.value, FUN.VALUE = numeric(1))
+    whp <- np < alpha_normtest
+    if (any(whp)) {
+      warning(paste(length(which(np < alpha_normtest)), "models failed the residuals normality test and
+              have been excluded from the multi SAR"), call. = FALSE)
+      #get model names
+      mn <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
+      badMods <- c(badMods, mn[whp])#select the model names for models with p < 0.05
+      fits <- fits[!whp]#then remove these models from the fit collection
+    }
+  }
+  if (homoTest != "none") {
+    hp <- vapply(fits, function(x) x$homoTest[[2]]$p.value, FUN.VALUE = numeric(1))
+    whh <- hp < alpha_homotest
+    if (any(whh)) {
+      warning(paste(length(which(hp < alpha_homotest)),"models failed the residuals homogeneity test and have been excluded from the multi SAR"), call. = FALSE)
+      mn <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
+      badMods <- c(badMods, mn[whh])#select the model names for models with p < 0.05
+      fits <- fits[!whh]
+    }
+  }
+  #negative values
+  if (neg_check){
+    nc <- vapply(fits, function(x) any(x$calculated < 0), FUN.VALUE = logical(1))
+    if (any(nc)) {
+      warning(paste(length(which(nc)), "models have negative fitted values and have been excluded from the multi SAR"), call. = FALSE)
+      mn <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
+      badMods <- c(badMods, mn[nc])#select the model names for models with p < 0.05
+      fits <- fits[!nc]
+    }
+  }
+
+  if (length(badMods == 0)) badMods <- 0
+  if (length(fits) < 2) stop("Fewer than two models could be fitted and / or passed the model checks")
+  
+####################################
   
   #setting variables
   nPoints <- length(fits[[1]]$data$A)
@@ -166,8 +211,8 @@ sar_multi <- function(data = galap,
       fits = fits,
       crit = crit,
       ic = IC,
-      norm_test = normtest,
-      homo_test = homotest,
+      norm_test = normaTest,
+      homo_test = homoTest,
       alpha_norm_test = alpha_normtest,
       alpha_homo_test = alpha_homotest,
       ics = ICs,
@@ -175,7 +220,7 @@ sar_multi <- function(data = galap,
       weights_ics = weights_ICs,
       n_points = nPoints,
       n_mods = nMods,
-      no_fit = badMods
+      no_fit = as.vector(badMods)
     )
     
     res <- list(mmi = mmi, details = details)
