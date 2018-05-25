@@ -18,7 +18,7 @@
 #'   contain the island areas and observed richness values, respectively.
 #'
 #'   The \code{\link{summary.sars}} function returns a more useful summary of the
-#'   model fit results, and the \code{\link{plot.}} plots the model.
+#'   model fit results, and the \code{\link{plot}} plots the model.
 #' @examples
 #' data(galap)
 #' fit <- lin_pow(galap, con = 1)

@@ -43,7 +43,7 @@
 #'   contain the island areas and observed richness values, respectively.
 #'
 #'   The \code{\link{summary.sars}} function returns a more useful summary of the
-#'   model fit results, and the \code{\link{plot.}} plots the model.
+#'   model fit results, and the \code{\link{plot}} plots the model.
 #' @note Occasionally a model fit will converge and pass the model fitting
 #'   checks (e.g. residual normality) but the resulting fit is nonsensical (e.g.
 #'   a horizontal line with intercept at zero). Thus, it can be useful to plot
