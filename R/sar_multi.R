@@ -1,19 +1,74 @@
-###multi model sars
-
-
+#' Fit a multimodel SAR curve
+#'
+#' @description Fit a multimodel SAR curve
+#' @usage sar_multi <- function(data = galap, obj = c("power",
+#'   "powerR","epm1","epm2","p1","p2","expo","koba",
+#'   "mmf","monod","negexpo","chapman","weibull3","asymp",
+#'   "ratio","gompertz","weibull4","betap","heleg", "linear"), keep_details =
+#'   TRUE, crit = "Info", normaTest = "lillie", homoTest = "cor.fitted",
+#'   neg_check = TRUE, alpha_normtest = 0.05, alpha_homotest = 0.05, verb =
+#'   TRUE)
+#' @param data A dataset in the form of a dataframe with two columns: the first
+#'   with island/site areas, and the second with the species richness of each
+#'   island/site.
+#' @param obj Either a vector of model names or a fit_collection object.
+#' @param keep_details ???
+#' @param crit The criterion used to compare models and compute the model
+#'   weights. The default "Info" switches to AIC or AICc depending on the number
+#'   of data points in the dataset. For BIC, use \code{crit = Bayes}.
+#' @param normaTest The test used to test the normality of the residuals of each
+#'   model. Can be any of "lillie" (Lilliefors (Kolmogorov-Smirnov) test; the
+#'   default), 'shapiro' (Shapiro-Wilk test of normality), "kolmo"
+#'   (Kolmogorov-Smirnov test), or "none" (no residuals normality test is
+#'   undertaken).
+#' @param homoTest The test used to check for homogeneity of the residuals of
+#'   each model. Can be any of "cor.fitted" (a correlation of the residuals with
+#'   the model fitted values; the default), "cor.area" (a correlation of the
+#'   residuals with the area values), or "none" (no residuals homogeneity test
+#'   is undertaken).
+#' @param neg_check Whether or not a check should be undertaken to flag any
+#'   models that predict negative richness values.
+#' @param alpha_normtest The alpha value used in the residual normality tests
+#'   (default = 0.05, i.e. any test with a P value < 0.05 is flagged as failing
+#'   the test).
+#' @param alpha_homotest The alpha value used in the residual homogeneity tests
+#'   (default = 0.05, i.e. any test with a P value < 0.05 is flagged as failing
+#'   the test).
+#' @param verb verbose (default = TRUE)
+#' @details
+#' @return A list of class "sars" with four elements. The first element is an
+#'   object of class 'summary.lm'. This is the summary of the linear model fit
+#'   using the \link[stats]{lm} function and the user's data. The second element
+#'   is a numeric vector of the model's fitted values, and the third and fourth
+#'   contain the island areas and observed richness values, respectively.
+#'
+#'   The \code{\link{summary.sars}} function returns a more useful summary of the
+#'   model fit results, and the \code{\link{plot.}} plots the model.
 #' @note Occasionally a model fit will converge and pass the model fitting
 #'   checks (e.g. residual normality) but the resulting fit is nonsensical (e.g.
 #'   a horizontal line with intercept at zero). Thus, it can be useful to plot
 #'   the resultant 'multi' object to check the individual model fits. To re-run
 #'   the \code{sar_multi} function without a particular model, simply remove it
 #'   from the \code{obj} argument.
-
+#' @examples
+#' data(galap)
+#' #attempt to construct a multimodel SAR curve using all twenty sar models
+#' fit <- sar_multi(galap)
+#' summary(fit)
+#' plot(fit)
+#' 
+#' # construct a multimodel SAR curve using a fit_collection object
+#' s1 <- sar_power(galap)
+#' s2 <- sar_expo(galap)
+#' s3 <- sar_koba(galap)
+#' ff <- fit_collection(s1, s2, s3)
+#' fit2 <- sar_multi(galap, obj = ff)
+#' summary(fit2)
+#' 
+#' # construct a multimodel SAR curve without conducting any model checks
+#' fit3 <- sar_multi(galap, normaTest = "none", homoTest = "none", neg_check = FALSE)
+#' 
 #' @export
-#' 
-#' 
-#' 
-#' 
-#' 
 
  #state in documentation that multicurve removes  s na RSS models. 
 
