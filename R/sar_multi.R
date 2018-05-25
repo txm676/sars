@@ -15,13 +15,14 @@
 #' 
 #' 
 
- #state in documentation that multicurve removes  s na RSS models. And that model fits should
-## still be checked for sens 
+ #state in documentation that multicurve removes  s na RSS models. 
+
+
+#models that fail normality tests removed and so may have also failed homogeneity test but not checked (as removed);
+#same with negative values check.
+
+
 #https://help.github.com/articles/caching-your-github-password-in-git/
-
-
-
-
 
 
 sar_multi <- function(data = galap,
@@ -97,7 +98,7 @@ sar_multi <- function(data = galap,
       #fits <- fits[!sigC]
    #}
   
-    fits <- fit_collection(fits = fits)
+ 
     
   }else{
     if (attributes(obj)$type == "fit_collection"){
@@ -119,7 +120,7 @@ sar_multi <- function(data = galap,
     stop("No model could be fitted, aborting multi_sars\n")
   }
   
-  badMods <- c()
+  badMods <- vector(length = 0, mode = "character")
   
   if(any(is.na(f_nas))){
     badNames <- is.na(f_nas)
@@ -163,8 +164,11 @@ sar_multi <- function(data = galap,
     }
   }
 
-  if (length(badMods == 0)) badMods <- 0
+  if (length(badMods) == 0) badMods <- 0
   if (length(fits) < 2) stop("Fewer than two models could be fitted and / or passed the model checks")
+  
+  
+  fits <- fit_collection(fits = fits)
   
 ####################################
   
