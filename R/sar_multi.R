@@ -36,7 +36,7 @@ sar_multi <- function(data = galap,
                        alpha_homotest = 0.05,
                        verb = TRUE){
   
-  if (!(is.character(obj))  || (class(obj) == "sars") ) stop("obj must be of class character or sars")
+  if (!((is.character(obj))  || (class(obj) == "sars")) ) stop("obj must be of class character or sars")
   
   if (is.character(obj) & is.null(data)) stop("if obj is character then data should be provided")
   
@@ -50,7 +50,7 @@ sar_multi <- function(data = galap,
   homoTest <- match.arg(homoTest, c("none","cor.area","cor.fitted"))
   
   #if (verb) cat_line(cli::rule(left = paste0(crayon::cyan(cli::symbol$bullet),crayon::bold(" multi_sars")),right="multi-model SAR"))
-  if (verb) sars:::cat_line(cli::rule(left = crayon::bold(" multi_sars"),right="multi-model SAR"))
+  if (verb && is.character(obj)) sars:::cat_line(cli::rule(left = crayon::bold(" multi_sars"),right="multi-model SAR"))
   #if (verb) cat_line(crayon::magenta(cli::symbol$arrow_right)," Data set is: ")
   #if (verb) cat_line(cli::rule(left = paste0(crayon::magenta(cli::symbol$bullet))))
   #if (verb) bullet("O | S : model", bullet = blue_arrow())
@@ -168,7 +168,7 @@ sar_multi <- function(data = galap,
   if (length(fits) < 2) stop("Fewer than two models could be fitted and / or passed the model checks")
   
   
-  fits <- fit_collection(fits = fits)
+  if (is.character(obj)) fits <- fit_collection(fits = fits)
   
 ####################################
   

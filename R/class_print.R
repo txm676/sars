@@ -62,20 +62,18 @@ print.summary.sars <- function(object){
   }#eo if fit
 
   if (attributes(object)$type == "multi"){ 
-    cat("\n", "Multi_sar object summary: ", "\n", sep = "")
+    cat("\n", "Sar_multi object summary: ", "\n", sep = "")
     cat("\n", paste(length(object$Models), " models successfully fitted"), "\n", sep = "")
     if (length(object$no_fit) > 1) {
       cat("\n", paste("The following models could not be fitted or were removed due to model checks:")
                                        , "\n", sep = "")
       cat(paste(object$no_fit, collapse = ", "), "\n")
-    }
-    if (length(object$no_fit) == 1){
-      cat("\n", "The following model could not be fitted or was removed due to model checks:", "\n", sep = "")
-      cat(object$no_fit, "\n")
-    }
-    if (length(object$no_fit) == 0){
+      } else if (object$no_fit == 0){
       cat("\n", paste("All models were fitted successfully"), 
           "\n", sep = "")
+      } else if (length(object$no_fit) == 1){
+      cat("\n", "The following model could not be fitted or was removed due to model checks:", "\n", sep = "")
+      cat(object$no_fit, "\n")
     }
     cat("\n", paste("Ranked models based on", object$Criterion, " weights:"), "\n", "\n" ,sep = "")
     print(object$Model_table)
@@ -108,15 +106,17 @@ print.sars <- function(object){
   }
   
   if (attributes(object)$type == "multi"){ 
-    cat("\n", "This is a multi_sar fit object:", "\n", sep = "")
+    cat("\n", "This is a sar_multi fit object:", "\n", sep = "")
     cat("\n", paste(length(object$details$mod_names), "models successfully fitted"), "\n", sep = "")
-    if (length(object$details$no_fit) > 1) cat("\n", paste(length(object$details$no_fit), 
-                                                           "models were unable to be fitted or were removed due to model checks"), "\n", sep = "")
-    if (length(object$details$no_fit) == 1) cat("\n", paste(length(object$details$no_fit), 
-                                                            "model was unable to be fitted or was removed due to model checks"), "\n", sep = "")
+    if (length(object$details$no_fit) > 1) {
+      cat("\n", paste(length(object$details$no_fit), "models were unable to be fitted or were removed due to model checks"), 
+          "\n", sep = "")
+    } else if (object$details$no_fit != 0){
+      cat("\n", paste(length(object$details$no_fit), "model was unable to be fitted or was removed due to model checks"),
+          "\n", sep = "")
+    }
      cat("\n", paste(object$details$ic, "used to rank models"), "\n", sep = "")
-  } 
-  
+  }
 }
 
 
