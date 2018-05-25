@@ -22,7 +22,7 @@ A list of class "sars" with four elements. The first element is an
   contain the island areas and observed richness values, respectively.
 
   The \code{\link{summary.sars}} function returns a more useful summary of the
-  model fit results, and the \code{\link{plot.}} plots the model.
+  model fit results, and the \code{\link{plot}} plots the model.
 }
 \description{
 Fit the log-log version of the power model to SAR data and

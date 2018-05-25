@@ -22,12 +22,13 @@ island/site.}
 \item{keep_details}{???}
 
 \item{crit}{The criterion used to compare models and compute the model
-weights. The default "Info" switches to AIC or AICc depending on the number
-of data points in the dataset. For BIC, use \code{crit = Bayes}.}
+weights. The default \code{crit = "Info"} switches to AIC or AICc depending
+on the number of data points in the dataset. For BIC, use \code{crit =
+"Bayes"}.}
 
 \item{normaTest}{The test used to test the normality of the residuals of each
-model. Can be any of "lillie" (Lilliefors (Kolmogorov-Smirnov) test; the
-default), 'shapiro' (Shapiro-Wilk test of normality), "kolmo"
+model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
+default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
 (Kolmogorov-Smirnov test), or "none" (no residuals normality test is
 undertaken).}
 
@@ -40,28 +41,64 @@ is undertaken).}
 \item{neg_check}{Whether or not a check should be undertaken to flag any
 models that predict negative richness values.}
 
-\item{alpha_normtest}{The alpha value used in the residual normality tests
+\item{alpha_normtest}{The alpha value used in the residual normality test
 (default = 0.05, i.e. any test with a P value < 0.05 is flagged as failing
 the test).}
 
-\item{alpha_homotest}{The alpha value used in the residual homogeneity tests
+\item{alpha_homotest}{The alpha value used in the residual homogeneity test
 (default = 0.05, i.e. any test with a P value < 0.05 is flagged as failing
 the test).}
 
 \item{verb}{verbose (default = TRUE)}
 }
 \value{
-A list of class "sars" with four elements. The first element is an
-  object of class 'summary.lm'. This is the summary of the linear model fit
-  using the \link[stats]{lm} function and the user's data. The second element
-  is a numeric vector of the model's fitted values, and the third and fourth
-  contain the island areas and observed richness values, respectively.
-
-  The \code{\link{summary.sars}} function returns a more useful summary of the
-  model fit results, and the \code{\link{plot.}} plots the model.
+A list of class "multi" and class "sars" with two elements. The first
+  element ('mmi') contains the fitted values of the multimodel sar curve.
+  The second element ('details') is a list with the following components: 
+  \itemize{
+    \item{mod_names} { Names of the models that were successfully fitted and passed any model check}
+    \item{fits} { A fit_collection object containing the successful model fits}
+    \item{ic} { The information criterion selected}
+    \item{norm_test} { The residual normality test selected}
+    \item{homo_test} { The residual homogeneity test selected}
+    \item{alpha_norm_test} { The alpha value used in the residual normality test}
+    \item{alpha_homo_test} { The alpha value used in the residual homogeneity test}
+    \item{ics} { The information criterion values (e.g. AIC values) of the model fits}
+    \item{delta_ics} { The delta information criterion values}
+    \item{weights_ics} { The information criterion weights of each model fit}
+    \item{n_points} {  Number of data points}
+    \item{n_mods} { The number of successfully fitted models}
+    \item{no_fit} { Names of the models which could not be fitted or did not pass model checks}
+    }
+    
+  The \code{\link{summary.sars}} function returns a more useful summary of
+  the model fit results, and the \code{\link{plot.multi}} plots the
+  multimodel curve.
 }
 \description{
-Fit a multimodel SAR curve
+Construct a multimodel species-area relationship
+curve using information criterion weights and up to twenty SAR models.
+}
+\details{
+The multimodel SAR curve is constructed using information criterion
+  weights (see Burnham & Anderson, 2002; Guilhaumon et al. 2010). If
+  \code{obj} is a vector of n model names the function fits the n models to
+  the dataset provided. If any models cannot be fitted they are removed from the
+  multimodel SAR. If \code{obj} is a fit_collection object, any model fits in
+  the collection which are NA are removed. In addition, if any other model
+  checks have been selected (i.e. residual normality and heterogeneity tests,
+  and checks for negative predicted richness values), these are undertaken
+  and any model that fails the selected test(s) is removed from the
+  multimodel SAR. The order of the additional checks inside the function is:
+  normality of residuals, homogeneity of residuals, and a check for negative
+  fitted values. Once a model fails one test it is removed and thus is not
+  availabile for further tests. Thus, a model may fail multiple tests but the
+  returned warning will only provide information on a single test.
+  
+  The resultant models are then used to construct the multimodel SAR curve.
+  For each model in turn, the model fitted values are multiplied by the
+  information criterion weight of that model, and the resultant values are
+  summed across all models (Burnham & Anderson, 2002).
 }
 \note{
 Occasionally a model fit will converge and pass the model fitting
@@ -89,4 +126,12 @@ summary(fit2)
 # construct a multimodel SAR curve without conducting any model checks
 fit3 <- sar_multi(galap, normaTest = "none", homoTest = "none", neg_check = FALSE)
 
+}
+\references{
+Burnham, K. P., & Anderson, D. R. (2002). Model selection and
+  multi-model inference: a practical information-theoretic approach (2nd
+  ed.). New-York: Springer.
+
+  Guilhaumon, F., Mouillot, D., & Gimenez, O. (2010). mmSAR: an R-package for
+  multimodel species–area relationship inference. Ecography, 33, 420-424.
 }
