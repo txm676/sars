@@ -28,6 +28,17 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#'   the model fitted values; the default), 'cor.area' (a correlation of the", "\n"))
   cat1(paste0("#'   residuals with the area values), or 'none' (no residuals homogeneity test is undertaken).","\n"))
   
+  cat1(paste0("#' @details The model is fitted using non-linear regression. The model parameter are estimated", "\n"))
+  cat1(paste0("#'   by minimizing the residual sum of squares with an unconstrained Nelder-Mead optimization algorithm", "\n")) 
+  cat1(paste0("#'   . To avoid numerical problems and speed up the convergence process, starting", "\n")) 
+  cat1(paste0("#'   values used to run the optimization algorithm are carefully chosen, or custom values can be provided", "\n")) 
+  cat1(paste0("#'   using the argument \\code{start}. The fitting process also determines the observed shape of the model fit,", "\n")) 
+  cat1(paste0("#'   and whether or not the observed fit is asymptotic (see Triantis et al. 2012 for further details).", "\n", "\n"))
+  cat1(paste0("#'   Model validation is undertaken by assessing the normality (\\code{normaTest}) and homogeneity (\\code{homoTest})", "\n")) 
+  cat1(paste0("#'   of the residuals and a warning is provided in \\code{\\link{summary.sars}} if either test is failed.", "\n", "\n")) 
+  cat1(paste0("#'   A selection of information criteria (e.g. AIC, BIC) are returned and can be used to compare models", "\n")) 
+  cat1(paste0("#'   (see also \\code{\\link{fit_collection}} and \\code{\\link{sar_multi}}).", "\n")) 
+  
   cat1(paste0("#' @return ", "A list of class 'sars' with the following components: ", "\n"))
   cat1(paste0("#'   \\itemize{", "\n"))
   cat1(paste0("#'     \\item{par} { The model parameters}", "\n"))
@@ -54,6 +65,9 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#'     \\item{asymptote} { A logical value indicating whether the observed fit is asymptotic}}", "\n", "\n"))
   cat1(paste0("#'   The \\code{\\link{summary.sars}} function returns a more useful summary of", "\n"))
   cat1(paste0("#'   the model fit results, and the \\code{\\link{plot.sars}} plots the model fit.", "\n"))
+  
+  cat1(paste0("#' @references Triantis, K.A., Guilhaumon, F. & Whittaker, R.J. (2012) The island species-area", "\n")) 
+  cat1(paste0("#'   relationship: biology and statistics. Journal of Biogeography, 39, 215-231.", "\n"))
   
   cat1(paste0("#' @examples", "\n", "#' data(galap)", "\n", "#' fit <- ", funName,
               "(galap)", "\n", "#' summary(fit)","\n", "#' plot(fit)", "\n"))

@@ -59,9 +59,25 @@ A list of class 'sars' with the following components:
 \description{
 Fit the Rational function model to SAR data
 }
+\details{
+The model is fitted using non-linear regression. The model parameter are estimated
+  by minimizing the residual sum of squares with an unconstrained Nelder-Mead optimization algorithm
+  . To avoid numerical problems and speed up the convergence process, starting
+  values used to run the optimization algorithm are carefully chosen, or custom values can be provided
+  using the argument \code{start}. The fitting process also determines the observed shape of the model fit,
+  and whether or not the observed fit is asymptotic (see Triantis et al. 2012 for further details).
+  Model validation is undertaken by assessing the normality (\code{normaTest}) and homogeneity (\code{homoTest})
+  of the residuals and a warning is provided in \code{\link{summary.sars}} if either test is failed.
+  A selection of information criteria (e.g. AIC, BIC) are returned and can be used to compare models
+  (see also \code{\link{fit_collection}} and \code{\link{sar_multi}}).
+}
 \examples{
 data(galap)
 fit <- sar_ratio(galap)
 summary(fit)
 plot(fit)
+}
+\references{
+Triantis, K.A., Guilhaumon, F. & Whittaker, R.J. (2012) The island species-area
+  relationship: biology and statistics. Journal of Biogeography, 39, 215-231.
 }
