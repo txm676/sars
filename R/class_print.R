@@ -5,17 +5,37 @@
 print.summary.sars <- function(object){
   
   if (attributes(object)$type == "lin_pow"){
-    cat("Model = ","Log-log power", "\n", "Logc =", object$Summary[1], "\n", 
-        "c =", exp(object$Summary[1]), "\n",
-        "z =", object$Summary[2], "\n", "z.sig =", object$Summary[3], 
-        "\n", "R2 =", object$Summary[4], "\n")
-    cat("\n")
-    if (length(object) == 4){
-      cat("Power (non-linear) parameters:", "\n",
+    cat("Model = ","Log-log power", "\n")
+   # rownames(object$Model$coefficients) <- c("LogC", "z")
+    print(object$Model)   
+    if (object$Normality_test$test == "shapiro"|| object$Normality_test$test == "lillie" ||
+        object$Normality_test$test == "kolmo"){
+      normP <- object$Normality_test[[2]]$p.value
+    } else{
+      normP <- "No normality test undertaken"
+    }
+    #homogeneity
+    if (object$Homogeneity_test$test == "cor.area" || object$Homogeneity_test$test == "cor.fitted"){
+      homoP <- object$Homogeneity_test[[2]]$p.value
+    } else{
+      homoP <- "No homogeneity test undertaken"
+    }
+    if (is.numeric(normP) && normP < 0.05 ){
+      cat("\n", "Warning: The normality test selected indicated the model residuals are
+          not normally distributed (i.e. P < 0.05)", "\n", sep = "")
+    }
+    if (is.numeric(homoP) && homoP < 0.05){
+      tr <- ifelse(object$Homogeneity_test$test == "cor.area", "area values", "fitted values")
+      cat("\n", paste("Warning: The homogeneity test selected indicated a signficant correlation
+                      between the residuals and the",tr, "(i.e. P < 0.05)"), "\n", sep = "")
+    }
+    #non-linear power comparison
+    if ("power" %in% names(object)){
+      cat("Power (non-linear) parameters:", "\n", 
           "c =", object$power[1], "\n",
           "z =", object$power[2])
     }
-  }
+  }#eo if lin_pow
   
   if (attributes(object)$type == "fit"){
     cat("\n", "Model: ","\n", object$Model, "\n", sep = "")
@@ -87,7 +107,14 @@ print.sars <- function(object){
   
   if (attributes(object)$type == "lin_pow"){
     cat("Model = ","Log-log power", "\n")
-    print(object$Model)
+    cat("\n", "Call: ","\n", "logS = logc + z.logA", "\n", sep = "")
+    cat("\n", "Coefficients: ", "\n", sep = "")
+    logc <- object$Model$coefficients[1, 1]
+    names(logc) <- "logc"
+    z <- object$Model$coefficients[2, 1]
+    names(z) <- "z"
+    print(c(logc, z))
+    cat("\n")
   }
   
   if (attributes(object)$type == "fit"){ 

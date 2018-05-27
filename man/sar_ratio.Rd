@@ -4,16 +4,57 @@
 \alias{sar_ratio}
 \title{Fit the Rational function model}
 \usage{
-sar_ratio(data, custstart = NULL, normtest = 'lillie')
+sar_ratio(data, start = NULL, grid_start = NULL, normaTest =  'lillie',
+  homoTest = 'cor.fitted')
 }
 \arguments{
 \item{data}{A dataset in the form of a dataframe with two columns: 
 the first with island/site areas, and the second with the species richness
 of each island/site.}
 
+\item{start}{}
+
 \item{grid_start}{NULL or the number of points sampled in the model parameter space
 or FALSE to prevent any grid start after a fail in inital optimization
 to run a grid search.}
+
+\item{normaTest}{The test used to test the normality of the residuals of the
+model. Can be any of 'lillie' (Lilliefors Kolmogorov-Smirnov test; the
+default), 'shapiro' (Shapiro-Wilk test of normality), 'kolmo'
+(Kolmogorov-Smirnov test), or 'none' (no residuals normality test is undertaken).}
+
+\item{homoTest}{The test used to check for homogeneity of the residuals of
+the model. Can be any of 'cor.fitted' (a correlation of the residuals with
+the model fitted values; the default), 'cor.area' (a correlation of the
+residuals with the area values), or 'none' (no residuals homogeneity test is undertaken).}
+}
+\value{
+A list of class 'sars' with the following components: 
+  \itemize{
+    \item{par} { The model parameters}
+    \item{value} { Residual sum of squares}
+    \item{counts} { **}
+    \item{convergence} { Numeric code indicating model convergence (0 = converged)}
+    \item{message} { Any message from the model fit algorithm}
+    \item{hessian} { ***}
+    \item{verge} { Logical code indicating model convergence}
+    \item{startValues} { The start values for the model parameters used in the optimisation}
+    \item{data} { Observed data}
+    \item{model} { A list of model information (e.g. the model name and formula)}
+    \item{calculated} {  The fitted values of the model}
+    \item{residuals} { The model residuals}
+    \item{AIC} { The AIC value of the model}
+    \item{AICc} { The AICc value of the model}
+    \item{BIC} { The BIC value of the model}
+    \item{R2} { The R2 value of the model}
+    \item{R2a} { The adjusted R2 value of the model}
+    \item{sigConf} { The model coefficients table}
+    \item{normaTest} { The results of the residuals normality test}
+    \item{homoTest} { The results of the residuals homogeneity test}
+    \item{observed_shape} { The observed shape of the model fit}
+    \item{asymptote} { A logical value indicating whether the observed fit is asymptotic}}
+  The \code{\link{summary.sars}} function returns a more useful summary of
+  the model fit results, and the \code{\link{plot.sars}} plots the model fit.
 }
 \description{
 Fit the Rational function model to SAR data

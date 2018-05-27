@@ -8,28 +8,53 @@ lin_pow(dat, con = 1)
 }
 \arguments{
 \item{con}{The constant to add to the species richness values in cases where
-one of the islands has zero species}
+one of the islands has zero species.}
 
-\item{x}{A dataset in the form of a dataframe with two columns:
-the first with island/site areas, and the second with the species richness of each
+\item{compare}{Fit the standard (non-linear) power model and return the
+z-value for comparison (default: \code{compare = FALSE}).}
+
+\item{normaTest}{The test used to test the normality of the residuals of the
+model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
+default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
+(Kolmogorov-Smirnov test), or "none" (no residuals normality test is
+undertaken).}
+
+\item{homoTest}{The test used to check for homogeneity of the residuals of
+the model. Can be any of "cor.fitted" (a correlation of the residuals with
+the model fitted values; the default), "cor.area" (a correlation of the
+residuals with the area values), or "none" (no residuals homogeneity test
+is undertaken).}
+
+\item{dat}{A dataset in the form of a dataframe with two columns: the first
+with island/site areas, and the second with the species richness of each
 island/site.}
 }
 \value{
-A list of class "sars" with four elements. The first element is an
-  object of class 'summary.lm'. This is the summary of the linear model fit
-  using the \link[stats]{lm} function and the user's data. The second element
-  is a numeric vector of the model's fitted values, and the third and fourth
-  contain the island areas and observed richness values, respectively.
+A list of class "sars" with up to six elements. The first element is
+  an object of class 'summary.lm'. This is the summary of the linear model
+  fit using the \link[stats]{lm} function and the user's data. The second
+  element is a numeric vector of the model's fitted values, and the third
+  contains the log-transformed observed data. The remaining elements depend
+  on the function arguments selected and can include the results of the
+  non-linear power model fit, and of the residuals normality and
+  heterogeneity tests.
 
-  The \code{\link{summary.sars}} function returns a more useful summary of the
-  model fit results, and the \code{\link{plot}} plots the model.
+  The \code{\link{summary.sars}} function returns a more useful summary of
+  the model fit results, and the \code{\link{plot.sars}} plots the model.
 }
 \description{
 Fit the log-log version of the power model to SAR data and
-  return parameter values, summary statistics and the fitted values. A check
-  is made for any islands with zero species. If any zero species islands are
-  found, a constant (default = 1) is added to each species richness value to
-  enable log transformation. Natural logarithms are used.
+  return parameter values, summary statistics and the fitted values.
+}
+\details{
+A check is made for any islands with zero species. If any zero
+  species islands are found, a constant (default: \code{con = 1}) is added to each
+  species richness value to enable log transformation. Natural logarithms are
+  used.
+  
+  The \code{compare} argument can be used to compare the c and z values
+  calculated using the log-log power model with that calculated using the
+  non-linear power model. Note that the log-log function returns logc.
 }
 \examples{
 data(galap)

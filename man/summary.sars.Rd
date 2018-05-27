@@ -7,33 +7,25 @@
 \method{summary}{sars}(object)
 }
 \arguments{
-\item{object}{An object of class 'mmSAR2'.}
+\item{object}{An object of class 'sars'.}
 
 \item{...}{further arguments passed to or from other methods.}
 }
 \value{
-The summary function returns an object of class "summary.mmSAR2". A
+The summary function returns an object of class "summary.sars". A
   print function is used to obtain and print a summary of the model fit
   results.
-
-  An object of class "summary.mmSAR2" is a list containing the following
-  components:
-  \itemize{
-    \item{"Summary"}{   A vector of model fit values (e.g. the c, z,
-    z-significance, and R2 value for the linear power model fit).}
-    \item{"df"}{   A dataframe containing the island areas and the models' fitted values.}
-   }
 }
 \description{
-S3 method for class 'mmSAR2'. summary.mmSAR2 creates summary
-  statistics for objects of class mmSAR2. The exact summary statistics
-  computed depends on the 'Type' attribute (e.g. 'lin_pow') of the mmSAR2
-  object (see below). The summary method generates more useful information
+S3 method for class 'sars'. summary.sars creates summary
+  statistics for objects of class 'sars'. The exact summary statistics
+  computed depends on the 'Type' attribute (e.g. 'lin_pow') of the 'sars'
+  object. The summary method generates more useful information
   for the user than the standard model fitting functions. Another S3 method
-  (print.summary.mmSAR2; not documented) is used to print the output.
+  (\code{print.summary.sars}; not documented) is used to print the output.
 }
 \examples{
 data(galap)
-fit <- lin_pow(galap, a = 1, s = 2, con = 1)
+fit <- lin_pow(galap, con = 1, compare = T)
 summary(fit)
 }
