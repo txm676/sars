@@ -9,7 +9,7 @@
   ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
   cex.lab = 1.3, cex.axis = 1, yRange = NULL, lwd = 2,
   lcol = "dodgerblue2", pLeg = TRUE, modNames = NULL, cex.names = 0.88,
-  ...)
+  subset_weights = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class 'multi'.}
@@ -36,7 +36,8 @@ multi}.}
 \item{pcol}{Colour of the points. Only for use with \code{type = multi}.}
 
 \item{ModTitle}{Plot title (default is \code{ModTitle = NULL}, which reverts
-to "MultiModel Fits"). For no title, use \code{ModTitle = ""}.}
+to "Multimodel SAR" for \code{type = multi} and to "Model weights" for
+\code{type = bar}). For no title, use \code{ModTitle = ""}.}
 
 \item{TiAdj}{Which way the plot title is justified.}
 
@@ -62,11 +63,15 @@ to the default.}
 plotted  (when \code{type = multi} and \code{allCurves = TRUE}).}
 
 \item{modNames}{A vector of model names for the barplot of weights (when
-\code{type = bar}). The default (\code{modNames = NULL}) uses the names
-from the \code{sar_multi} function.}
+\code{type = bar}). The default (\code{modNames = NULL}) uses abbreviated
+versions (see below) of the names from the \code{sar_multi} function.}
 
 \item{cex.names}{The amount by which the axis labels (model names) should be
 scaled relative to the default. Only for use with \code{type = bar}.}
+
+\item{subset_weights}{Only create a barplot of the model weights for models
+with a weight value above a given threshold (\code{subset_weights}). Only
+for use with \code{type = bar}.}
 
 \item{\dots}{Further graphical parameters (see \code{\link[graphics]{par}},
 \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
@@ -92,6 +97,34 @@ When plotting all model fits on the same plot with a legend it is
   the resultant 'multi' object to check the individual model fits. To re-run
   the \code{sar_multi} function without a particular model, simply remove it
   from the \code{obj} argument.
+  
+  For visual interpretation of the model weights barplot it is necessary to
+  abbreviate the model names when plotting the weights of several models. To
+  plot fewer bars, use the \code{subset_weights} argument to filter out
+  models with lower weights than a threshold value. To provide a different
+  set of names use the \code{modNames} argument. The model abbreviations used
+  as the default are:
+  \itemize{
+    \item{Pow = } { Power}
+    \item{PowR = } { PowerR}
+    \item{E1 = } { Extended_Power_model_1}
+    \item{E2 = } { Extended_Power_model_2}
+    \item{P1 = } { Persistence_function_1}
+    \item{P2 = } { Persistence_function_2}
+    \item{Exp = } { Exponential}
+    \item{Kob = } { Kobayashi}
+    \item{MMF = } { MMF}
+    \item{Mon = } { Monod}
+    \item{NegE = } { Negative_exponential}
+    \item{CR = } { Chapman_Richards}
+    \item{CW3 = } { Cumulative_Weibull_3_par.}
+    \item{AR = } { Asymptotic_regression}
+    \item{RF = } { Rational_function}
+    \item{Gom = } { Gompertz}
+    \item{CW4 = } { Cumulative_Weibull_4_par.}
+    \item{BP = } { Beta-P_cumulative}
+    \item{Hel = } { Heleg(Logistic)}
+    \item{Lin = } { Linear_model}}
 }
 \examples{
 data(galap)
@@ -107,4 +140,6 @@ plot(fit, allCurves = FALSE, ModTitle = "", lcol = "black")
 
 #Plot a barplot of the model weights
 plot(fit, type = "bar")
+#subset to plot only models with weight > 0.05
+plot(fit, type = "bar", subset_weights = 0.05)
 }

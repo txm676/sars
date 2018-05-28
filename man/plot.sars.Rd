@@ -28,10 +28,10 @@ or separate plots (\code{mfplot = FALSE}; the default).}
 
 \item{pcol}{Colour of the points.}
 
-\item{ModTitle}{PPlot title (default is \code{ModTitle = NULL}, which reverts
-to "MultiModel Fits"). For no title, use \code{ModTitle = ""}. For a sars
-object of type fit_collection, a vector of names can be provided (e.g.
-\code{letters[1:3]}).}
+\item{ModTitle}{Plot title (default is \code{ModTitle = NULL}, which reverts
+to a default name depending on the type of plot). For no title, use
+\code{ModTitle = ""}. For a sars object of type fit_collection, a vector of
+names can be provided (e.g. \code{letters[1:3]}).}
 
 \item{TiAdj}{Which way the plot title is justified.}
 
@@ -78,6 +78,8 @@ S3 method for class 'sars'. \code{plot.sars} creates plots for
   object of Type 'fit_collection' the \code{plot.sars} function returns
   either a grid with n individual plots (corresponding to the n model fits in
   the fit_collection), or a single plot with all n model fits included.
+  
+  For plotting a 'sar_multi' object, see \code{\link{plot.multi}}.
 }
 \examples{
 data(galap)
