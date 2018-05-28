@@ -9,7 +9,7 @@ cat_roxygen <- function(model, funName, fileName){
   
   cat1(paste0("#' ","Fit the ", model$name," model", "\n"))
   cat1("\n")
-  cat1(paste0("#' @description ","Fit the ", model$name," model to SAR data", "\n"))
+  cat1(paste0("#' @description ","Fit the ", model$name," model to SAR data.", "\n"))
   cat1(paste0("#' @usage ", funName,"(data, start = NULL, grid_start = NULL, normaTest =  'lillie',", "\n"))
   cat1(paste0("#'   homoTest = 'cor.fitted')", "\n"))
   cat1(paste0("#' @param ", "data ", "A dataset in the form of a dataframe with two columns: ", "\n"))
@@ -28,10 +28,10 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#'   the model fitted values; the default), 'cor.area' (a correlation of the", "\n"))
   cat1(paste0("#'   residuals with the area values), or 'none' (no residuals homogeneity test is undertaken).","\n"))
   
-  cat1(paste0("#' @details The model is fitted using non-linear regression. The model parameter are estimated", "\n"))
+  cat1(paste0("#' @details The model is fitted using non-linear regression. The model parameters are estimated", "\n"))
   cat1(paste0("#'   by minimizing the residual sum of squares with an unconstrained Nelder-Mead optimization algorithm", "\n")) 
-  cat1(paste0("#'   . To avoid numerical problems and speed up the convergence process, starting", "\n")) 
-  cat1(paste0("#'   values used to run the optimization algorithm are carefully chosen, or custom values can be provided", "\n")) 
+  cat1(paste0("#'   and the \\code{\\link{optim}} function. To avoid numerical problems and speed up the convergence process,", "\n")) 
+  cat1(paste0("#'   the starting values used to run the optimization algorithm are carefully chosen, or custom values can be provided", "\n")) 
   cat1(paste0("#'   using the argument \\code{start}. The fitting process also determines the observed shape of the model fit,", "\n")) 
   cat1(paste0("#'   and whether or not the observed fit is asymptotic (see Triantis et al. 2012 for further details).", "\n", "\n"))
   cat1(paste0("#'   Model validation is undertaken by assessing the normality (\\code{normaTest}) and homogeneity (\\code{homoTest})", "\n")) 

@@ -57,13 +57,13 @@ A list of class 'sars' with the following components:
   the model fit results, and the \code{\link{plot.sars}} plots the model fit.
 }
 \description{
-Fit the Beta-P cumulative model to SAR data
+Fit the Beta-P cumulative model to SAR data.
 }
 \details{
-The model is fitted using non-linear regression. The model parameter are estimated
+The model is fitted using non-linear regression. The model parameters are estimated
   by minimizing the residual sum of squares with an unconstrained Nelder-Mead optimization algorithm
-  . To avoid numerical problems and speed up the convergence process, starting
-  values used to run the optimization algorithm are carefully chosen, or custom values can be provided
+  and the \code{\link{optim}} function. To avoid numerical problems and speed up the convergence process,
+  the starting values used to run the optimization algorithm are carefully chosen, or custom values can be provided
   using the argument \code{start}. The fitting process also determines the observed shape of the model fit,
   and whether or not the observed fit is asymptotic (see Triantis et al. 2012 for further details).
   Model validation is undertaken by assessing the normality (\code{normaTest}) and homogeneity (\code{homoTest})

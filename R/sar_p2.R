@@ -1,6 +1,6 @@
 #' Fit the Persistence function 2 model
 
-#' @description Fit the Persistence function 2 model to SAR data
+#' @description Fit the Persistence function 2 model to SAR data.
 #' @usage sar_p2(data, start = NULL, grid_start = NULL, normaTest =  'lillie',
 #'   homoTest = 'cor.fitted')
 #' @param data A dataset in the form of a dataframe with two columns: 
@@ -18,10 +18,10 @@
 #'   the model. Can be any of 'cor.fitted' (a correlation of the residuals with
 #'   the model fitted values; the default), 'cor.area' (a correlation of the
 #'   residuals with the area values), or 'none' (no residuals homogeneity test is undertaken).
-#' @details The model is fitted using non-linear regression. The model parameter are estimated
+#' @details The model is fitted using non-linear regression. The model parameters are estimated
 #'   by minimizing the residual sum of squares with an unconstrained Nelder-Mead optimization algorithm
-#'   . To avoid numerical problems and speed up the convergence process, starting
-#'   values used to run the optimization algorithm are carefully chosen, or custom values can be provided
+#'   and the \code{\link{optim}} function. To avoid numerical problems and speed up the convergence process,
+#'   the starting values used to run the optimization algorithm are carefully chosen, or custom values can be provided
 #'   using the argument \code{start}. The fitting process also determines the observed shape of the model fit,
 #'   and whether or not the observed fit is asymptotic (see Triantis et al. 2012 for further details).
 
