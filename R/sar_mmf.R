@@ -6,7 +6,7 @@
 #' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness
 #'   of each island/site.
-#' @param start 
+#' @param start NULL or custom parameter start values for the optimisation algorithm.
 #' @param grid_start NULL or the number of points sampled in the model parameter space
 #'   or FALSE to prevent any grid start after a fail in inital optimization
 #'   to run a grid search.
@@ -34,10 +34,10 @@
 #'   \itemize{
 #'     \item{par} { The model parameters}
 #'     \item{value} { Residual sum of squares}
-#'     \item{counts} { **}
+#'     \item{counts} {  The number of iterations for the convergence of the fitting algorithm}
 #'     \item{convergence} { Numeric code indicating model convergence (0 = converged)}
 #'     \item{message} { Any message from the model fit algorithm}
-#'     \item{hessian} { ***}
+#'     \item{hessian} { A symmetric matrix giving an estimate of the Hessian at the solution found}
 #'     \item{verge} { Logical code indicating model convergence}
 #'     \item{startValues} { The start values for the model parameters used in the optimisation}
 #'     \item{data} { Observed data}
