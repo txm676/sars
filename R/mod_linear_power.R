@@ -2,14 +2,14 @@
 #'
 #' @description Fit the log-log version of the power model to SAR data and
 #'   return parameter values, summary statistics and the fitted values.
-#' @usage lin_pow(dat, con = 1)
+#' @usage lin_pow(dat, con = 1, compare = FALSE, normaTest =  "lillie", homoTest = "cor.fitted")
 #' @param dat A dataset in the form of a dataframe with two columns: the first
 #'   with island/site areas, and the second with the species richness of each
 #'   island/site.
 #' @param con The constant to add to the species richness values in cases where
 #'   one of the islands has zero species.
 #' @param compare Fit the standard (non-linear) power model and return the
-#' z-value for comparison (default: \code{compare = FALSE}).
+#'   z-value for comparison (default: \code{compare = FALSE}).
 #' @param normaTest The test used to test the normality of the residuals of the
 #'   model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
 #'   default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"

@@ -9,8 +9,8 @@ This package provides functions to fit twenty models to
   species-area relationship (SAR) data (see Triantis et al. 2012), plot the
   model fits, and to construct a multimodel SAR curve using information
   criterion weights. A number of additional SAR functions are provided, e.g.
-  fit the log-log power model, fit the general dynamic model of island
-  biogeography (GDM), and fit Coleman's Random Placement model.
+  to fit the log-log power model, the general dynamic model of island
+  biogeography (GDM), and Coleman's Random Placement model.
 }
 \details{
 Functions are provided to fit 20 individual SAR models. Nineteen are
@@ -25,7 +25,7 @@ Functions are provided to fit 20 individual SAR models. Nineteen are
   assessed.
 
   A multimodel SAR curve can be constructed using the \code{\link{sar_multi}}
-  functions. This fits up to twenty SAR models and constructs the multimodel
+  function. This fits up to twenty SAR models and constructs the multimodel
   curve (with confidence intervals) using information criterion weights (see
   \code{\link{summary.sars}} to calculate a table of models ranked by
   information criterion weight). The \code{\link{plot.multi}} functions

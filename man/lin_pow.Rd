@@ -4,7 +4,7 @@
 \alias{lin_pow}
 \title{Fit the log-log version of the power model}
 \usage{
-lin_pow(dat, con = 1)
+lin_pow(dat, con = 1, compare = FALSE, normaTest =  "lillie", homoTest = "cor.fitted")
 }
 \arguments{
 \item{con}{The constant to add to the species richness values in cases where
