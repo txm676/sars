@@ -145,10 +145,65 @@ print.sars <- function(object){
   }
 }
 
+#' @export
 
-
-#print.gdm.sars <- function(object){
-
-#}
+print.gdm <- function(object){
+  if (attributes(object)$Type == "lin_pow"){
+    if (!attributes(object)$mod_sel){
+      cat("\n","GDM fit using the linear (log-log) power SAR model", "\n")
+      stats:::print.lm(object)
+    } else {
+      cat("\n","GDM fit using the linear (log-log) power SAR model", "\n")
+      cat("\n","GDM model summary:", "\n")
+      stats:::print.lm(object[[1]])
+      cat("\n","All model summaries:", "\n", "\n")
+      
+      df <- data.frame("R2" = vapply(object, function(x) summary(x)$r.squared, numeric(1)),
+                       "Adj.R2" = vapply(object, function(x) summary(x)$adj.r.squared, numeric(1)),
+                       "AIC" = vapply(object, AIC, numeric(1)))
+      df$Delta.AIC <- df$AIC - min(df$AIC)
+      rownames(df) <- c("GDM", "A + T", "A", "Intercept")
+      print(df)
+    }
+  }
+  
+  if (attributes(object)$Type %in% c("expo", "linear", "power")){
+    mod <- match.arg(attributes(object)$Type, c("exponential", "linear", "power"))
+    if (!attributes(object)$mod_sel){
+      cat("\n",paste("GDM fit using the", mod, "SAR model", sep = " "),
+          "\n", "\n")
+      stats:::print.nls(object)
+    } else {
+      cat("\n",paste("GDM fit using the", mod, "SAR model", sep = " "),
+          "\n")
+      cat("\n","GDM model summary:", "\n", "\n")
+      stats:::print.nls(object[[1]])
+      cat("\n","All model summaries:", "\n", "\n")
+      
+      df <- data.frame("RSE" = vapply(object, function(x) summary(x)$sigma, numeric(1)),
+                       "AIC" = vapply(object, AIC, numeric(1)))
+      df$Delta.AIC <-  df$AIC - min(df$AIC)
+      rownames(df) <- c("GDM", "A + T", "A")
+      print(df)
+    }
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  }
+      
+      
+      
   
   
