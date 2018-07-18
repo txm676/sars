@@ -91,6 +91,9 @@
 #'
 #'   Guilhaumon, F., Mouillot, D., & Gimenez, O. (2010). mmSAR: an R-package for
 #'   multimodel species–area relationship inference. Ecography, 33, 420-424.
+#' @import stats
+#' @import cli 
+#' @import crayon
 #' @examples
 #' data(galap)
 #' #attempt to construct a multimodel SAR curve using all twenty sar models
@@ -138,10 +141,10 @@ sar_multi <- function(data = galap,
   if (normaTest == "none") alpha_normtest <- "none"
   if (homoTest == "none") alpha_homotest <- "none"
   
-  #if (verb) cat_line(cli::rule(left = paste0(crayon::cyan(cli::symbol$bullet),crayon::bold(" multi_sars")),right="multi-model SAR"))
-  if (verb && is.character(obj)) sars:::cat_line(cli::rule(left = crayon::bold(" multi_sars"),right="multi-model SAR"))
-  #if (verb) cat_line(crayon::magenta(cli::symbol$arrow_right)," Data set is: ")
-  #if (verb) cat_line(cli::rule(left = paste0(crayon::magenta(cli::symbol$bullet))))
+  #if (verb) cat_line(rule(left = paste0(cyan(symbol$bullet),bold(" multi_sars")),right="multi-model SAR"))
+  if (verb && is.character(obj)) cat_line(rule(left = bold(" multi_sars"),right="multi-model SAR"))
+  #if (verb) cat_line(magenta(symbol$arrow_right)," Data set is: ")
+  #if (verb) cat_line(rule(left = paste0(magenta(symbol$bullet))))
   #if (verb) bullet("O | S : model", bullet = blue_arrow())
   
   #if not yet fitted, fit the models to the datasquare_small_filled
@@ -156,13 +159,13 @@ sar_multi <- function(data = galap,
       
       if (verb) {
         if(is.na(f$value)) {
-          sars:::cat_line( paste0(crayon::red(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ", crayon::red(cli::symbol$cross)))
+          cat_line( paste0(red(symbol$arrow_right)," ",col_align(x,max(nchar(obj)))," : ", red(symbol$cross)))
         }else{
           
           if (!is.matrix(f$sigConf)){
-            sars::: cat_line( paste0(crayon::yellow(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : Warning: could not compute parameters statistics"))
+            cat_line( paste0(yellow(symbol$arrow_right)," ",col_align(x,max(nchar(obj)))," : Warning: could not compute parameters statistics"))
           }else{
-            sars:::cat_line( paste0(crayon::cyan(cli::symbol$arrow_right)," ",crayon::col_align(x,max(nchar(obj)))," : ",crayon::green(cli::symbol$tick)))
+            cat_line( paste0(cyan(symbol$arrow_right)," ",col_align(x,max(nchar(obj)))," : ",green(symbol$tick)))
           }
         }
       }
@@ -322,8 +325,8 @@ sar_multi <- function(data = galap,
   class(res) <- c("multi", "sars")
   attr(res, "type") <- "multi"
   
-  #if (verb) cat_line(cli::rule(left = crayon::cyan(cli::symbol$bullet)))
-  if (verb) sars:::cat_line(cli::rule())
+  #if (verb) cat_line(rule(left = cyan(symbol$bullet)))
+  if (verb) cat_line(rule())
   
   invisible(res)
   

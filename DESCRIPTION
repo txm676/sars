@@ -1,26 +1,22 @@
 Package: sars
 Type: Package
 Title: Fit and compare species-area relationship models using multimodel inference
-Version: 0.1.0
+Version: 1.0.0
 Authors@R: c(person("Thomas J.", "Matthews", email = "txm676@gmail.com",
                   role = c("aut", "cre")),
             person("François", "Guilhaumon", email = "francois.guilhaumon@ird.fr",
                   role = c("aut")))
 Description: Implements the basic elements of the multi-model 
-    inference paradigm (Burnham & Anderson, 2002) with simple R list-objects 
-    and functions. The package is scalable and users can easily create their own model and data objects. 
+    inference paradigm (Burnham & Anderson, 2002) for up to twenty species-area relationship models (SAR),
+    using simple R list-objects and functions. The package is scalable and users can easily create their 
+    own model and data objects. Additional SAR related functions are provided.
 License: GPL-3
 URL: https://github.com/txm676/sars
 BugReports: https://github.com/txm676/sars/issues
 Imports: 
     dplyr,
-    ggplot2,
     graphics,
-    grid,
-    gridExtra,
     nortest,
-    numDeriv,
-    Rdpack,
     stats,
     crayon,
     cli

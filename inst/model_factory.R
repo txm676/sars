@@ -117,7 +117,7 @@ model_factory <- function(f, overwrite = FALSE){
   #checks
   cat1("if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe')","\n")
   cat1("if (is.matrix(data)) data <- as.data.frame(data)","\n")
-  cat1("if (base::anyNA(data)) stop('NAs present in data')","\n")
+  cat1("if (anyNA(data)) stop('NAs present in data')","\n")
   #cat1("normtest <- match.arg(normtest, c('none', 'shapiro', 'kolmo', 'lillie'))","\n")
   
   #data ordering and column naming (assuming Area then Species Richness)

@@ -1,4 +1,8 @@
 ######################################## optimization function
+
+#' @import stats
+#' @importFrom nortest lillie.test
+
 rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
                      normaTest = "lillie", homoTest = "cor.fitted"){
 
@@ -32,7 +36,7 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
                    )
 
   #Backtransformation of parameters values
-  res1$par  <-  sars:::backLink(res1$par,model$parLim)
+  res1$par  <-  backLink(res1$par,model$parLim)
 
   #renaming the parameters vector
   names(res1$par) <- model$parNames
@@ -72,7 +76,7 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   if (normaTest == "shapiro") {
     normaTest <- list("test" = "shapiro", tryCatch(shapiro.test(residu), error = function(e)NA))
     } else if (normaTest == "lillie"){ 
-      normaTest <- list("test" = "lillie", tryCatch(nortest::lillie.test(residu), error = function(e)NA))
+      normaTest <- list("test" = "lillie", tryCatch(lillie.test(residu), error = function(e)NA))
     } else if (normaTest == "kolmo"){ 
       normaTest <- list("test" = "kolmo", tryCatch(ks.test(residu, "pnorm"), error = function(e)NA))
       } else{
@@ -177,6 +181,9 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
 }#eo rssoptim
 
 ######################################## Multiple starting values optimization function
+
+#' @import stats
+
 grid_start_fit <- function(model, data, n, algo = "Nelder-Mead", normaTest = "lillie", homoTest = "cor.fitted",
                            verb = TRUE) {
   
