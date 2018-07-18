@@ -49,7 +49,7 @@
 #' @param \dots Further graphical parameters (see \code{\link[graphics]{par}},
 #'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
-#' @importFrom graphics plot lines title
+#' @import graphics 
 #' @examples
 #' data(galap)
 #' #fit and plot a sars object of Type fit.
@@ -271,7 +271,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 #' @param \dots Further graphical parameters (see \code{\link[graphics]{par}},
 #'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
-#' @importFrom graphics plot lines title
+#' @import graphics 
 #' @note When plotting all model fits on the same plot with a legend it is
 #'   necessary to manually extend your plotting window (height and width; e.g.
 #'   the 'Plots' window of R studio) before plotting to ensure the legend fits

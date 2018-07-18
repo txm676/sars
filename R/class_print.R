@@ -1,4 +1,5 @@
 
+#' @import stats 
 #' @export
 
 
@@ -42,11 +43,11 @@ print.summary.sars <- function(object){
     cat("\n", "Call: ","\n", as.character(object$formula), "\n", sep = "")
     cat("\n", "Did the model converge: ", object$convergence , "\n", sep = "")
     cat("\n", "Residuals: ", "\n", sep = "")
-    print(stats::quantile(object$residuals))
+    print(quantile(object$residuals))
     cat("\n", "Parameters: ", "\n", sep = "")
     mm <- object$Parameters
     rownames(mm) <- object$parNames
-    stats::printCoefmat(mm)
+    printCoefmat(mm)
     cat("\n", "R-squared: ", object$R2 , ", Adjusted R-squared: ", object$R2a, "\n", sep = "")
     cat("AIC: ", object$AIC , ", AICc: ", object$AICc, ", BIC: ", object$BIC, "\n", sep = "")
     cat("Observed shape: ", object$observed_shape, ", Asymptote: ", object$asymptote, "\n", "\n", sep = "")
@@ -145,6 +146,7 @@ print.sars <- function(object){
   }
 }
 
+#' @import stats 
 #' @export
 
 print.gdm <- function(object){

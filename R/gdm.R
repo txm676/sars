@@ -16,16 +16,22 @@
 #'   rejected if more than a third of the observed data points fall beyond one
 #'   standard deviation from the expected curve.
 #' @usage gdm(data, model = "lin_pow", mod_sel = FALSE, A = 1, S = 2, Ti = 3)
-#' @param data A dataframe or matrix in which rows are species and columns are
-#'   sites. Each element/value in the matrix is the abundance of a given species
-#'   in a given site.
-#' @param area A vector of site (island) area values. The order of the vector
-#'   must match the order of the columns in \code{data}.
+#' @param data A dataframe or matrix with at least three columns, where one
+#'   column should include island area values, one island richness values and
+#'   one island age values.
+#' @param model Name of the SAR model to be used to fit the GDM. Can be any of
+#'   'expo', 'linear', 'power', 'all', or 'lin_pow'.
+#' @param mod_sel Logical argument specifying whether, for a given SAR model, a
+#'   model comparison of the GDM with other nested candidate models should be
+#'   undertaken.
+#' @param AST The column locations in \code{data} for the area, richness and
+#'   time values (in that order).
 #' @return A list of class "coleman" with four elements. The first element
 #'   contains the fitted values of the model. The second element contains the
 #'   standard deviations of the fitted values, and the third and fourth contain
 #'   the relative island areas and observed richness values, respectively.
 #'   \code{\link{plot.coleman}} plots the model.
+#' @import stats
 #' @references Whittaker, R. J., Triantis, K. A., & Ladle, R. J. (2008). A
 #'   general dynamic theory of oceanic island biogeography. Journal of
 #'   Biogeography, 35, 977-994.
@@ -58,7 +64,7 @@
 
 #import rgamma
 
-gdm <- function(data, model = "lin_pow", mod_sel = FALSE, A = 1, S = 2, Ti = 3){
+gdm <- function(data, model = "lin_pow", mod_sel = FALSE, AST = c(1, 2, 3)){
   if (anyNA(data)) stop("NAs present in data")
   if (!(is.matrix(data) || is.data.frame(data))) stop("data must be a matrix or dataframe")
   if (is.matrix(data)) data <- as.data.frame(data)
@@ -72,10 +78,10 @@ gdm <- function(data, model = "lin_pow", mod_sel = FALSE, A = 1, S = 2, Ti = 3){
   }
   if (!is.logical(mod_sel)) stop("mod_sel argument should be TRUE or FALSE")
   
-  if (A == 1 && S == 2 && Ti == 3){
+  if (all(AST == c(1, 2, 3))){
     colnames(data) <-c("Area", "SR", "Time")
   } else{
-    data <- data[, c(A, S, Ti)]
+    data <- data[, AST]
     colnames(data) <- c("Area", "SR", "Time")
   }
   

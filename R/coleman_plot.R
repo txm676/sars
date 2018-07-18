@@ -27,6 +27,7 @@
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
 #' @details The resultant plot contains the observed richness values ***
 #' @importFrom dplyr arrange
+#' @import graphics 
 #' @examples
 #' data(cole_sim)
 #' fit <- coleman(cole_sim[[1]], cole_sim[[2]])

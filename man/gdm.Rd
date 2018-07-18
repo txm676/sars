@@ -7,12 +7,19 @@
 gdm(data, model = "lin_pow", mod_sel = FALSE, A = 1, S = 2, Ti = 3)
 }
 \arguments{
-\item{data}{A dataframe or matrix in which rows are species and columns are
-sites. Each element/value in the matrix is the abundance of a given species
-in a given site.}
+\item{data}{A dataframe or matrix with at least three columns, where one
+column should include island area values, one island richness values and
+one island age values.}
 
-\item{area}{A vector of site (island) area values. The order of the vector
-must match the order of the columns in \code{data}.}
+\item{model}{Name of the SAR model to be used to fit the GDM. Can be any of
+'expo', 'linear', 'power', 'all', or 'lin_pow'.}
+
+\item{mod_sel}{Logical argument specifying whether, for a given SAR model, a
+model comparison of the GDM with other nested candidate models should be
+undertaken.}
+
+\item{AST}{The column locations in \code{data} for the area, richness and
+time values (in that order).}
 }
 \value{
 A list of class "coleman" with four elements. The first element

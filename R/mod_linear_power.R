@@ -28,6 +28,8 @@
 #'   The \code{compare} argument can be used to compare the c and z values
 #'   calculated using the log-log power model with that calculated using the
 #'   non-linear power model. Note that the log-log function returns logc.
+#' @import stats
+#' @importFrom nortest lillie.test
 #' @return A list of class "sars" with up to six elements. The first element is
 #'   an object of class 'summary.lm'. This is the summary of the linear model
 #'   fit using the \link[stats]{lm} function and the user's data. The second
@@ -61,10 +63,10 @@ lin_pow <- function(data, con = 1, compare = F, normaTest =  "lillie", homoTest 
   } else {
        log.data = data.frame(A = log(data$A), S = log(data$S))
   }
-  linearPower.fit = stats::lm(S ~ A, data = log.data)
+  linearPower.fit = lm(S ~ A, data = log.data)
 
   fv <- linearPower.fit$fitted.values
-  linearPower.fit <- stats::summary.lm(linearPower.fit)
+  linearPower.fit <- summary.lm(linearPower.fit)
   resid <- linearPower.fit$residuals
   res <- list(Model = linearPower.fit, calculated = fv, data = log.data)
   
@@ -80,7 +82,7 @@ lin_pow <- function(data, con = 1, compare = F, normaTest =  "lillie", homoTest 
   if (normaTest == "shapiro") {
     normaTest <- list("test" = "shapiro", tryCatch(shapiro.test(resid), error = function(e)NA))
   } else if (normaTest == "lillie"){ 
-    normaTest <- list("test" = "lillie", tryCatch(nortest::lillie.test(resid), error = function(e)NA))
+    normaTest <- list("test" = "lillie", tryCatch(lillie.test(resid), error = function(e)NA))
   } else if (normaTest == "kolmo"){ 
     normaTest <- list("test" = "kolmo", tryCatch(ks.test(resid, "pnorm"), error = function(e)NA))
   } else{
