@@ -163,6 +163,7 @@ print.gdm <- function(object){
                        "AIC" = vapply(object, AIC, numeric(1)))
       df$Delta.AIC <- df$AIC - min(df$AIC)
       rownames(df) <- c("GDM", "A + T", "A", "Intercept")
+      df <- df[order(df$Delta.AIC),]
       print(df)
     }
   }
@@ -191,8 +192,14 @@ print.gdm <- function(object){
     
     if (attributes(object)$Type == "allMods"){
       cat("\n","GDM model comparison:", "\n", "\n")
-      df <- data.frame("RSE" = vapply(object, function(x) summary(x)$sigma, numeric(1)),
+      
+      if (!attributes(object)$mod_sel){
+        df <- data.frame("RSE" = vapply(object, function(x) summary(x)$sigma, numeric(1)),
                        "AIC" = vapply(object, AIC, numeric(1)))
+      } else {
+        df <- data.frame("RSE" = vapply(object, function(x) summary(x[[1]])$sigma, numeric(1)),
+                         "AIC" = vapply(object, function(x) AIC(x[[1]]), numeric(1)))
+      }
       df$Delta.AIC <-  df$AIC - min(df$AIC)
       rownames(df) <- c("Exponential", "Linear")
       df <- df[order(df$Delta.AIC),]

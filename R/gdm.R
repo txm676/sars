@@ -2,6 +2,48 @@
 
 #data <- data.frame("A" = c(10,40,80,160,160), "S" = c(1,3,5,8,10), Ti = c(1,2,3,4,5))
 
+#' Fit the General Dynamic Model of Island Biogeography 
+#'
+#' @description Fit Coleman's (1981) random placement model to a species-site
+#'   abundance matrix: rows are species and columns are sites. Note that the
+#'   data must be abundance data and not presence-absence data. According to
+#'   this model, the number of species occurring on an island depends on the
+#'   relative area of the island and the regional relative species abundances.
+#'   The fit of the random placement model can be determined through use of a
+#'   diagnostic plot (see \code{\link{plot.coleman}}) of island area (log
+#'   transformed) against species richness, alongside the model’s predicted
+#'   values (see Wang et al., 2010). Following Wang et al. (2010), the model is
+#'   rejected if more than a third of the observed data points fall beyond one
+#'   standard deviation from the expected curve.
+#' @usage gdm(data, model = "lin_pow", mod_sel = FALSE, A = 1, S = 2, Ti = 3)
+#' @param data A dataframe or matrix in which rows are species and columns are
+#'   sites. Each element/value in the matrix is the abundance of a given species
+#'   in a given site.
+#' @param area A vector of site (island) area values. The order of the vector
+#'   must match the order of the columns in \code{data}.
+#' @return A list of class "coleman" with four elements. The first element
+#'   contains the fitted values of the model. The second element contains the
+#'   standard deviations of the fitted values, and the third and fourth contain
+#'   the relative island areas and observed richness values, respectively.
+#'   \code{\link{plot.coleman}} plots the model.
+#' @references Whittaker, R. J., Triantis, K. A., & Ladle, R. J. (2008). A
+#'   general dynamic theory of oceanic island biogeography. Journal of
+#'   Biogeography, 35, 977-994.
+#'   
+#'   Borregaard, M. K. et al. (2017). Oceanic island biogeography through the
+#'   lens of the general dynamic model: assessment and prospect. Biological
+#'   Reviews, 92, 830-853.
+#' @examples
+#' #create an example dataset and fit the GDM using the exponential SAR model
+#' data(galap)
+#' galap$t <- rgamma(16, 5, scale = 2)
+#' g <- gdm(galap, model = "expo", mod_sel = FALSE)
+#' 
+#' #Compare the GDM (using the exponential model) with other **
+#' g2 <- gdm(galap, model = "expo", mod_sel = TRUE)
+#' 
+#' #compare the GDM fitted using the linear, exponential and power SAR models
+#' g3 <- gdm(galap, model = "all", mod_sel = FALSE)
 #' @export
 
 #no R2 provided for non-linear models as only for linear models, residual standard
@@ -13,6 +55,8 @@
 #all model comparison does not include log-log power as can't use AIC
 
 #3d plotting will be provided in a future version of the package
+
+#import rgamma
 
 gdm <- function(data, model = "lin_pow", mod_sel = FALSE, A = 1, S = 2, Ti = 3){
   if (anyNA(data)) stop("NAs present in data")
@@ -98,7 +142,8 @@ gdm <- function(data, model = "lin_pow", mod_sel = FALSE, A = 1, S = 2, Ti = 3){
     attr(fit, "Type") <- "linear"
     attr(fit, "mod_sel") <- mod_sel
     if (model == "all") allMods[[2]] <- fit
-    }
+  }
+  
   if (model == "all") {
     class(allMods) <- "gdm"
     attr(allMods, "Type") <- "allMods"
