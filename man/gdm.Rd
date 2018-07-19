@@ -4,7 +4,7 @@
 \alias{gdm}
 \title{Fit the General Dynamic Model of Island Biogeography}
 \usage{
-gdm(data, model = "lin_pow", mod_sel = FALSE, A = 1, S = 2, Ti = 3)
+gdm(data, model = "linear", mod_sel = FALSE, A = 1, S = 2, Ti = 3)
 }
 \arguments{
 \item{data}{A dataframe or matrix with at least three columns, where one
@@ -12,7 +12,7 @@ column should include island area values, one island richness values and
 one island age values.}
 
 \item{model}{Name of the SAR model to be used to fit the GDM. Can be any of
-'expo', 'linear', 'power', 'all', or 'lin_pow'.}
+'expo', 'linear', 'power', or 'all'.}
 
 \item{mod_sel}{Logical argument specifying whether, for a given SAR model, a
 model comparison of the GDM with other nested candidate models should be
@@ -22,8 +22,7 @@ undertaken.}
 time values (in that order).}
 }
 \value{
-An object of class 'gdm'. If \code{model == "lin_pow"}, the returned
-  object is a \code{\link{lm}} model fit. If \code{model %in% c("expo",
+An object of class 'gdm'.If \code{model %in% c("expo",
   "linear", "power")} the returned object is a \code{\link{nls}} model fit
   object. If \code{model == "all"}, the returned object is a list with three
   elements; each element being a \code{nls} fit object.
@@ -45,19 +44,22 @@ The GDM models island species richness as a function of island area
   and island age, and takes the general form: S ~ A + T + T^2, where S =
   richness, A =area, and T = island age. The T^2 term is included as the GDM
   predicts a hump-shaped relationship between island richness and island age.
-  However, a variety of different SAR models have been used to fit th GDM and
-  four options are available here: the exponential, linear and power SAR
-  models, and the log-log version of the power model. For example, when the
-  linear SAR model is used, the GDM can be fitted using the expression: S ~ c
-  + z*Area + k*T + j*T^2, where c,z,k,j are parameters to be estimated.
+  However, a variety of different SAR models have been used to fit the GDM and
+  three options are available here: the exponential, linear and power SAR
+  model. Model fitting follows the procedure in Cardoso et al. (2015). For
+  example, when the linear SAR model is used, the GDM can be fitted using the
+  expression: S ~ c + z*Area + k*T + j*T^2, where c,z,k,j are parameters to
+  be estimated.
 
-  For the exponential, linear and power SAR models, the GDM is fitted using
-  non-linear regression and the \code{\link{nls}} function. In the case of
-  the log-log power model, the GDM is fitted using the \code{\link{lm}}
-  function.
+  For all three SAR models, the GDM is fitted using
+  non-linear regression and the \code{\link{nls}} function.
 
   Residual standard error (RSE) is used instead of R2, and for each model the
   AIC and RSE is provided.
+  
+  null model calculated using lm not nls
+  
+  linear form of SAR models used
 }
 \note{
 AIC is calculated using the \code{\link{AIC}} function, which is based
@@ -87,4 +89,9 @@ Whittaker, R. J., Triantis, K. A., & Ladle, R. J. (2008). A
   Borregaard, M. K. et al. (2017). Oceanic island biogeography through the
   lens of the general dynamic model: assessment and prospect. Biological
   Reviews, 92, 830-853.
+  
+  Cardoso, P., Rigal, F., & Carvalho, J. C. (2015). BAT–Biodiversity
+  Assessment Tools, an R package for the measurement and estimation of alpha
+  and beta taxon, phylogenetic and functional diversity. Methods in Ecology
+  and Evolution, 6, 232-236.
 }
