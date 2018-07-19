@@ -182,11 +182,12 @@ print.gdm <- function(object){
       cat("\n","GDM model summary:", "\n", "\n")
       stats:::print.nls(object[[1]])
       cat("\n","All model summaries:", "\n", "\n")
-      
-      df <- data.frame("RSE" = vapply(object, function(x) summary(x)$sigma, numeric(1)),
-                       "AIC" = vapply(object, AIC, numeric(1)))
+      obNL <- object[1:3]
+      df <- data.frame("RSE" = vapply(obNL, function(x) summary(x)$sigma, numeric(1)),
+                       "AIC" = vapply(obNL, AIC, numeric(1)))
+      df <- rbind(df, c(summary(object[[4]])$sigma, AIC(object[[4]])))
       df$Delta.AIC <-  df$AIC - min(df$AIC)
-      rownames(df) <- c("GDM", "A + T", "A")
+      rownames(df) <- c("GDM", "A + T", "A", "Intercept")
       df <- df[order(df$Delta.AIC),]
       print(df)
     }

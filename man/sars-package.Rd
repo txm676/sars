@@ -37,7 +37,7 @@ Functions are provided to fit 20 individual SAR models. Nineteen are
   those calculated using the non-linear power model, (ii) \code{\link{gdm}},
   which fits the general dynamic model of island biogeography (Whittaker et
   al. 2008) using several different functions, and (iii)
-  \code{\link{colemean}}, which fits Coleman's  (1981) random placement model
+  \code{\link{coleman}}, which fits Coleman's  (1981) random placement model
   to a species-site abundance matrix.
 }
 \examples{

@@ -22,24 +22,50 @@ undertaken.}
 time values (in that order).}
 }
 \value{
-A list of class "coleman" with four elements. The first element
-  contains the fitted values of the model. The second element contains the
-  standard deviations of the fitted values, and the third and fourth contain
-  the relative island areas and observed richness values, respectively.
-  \code{\link{plot.coleman}} plots the model.
+An object of class 'gdm'. If \code{model == "lin_pow"}, the returned
+  object is a \code{\link{lm}} model fit. If \code{model %in% c("expo",
+  "linear", "power")} the returned object is a \code{\link{nls}} model fit
+  object. If \code{model == "all"}, the returned object is a list with three
+  elements; each element being a \code{nls} fit object.
+
+  If \code{mod_sel == TRUE} and \code{model != "all"}, a list with four
+  elements is returned; each element being a \code{lm} or \code{nls} fit
+  object. When \code{model == "all"}, a list with three elements is returned;
+  each element being a list of the four model fits for a particular SAR
+  model.
 }
 \description{
-Fit Coleman's (1981) random placement model to a species-site
-  abundance matrix: rows are species and columns are sites. Note that the
-  data must be abundance data and not presence-absence data. According to
-  this model, the number of species occurring on an island depends on the
-  relative area of the island and the regional relative species abundances.
-  The fit of the random placement model can be determined through use of a
-  diagnostic plot (see \code{\link{plot.coleman}}) of island area (log
-  transformed) against species richness, alongside the model’s predicted
-  values (see Wang et al., 2010). Following Wang et al. (2010), the model is
-  rejected if more than a third of the observed data points fall beyond one
-  standard deviation from the expected curve.
+Fit the general dynamic model (GDM) of island biogeography using
+  a variety of SAR models. Functions are provided to compare the GDM fitted
+  using different SAR models, and also, for a given SAR model, to compare the
+  GDM with alternative nested candidate models (e.g. S ~ A + T).
+}
+\details{
+The GDM models island species richness as a function of island area
+  and island age, and takes the general form: S ~ A + T + T^2, where S =
+  richness, A =area, and T = island age. The T^2 term is included as the GDM
+  predicts a hump-shaped relationship between island richness and island age.
+  However, a variety of different SAR models have been used to fit th GDM and
+  four options are available here: the exponential, linear and power SAR
+  models, and the log-log version of the power model. For example, when the
+  linear SAR model is used, the GDM can be fitted using the expression: S ~ c
+  + z*Area + k*T + j*T^2, where c,z,k,j are parameters to be estimated.
+
+  For the exponential, linear and power SAR models, the GDM is fitted using
+  non-linear regression and the \code{\link{nls}} function. In the case of
+  the log-log power model, the GDM is fitted using the \code{\link{lm}}
+  function.
+
+  Residual standard error (RSE) is used instead of R2, and for each model the
+  AIC and RSE is provided.
+}
+\note{
+AIC is calculated using the \code{\link{AIC}} function, which is based
+  on the log-likelihood and not the residual sum of squares (the latter is
+  used in the main functions of the sars package).
+  
+  A plot generic function enabling 3-d plotting of the GDM fit will be
+  provided in a future version of the package.
 }
 \examples{
 #create an example dataset and fit the GDM using the exponential SAR model
@@ -47,7 +73,7 @@ data(galap)
 galap$t <- rgamma(16, 5, scale = 2)
 g <- gdm(galap, model = "expo", mod_sel = FALSE)
 
-#Compare the GDM (using the exponential model) with other **
+#Compare the GDM (using the exponential model) with other nested candidate models
 g2 <- gdm(galap, model = "expo", mod_sel = TRUE)
 
 #compare the GDM fitted using the linear, exponential and power SAR models
@@ -57,7 +83,7 @@ g3 <- gdm(galap, model = "all", mod_sel = FALSE)
 Whittaker, R. J., Triantis, K. A., & Ladle, R. J. (2008). A
   general dynamic theory of oceanic island biogeography. Journal of
   Biogeography, 35, 977-994.
-  
+
   Borregaard, M. K. et al. (2017). Oceanic island biogeography through the
   lens of the general dynamic model: assessment and prospect. Biological
   Reviews, 92, 830-853.

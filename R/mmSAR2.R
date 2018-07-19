@@ -33,7 +33,7 @@
 #'   those calculated using the non-linear power model, (ii) \code{\link{gdm}},
 #'   which fits the general dynamic model of island biogeography (Whittaker et
 #'   al. 2008) using several different functions, and (iii)
-#'   \code{\link{colemean}}, which fits Coleman's  (1981) random placement model
+#'   \code{\link{coleman}}, which fits Coleman's  (1981) random placement model
 #'   to a species-site abundance matrix.
 #' @author Thomas J. Matthews and Francois Guilhaumon
 #' @references Coleman, B. D. (1981). On random placement and species-area
