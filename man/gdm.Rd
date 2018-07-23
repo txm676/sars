@@ -4,7 +4,7 @@
 \alias{gdm}
 \title{Fit the General Dynamic Model of Island Biogeography}
 \usage{
-gdm(data, model = "linear", mod_sel = FALSE, A = 1, S = 2, Ti = 3)
+gdm(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3))
 }
 \arguments{
 \item{data}{A dataframe or matrix with at least three columns, where one
@@ -22,8 +22,8 @@ undertaken.}
 time values (in that order).}
 }
 \value{
-An object of class 'gdm'.If \code{model %in% c("expo",
-  "linear", "power")} the returned object is a \code{\link{nls}} model fit
+An object of class 'gdm'. If \code{model} is one of "expo",
+  "linear" or "power" the returned object is a \code{\link{nls}} model fit
   object. If \code{model == "all"}, the returned object is a list with three
   elements; each element being a \code{nls} fit object.
 
@@ -44,22 +44,30 @@ The GDM models island species richness as a function of island area
   and island age, and takes the general form: S ~ A + T + T^2, where S =
   richness, A =area, and T = island age. The T^2 term is included as the GDM
   predicts a hump-shaped relationship between island richness and island age.
-  However, a variety of different SAR models have been used to fit the GDM and
-  three options are available here: the exponential, linear and power SAR
+  However, a variety of different SAR models have been used to fit the GDM
+  and three options are available here: the exponential, linear and power SAR
   model. Model fitting follows the procedure in Cardoso et al. (2015). For
   example, when the linear SAR model is used, the GDM can be fitted using the
-  expression: S ~ c + z*Area + k*T + j*T^2, where c,z,k,j are parameters to
-  be estimated.
+  expression: S ~ c + z*Area + k*T + j*T^2, where c,z,k,j are free parameters
+  to be estimated.
 
-  For all three SAR models, the GDM is fitted using
-  non-linear regression and the \code{\link{nls}} function.
+  For all three SAR models, the GDM is fitted using non-linear regression and
+  the \code{\link{nls}} function. For ease of fitting, the exponential and
+  power SAR models are included in their logarithmic form, e.g. the
+  exponential model is fitted using: S ~ c + x*log(A), where c and x are
+  parameters to be estimated.
 
-  Residual standard error (RSE) is used instead of R2, and for each model the
-  AIC and RSE is provided.
-  
-  null model calculated using lm not nls
-  
-  linear form of SAR models used
+  For each model fit, the residual standard error (RSE) and AIC values are
+  reported. However, as the model fit object is returned, it is possible to
+  calculate or extract various other measures of goodness of fit (see
+  \code{\link{nls}}).
+
+  If \code{mod_sel == TRUE}, the GDM (using a particular SAR model) is fitted
+  and compared with three other (nested) candidate models: area and time
+  (i.e. no time^2 term), just area, and an intercept only model. The
+  intercept only model is fitted using \code{lm} rather than \code{nls}. If
+  \code{model == "all"}, the GDM is fitted three times (using the power, expo
+  and linear SAR models), and the fits compared using \code{AIC}.
 }
 \note{
 AIC is calculated using the \code{\link{AIC}} function, which is based

@@ -1,6 +1,3 @@
-###########Fit the GDM#############################
-
-#data <- data.frame("A" = c(10,40,80,160,160), "S" = c(1,3,5,8,10), Ti = c(1,2,3,4,5))
 
 #' Fit the General Dynamic Model of Island Biogeography
 #'
@@ -8,7 +5,7 @@
 #'   a variety of SAR models. Functions are provided to compare the GDM fitted
 #'   using different SAR models, and also, for a given SAR model, to compare the
 #'   GDM with alternative nested candidate models (e.g. S ~ A + T).
-#' @usage gdm(data, model = "linear", mod_sel = FALSE, A = 1, S = 2, Ti = 3)
+#' @usage gdm(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3))
 #' @param data A dataframe or matrix with at least three columns, where one
 #'   column should include island area values, one island richness values and
 #'   one island age values.
@@ -23,26 +20,32 @@
 #'   and island age, and takes the general form: S ~ A + T + T^2, where S =
 #'   richness, A =area, and T = island age. The T^2 term is included as the GDM
 #'   predicts a hump-shaped relationship between island richness and island age.
-#'   However, a variety of different SAR models have been used to fit the GDM and
-#'   three options are available here: the exponential, linear and power SAR
+#'   However, a variety of different SAR models have been used to fit the GDM
+#'   and three options are available here: the exponential, linear and power SAR
 #'   model. Model fitting follows the procedure in Cardoso et al. (2015). For
 #'   example, when the linear SAR model is used, the GDM can be fitted using the
-#'   expression: S ~ c + z*Area + k*T + j*T^2, where c,z,k,j are parameters to
-#'   be estimated.
+#'   expression: S ~ c + z*Area + k*T + j*T^2, where c,z,k,j are free parameters
+#'   to be estimated.
 #'
-#'   For all three SAR models, the GDM is fitted using
-#'   non-linear regression and the \code{\link{nls}} function.
+#'   For all three SAR models, the GDM is fitted using non-linear regression and
+#'   the \code{\link{nls}} function. For ease of fitting, the exponential and
+#'   power SAR models are included in their logarithmic form, e.g. the
+#'   exponential model is fitted using: S ~ c + x*log(A), where c and x are
+#'   parameters to be estimated.
 #'
-#'   Residual standard error (RSE) is used instead of R2, and for each model the
-#'   AIC and RSE is provided.
-#'   
-#'   null model calculated using lm not nls
-#'   
-#'   linear form of SAR models used
+#'   For each model fit, the residual standard error (RSE) and AIC values are
+#'   reported. However, as the model fit object is returned, it is possible to
+#'   calculate or extract various other measures of goodness of fit (see
+#'   \code{\link{nls}}).
 #'
-#'
-#' @return An object of class 'gdm'.If \code{model %in% c("expo",
-#'   "linear", "power")} the returned object is a \code{\link{nls}} model fit
+#'   If \code{mod_sel == TRUE}, the GDM (using a particular SAR model) is fitted
+#'   and compared with three other (nested) candidate models: area and time
+#'   (i.e. no time^2 term), just area, and an intercept only model. The
+#'   intercept only model is fitted using \code{lm} rather than \code{nls}. If
+#'   \code{model == "all"}, the GDM is fitted three times (using the power, expo
+#'   and linear SAR models), and the fits compared using \code{AIC}.
+#' @return An object of class 'gdm'. If \code{model} is one of "expo",
+#'   "linear" or "power" the returned object is a \code{\link{nls}} model fit
 #'   object. If \code{model == "all"}, the returned object is a list with three
 #'   elements; each element being a \code{nls} fit object.
 #'
@@ -84,16 +87,6 @@
 #' g3 <- gdm(galap, model = "all", mod_sel = FALSE)
 #' @export
 
-
-
-#things to check with FG:
-
-#AIC calculated using AIC function (log likelihood) not the 
-#RSS like rest of sars: check with FG this is OK
-
-#I tried to match the BAT R package where possible, and with the power model:
-#they use the expression: S ~ exp(c + z*log(A) +x*T + y*T^2), but should it
-#not be log(c), as is the log-log power model not log(s) = log(c) + z*log(A)? 
 
 gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3)){
   if (anyNA(data)) stop("NAs present in data")
