@@ -123,6 +123,11 @@
 #the confInt may have bugs, please report any to the maintainer
 
 
+##note: with many SAR models in the multi fit, it can take a long time
+#models are removed from confint (but not sar_multi) if NAs are produced in Jacobian or in the transResiduals
+
+
+
 
 sar_multi <- function(data = galap,
                        obj = c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg", "linear"),
@@ -365,12 +370,12 @@ sar_multi <- function(data = galap,
   if (verb) cat_line(rule())
   
   if (confInt){
-    cat("\n", "Calculating sar_multi confidence intervals - this may take some time", "\n","\n")
+    cat("\n", "Calculating sar_multi confidence intervals - this may take some time:", "\n","\n")
     cis <- sar_conf_int(res, n = ciN, crit = crit, normaTest = normaTest,
                         homoTest = homoTest,
                         neg_check = neg_check,
                         alpha_normtest = alpha_normtest,
-                        alpha_homotest = alpha_homotest)
+                        alpha_homotest = alpha_homotest, verb = verb)
     res$details$confInt = cis
   } else {
     res$details$confInt = NA

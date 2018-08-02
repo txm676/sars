@@ -1,35 +1,10 @@
-#' Generate a non parametric confidence interval for a SAR
 
-#' @description Generate a non parametric confidence interval for a SAR
-#' @usage sar_conf_int(obj, n_boot = 99)
-#' @param obj An object of class 'sar' or 'multi.sar'.
-#' @param n_boot the number of bootstrap sample used to construct the confidence interval.
-#' @return 
-#' @examples
-#' #multi_sar fit
-#' data(galap)
-#' fit <- sar_multi(data = galap)
-#' conf_fit <- sar_conf_int(fit)
-#' #simple sar fit
-#' data(galap)
-#' fit <- sar_power(data = galap)
-#' conf_fit <- sar_conf_int(fit)
-
-#note: with many SAR models in the multi fit, it can take a long time
-#models are removed from confint (but not sar_multi) if NAs are produced in Jacobian or in the transResiduals
-
-#' @export
-
-#fit <- sar_multi(galap)
-#s <- sar_conf_int(fit, n = 100)
-
-#n = number of iterations
 
 sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
                          homoTest = "cor.fitted",
                          neg_check = TRUE,
                          alpha_normtest = 0.05,
-                         alpha_homotest = 0.05){
+                         alpha_homotest = 0.05, verb = TRUE){
   
   if (!"multi" %in% class(fit)) stop ("class of 'fit' should be 'multi'")
   if (length(fit$details$mod_names) < 2) stop ("less than two models in the sar multi object")
@@ -151,7 +126,10 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
 
   #run the boostrapping (based on code in mmSAR)
   
-  z <- 1
+  if (verb) {
+    pb <- txtProgressBar(min = 0, max = n, style = 3)
+    z <- 1
+  }
   nBoot <- n
   
   pointsNames <- paste("S",c(1:nrow(dat)))
@@ -210,8 +188,11 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
     if (length(optimres) == 1) {
       badBoot=TRUE
     } else {
-      if ((z %% 10) == 0) print(z)
-      z <- z + 1
+      #progress bar
+      if (verb) {
+        setTxtProgressBar(pb, z)
+        z <- z + 1
+      }
       #matrix for the fitted values
       bootCalculated[[nGoodBoot]] <- matrix(nrow = length(optimres$details$fits), ncol = nrow(df))
       rownames(bootCalculated[[nGoodBoot]]) <- as.vector(optimres$details$mod_names)
@@ -269,6 +250,8 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
     } else { bootHat[k,] <- rep(0, nrow(dat)) }
     
   } #end of for k
+  
+  if (verb) cat("\n")#needed to drop warnings below progress bar
   
   #sort and return the CIs
   bootSort <- apply(bootHat, 2, sort)

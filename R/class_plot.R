@@ -319,7 +319,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 #' plot(fit)
 #' 
 #' #remove the legend
-#' plot(fit, pLeg = F)
+#' plot(fit, pLeg = FALSE)
 #' 
 #' #plot just the multimodel curve
 #' plot(fit, allCurves = FALSE, ModTitle = "", lcol = "black")

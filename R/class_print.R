@@ -3,7 +3,7 @@
 #' @export
 
 
-print.summary.sars <- function(object){
+print.summary.sars <- function(object, ...){
   
   if (attributes(object)$type == "lin_pow"){
     cat("Model = ","Log-log power", "\n")
@@ -104,7 +104,7 @@ print.summary.sars <- function(object){
 #' @export
 #' 
 
-print.sars <- function(object){
+print.sars <- function(object, ...){
   
   if (attributes(object)$type == "lin_pow"){
     cat("Model = ","Log-log power", "\n")
@@ -149,7 +149,7 @@ print.sars <- function(object){
 #' @import stats 
 #' @export
 
-print.gdm <- function(object){
+print.gdm <- function(object, ...){
   if (attributes(object)$Type %in% c("expo", "linear", "power")){
     mod <- match.arg(attributes(object)$Type, c("exponential", "linear", "power"))
     if (!attributes(object)$mod_sel){

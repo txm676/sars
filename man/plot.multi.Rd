@@ -133,7 +133,7 @@ fit <- sar_multi(galap)
 plot(fit)
 
 #remove the legend
-plot(fit, pLeg = F)
+plot(fit, pLeg = FALSE)
 
 #plot just the multimodel curve
 plot(fit, allCurves = FALSE, ModTitle = "", lcol = "black")
