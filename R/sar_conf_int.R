@@ -72,7 +72,7 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
 
     
   #fit the best model to observed data; extract fitted values and residuals
-  me <- eval(parse(text = paste(w2, "dat)", sep = "")))
+  me <- suppressWarnings(eval(parse(text = paste(w2, "dat)", sep = ""))))
   meF <- me$calculated
   meR <- me$residuals
   
@@ -102,6 +102,16 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   }
   
   jacobbis <- t(jacob) %*% jacob
+  
+  ##occasionally the jaccobis function returns Inf, which errors below,
+  #so need to removed this model
+  if (anyNA(jacobbis)  || any(jacobbis == "Inf")){
+    calculated[i, ] <- NA
+    residuals[i, ] <- NA
+    transResiduals[i, ] <- NA
+    next
+  }
+  
   s <- svd(jacobbis)
   jacobbismun <- s$v %*% (diag(1 / s$d)) %*% (t(s$u))
   hatMat <- jacob %*% jacobbismun %*% t(jacob)
@@ -126,8 +136,8 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
  if (anyNA(transResiduals)){
    
   wna <- which(apply(transResiduals, 1, anyNA))
-  warning(paste("The following model(s) has been removed from the confidence interval calculations as NAs are 
-                present in the transformed residuals:", names(wna)))
+  warning(paste("The following model(s) has been removed from the confidence interval calculations as NAs/Infs are 
+                present in the transformed residuals:", paste(names(wna), collapse = ", ")))
   calculated <- calculated[-wna, ]
   residuals <- residuals[-wna, ]
   transResiduals <- transResiduals[-wna, ]

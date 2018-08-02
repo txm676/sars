@@ -118,6 +118,10 @@
 #sometimes bad models produce calculated values with all same richness values and no correlation
 #can be done. Remove these
 
+#needs at least four data points
+
+#the confInt may have bugs, please report any to the maintainer
+
 
 
 sar_multi <- function(data = galap,
@@ -134,6 +138,9 @@ sar_multi <- function(data = galap,
                        ciN = 100){
   
   if (!((is.character(obj))  || (class(obj) == "sars")) ) stop("obj must be of class character or sars")
+  
+  if (nrow(data) < 4) stop ("Multi SAR needs at least four data points")
+  if (nrow(data) == 4 && normaTest == "lillie") stop ("The Lilliefors test cannot be performed with less than 5 data points")
   
   if (is.character(obj) & is.null(data)) stop("if obj is character then data should be provided")
   

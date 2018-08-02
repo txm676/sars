@@ -9,7 +9,7 @@
   ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
   cex.lab = 1.3, cex.axis = 1, yRange = NULL, lwd = 2,
   lcol = "dodgerblue2", pLeg = TRUE, modNames = NULL, cex.names = 0.88,
-  subset_weights = NULL, ...)
+  subset_weights = NULL, confInt = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class 'multi'.}

@@ -17,7 +17,7 @@ Generate a non parametric confidence interval for a SAR
 \examples{
 #multi_sar fit
 data(galap)
-fit <- multi_sar(data = galap)
+fit <- sar_multi(data = galap)
 conf_fit <- sar_conf_int(fit)
 #simple sar fit
 data(galap)
