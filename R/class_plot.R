@@ -337,8 +337,15 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
                       pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
                       cex.lab = 1.3, cex.axis = 1, yRange = NULL, 
                       lwd = 2, lcol = 'dodgerblue2', pLeg = TRUE, modNames = NULL, cex.names=.88,
-                      subset_weights = NULL, ...)
+                      subset_weights = NULL, confInt = FALSE, ...)
 {
+  
+  if (confInt){
+    if (length(x$details$confInt) == 1) stop ("No confidence interval information in the fit object")
+    CI <- x$details$confInt
+  }
+  
+  
   ic <- x[[2]]$ic 
   dat <- x$details$fits
   
@@ -391,11 +398,21 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
     #set y axis range
     if (is.null(yRange)){
       if (allCurves){
+        if (confInt){ #CIs larger so need to add to ymax and ymin
+          yMax <- max(c(yy,unlist(mf2), CI$U))
+          yMin <- min(c(yy,unlist(mf2), CI$L))
+        } else {
         yMax <- max(c(yy,unlist(mf2)))#fitted line can be above the largest observed data point
         yMin <- min(c(yy,unlist(mf2)))
-      } else{
+      }
+        }else{
+        if (confInt){ #CIs larger so need to add to ymax and ymin
+          yMax <- max(c(yy,wfv, CI$U))#fitted line can be above the largest observed data point
+          yMin <- min(c(yy,wfv, CI$L))
+        } else {
         yMax <- max(c(yy,wfv))#fitted line can be above the largest observed data point
         yMin <- min(c(yy,wfv))
+        }
       }
       yRange = c(yMin, yMax)
     }
@@ -418,21 +435,52 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
      # legHeight <- lSiz$rect$h 
     #  yMAX <- legHeight + (legHeight * 0.3)
      # yRange <- c(yMin, yMAX)
-      matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,xlim = c(min(xx), xMAX), ylim = yRange)
+
+      if (confInt){
+        matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, 
+                cex.lab = cex.lab, cex.axis = cex.axis,xlim = c(min(xx), xMAX), ylim = yRange)
+        polygon(c(xx,rev(xx)),c(CI$L,rev(CI$U)),col="grey87",border=NA)
+        points(x = xx, y = yy, pch = pch, col = pcol, 
+               cex = cex)
+      } else {
+        matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+                cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,xlim = c(min(xx), xMAX), ylim = yRange)
+      }#eo confInt
     } else{ #no legend
-      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-      cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
-    }
+      
+      if (confInt){
+        plot(x = xx, y = yy, xlab = xlab, ylab = ylab, 
+             cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
+        polygon(c(xx,rev(xx)),c(CI$L,rev(CI$U)),col="grey87",border=NA)
+        points(x = xx, y = yy, pch = pch, col = pcol, 
+               cex = cex)
+      } else {
+        plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+        cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
+      }#eo confInt
+    }#eo no legend
       matlines(xx, mf2, lwd = lwd, lty = 1:ncol(mf2), col=1:ncol(mf2))
       if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax, legend = nams2,horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2)) 
       title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main)
   } else if (!allCurves){
     #just multimodel SAR curve
-    plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
-    title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main)
-    lines(x = xx, y = wfv, lwd = lwd, col = lcol)
+    if (confInt){
+      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, 
+            cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
+      polygon(c(xx,rev(xx)),c(CI$L,rev(CI$U)),col="grey87",border=NA)
+      points(x = xx, y = yy, pch = pch, col = pcol, 
+             cex = cex)
+      title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main)
+      lines(x = xx, y = wfv, lwd = lwd, col = lcol)
+      
+     # lines(x = xx, y = CI$L, lwd = lwd, col = "black")
+     # lines(x = xx, y = CI$U, lwd = lwd, col = "black")
+    } else {
+      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+      cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
+      title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main)
+      lines(x = xx, y = wfv, lwd = lwd, col = lcol)
+    }#eo confint
   }
   }
   

@@ -1,6 +1,7 @@
 #Chapman–Richards 3 S = a [1 − exp(−bA)]c Flather (1996)
 model <- list(
   name=c("Chapman Richards"),
+  formula=expression(S == d * (1 - exp(-z*A)^c )),
   exp=expression(d * (1 - exp(-z*A)^c )),
   shape="sigmoid",
   asymp=function(pars)pars["d"],

@@ -116,9 +116,29 @@ sar_linear <- function(data = galap, normaTest =  "lillie", homoTest = "cor.fitt
   }
   fit$normaTest <- normaTest
   fit$homoTest <- homoTest
+  
+  #copying the non-linear models (for use in confint calculations)
+  fit$model$exp <- expression(c + m*A)
+  fit$model$mod.fun <- function(A = A, par = par, model = model) { eval(model$exp,list(A=A,c=par[1],m=par[2]))}
+  #rss function (for use in confInts of sar_multi)
+  fit$model$rss.fun <- function(par,data, model, opt = TRUE){
+    S <- data$S
+    A <- data$A
+    res <- sum((S - model$mod.fun(A,par, model = model))^2)
+    res
+  }
   class(fit) <- 'sars' 
   attr(fit, 'type') <- 'fit' 
   return(fit) 
 }#end of sar_linear
+
+
+
+
+
+
+
+
+
 
 

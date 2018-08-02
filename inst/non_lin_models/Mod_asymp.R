@@ -1,6 +1,7 @@
 #Asymptotic Regression
 model <- list(
   name=c("Asymptotic regression"),
+  formula=expression(S == d - c*z^A),
   exp=expression(d - c*z^A),
   shape="convex",
   asymp=function(pars)pars["d"],

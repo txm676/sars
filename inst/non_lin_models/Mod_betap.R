@@ -1,6 +1,7 @@
 #Beta-P function (cumulative)
 model <- list(
   name=c("Beta-P cumulative"),
+  formula=expression(S == d*(1-(1+(A/c)^z)^-f)),
   exp=expression(d*(1-(1+(A/c)^z)^-f)),
   shape="sigmoid",
   asymp=function(pars)pars["d"],

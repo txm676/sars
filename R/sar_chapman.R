@@ -70,12 +70,13 @@ sar_chapman <- function(data = galap, start = NULL, grid_start = NULL, normaTest
               homoTest = "cor.fitted"){
 if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe') 
 if (is.matrix(data)) data <- as.data.frame(data) 
-if (base::anyNA(data)) stop('NAs present in data') 
+if (anyNA(data)) stop('NAs present in data') 
 data <- data[order(data[,1]),] 
 colnames(data) <- c('A','S') 
 #Chapman–Richards 3 S = a [1 − exp(−bA)]c Flather (1996)
 model <- list(
   name=c("Chapman Richards"),
+  formula=expression(S == d * (1 - exp(-z*A)^c )),
   exp=expression(d * (1 - exp(-z*A)^c )),
   shape="sigmoid",
   asymp=function(pars)pars["d"],

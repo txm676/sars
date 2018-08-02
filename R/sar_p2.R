@@ -70,7 +70,7 @@ sar_p2 <- function(data = galap, start = NULL, grid_start = NULL, normaTest =  "
               homoTest = "cor.fitted"){
 if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe') 
 if (is.matrix(data)) data <- as.data.frame(data) 
-if (base::anyNA(data)) stop('NAs present in data') 
+if (anyNA(data)) stop('NAs present in data') 
 data <- data[order(data[,1]),] 
 colnames(data) <- c('A','S') 
 # PERSISTENCE FUNCTION 2 (TJORVE 2009)

@@ -70,12 +70,13 @@ sar_betap <- function(data = galap, start = NULL, grid_start = NULL, normaTest =
               homoTest = "cor.fitted"){
 if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe') 
 if (is.matrix(data)) data <- as.data.frame(data) 
-if (base::anyNA(data)) stop('NAs present in data') 
+if (anyNA(data)) stop('NAs present in data') 
 data <- data[order(data[,1]),] 
 colnames(data) <- c('A','S') 
 #Beta-P function (cumulative)
 model <- list(
   name=c("Beta-P cumulative"),
+  formula=expression(S == d*(1-(1+(A/c)^z)^-f)),
   exp=expression(d*(1-(1+(A/c)^z)^-f)),
   shape="sigmoid",
   asymp=function(pars)pars["d"],

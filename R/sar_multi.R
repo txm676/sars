@@ -114,6 +114,12 @@
 #'
 #' @export
 
+
+#sometimes bad models produce calculated values with all same richness values and no correlation
+#can be done. Remove these
+
+
+
 sar_multi <- function(data = galap,
                        obj = c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg", "linear"),
                        keep_details = TRUE,
@@ -123,7 +129,9 @@ sar_multi <- function(data = galap,
                        neg_check = TRUE,
                        alpha_normtest = 0.05,
                        alpha_homotest = 0.05,
-                       verb = TRUE){
+                       verb = TRUE,
+                       confInt = FALSE, 
+                       ciN = 100){
   
   if (!((is.character(obj))  || (class(obj) == "sars")) ) stop("obj must be of class character or sars")
   
@@ -225,6 +233,16 @@ sar_multi <- function(data = galap,
 
   if (normaTest != "none") {
     np <- vapply(fits, function(x) x$normaTest[[2]]$p.value, FUN.VALUE = numeric(1))
+    #sometimes bad models produce calculated values with all same richness values and no correlation
+    #can be done. Remove these
+    if (anyNA(np)){
+      warning(paste(length(which(is.na(np))),"models returned NAs in the residuals normality test and have been excluded from the multi SAR"), call. = FALSE)
+      wnn <- is.na(np)
+      mn <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
+      badMods <- c(badMods, mn[wnn])#select the model names with NAs
+      fits <- fits[!wnn]
+      np <- np[!wnn]
+    }
     whp <- np < alpha_normtest
     if (any(whp)) {
       warning(paste(length(which(np < alpha_normtest)), "models failed the residuals normality test and
@@ -237,6 +255,17 @@ sar_multi <- function(data = galap,
   }
   if (homoTest != "none") {
     hp <- vapply(fits, function(x) x$homoTest[[2]]$p.value, FUN.VALUE = numeric(1))
+    
+    #sometimes bad models produce calculated values with all same richness values and no correlation
+    #can be done. Remove these
+    if (anyNA(hp)){
+      warning(paste(length(which(is.na(hp))),"returned NAs in the residuals homogeneity test and have been excluded from the multi SAR"), call. = FALSE)
+      whn <- is.na(hp)
+      mn <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
+      badMods <- c(badMods, mn[whn])#select the model names with NAs
+      fits <- fits[!whn]
+      hp <- hp[!whn]
+    }
     whh <- hp < alpha_homotest
     if (any(whh)) {
       warning(paste(length(which(hp < alpha_homotest)),"models failed the residuals homogeneity test and have been excluded from the multi SAR"), call. = FALSE)
@@ -327,6 +356,18 @@ sar_multi <- function(data = galap,
   
   #if (verb) cat_line(rule(left = cyan(symbol$bullet)))
   if (verb) cat_line(rule())
+  
+  if (confInt){
+    cat("\n", "Calculating sar_multi confidence intervals - this may take some time", "\n","\n")
+    cis <- sar_conf_int(res, n = ciN, crit = crit, normaTest = normaTest,
+                        homoTest = homoTest,
+                        neg_check = neg_check,
+                        alpha_normtest = alpha_normtest,
+                        alpha_homotest = alpha_homotest)
+    res$details$confInt = cis
+  } else {
+    res$details$confInt = NA
+  }
   
   invisible(res)
   

@@ -15,8 +15,13 @@
 #' fit <- sar_power(data = galap)
 #' conf_fit <- sar_conf_int(fit)
 
+#note: with many SAR models in the multi fit, it can take a long time
+#models are removed from confint (but not sar_multi) if NAs are produced in Jacobian or in the transResiduals
+
 #' @export
 
+#fit <- sar_multi(galap)
+#s <- sar_conf_int(fit, n = 100)
 
 #n = number of iterations
 
@@ -71,12 +76,29 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   meF <- me$calculated
   meR <- me$residuals
   
+  if (nams[i] == "Linear_model"){
+  #based on code from mmSAR in Rforge
+   jacob <- numDeriv::jacobian(me$model$rss.fun, me$par, data = me$data[1, ], model = me$model,  opt = FALSE)
   
+   for (k in 2:nrow(dat)) {
+     jacob <- rbind(jacob, numDeriv::jacobian(me$model$rss.fun, me$par, data = me$data[k, ],model = me$model, opt = FALSE)) 
+  }
+  } else {
   #based on code from mmSAR in Rforge
   jacob <- numDeriv::jacobian(me$model$rss.fun, me$par, data = me$data[1, ], opt = FALSE)
   
   for (k in 2:nrow(dat)) {
     jacob <- rbind(jacob, numDeriv::jacobian(me$model$rss.fun, me$par, data = me$data[k, ], opt = FALSE)) 
+  }
+  }#eo if linear
+  
+  ##occasionally the jacobian function returns NA for certain models: need to remove these,
+  #so just fill all NAs for this model and it will be removed below
+  if (anyNA(jacob)){
+    calculated[i, ] <- NA
+    residuals[i, ] <- NA
+    transResiduals[i, ] <- NA
+    next
   }
   
   jacobbis <- t(jacob) %*% jacob
@@ -100,11 +122,24 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   rownames(calculated) <- rownames(residuals) <- rownames(transResiduals) <- nams
   
   
-  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  #some models have NANs in the transResiduals calculation; so remove them from all the matrices (and names vector)
-  ######!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #some models have NANs in the transResiduals calculation; so remove them from all the matrices (and names vectors)
+ if (anyNA(transResiduals)){
+   
+  wna <- which(apply(transResiduals, 1, anyNA))
+  warning(paste("The following model(s) has been removed from the confidence interval calculations as NAs are 
+                present in the transformed residuals:", names(wna)))
+  calculated <- calculated[-wna, ]
+  residuals <- residuals[-wna, ]
+  transResiduals <- transResiduals[-wna, ]
+  wei <- wei[-wna]
+  nams <- nams[-wna]
+  nams_short <- nams_short[-wna]
+  if (identical(!nrow(calculated), nrow(residuals), 
+                nrow(transResiduals), length(wei), length(nams), length(nams_short))) stop ("Problem with removed models 
+                                                                                            following transResiduals checks")
+ }
 
-  
+  #run the boostrapping (based on code in mmSAR)
   
   z <- 1
   nBoot <- n
@@ -227,9 +262,9 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   
   #sort and return the CIs
   bootSort <- apply(bootHat, 2, sort)
-  alp <- 0.05
-  c1 <- ceiling((n + 1) * alp) ##THIS IS GIVING 10% NOT 5%
-  c2 <- floor((n + 1) * (1-alp))
+  alp <- 0.025
+  c1 <- ceiling(n  * alp) #maybe a better way
+  c2 <- floor(n  * (1-alp))
   CI <- data.frame("L" = bootSort[c1, ], "U" = bootSort[c2, ])
   return(CI)
 }
