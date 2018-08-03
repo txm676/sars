@@ -268,22 +268,25 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 #' @param subset_weights Only create a barplot of the model weights for models
 #'   with a weight value above a given threshold (\code{subset_weights}). Only
 #'   for use with \code{type = bar}.
+#' @param confInt A logical argument specifying whether confidence intervals
+#'   should be plotted around the multimodel curve. Can only be used if
+#'   confidence intervals have been generated in the \code{sar_multi} function.
 #' @param \dots Further graphical parameters (see \code{\link[graphics]{par}},
 #'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
-#' @import graphics 
+#' @import graphics
 #' @note When plotting all model fits on the same plot with a legend it is
 #'   necessary to manually extend your plotting window (height and width; e.g.
 #'   the 'Plots' window of R studio) before plotting to ensure the legend fits
 #'   in the plot. Extending the plotting window after plotting simply stretches
 #'   the legend.
-#'   
-#'   Occasionally a model fit will converge and pass the model fitting
-#'   checks (e.g. residual normality) but the resulting fit is nonsensical (e.g.
-#'   a horizontal line with intercept at zero). Thus, it can be useful to plot
-#'   the resultant 'multi' object to check the individual model fits. To re-run
-#'   the \code{sar_multi} function without a particular model, simply remove it
-#'   from the \code{obj} argument.
+#'
+#'   Occasionally a model fit will converge and pass the model fitting checks
+#'   (e.g. residual normality) but the resulting fit is nonsensical (e.g. a
+#'   horizontal line with intercept at zero). Thus, it can be useful to plot the
+#'   resultant 'multi' object to check the individual model fits. To re-run the
+#'   \code{sar_multi} function without a particular model, simply remove it from
+#'   the \code{obj} argument.
 #'   
 #'   For visual interpretation of the model weights barplot it is necessary to
 #'   abbreviate the model names when plotting the weights of several models. To
@@ -380,7 +383,7 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   for (i in seq_along(aw)) {mf3[ ,i] <- mf2[ ,i] * aw[i]}
   wfv <- rowSums(mf3)
   
-  #this is a test error for development: remove the mmi fitted code from this function before release
+  #this is a test error for development
   if (!all(round(wfv) == round(x$mmi))) stop("Multimodel fitted values do not match between functions")
 
   if (allCurves){
@@ -472,9 +475,6 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
              cex = cex)
       title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main)
       lines(x = xx, y = wfv, lwd = lwd, col = lcol)
-      
-     # lines(x = xx, y = CI$L, lwd = lwd, col = "black")
-     # lines(x = xx, y = CI$U, lwd = lwd, col = "black")
     } else {
       plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
       cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
@@ -486,9 +486,6 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   
   if (type == "bar"){  
   ##barplot of IC weights
-    
-  #often many have very low weight (near 0), so filter out main ones. 
-  #aw2 <- 
     
   if (!is.null(subset_weights)) aw <- aw[aw > subset_weights]
   

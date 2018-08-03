@@ -4,10 +4,12 @@
 \alias{summary.sars}
 \title{Summarising the results of the model fitting functions}
 \usage{
-\method{summary}{sars}(object)
+\method{summary}{sars}(object, ...)
 }
 \arguments{
 \item{object}{An object of class 'sars'.}
+
+\item{\dots}{Further arguments.}
 }
 \value{
 The \code{summary.sars} function returns an object of class
@@ -56,6 +58,6 @@ mf <- sar_multi(galap)
 summary(mf)
 summary(mf)$Model_table
 #Get a summary of the fit of the linear power model
-fit <- lin_pow(galap, con = 1, compare = T)
+fit <- lin_pow(galap, con = 1, compare = TRUE)
 summary(fit)
 }

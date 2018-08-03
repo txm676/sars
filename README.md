@@ -1,4 +1,3 @@
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 The **'sars'** R Package <img src="man/figures/sars_logo.png" align="right" width="10%"/>
 =========================================================================================
@@ -8,6 +7,8 @@ The **'sars'** R Package <img src="man/figures/sars_logo.png" align="right" widt
 > *fit and compare **Species-Area Relationship (SAR)** models using multi-model inference*
 
 **sars** provides functionality to fit twenty SAR model using non-linear regression, and to calculate multi-model averaged curves using various information criteria. The software also provides easy to use functionality to plot multi-model SAR curves and to generate confidence intervals using bootstrapping.
+
+As this is version 1.0.0 of the package, it is possible that there are some bugs in places. Please report any issues to us via GitHub.
 
 Table of Contents
 -----------------
@@ -47,28 +48,29 @@ fit_pow <- sar_power(data = galap)
 Attempting to fit all 20 sar models to the 'galapagos' (Preston 1962) data set and get a multi-model SAR:
 
 ``` r
-mm_galap <- multi_sars(data = galap)
-#> ● multi_sars: multi-model SAR
-#> ● opt. | sig. : model
-#> → ✔ | ✔ : sar_power
-#> → ✔ | ✔ : sar_powerR
-#> → ✔ | ✔ : sar_epm1
-#> → ✔ | ✔ : sar_epm2
-#> → ✔ | ✔ : sar_p1
-#> → ✔ | ✔ : sar_p2
-#> → ✔ | ✔ : sar_expo
-#> → ✔ | ✔ : sar_koba
-#> → ✔ | ✔ : sar_mmf
-#> → ✔ | ✔ : sar_monod
-#> → ✔ | ✔ : sar_negexpo
-#> → ✔ | ✖ : sar_chapman
-#> → ✔ | ✔ : sar_weibull3
-#> → ✔ | ✔ : sar_asymp
-#> → ✔ | ✔ : sar_ratio
-#> → ✔ | ✔ : sar_gompertz
-#> → ✔ | ✔ : sar_weibull4
-#> → ✔ | ✖ : sar_betap
-#> → ✔ | ✔ : sar_heleg
+mm_galap <- sar_multi(data = galap)
+#> --  multi_sars ---------------------------------------------------------------------- multi-model SAR --
+#> > power    : v
+#> > powerR   : v
+#> > epm1     : v
+#> > epm2     : v
+#> > p1       : v
+#> > p2       : v
+#> > expo     : v
+#> > koba     : v
+#> > mmf      : v
+#> > monod    : v
+#> > negexpo  : v
+#> > chapman  : Warning: could not compute parameters statistics
+#> > weibull3 : v
+#> > asymp    : v
+#> > ratio    : v
+#> > gompertz : v
+#> > weibull4 : v
+#> > betap    : Warning: could not compute parameters statistics
+#> > heleg    : v
+#> > linear   : v
+#> --------------------------------------------------------------------------------------------------------
 ```
 
 Most of 'fitted' objects have corresponding plot methods:

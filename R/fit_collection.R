@@ -2,8 +2,9 @@
 
 #' @description Creates a fit collection of SAR model fits, which can then be
 #'   plotted using \code{\link{plot.sars}}.
-#' @usage fit_collection(...)
+#' @usage fit_collection(..., fits = list(...))
 #' @param ... A set of one or more SAR model fits (all of class 'sars').
+#' @param fits Internal argument that creates a list of the model fits.
 #' @return A list of class 'sars' with n elements, corresponding to the
 #'   n individual SAR model fits.
 #' @examples

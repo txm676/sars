@@ -4,13 +4,13 @@
 \alias{sar_multi}
 \title{Fit a multimodel SAR curve}
 \usage{
-sar_multi <- function(data = galap, obj = c("power",
+sar_multi(data, obj = c("power",
   "powerR","epm1","epm2","p1","p2","expo","koba",
   "mmf","monod","negexpo","chapman","weibull3","asymp",
-  "ratio","gompertz","weibull4","betap","heleg", "linear"), keep_details =
-  TRUE, crit = "Info", normaTest = "lillie", homoTest = "cor.fitted",
-  neg_check = TRUE, alpha_normtest = 0.05, alpha_homotest = 0.05, verb =
-  TRUE)
+  "ratio","gompertz","weibull4","betap","heleg", "linear"), crit = "Info",
+  normaTest = "lillie", homoTest = "cor.fitted", neg_check = TRUE,
+  alpha_normtest = 0.05, alpha_homotest = 0.05, confInt = FALSE, ciN = 100,
+  verb = TRUE)
 }
 \arguments{
 \item{data}{A dataset in the form of a dataframe with two columns: the first
@@ -18,8 +18,6 @@ with island/site areas, and the second with the species richness of each
 island/site.}
 
 \item{obj}{Either a vector of model names or a fit_collection object.}
-
-\item{keep_details}{???}
 
 \item{crit}{The criterion used to compare models and compute the model
 weights. The default \code{crit = "Info"} switches to AIC or AICc depending
@@ -49,56 +47,69 @@ the test).}
 (default = 0.05, i.e. any test with a P value < 0.05 is flagged as failing
 the test).}
 
-\item{verb}{verbose (default = TRUE)}
+\item{confInt}{A logical argument specifying whether confidence intervals
+should be calculated for the multimodel curve using boostrapping.}
+
+\item{ciN}{The number of boostrap samples to be drawn to calculate the
+confidence intervals (if \code{confInt == TRUE}).}
+
+\item{verb}{verbose (default: \code{verb == TRUE}).}
 }
 \value{
 A list of class "multi" and class "sars" with two elements. The first
-  element ('mmi') contains the fitted values of the multimodel sar curve.
-  The second element ('details') is a list with the following components: 
-  \itemize{
-    \item{mod_names} { Names of the models that were successfully fitted and passed any model check}
-    \item{fits} { A fit_collection object containing the successful model fits}
-    \item{ic} { The information criterion selected}
-    \item{norm_test} { The residual normality test selected}
-    \item{homo_test} { The residual homogeneity test selected}
-    \item{alpha_norm_test} { The alpha value used in the residual normality test}
-    \item{alpha_homo_test} { The alpha value used in the residual homogeneity test}
-    \item{ics} { The information criterion values (e.g. AIC values) of the model fits}
-    \item{delta_ics} { The delta information criterion values}
-    \item{weights_ics} { The information criterion weights of each model fit}
-    \item{n_points} {  Number of data points}
-    \item{n_mods} { The number of successfully fitted models}
-    \item{no_fit} { Names of the models which could not be fitted or did not pass model checks}
-    }
-    
+  element ('mmi') contains the fitted values of the multimodel sar curve. The
+  second element ('details') is a list with the following components:
+  \itemize{ \item{mod_names} { Names of the models that were successfully
+  fitted and passed any model check} \item{fits} { A fit_collection object
+  containing the successful model fits} \item{ic} { The information criterion
+  selected} \item{norm_test} { The residual normality test selected}
+  \item{homo_test} { The residual homogeneity test selected}
+  \item{alpha_norm_test} { The alpha value used in the residual normality
+  test} \item{alpha_homo_test} { The alpha value used in the residual
+  homogeneity test} \item{ics} { The information criterion values (e.g. AIC
+  values) of the model fits} \item{delta_ics} { The delta information
+  criterion values} \item{weights_ics} { The information criterion weights of
+  each model fit} \item{n_points} {  Number of data points} \item{n_mods} {
+  The number of successfully fitted models} \item{no_fit} { Names of the
+  models which could not be fitted or did not pass model checks} }
+
   The \code{\link{summary.sars}} function returns a more useful summary of
   the model fit results, and the \code{\link{plot.multi}} plots the
   multimodel curve.
 }
 \description{
-Construct a multimodel species-area relationship
-curve using information criterion weights and up to twenty SAR models.
+Construct a multimodel species-area relationship curve using
+  information criterion weights and up to twenty SAR models.
 }
 \details{
 The multimodel SAR curve is constructed using information criterion
   weights (see Burnham & Anderson, 2002; Guilhaumon et al. 2010). If
   \code{obj} is a vector of n model names the function fits the n models to
-  the dataset provided. If any models cannot be fitted they are removed from the
-  multimodel SAR. If \code{obj} is a fit_collection object, any model fits in
-  the collection which are NA are removed. In addition, if any other model
-  checks have been selected (i.e. residual normality and heterogeneity tests,
-  and checks for negative predicted richness values), these are undertaken
-  and any model that fails the selected test(s) is removed from the
-  multimodel SAR. The order of the additional checks inside the function is:
-  normality of residuals, homogeneity of residuals, and a check for negative
-  fitted values. Once a model fails one test it is removed and thus is not
-  availabile for further tests. Thus, a model may fail multiple tests but the
-  returned warning will only provide information on a single test.
-  
+  the dataset provided. A dataset must have four or more datapoints to fit
+  the multimodel curve. If any models cannot be fitted they are removed from
+  the multimodel SAR. If \code{obj} is a fit_collection object, any model
+  fits in the collection which are NA are removed. In addition, if any other
+  model checks have been selected (i.e. residual normality and heterogeneity
+  tests, and checks for negative predicted richness values), these are
+  undertaken and any model that fails the selected test(s) is removed from
+  the multimodel SAR. The order of the additional checks inside the function
+  is: normality of residuals, homogeneity of residuals, and a check for
+  negative fitted values. Once a model fails one test it is removed and thus
+  is not availabile for further tests. Thus, a model may fail multiple tests
+  but the returned warning will only provide information on a single test.
+
   The resultant models are then used to construct the multimodel SAR curve.
   For each model in turn, the model fitted values are multiplied by the
   information criterion weight of that model, and the resultant values are
-  summed across all models (Burnham & Anderson, 2002).
+  summed across all models (Burnham & Anderson, 2002). Confidence intervals
+  can be calculated (using \code{confInt}) around the multimodel averaged
+  curve using the bootstrap procedure outlined in Guilhaumon et al (2010).The
+  procedure transforms the residuals from the individual model fits and
+  occasionally NAs / Inf values can be produced - in these cases, the model
+  is removed from the confidence interval calculation (but not the multimodel
+  curve itself). When several SAR models are used and the number of boostraps
+  (\code{ciN}) is large, generating the confidence intervals can take a long
+  time.
 }
 \note{
 Occasionally a model fit will converge and pass the model fitting
@@ -107,6 +118,10 @@ Occasionally a model fit will converge and pass the model fitting
   the resultant 'multi' object to check the individual model fits. To re-run
   the \code{sar_multi} function without a particular model, simply remove it
   from the \code{obj} argument.
+
+  The generation of confidence intervals around the multimodel curve (using
+  \code{confInt == TRUE}), may throw up errors that we have yet to come
+  across. Please report any issues to the package maintainer.
 }
 \examples{
 data(galap)

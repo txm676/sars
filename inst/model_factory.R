@@ -111,7 +111,7 @@ model_factory <- function(f, overwrite = FALSE){
   cat1("\n")
   
   #function definition
-  cat1(paste0(funName,' <- function(data = galap, start = NULL, grid_start = NULL, normaTest =  "lillie",
+  cat1(paste0(funName,' <- function(data, start = NULL, grid_start = NULL, normaTest =  "lillie",
               homoTest = "cor.fitted"){',"\n"))
   
   #checks

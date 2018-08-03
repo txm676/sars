@@ -1,4 +1,6 @@
 
+#' @import numDeriv
+#' @import utils
 
 sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
                          homoTest = "cor.fitted",
@@ -23,7 +25,6 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   
   x3 <-   c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman",
             "weibull3","asymp","ratio","gompertz","weibull4","betap","heleg", "linear")
-  
   
   
   #observed data
@@ -60,10 +61,10 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   }
   } else {
   #based on code from mmSAR in Rforge
-  jacob <- numDeriv::jacobian(me$model$rss.fun, me$par, data = me$data[1, ], opt = FALSE)
+  jacob <- jacobian(me$model$rss.fun, me$par, data = me$data[1, ], opt = FALSE)
   
   for (k in 2:nrow(dat)) {
-    jacob <- rbind(jacob, numDeriv::jacobian(me$model$rss.fun, me$par, data = me$data[k, ], opt = FALSE)) 
+    jacob <- rbind(jacob, jacobian(me$model$rss.fun, me$par, data = me$data[k, ], opt = FALSE)) 
   }
   }#eo if linear
   
@@ -135,10 +136,10 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   pointsNames <- paste("S",c(1:nrow(dat)))
   
   #Matrix of boot Samples
-  bootMatrix=matrix(0, nBoot, nrow(dat))
+  bootMatrix <- matrix(0, nBoot, nrow(dat))
   
   #list of optimisation results
-  optimBootResult = vector("list", length = nBoot)
+  optimBootResult <- vector("list", length = nBoot)
   
   #choosing an IC criterion (AIC or AICc or BIC): same code as within sar_multi as needs to be identical
   IC <- switch(crit,
@@ -151,7 +152,7 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   
   
   #test variable
-  nGoodBoot = 1
+  nGoodBoot <- 1
   
   filtModelList <- nams
   
@@ -164,23 +165,21 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
     while (test != 0 ) {
       
       for (l in 1:nrow(dat)) {
-        positives = transResiduals[chousModel,][transResiduals[chousModel,] > 0]
-        negatives = transResiduals[chousModel,][transResiduals[chousModel,] < 0]
-        
-        vtci = negatives[abs(negatives) <= calculated[chousModel,l] ]
-        vtci = c(vtci,positives)
-        value = sample(vtci,1)
-        
-        bootMatrix[nGoodBoot,l] <- calculated[chousModel,l] + value
+        positives <- transResiduals[chousModel, ][transResiduals[chousModel, ] > 0]
+        negatives <- transResiduals[chousModel, ][transResiduals[chousModel, ] < 0]
+        vtci <- negatives[abs(negatives) <= calculated[chousModel, l] ]
+        vtci <- c(vtci, positives)
+        value <- sample(vtci, 1)
+        bootMatrix[nGoodBoot, l] <- calculated[chousModel, l] + value
       }#end of for
       
       #test if one species richness is negative
-      test = length( which(bootMatrix[nGoodBoot,]<0) )
+      test <- length( which(bootMatrix[nGoodBoot, ] < 0) )
       
     }#end of while
 
     #fit multiSAR
-    badBoot=FALSE
+    badBoot <- FALSE
   
     df <- data.frame("A" = dat$A, "S" = bootMatrix[nGoodBoot, ])
     optimres <- tryCatch(suppressWarnings(sar_multi(df, obj = nams_short, verb = FALSE)), error = function(e) NA)
@@ -200,6 +199,7 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
       optimBootResult[[nGoodBoot]] <- matrix(nrow = length(optimres$details$fits), ncol = 3)
       rownames( optimBootResult[[nGoodBoot]]) <- as.vector(optimres$details$mod_names)
       colnames(optimBootResult[[nGoodBoot]]) <- c(paste(IC), "Delta", "Weights")
+      
       for (k in 1:length(optimres$details$mod_names)){
       bootCalculated[[nGoodBoot]][k, ] <- optimres$details$fits[[k]]$calculated
       optimBootResult[[nGoodBoot]][k, 1] <- as.vector(unlist(optimres$details$fits[[k]][IC]))

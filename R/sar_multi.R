@@ -1,19 +1,18 @@
 #' Fit a multimodel SAR curve
 #'
-#' @description Construct a multimodel species-area relationship
-#' curve using information criterion weights and up to twenty SAR models. 
-#' @usage sar_multi <- function(data = galap, obj = c("power",
+#' @description Construct a multimodel species-area relationship curve using
+#'   information criterion weights and up to twenty SAR models.
+#' @usage sar_multi(data, obj = c("power",
 #'   "powerR","epm1","epm2","p1","p2","expo","koba",
 #'   "mmf","monod","negexpo","chapman","weibull3","asymp",
-#'   "ratio","gompertz","weibull4","betap","heleg", "linear"), keep_details =
-#'   TRUE, crit = "Info", normaTest = "lillie", homoTest = "cor.fitted",
-#'   neg_check = TRUE, alpha_normtest = 0.05, alpha_homotest = 0.05, verb =
-#'   TRUE)
+#'   "ratio","gompertz","weibull4","betap","heleg", "linear"), crit = "Info",
+#'   normaTest = "lillie", homoTest = "cor.fitted", neg_check = TRUE,
+#'   alpha_normtest = 0.05, alpha_homotest = 0.05, confInt = FALSE, ciN = 100,
+#'   verb = TRUE)
 #' @param data A dataset in the form of a dataframe with two columns: the first
 #'   with island/site areas, and the second with the species richness of each
 #'   island/site.
 #' @param obj Either a vector of model names or a fit_collection object.
-#' @param keep_details ???
 #' @param crit The criterion used to compare models and compute the model
 #'   weights. The default \code{crit = "Info"} switches to AIC or AICc depending
 #'   on the number of data points in the dataset. For BIC, use \code{crit =
@@ -36,46 +35,57 @@
 #' @param alpha_homotest The alpha value used in the residual homogeneity test
 #'   (default = 0.05, i.e. any test with a P value < 0.05 is flagged as failing
 #'   the test).
-#' @param verb verbose (default = TRUE)
+#' @param confInt A logical argument specifying whether confidence intervals
+#'   should be calculated for the multimodel curve using boostrapping.
+#' @param ciN The number of boostrap samples to be drawn to calculate the
+#'   confidence intervals (if \code{confInt == TRUE}).
+#' @param verb verbose (default: \code{verb == TRUE}).
 #' @details The multimodel SAR curve is constructed using information criterion
 #'   weights (see Burnham & Anderson, 2002; Guilhaumon et al. 2010). If
 #'   \code{obj} is a vector of n model names the function fits the n models to
-#'   the dataset provided. If any models cannot be fitted they are removed from the
-#'   multimodel SAR. If \code{obj} is a fit_collection object, any model fits in
-#'   the collection which are NA are removed. In addition, if any other model
-#'   checks have been selected (i.e. residual normality and heterogeneity tests,
-#'   and checks for negative predicted richness values), these are undertaken
-#'   and any model that fails the selected test(s) is removed from the
-#'   multimodel SAR. The order of the additional checks inside the function is:
-#'   normality of residuals, homogeneity of residuals, and a check for negative
-#'   fitted values. Once a model fails one test it is removed and thus is not
-#'   availabile for further tests. Thus, a model may fail multiple tests but the
-#'   returned warning will only provide information on a single test.
-#'   
+#'   the dataset provided. A dataset must have four or more datapoints to fit
+#'   the multimodel curve. If any models cannot be fitted they are removed from
+#'   the multimodel SAR. If \code{obj} is a fit_collection object, any model
+#'   fits in the collection which are NA are removed. In addition, if any other
+#'   model checks have been selected (i.e. residual normality and heterogeneity
+#'   tests, and checks for negative predicted richness values), these are
+#'   undertaken and any model that fails the selected test(s) is removed from
+#'   the multimodel SAR. The order of the additional checks inside the function
+#'   is: normality of residuals, homogeneity of residuals, and a check for
+#'   negative fitted values. Once a model fails one test it is removed and thus
+#'   is not availabile for further tests. Thus, a model may fail multiple tests
+#'   but the returned warning will only provide information on a single test.
+#'
 #'   The resultant models are then used to construct the multimodel SAR curve.
 #'   For each model in turn, the model fitted values are multiplied by the
 #'   information criterion weight of that model, and the resultant values are
-#'   summed across all models (Burnham & Anderson, 2002).
-#' 
+#'   summed across all models (Burnham & Anderson, 2002). Confidence intervals
+#'   can be calculated (using \code{confInt}) around the multimodel averaged
+#'   curve using the bootstrap procedure outlined in Guilhaumon et al (2010).The
+#'   procedure transforms the residuals from the individual model fits and
+#'   occasionally NAs / Inf values can be produced - in these cases, the model
+#'   is removed from the confidence interval calculation (but not the multimodel
+#'   curve itself). When several SAR models are used and the number of boostraps
+#'   (\code{ciN}) is large, generating the confidence intervals can take a long
+#'   time.
+#'
 #' @return A list of class "multi" and class "sars" with two elements. The first
-#'   element ('mmi') contains the fitted values of the multimodel sar curve.
-#'   The second element ('details') is a list with the following components: 
-#'   \itemize{
-#'     \item{mod_names} { Names of the models that were successfully fitted and passed any model check}
-#'     \item{fits} { A fit_collection object containing the successful model fits}
-#'     \item{ic} { The information criterion selected}
-#'     \item{norm_test} { The residual normality test selected}
-#'     \item{homo_test} { The residual homogeneity test selected}
-#'     \item{alpha_norm_test} { The alpha value used in the residual normality test}
-#'     \item{alpha_homo_test} { The alpha value used in the residual homogeneity test}
-#'     \item{ics} { The information criterion values (e.g. AIC values) of the model fits}
-#'     \item{delta_ics} { The delta information criterion values}
-#'     \item{weights_ics} { The information criterion weights of each model fit}
-#'     \item{n_points} {  Number of data points}
-#'     \item{n_mods} { The number of successfully fitted models}
-#'     \item{no_fit} { Names of the models which could not be fitted or did not pass model checks}
-#'     }
-#'     
+#'   element ('mmi') contains the fitted values of the multimodel sar curve. The
+#'   second element ('details') is a list with the following components:
+#'   \itemize{ \item{mod_names} { Names of the models that were successfully
+#'   fitted and passed any model check} \item{fits} { A fit_collection object
+#'   containing the successful model fits} \item{ic} { The information criterion
+#'   selected} \item{norm_test} { The residual normality test selected}
+#'   \item{homo_test} { The residual homogeneity test selected}
+#'   \item{alpha_norm_test} { The alpha value used in the residual normality
+#'   test} \item{alpha_homo_test} { The alpha value used in the residual
+#'   homogeneity test} \item{ics} { The information criterion values (e.g. AIC
+#'   values) of the model fits} \item{delta_ics} { The delta information
+#'   criterion values} \item{weights_ics} { The information criterion weights of
+#'   each model fit} \item{n_points} {  Number of data points} \item{n_mods} {
+#'   The number of successfully fitted models} \item{no_fit} { Names of the
+#'   models which could not be fitted or did not pass model checks} }
+#'
 #'   The \code{\link{summary.sars}} function returns a more useful summary of
 #'   the model fit results, and the \code{\link{plot.multi}} plots the
 #'   multimodel curve.
@@ -85,6 +95,11 @@
 #'   the resultant 'multi' object to check the individual model fits. To re-run
 #'   the \code{sar_multi} function without a particular model, simply remove it
 #'   from the \code{obj} argument.
+#'
+#'   The generation of confidence intervals around the multimodel curve (using
+#'   \code{confInt == TRUE}), may throw up errors that we have yet to come
+#'   across. Please report any issues to the package maintainer.
+#'
 #' @references Burnham, K. P., & Anderson, D. R. (2002). Model selection and
 #'   multi-model inference: a practical information-theoretic approach (2nd
 #'   ed.). New-York: Springer.
@@ -115,32 +130,17 @@
 #' @export
 
 
-#sometimes bad models produce calculated values with all same richness values and no correlation
-#can be done. Remove these
-
-#needs at least four data points
-
-#the confInt may have bugs, please report any to the maintainer
-
-
-##note: with many SAR models in the multi fit, it can take a long time
-#models are removed from confint (but not sar_multi) if NAs are produced in Jacobian or in the transResiduals
-
-
-
-
-sar_multi <- function(data = galap,
+sar_multi <- function(data,
                        obj = c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg", "linear"),
-                       keep_details = TRUE,
                        crit = "Info",
                        normaTest = "lillie",
                        homoTest = "cor.fitted",
                        neg_check = TRUE,
                        alpha_normtest = 0.05,
                        alpha_homotest = 0.05,
-                       verb = TRUE,
                        confInt = FALSE, 
-                       ciN = 100){
+                       ciN = 100,
+                       verb = TRUE){
   
   if (!((is.character(obj))  || (class(obj) == "sars")) ) stop("obj must be of class character or sars")
   
@@ -162,7 +162,10 @@ sar_multi <- function(data = galap,
   if (homoTest == "none") alpha_homotest <- "none"
   
   #if (verb) cat_line(rule(left = paste0(cyan(symbol$bullet),bold(" multi_sars")),right="multi-model SAR"))
-  if (verb && is.character(obj)) cat_line(rule(left = bold(" multi_sars"),right="multi-model SAR"))
+  if (verb && is.character(obj)) {
+    cat("\n", paste("Now attempting to fit the", length(obj), "SAR models:"), "\n", "\n")
+    cat_line(rule(left = bold(" multi_sars"),right="multi-model SAR"))
+  }
   #if (verb) cat_line(magenta(symbol$arrow_right)," Data set is: ")
   #if (verb) cat_line(rule(left = paste0(magenta(symbol$bullet))))
   #if (verb) bullet("O | S : model", bullet = blue_arrow())
@@ -194,7 +197,6 @@ sar_multi <- function(data = galap,
       
     }))#eo suppressWarnings(lapply)
   
-    
     #remove models with no parameter estimates
   #  sigC <- vapply(fits, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
     #if(all(sigC)) stop("No model could be fitted, aborting multi_sars\n")
@@ -209,9 +211,6 @@ sar_multi <- function(data = galap,
       #}
       #fits <- fits[!sigC]
    #}
-  
- 
-    
   }else{
     if (attributes(obj)$type == "fit_collection"){
       fits <- obj
@@ -236,9 +235,17 @@ sar_multi <- function(data = galap,
   
   if(any(is.na(f_nas))){
     badNames <- is.na(f_nas)
-    warning(paste(length(which(is.na(f_nas))), "models could not be fitted and have been excluded from the multi SAR"), call. = FALSE)
+    message("\n", paste(length(which(is.na(f_nas))), "models could not be fitted and have been excluded from the multi SAR"), "\n")
     badMods <- obj[badNames] #extract the bad model names from the obj vector (not from fits, as no model name if NA)
     fits <- fits[!is.na(f_nas)]
+  }
+  
+  if (normaTest != "none" || homoTest != "none" || neg_check){
+    if (is.character(obj)){
+       cat("\n", "Model fitting completed. Now undertaking model validation checks.", "\n", "Additional models will be excluded if necessary:", "\n")
+    } else {
+      cat("\n", "Now undertaking model validation checks. Additional models will" , "\n", "be excluded if necessary:", "\n")
+    }
   }
   
   #if checks for normality and / or homoscedasticity enabled, then check and remove bad fits from fits
@@ -248,7 +255,7 @@ sar_multi <- function(data = galap,
     #sometimes bad models produce calculated values with all same richness values and no correlation
     #can be done. Remove these
     if (anyNA(np)){
-      warning(paste(length(which(is.na(np))),"models returned NAs in the residuals normality test and have been excluded from the multi SAR"), call. = FALSE)
+      message("\n", paste(length(which(is.na(np))),"models returned NAs in the residuals normality test and have been excluded from the multi SAR"), "\n")
       wnn <- is.na(np)
       mn <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
       badMods <- c(badMods, mn[wnn])#select the model names with NAs
@@ -257,8 +264,7 @@ sar_multi <- function(data = galap,
     }
     whp <- np < alpha_normtest
     if (any(whp)) {
-      warning(paste(length(which(np < alpha_normtest)), "models failed the residuals normality test and
-              have been excluded from the multi SAR"), call. = FALSE)
+      message("\n", paste(length(which(np < alpha_normtest)), "models failed the residuals normality test and have been excluded from the multi SAR"), "\n")
       #get model names
       mn <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
       badMods <- c(badMods, mn[whp])#select the model names for models with p < 0.05
@@ -271,7 +277,7 @@ sar_multi <- function(data = galap,
     #sometimes bad models produce calculated values with all same richness values and no correlation
     #can be done. Remove these
     if (anyNA(hp)){
-      warning(paste(length(which(is.na(hp))),"returned NAs in the residuals homogeneity test and have been excluded from the multi SAR"), call. = FALSE)
+      message("\n", paste(length(which(is.na(hp))),"returned NAs in the residuals homogeneity test and have been excluded from the multi SAR"), "\n")
       whn <- is.na(hp)
       mn <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
       badMods <- c(badMods, mn[whn])#select the model names with NAs
@@ -280,7 +286,7 @@ sar_multi <- function(data = galap,
     }
     whh <- hp < alpha_homotest
     if (any(whh)) {
-      warning(paste(length(which(hp < alpha_homotest)),"models failed the residuals homogeneity test and have been excluded from the multi SAR"), call. = FALSE)
+      message("\n", paste(length(which(hp < alpha_homotest)),"models failed the residuals homogeneity test and have been excluded from the multi SAR"), "\n")
       mn <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
       badMods <- c(badMods, mn[whh])#select the model names for models with p < 0.05
       fits <- fits[!whh]
@@ -290,7 +296,7 @@ sar_multi <- function(data = galap,
   if (neg_check){
     nc <- vapply(fits, function(x) any(x$calculated < 0), FUN.VALUE = logical(1))
     if (any(nc)) {
-      warning(paste(length(which(nc)), "models have negative fitted values and have been excluded from the multi SAR"), call. = FALSE)
+      message("\n", paste(length(which(nc)), "models have negative fitted values and have been excluded from the multi SAR"), "\n")
       mn <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
       badMods <- c(badMods, mn[nc])#select the model names for models with p < 0.05
       fits <- fits[!nc]
@@ -299,8 +305,7 @@ sar_multi <- function(data = galap,
 
   if (length(badMods) == 0) badMods <- 0
   if (length(fits) < 2) stop("Fewer than two models could be fitted and / or passed the model checks")
-  
-  
+
   if (is.character(obj)) fits <- fit_collection(fits = fits)
   
 ####################################
@@ -310,8 +315,6 @@ sar_multi <- function(data = galap,
   nMods <- length(fits)
 
   modNames <- vapply(fits, FUN = function(x){x$model$name}, FUN.VALUE = character(1))
-  if(is.character(obj)){  keep_details <- TRUE }
-
   
   #choosing an IC criterion (AIC or AICc or BIC)
   IC <- switch(crit,
@@ -340,9 +343,7 @@ sar_multi <- function(data = galap,
   mmi <- apply(wm, 1 , sum)
 
   res <- mmi
-  
-  if(keep_details){
-    
+
     details <- list(
       mod_names = modNames,
       fits = fits,
@@ -360,9 +361,8 @@ sar_multi <- function(data = galap,
       no_fit = as.vector(badMods)
     )
     
-    res <- list(mmi = mmi, details = details)
-  }#eo if keep_details 
-  
+  res <- list(mmi = mmi, details = details)
+ 
   class(res) <- c("multi", "sars")
   attr(res, "type") <- "multi"
   
@@ -376,9 +376,9 @@ sar_multi <- function(data = galap,
                         neg_check = neg_check,
                         alpha_normtest = alpha_normtest,
                         alpha_homotest = alpha_homotest, verb = verb)
-    res$details$confInt = cis
+    res$details$confInt <- cis
   } else {
-    res$details$confInt = NA
+    res$details$confInt <- NA
   }
   
   invisible(res)

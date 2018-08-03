@@ -2,8 +2,8 @@
 #'
 #' @description Fit the log-log version of the power model to SAR data and
 #'   return parameter values, summary statistics and the fitted values.
-#' @usage lin_pow(dat, con = 1, compare = FALSE, normaTest =  "lillie", homoTest = "cor.fitted")
-#' @param dat A dataset in the form of a dataframe with two columns: the first
+#' @usage lin_pow(data, con = 1, compare = FALSE, normaTest =  "lillie", homoTest = "cor.fitted")
+#' @param data A dataset in the form of a dataframe with two columns: the first
 #'   with island/site areas, and the second with the species richness of each
 #'   island/site.
 #' @param con The constant to add to the species richness values in cases where
@@ -49,7 +49,7 @@
 #' @export
 
 
-lin_pow <- function(data, con = 1, compare = F, normaTest =  "lillie", homoTest = "cor.fitted") {
+lin_pow <- function(data, con = 1, compare = FALSE, normaTest =  "lillie", homoTest = "cor.fitted") {
 
   if (!(is.matrix(data) || is.data.frame(data))) stop("data must be a matrix or dataframe")
   if (is.matrix(data)) data <- as.data.frame(data)

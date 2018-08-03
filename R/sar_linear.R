@@ -54,7 +54,7 @@
 #' plot(fit)
 #' @export 
 
-sar_linear <- function(data = galap, normaTest =  "lillie", homoTest = "cor.fitted"){
+sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
   if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe') 
   if (is.matrix(data)) data <- as.data.frame(data) 
   if (anyNA(data)) stop('NAs present in data') 
@@ -114,9 +114,9 @@ sar_linear <- function(data = galap, normaTest =  "lillie", homoTest = "cor.fitt
   } else {
     homoTest = "none"
   }
+
   fit$normaTest <- normaTest
   fit$homoTest <- homoTest
-  
   #copying the non-linear models (for use in confint calculations)
   fit$model$exp <- expression(c + m*A)
   fit$model$mod.fun <- function(A = A, par = par, model = model) { eval(model$exp,list(A=A,c=par[1],m=par[2]))}

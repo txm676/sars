@@ -18,8 +18,10 @@ Imports:
     graphics,
     nortest,
     stats,
+    utils,
     crayon,
-    cli
+    cli,
+    numDeriv
 Depends: R(>= 3.0.0)
 Encoding: UTF-8
 LazyData: true

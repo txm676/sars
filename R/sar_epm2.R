@@ -66,7 +66,7 @@
 #' plot(fit)
 #' @export
 
-sar_epm2 <- function(data = galap, start = NULL, grid_start = NULL, normaTest =  "lillie",
+sar_epm2 <- function(data, start = NULL, grid_start = NULL, normaTest =  "lillie",
               homoTest = "cor.fitted"){
 if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe') 
 if (is.matrix(data)) data <- as.data.frame(data) 

@@ -25,6 +25,9 @@ knitr::opts_chunk$set(
 
 **sars** provides functionality to fit twenty SAR model using non-linear regression, and to calculate multi-model averaged curves using various information criteria. The software also provides easy to use functionality to plot multi-model SAR curves and to generate confidence intervals using bootstrapping.
 
+As this is version 1.0.0 of the package, it is possible that there are some bugs in places. Please report any
+issues to us via GitHub.
+
 ## Table of Contents
 
 - [Installation](#installation)
@@ -62,7 +65,7 @@ fit_pow <- sar_power(data = galap)
 
 Attempting to fit all 20 sar models to the 'galapagos' [@Preston1962] data set and get a multi-model SAR:
 ```{r warning = FALSE}
-mm_galap <- multi_sars(data = galap)
+mm_galap <- sar_multi(data = galap)
 ```
 
 Most of 'fitted' objects have corresponding plot methods:
