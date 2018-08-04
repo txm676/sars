@@ -3,3 +3,6 @@
 ^README\.Rmd$
 ^_pkgdown\.yml$
 ^docs$
+.travis.yml
+^cran-comments\.md$
+
