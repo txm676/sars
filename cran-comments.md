@@ -1,6 +1,6 @@
 
 ##This is a new submission
-*version 1.0.0 of gambin package
+*version 1.0.0 of sars package
 
 
 ##Test environments
