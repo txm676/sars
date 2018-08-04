@@ -23,7 +23,10 @@ knitr::opts_chunk$set(
 
 > *fit and compare **Species-Area Relationship (SAR)** models using multi-model inference*
 
-**sars** provides functionality to fit twenty SAR model using non-linear regression, and to calculate multi-model averaged curves using various information criteria. The software also provides easy to use functionality to plot multi-model SAR curves and to generate confidence intervals using bootstrapping.
+**sars** provides functionality to fit twenty SAR model using non-linear regression, and to calculate multi-model averaged curves using various information criteria. The software also provides easy to use functionality to plot multi-model SAR curves and to generate confidence intervals using bootstrapping. Additional SAR related functions
+include fitting the linear version of the power model and comparing parameters with the non-linear version, fitting
+the general dynamic model of island biogeography, and fitting the random placement model to a species abundance -
+site matrix.
 
 As this is version 1.0.0 of the package, it is possible that there are some bugs in places. Please report any
 issues to us via GitHub.
@@ -68,7 +71,7 @@ Attempting to fit all 20 sar models to the 'galapagos' [@Preston1962] data set a
 mm_galap <- sar_multi(data = galap)
 ```
 
-Most of 'fitted' objects have corresponding plot methods:
+Each of the 'fitted' objects have corresponding plot methods:
 
 to fit the exponential SAR model [@Gleason1922] to the 'galapagos' data set and plot it
 ```{r}
@@ -76,6 +79,19 @@ fit_expo <- sar_expo(data = galap)
 
 plot(fit_expo)
 ```
+
+to fit a multimodel SAR curve to the 'galapagos' data set and plot it
+```{r}
+mm_galap <- suppressMessages(sar_multi(data = galap, verb = FALSE))
+
+plot(mm_galap)
+```
+
+
+
+
+
+
 
 ## Troubleshoutting
 

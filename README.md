@@ -6,7 +6,7 @@ The **'sars'** R Package <img src="man/figures/sars_logo.png" align="right" widt
 
 > *fit and compare **Species-Area Relationship (SAR)** models using multi-model inference*
 
-**sars** provides functionality to fit twenty SAR model using non-linear regression, and to calculate multi-model averaged curves using various information criteria. The software also provides easy to use functionality to plot multi-model SAR curves and to generate confidence intervals using bootstrapping.
+**sars** provides functionality to fit twenty SAR model using non-linear regression, and to calculate multi-model averaged curves using various information criteria. The software also provides easy to use functionality to plot multi-model SAR curves and to generate confidence intervals using bootstrapping. Additional SAR related functions include fitting the linear version of the power model and comparing parameters with the non-linear version, fitting the general dynamic model of island biogeography, and fitting the random placement model to a species abundance - site matrix.
 
 As this is version 1.0.0 of the package, it is possible that there are some bugs in places. Please report any issues to us via GitHub.
 
@@ -49,7 +49,10 @@ Attempting to fit all 20 sar models to the 'galapagos' (Preston 1962) data set a
 
 ``` r
 mm_galap <- sar_multi(data = galap)
-#> --  multi_sars ---------------------------------------------------------------------- multi-model SAR --
+#> 
+#>  Now attempting to fit the 20 SAR models: 
+#>  
+#> --  multi_sars ------------------------------------------------------------------- multi-model SAR --
 #> > power    : v
 #> > powerR   : v
 #> > epm1     : v
@@ -67,13 +70,25 @@ mm_galap <- sar_multi(data = galap)
 #> > ratio    : v
 #> > gompertz : v
 #> > weibull4 : v
-#> > betap    : Warning: could not compute parameters statistics
+#> > betap    : v
 #> > heleg    : v
 #> > linear   : v
-#> --------------------------------------------------------------------------------------------------------
+#> 
+#>  Model fitting completed - all models succesfully fitted. Now undertaking model validation checks. 
+#>  Additional models will be excluded if necessary:
+#> 
+#> 4 models failed the residuals normality test and have been excluded from the multi SAR:
+#> Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model
+#> 
+#> 1 models have negative fitted values and have been excluded from the multi SAR:
+#> Exponential
+#> 
+#>  15 remaining models used to construct the multi SAR: 
+#>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
+#> -----------------------------------------------------------------------------------------------------
 ```
 
-Most of 'fitted' objects have corresponding plot methods:
+Each of the 'fitted' objects have corresponding plot methods:
 
 to fit the exponential SAR model (Gleason 1922) to the 'galapagos' data set and plot it
 
@@ -84,6 +99,16 @@ plot(fit_expo)
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+
+to fit a multimodel SAR curve to the 'galapagos' data set and plot it
+
+``` r
+mm_galap <- suppressMessages(sar_multi(data = galap, verb = FALSE))
+
+plot(mm_galap)
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
 Troubleshoutting
 ----------------

@@ -240,9 +240,15 @@ sar_multi <- function(data,
     fits <- fits[!is.na(f_nas)]
   }
   
-  if (normaTest != "none" || homoTest != "none" || neg_check){
+  bml <- length(badMods)
+  
+  if ((normaTest != "none" || homoTest != "none" || neg_check) && verb){
     if (is.character(obj)){
+      if (any(is.na(f_nas))){
        cat("\n", "Model fitting completed. Now undertaking model validation checks.", "\n", "Additional models will be excluded if necessary:", "\n")
+      } else {
+        cat("\n", "Model fitting completed - all models succesfully fitted. Now undertaking model validation checks.", "\n", "Additional models will be excluded if necessary:", "\n")
+      }
     } else {
       cat("\n", "Now undertaking model validation checks. Additional models will" , "\n", "be excluded if necessary:", "\n")
     }
@@ -255,19 +261,20 @@ sar_multi <- function(data,
     #sometimes bad models produce calculated values with all same richness values and no correlation
     #can be done. Remove these
     if (anyNA(np)){
-      message("\n", paste(length(which(is.na(np))),"models returned NAs in the residuals normality test and have been excluded from the multi SAR"), "\n")
       wnn <- is.na(np)
       mn <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
+      message("\n", paste(length(which(is.na(np))),"models returned NAs in the residuals normality test and have been excluded from the multi SAR:"), "\n",
+              paste(mn[wnn], collapse = ", "), "\n")
       badMods <- c(badMods, mn[wnn])#select the model names with NAs
       fits <- fits[!wnn]
       np <- np[!wnn]
     }
     whp <- np < alpha_normtest
     if (any(whp)) {
-      message("\n", paste(length(which(np < alpha_normtest)), "models failed the residuals normality test and have been excluded from the multi SAR"), "\n")
-      #get model names
-      mn <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
-      badMods <- c(badMods, mn[whp])#select the model names for models with p < 0.05
+      mn2 <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
+      message("\n", paste(length(which(np < alpha_normtest)), "models failed the residuals normality test and have been excluded from the multi SAR:"), "\n",
+              paste(mn2[whp], collapse = ", "), "\n")
+      badMods <- c(badMods, mn2[whp])#select the model names for models with p < 0.05
       fits <- fits[!whp]#then remove these models from the fit collection
     }
   }
@@ -277,18 +284,20 @@ sar_multi <- function(data,
     #sometimes bad models produce calculated values with all same richness values and no correlation
     #can be done. Remove these
     if (anyNA(hp)){
-      message("\n", paste(length(which(is.na(hp))),"returned NAs in the residuals homogeneity test and have been excluded from the multi SAR"), "\n")
       whn <- is.na(hp)
-      mn <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
-      badMods <- c(badMods, mn[whn])#select the model names with NAs
+      mn3 <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
+      message("\n", paste(length(which(is.na(hp))),"returned NAs in the residuals homogeneity test and have been excluded from the multi SAR:"), "\n",
+              paste(mn3[whn], collapse = ", "), "\n")
+      badMods <- c(badMods, mn3[whn])#select the model names with NAs
       fits <- fits[!whn]
       hp <- hp[!whn]
     }
     whh <- hp < alpha_homotest
     if (any(whh)) {
-      message("\n", paste(length(which(hp < alpha_homotest)),"models failed the residuals homogeneity test and have been excluded from the multi SAR"), "\n")
-      mn <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
-      badMods <- c(badMods, mn[whh])#select the model names for models with p < 0.05
+      mn4 <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
+      message("\n", paste(length(which(hp < alpha_homotest)),"models failed the residuals homogeneity test and have been excluded from the multi SAR:"), "\n",
+              paste(mn4[whh], collapse = ", "), "\n")
+      badMods <- c(badMods, mn4[whh])#select the model names for models with p < 0.05
       fits <- fits[!whh]
     }
   }
@@ -296,15 +305,23 @@ sar_multi <- function(data,
   if (neg_check){
     nc <- vapply(fits, function(x) any(x$calculated < 0), FUN.VALUE = logical(1))
     if (any(nc)) {
-      message("\n", paste(length(which(nc)), "models have negative fitted values and have been excluded from the multi SAR"), "\n")
-      mn <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
-      badMods <- c(badMods, mn[nc])#select the model names for models with p < 0.05
+      mn5 <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
+      message("\n", paste(length(which(nc)), "models have negative fitted values and have been excluded from the multi SAR:"), "\n",
+              paste(mn5[nc], collapse = ", "), "\n")
+      badMods <- c(badMods, mn5[nc])#select the model names for models with p < 0.05
       fits <- fits[!nc]
     }
   }
 
+  if (length(badMods) == bml && verb) cat("\n", "All models passed the model validation checks","\n","\n")
+  
   if (length(badMods) == 0) badMods <- 0
   if (length(fits) < 2) stop("Fewer than two models could be fitted and / or passed the model checks")
+  
+  
+  sf <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))
+  if (verb) cat(length(sf), "remaining models used to construct the multi SAR:", "\n",
+       paste(sf, collapse = ", "), "\n")
 
   if (is.character(obj)) fits <- fit_collection(fits = fits)
   
