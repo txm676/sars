@@ -2,7 +2,7 @@
 The **'sars'** R Package <img src="man/figures/sars_logo.png" align="right" width="10%"/>
 =========================================================================================
 
-[![Build Status](https://travis-ci.org/txm676/gambin.svg?branch=master)](https://travis-ci.org/txm676/gambin) [![Downloads](https://cranlogs.r-pkg.org/badges/gambin?color=brightgreen)](https://cran.r-project.org/package=gambin) [![CRAN](https://www.r-pkg.org/badges/version/gambin)](https://cran.r-project.org/package=gambin)
+[![Build Status](https://travis-ci.org/txm676/sars.svg?branch=master)](https://travis-ci.org/txm676/sars) [![Downloads](https://cranlogs.r-pkg.org/badges/sars?color=brightgreen)](https://cran.r-project.org/package=sars) [![CRAN](https://www.r-pkg.org/badges/version/sars)](https://cran.r-project.org/package=sars)
 
 > *fit and compare **Species-Area Relationship (SAR)** models using multi-model inference*
 
@@ -82,8 +82,7 @@ mm_galap <- sar_multi(data = galap)
 #> 
 #> 1 models have negative fitted values and have been excluded from the multi SAR:
 #> Exponential
-#> 
-#>  15 remaining models used to construct the multi SAR: 
+#> 15 remaining models used to construct the multi SAR: 
 #>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
 #> -----------------------------------------------------------------------------------------------------
 ```

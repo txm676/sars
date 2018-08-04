@@ -36,8 +36,8 @@
 #'   (default = 0.05, i.e. any test with a P value < 0.05 is flagged as failing
 #'   the test).
 #' @param confInt A logical argument specifying whether confidence intervals
-#'   should be calculated for the multimodel curve using boostrapping.
-#' @param ciN The number of boostrap samples to be drawn to calculate the
+#'   should be calculated for the multimodel curve using bootstrapping.
+#' @param ciN The number of bootstrap samples to be drawn to calculate the
 #'   confidence intervals (if \code{confInt == TRUE}).
 #' @param verb verbose (default: \code{verb == TRUE}).
 #' @details The multimodel SAR curve is constructed using information criterion
@@ -53,7 +53,7 @@
 #'   the multimodel SAR. The order of the additional checks inside the function
 #'   is: normality of residuals, homogeneity of residuals, and a check for
 #'   negative fitted values. Once a model fails one test it is removed and thus
-#'   is not availabile for further tests. Thus, a model may fail multiple tests
+#'   is not available for further tests. Thus, a model may fail multiple tests
 #'   but the returned warning will only provide information on a single test.
 #'
 #'   The resultant models are then used to construct the multimodel SAR curve.
@@ -65,7 +65,7 @@
 #'   procedure transforms the residuals from the individual model fits and
 #'   occasionally NAs / Inf values can be produced - in these cases, the model
 #'   is removed from the confidence interval calculation (but not the multimodel
-#'   curve itself). When several SAR models are used and the number of boostraps
+#'   curve itself). When several SAR models are used and the number of bootstraps
 #'   (\code{ciN}) is large, generating the confidence intervals can take a long
 #'   time.
 #'
@@ -105,7 +105,7 @@
 #'   ed.). New-York: Springer.
 #'
 #'   Guilhaumon, F., Mouillot, D., & Gimenez, O. (2010). mmSAR: an R-package for
-#'   multimodel species–area relationship inference. Ecography, 33, 420-424.
+#'   multimodel species-area relationship inference. Ecography, 33, 420-424.
 #' @import stats
 #' @import cli 
 #' @import crayon
