@@ -105,7 +105,7 @@ to fit a multimodel SAR curve to the 'galapagos' data set and plot it
 ``` r
 mm_galap <- suppressMessages(sar_multi(data = galap, verb = FALSE))
 
-plot(mm_galap)
+plot(mm_galap, pLeg = FALSE)
 ```
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
