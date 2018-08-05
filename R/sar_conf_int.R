@@ -182,7 +182,7 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
     badBoot <- FALSE
   
     df <- data.frame("A" = dat$A, "S" = bootMatrix[nGoodBoot, ])
-    optimres <- tryCatch(suppressWarnings(sar_multi(df, obj = nams_short, verb = FALSE)), error = function(e) NA)
+    optimres <- tryCatch(suppressMessages(sar_multi(df, obj = nams_short, verb = FALSE)), error = function(e) NA)
  
     if (length(optimres) == 1) {
       badBoot=TRUE

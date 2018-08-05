@@ -47,7 +47,7 @@ print.summary.sars <- function(x, ...){
     cat("\n", "Parameters: ", "\n", sep = "")
     mm <- object$Parameters
     #if singular gradient at parameter estimates there are no pars to print
-    if (is.na(mm)){
+    if (length(mm) == 1){
       cat("\n","singular gradient at parameter estimates: no parameters significance and conf. interval","\n")
     } else{
        rownames(mm) <- object$parNames
@@ -135,7 +135,7 @@ print.sars <- function(x, ...){
   if (attributes(object)$type == "fit_collection"){ 
     cat("\n", "This is a fit collection", "\n", sep = "")
     cat("\n", length(object), " models contained in the fit collection: ","\n", sep = "")
-    cat( "\n", unlist(lapply(object, function(x) x$model$name)), "\n", "\n")
+    cat( "\n", paste(unlist(lapply(object, function(x) x$model$name)), collapse = ", "), "\n", "\n")
   }
   
   if (attributes(object)$type == "multi"){ 
