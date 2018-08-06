@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 ```
 # The **'sars'** R Package <img src="man/figures/sars_logo.png" align="right" width="10%"/>
 
-[![Build Status](https://travis-ci.org/txm676/sars.svg?branch=master)](https://travis-ci.org/txm676/sars)
+[![Build Status](https://travis-ci.com/txm676/sars.svg?branch=master)](https://travis-ci.com/txm676/sars)
 [![Downloads](https://cranlogs.r-pkg.org/badges/sars?color=brightgreen)](https://cran.r-project.org/package=sars)
 [![CRAN](https://www.r-pkg.org/badges/version/sars)](https://cran.r-project.org/package=sars)
 
