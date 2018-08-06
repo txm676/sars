@@ -52,7 +52,7 @@ mm_galap <- sar_multi(data = galap)
 #> 
 #>  Now attempting to fit the 20 SAR models: 
 #>  
-#> --  multi_sars ------------------------------------------------------------------- multi-model SAR --
+#> --  multi_sars ---------------------------------------------------------------------------- multi-model SAR --
 #> > power    : v
 #> > powerR   : v
 #> > epm1     : v
@@ -84,7 +84,7 @@ mm_galap <- sar_multi(data = galap)
 #> Exponential
 #> 15 remaining models used to construct the multi SAR: 
 #>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-#> -----------------------------------------------------------------------------------------------------
+#> --------------------------------------------------------------------------------------------------------------
 ```
 
 Each of the 'fitted' objects have corresponding plot methods:
