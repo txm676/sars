@@ -497,7 +497,7 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   }
   
   barplot(aw, ylim=c(0, max(aw) + 0.05), cex.names= cex.names, ylab = ylab, cex.lab = cex.lab, 
-          names.arg = modNames)
+          cex.axis = cex.axis, names.arg = modNames)
   title(main = ModTitle, cex.main = cex.main, adj = TiAdj, line = TiLine)
   }
 
