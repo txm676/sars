@@ -485,7 +485,7 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   }
   
   if (type == "bar"){  
-  ##barplot of IC weights
+  ##barplot of IC weight
     
   if (!is.null(subset_weights)) aw <- aw[aw > subset_weights]
   
