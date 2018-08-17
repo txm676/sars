@@ -3,13 +3,27 @@
 ############################################################
 
 library(sars)
+library(foreach)
+library(doParallel)
+library(cluster)
+library(dplyr)
 
-dat <- ro()
+
+dat <- read.csv("D:\\documents\\Work\\On-going projects\\Dengler\\test.csv")
 colnames(dat) <- c("A", "S")
 
-pp <- sar_power(dat)
+#####################################
+###Second test dataset#############
+################################
 
-lin_pow(dat)
+dat <- ro()#test2
+un <- unique(dat$group)
+l2 <- lapply(un, function(x){
+  f <- dplyr::filter(dat, group == x)
+  f <- dplyr::select(f, c(A, S))
+  f
+})
+
 
 A = 5
 B = 3
@@ -43,12 +57,14 @@ nls(formula = S ~ 10 ^ (log10(c) +(log10(A) < log10(B)) * (z1 * log10(A)) +
 
 
 
+#normal breakpoint
+
+S ~ 10 ^ (log10(c) +(log10(A) < log10(B)) * (z1 * log10(A)) + 
+            (log10(A) >= log10(B)) * ((z1 * (log10(B) + z2)) * (log10(A) - log10(B))))
+
 #log version
-log_S =	log_c+(log_A<log_T)*(z1*log_A)+(log_A>=log_T)*(z1*log_T+z2*(log_A-log_T))
-
-LS = log10(c) + (log10(A) < log10(B)) + (z1 * log10(A)) + 
-            (log10(A) >= log10(B)) * ((z1 * (log10(B) + z2)) * (log10(A) - log10(B)))
-
+log10(S) ~ log10(c) + (log10(A) < log10(B)) * (z1 * log10(A)) + 
+  (log10(A) >= log10(B)) * (z1 * log10(B) + z2 * (log10(A) - log10(B)))
 
 
 ###smooth (k = 1)
@@ -79,6 +95,8 @@ S = log10(c) + (z2 - z1) * (log(exp(k * log10(B) - k * log10(A)) + 1) / k + log1
 #parameter and each row is a set of starting values. Similar to 
 #what is returned by expand.grid function. The order of columns shoud be: c, z1, z2, B.
 
+#nls fit objects bring environment with them so can be very large (maybe just return best startign values)
+
 grid_start_deng <- function(dat, pars = NULL, mod = "break"){
   
   if (!(is.data.frame(dat) || is.matrix(dat))) stop("dat must be a dataframe or matrix")
@@ -97,18 +115,20 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break"){
   
   if (! mod %in% c("break", "break_log", "smooth4", "smooth4_log", "smooth5", "smooth5_log")) stop("mod not recognised")
   if (is.null(pars)){ #if pars not provided create a df of different starting values
-  c <- seq(0.01, 500, 50)
-  z1 <- seq(0.01, 1, 0.1)
-  z2 <- seq(0.01, 1, 0.1)
+  c <- c(1, 50, 100, 500, 2000)
+  z1 <- seq(0.01, 1, 0.15)
+  z2 <- seq(0.01, 1, 0.15)
   #get range of values for breakpoints
   dr2 <- max(dat$A)[1]; dr1 <- min(dat$A)[1]
   B <- exp(seq(log(dr1), log(dr2))) 
   
-  grid_vals <- expand.grid(c, z1, z2, B)
-  colnames(grid_vals) <- c("c", "z1", "z2", "B")
-  #if smooth 5 parameter need to add starting values for k
-  if (mod %in% c("smooth5", "smooth5_log")){
-    grid_vals$k <- 1
+  if (mod %in% c("smooth5", "smooth5_log")){ #if smooth 5 parameter need to add starting values for k
+    k <- c(1, dr2 * 0.005, dr2 * 0.25)
+    grid_vals <- expand.grid(c, z1, z2, B, k)
+    colnames(grid_vals) <- c("c", "z1", "z2", "B", "k")
+  } else {
+    grid_vals <- expand.grid(c, z1, z2, B)
+    colnames(grid_vals) <- c("c", "z1", "z2", "B")
   }
   } else { #else do some checks and use the user's starting values df
     if (!is.data.frame(pars)) stop("pars argument should be a dataframe or NULL")
@@ -128,15 +148,15 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break"){
     tryCatch(nls(formula = S ~ 10 ^ (log10(c) +(log10(A) < log10(B)) * (z1 * log10(A)) + 
                             (log10(A) >= log10(B)) * ((z1 * (log10(B) + z2)) * (log10(A) - log10(B)))), 
       data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4]), lower=c(0.01, 0.01, 0.01, 1),
-      algorithm = "port"), error = function(e) list(value = NA))
+      upper = c(max(dat$S), 1, 1, dr2), algorithm = "port"), error = function(e) list(value = NA))
     })#eo apply
   } else if (mod == "break_log"){
     reg <- apply(grid_vals, 1, function(x){
       
-      tryCatch(nls(formula = log10(S) ~ log10(c) + (log10(A) < log10(B)) + (z1 * log10(A)) + 
-                     (log10(A) >= log10(B)) * ((z1 * (log10(B) + z2)) * (log10(A) - log10(B))), 
+      tryCatch(nls(formula = log10(S) ~ log10(c) + (log10(A) < log10(B)) * (z1 * log10(A)) + 
+                     (log10(A) >= log10(B)) * (z1 * log10(B) + z2 * (log10(A) - log10(B))), 
                    data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4]), lower=c(0.01, 0.01, 0.01, 1),
-                   algorithm = "port"), error = function(e) list(value = NA))
+                   upper = c(max(dat$S), 1, 1, dr2), algorithm = "port"), error = function(e) list(value = NA))
     })#eo a
   } else if (mod == "smooth4"){
     reg <- apply(grid_vals, 1, function(x){
@@ -144,7 +164,7 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break"){
       tryCatch(nls(formula = S ~ 10 ^ (log10(c) + (z2 - z1) * (log(exp(1 * log10(B) - log10(A)) + 1) + log10(A)) +
                                      z1 * log10(A) - (z2 - z1) * (log(exp(log10(B)) + 1))), 
                    data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4]), lower=c(0.01, 0.01, 0.01, 1),
-                   algorithm = "port"), error = function(e) list(value = NA))
+                   upper = c(max(dat$S), 1, 1, dr2), algorithm = "port"), error = function(e) list(value = NA))
     })#eo a
   } else if (mod == "smooth4_log"){
     reg <- apply(grid_vals, 1, function(x){
@@ -152,7 +172,7 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break"){
       tryCatch(nls(formula = log10(S) ~ log10(c) + (z2 - z1) * (log(exp(1 * log10(B) - log10(A)) + 1) + log10(A)) +
                      z1 * log10(A) - (z2 - z1) * (log(exp(log10(B)) + 1)), 
                    data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4]), lower=c(0.01, 0.01, 0.01, 1),
-                   algorithm = "port"), error = function(e) list(value = NA))
+                   upper = c(max(dat$S), 1, 1, dr2), algorithm = "port"), error = function(e) list(value = NA))
     })#eo a
   } else if (mod == "smooth5"){
     reg <- apply(grid_vals, 1, function(x){
@@ -161,7 +181,7 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break"){
                                                 z1 * log10(A) - (z2 - z1) * (log(exp(k * log10(B)) + 1) /k)), 
                    data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4], k = x[5]), 
                    lower=c(0.01, 0.01, 0.01, 1, 0.01),
-                   algorithm = "port"), error = function(e) list(value = NA))
+                   upper = c(max(dat$S), 1, 1, dr2), algorithm = "port"), error = function(e) list(value = NA))
     })#eo a
   } else if (mod == "smooth5_log"){
     reg <- apply(grid_vals, 1, function(x){
@@ -170,7 +190,7 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break"){
                      z1 * log10(A) - (z2 - z1) * (log(exp(k * log10(B)) + 1) /k), 
                    data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4], k = x[5]), 
                    lower=c(0.01, 0.01, 0.01, 1, 0.01),
-                   algorithm = "port"), error = function(e) list(value = NA))
+                   upper = c(max(dat$S), 1, 1, dr2), algorithm = "port"), error = function(e) list(value = NA))
     })#eo a
   }
   reg2 <- reg[sapply(reg, function(x) all(!is.na(x)))] #remove NA elements (i.e. subset a list)
@@ -188,17 +208,72 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break"){
 }
 
 
-gg <- grid_start_deng(dat)
 
-gg2 <- grid_start_deng(dat, mod = "break_log")
 
-gg3 <- grid_start_deng(dat, mod = "smooth4")
+cores = 6
+cl = makeCluster(cores); on.exit(stopCluster(cl))
+registerDoParallel(cl)
+i = 1 #Dummy line for RStudio warnings
 
-gg4 <- grid_start_deng(dat, mod = "smooth4_log")
 
-gg5 <- grid_start_deng(dat, mod = "smooth5")
+modz <- c("break", "break_log", "smooth4", "smooth4_log", "smooth5", "smooth5_log")
 
-gg6 <- grid_start_deng(dat, mod = "smooth5_log")
+dat <- l2[[1]] 
+
+allList = foreach(i=seq(from=1, to=length(modz), by=1))  %dopar% { 
+gg2 <- tryCatch(grid_start_deng(dat, mod = modz[i]), error = function(e) list(value = NA))
+gg2
+}
+
+
+
+##extract the best models from the ll list object
+gg <- allList[[1]]
+gg2 <- allList[[2]]
+gg3 <- allList[[3]]
+gg4 <- allList[[4]]
+gg5 <- allList[[5]]
+gg6 <- allList[[6]]
+
+
+
+
+x <- c(1632.17 , 0.01, 1, dr2/2 , 10)
+
+nls(formula = S ~ 10 ^ (log10(c) + (z2 - z1) * (log(exp(k * log10(B) - k * log10(A)) + 1) / k + log10(A)) +
+                          z1 * log10(A) - (z2 - z1) * (log(exp(k * log10(B)) + 1) /k)), 
+    data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4], k = x[5]), 
+    lower=c(0.01, 0.01, 0.01, 1, 0.01),
+    upper = c(max(dat$S), 1, 1, dr2), control = list(maxiter = 5000), algorithm = "port", trace = TRUE)
+
+
+
+allList = foreach(i=seq(from=1, to=length(l2), by=1))  %dopar% { 
+  
+  gg <- grid_start_deng(dat)
+  
+  gg2 <- grid_start_deng(dat, mod = modz[i])
+  
+  gg3 <- grid_start_deng(dat, mod = modz[i])
+  
+  gg4 <- grid_start_deng(dat, mod = modz[i])
+  
+  gg5 <- grid_start_deng(dat, mod = modz[i])
+  
+  gg6 <- grid_start_deng(dat, mod = modz[i])
+  
+  ll <- list(gg, gg2, gg3, gg4, gg5, gg6)
+  ll
+}
+
+##extract the best models from the ll list object
+gg <- ll[[1]]
+gg2 <- ll[[2]]
+gg3 <- ll[[3]]
+gg4 <- ll[[4]]
+gg5 <- ll[[5]]
+gg6 <- ll[[6]]
+
 
 ######################################
 #test plots for Jurgen
