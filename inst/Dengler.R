@@ -97,7 +97,7 @@ S = log10(c) + (z2 - z1) * (log(exp(k * log10(B) - k * log10(A)) + 1) / k + log1
 
 #nls fit objects bring environment with them so can be very large (maybe just return best startign values)
 
-grid_start_deng <- function(dat, pars = NULL, mod = "break"){
+grid_start_deng <- function(dat, pars = NULL, mod = "break", extensive = FALSE){
   
   if (!(is.data.frame(dat) || is.matrix(dat))) stop("dat must be a dataframe or matrix")
   if (is.matrix(dat)) dat <- as.data.frame(dat)
@@ -115,15 +115,27 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break"){
   
   if (! mod %in% c("break", "break_log", "smooth4", "smooth4_log", "smooth5", "smooth5_log")) stop("mod not recognised")
   if (is.null(pars)){ #if pars not provided create a df of different starting values
-  c <- c(1, 50, 100, 500, 2000)
-  z1 <- seq(0.01, 1, 0.15)
-  z2 <- seq(0.01, 1, 0.15)
-  #get range of values for breakpoints
-  dr2 <- max(dat$A)[1]; dr1 <- min(dat$A)[1]
-  B <- exp(seq(log(dr1), log(dr2))) 
   
+  #get range of values for breakpoints
+  dr2 <- max(dat$A)[1]; dr1 <- min(dat$A)[1]  
+  if (!extensive){
+    c <- c(1, 50, 100, 500, 2000)
+    z1 <- seq(0.01, 1, 0.15)
+    z2 <- seq(0.01, 1, 0.15)
+    B <- exp(seq(log(dr1), log(dr2))) 
+  } else {
+    c <- c(1, 5, 20, 50, 100, 250, 500, 1000, 3000)
+    z1 <- seq(0.01, 1, 0.1)
+    z2 <- seq(0.01, 1, 0.1)
+    B <- c(1, 10, 100, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 4000000, 12000000)
+  }
+
   if (mod %in% c("smooth5", "smooth5_log")){ #if smooth 5 parameter need to add starting values for k
-    k <- c(1, dr2 * 0.005, dr2 * 0.25)
+    if (!extensive){
+      k <- c(1, dr2 * 0.005, dr2 * 0.25)
+    } else {
+      k <- c(0.5, 1, 3, 5, 10, 25, 50, 100, 500, 1000)
+    }
     grid_vals <- expand.grid(c, z1, z2, B, k)
     colnames(grid_vals) <- c("c", "z1", "z2", "B", "k")
   } else {
@@ -140,7 +152,7 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break"){
     grid_vals <- pars
   }#eo is.null(pars)
   
-  message("\n", paste(nrow(grid_vals), "combinations of starting parameter values used"), "\n", "\n")
+  message("\n", paste(nrow(grid_vals), "combinations of starting parameter values used"), "\n")
   
   if (mod == "break"){
     reg <- apply(grid_vals, 1, function(x){
@@ -195,7 +207,14 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break"){
   }
   reg2 <- reg[sapply(reg, function(x) all(!is.na(x)))] #remove NA elements (i.e. subset a list)
   
-  if (length(reg2) == 0) stop("No model fits converged: try providing different starting values")
+  if (length(reg2) == 0 && extensive == FALSE){
+    message("\n","No models converged: re-starting with more starting parameter value combinations","\n")
+    newA <- tryCatch(grid_start_deng(dat, pars = NULL, mod = mod, extensive = TRUE), error = function(e) list(value = NA))
+    if (length(newA) == 1) stop("No model fits converged: try providing different starting values")
+    return(newA)
+  }
+  
+  if (length(reg2) == 0) stop("No models converged: try providing different starting values")
   
   if (length(reg2) == 1){
     finMod <- reg2[[1]]
@@ -210,7 +229,7 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break"){
 
 
 
-cores = 6
+cores = 3
 cl = makeCluster(cores); on.exit(stopCluster(cl))
 registerDoParallel(cl)
 i = 1 #Dummy line for RStudio warnings
@@ -221,7 +240,7 @@ modz <- c("break", "break_log", "smooth4", "smooth4_log", "smooth5", "smooth5_lo
 dat <- l2[[1]] 
 
 allList = foreach(i=seq(from=1, to=length(modz), by=1))  %dopar% { 
-gg2 <- tryCatch(grid_start_deng(dat, mod = modz[i]), error = function(e) list(value = NA))
+gg2 <- tryCatch(grid_start_deng(dat, mod = modz[i], extensive = FALSE), error = function(e) list(value = NA))
 gg2
 }
 
@@ -238,29 +257,34 @@ gg6 <- allList[[6]]
 
 
 
-x <- c(1632.17 , 0.01, 1, dr2/2 , 10)
+x <- c(222.4 , 0.2865, 1, 3739000 , 107.7)
 
 nls(formula = S ~ 10 ^ (log10(c) + (z2 - z1) * (log(exp(k * log10(B) - k * log10(A)) + 1) / k + log10(A)) +
                           z1 * log10(A) - (z2 - z1) * (log(exp(k * log10(B)) + 1) /k)), 
     data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4], k = x[5]), 
     lower=c(0.01, 0.01, 0.01, 1, 0.01),
-    upper = c(max(dat$S), 1, 1, dr2), control = list(maxiter = 5000), algorithm = "port", trace = TRUE)
+    upper = c(max(dat$S), 1, 1, dr2, 10000), control = list(maxiter = 5000), algorithm = "port", trace = TRUE)
+
+
+
 
 
 
 allList = foreach(i=seq(from=1, to=length(l2), by=1))  %dopar% { 
   
-  gg <- grid_start_deng(dat)
+  dat <- l2[[i]]
   
-  gg2 <- grid_start_deng(dat, mod = modz[i])
+  gg <- tryCatch(grid_start_deng(dat), error = function(e) list(value = NA))
   
-  gg3 <- grid_start_deng(dat, mod = modz[i])
+  gg2 <- tryCatch(grid_start_deng(dat, mod = "break_log"), error = function(e) list(value = NA))
   
-  gg4 <- grid_start_deng(dat, mod = modz[i])
+  gg3 <-tryCatch(grid_start_deng(dat, mod = "smooth4"), error = function(e) list(value = NA))
   
-  gg5 <- grid_start_deng(dat, mod = modz[i])
+  gg4 <- tryCatch(grid_start_deng(dat, mod = "smooth4_log"), error = function(e) list(value = NA))
   
-  gg6 <- grid_start_deng(dat, mod = modz[i])
+  gg5 <- tryCatch(grid_start_deng(dat, mod = "smooth5"), error = function(e) list(value = NA))
+  
+  gg6 <- tryCatch(grid_start_deng(dat, mod = "smooth5_log"), error = function(e) list(value = NA))
   
   ll <- list(gg, gg2, gg3, gg4, gg5, gg6)
   ll
