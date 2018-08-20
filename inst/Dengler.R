@@ -24,37 +24,7 @@ l2 <- lapply(un, function(x){
   f
 })
 
-
-A = 5
-B = 3
-z1 = 0.2
-z2 = 0.3
-c = 40
-k = 1
-
-S =	10 ^ (log10(c) + (log10(A) < log10(B)) * (z1 * log10(A)) + 
-            (log10(A) >= log10(B)) * ((z1 * (log10(B) + z2)) * (log10(A) - log10(B))))
-
-#get dengler to independently calculate an S value for each function using set A,B, z and c pars
-
-res1 <- tryCatch(optim(startMod, rssfun, hessian = TRUE, data = data, method = algo, control = list(maxit = 50000) ),
-                 error = function(e){e})
-
-
-#starting values
-
-#log10(B) = 5.5 (i.e. about 300000 km²)
-#z1 about 0.2
-#z2 about 0.7
-#log10(c) about 2.5
-#k you can set to 1
-
-
-nls(formula = S ~ 10 ^ (log10(c) +(log10(A) < log10(B)) * (z1 * log10(A)) + 
-                          (log10(A) >= log10(B)) * ((z1 * (log10(B) + z2)) * (log10(A) - log10(B)))), 
-    data = dat, start = data.frame(c = 100, z1 = 0.2, z2 = 0.7, B = 3000), lower=c(0.1,0.01, 0.01, 1),
-    algorithm = "port",  control = list(maxiter = 5000))
-
+#NB H has some NAs in area column so removed (check with Jurgen)
 
 
 #normal breakpoint
@@ -237,9 +207,9 @@ i = 1 #Dummy line for RStudio warnings
 
 modz <- c("break", "break_log", "smooth4", "smooth4_log", "smooth5", "smooth5_log")
 
-dat <- l2[[1]] 
+dat <- l2[[5]] 
 
-allList = foreach(i=seq(from=1, to=length(modz), by=1))  %dopar% { 
+allList2 = foreach(i=seq(from=1, to=length(modz), by=1))  %dopar% { 
 gg2 <- tryCatch(grid_start_deng(dat, mod = modz[i], extensive = FALSE), error = function(e) list(value = NA))
 gg2
 }
@@ -256,8 +226,7 @@ gg6 <- allList[[6]]
 
 
 
-
-x <- c(222.4 , 0.2865, 1, 3739000 , 107.7)
+x <- c(0.6, 0.3, 0.01, 798600, 1)
 
 nls(formula = S ~ 10 ^ (log10(c) + (z2 - z1) * (log(exp(k * log10(B) - k * log10(A)) + 1) / k + log10(A)) +
                           z1 * log10(A) - (z2 - z1) * (log(exp(k * log10(B)) + 1) /k)), 
@@ -289,6 +258,8 @@ allList = foreach(i=seq(from=1, to=length(l2), by=1))  %dopar% {
   ll <- list(gg, gg2, gg3, gg4, gg5, gg6)
   ll
 }
+
+save(allList, file = "allList.R")
 
 ##extract the best models from the ll list object
 gg <- ll[[1]]
@@ -333,6 +304,83 @@ points(log10(dat$A), gg6$m$fitted(), col = "red")
 
 
 dev.off()
+
+
+
+
+
+##############################################
+####extract each element of allList and plot#####
+######################################################
+
+#check if any are NAs
+sapply(allList, function(x) sapply(x, length))
+
+
+for (i in 1:length(allList)){
+  
+  ll <- allList[[i]]
+  gg <- ll[[1]]
+  gg2 <- ll[[2]]
+  gg3 <- ll[[3]]
+  gg4 <- ll[[4]]
+  gg5 <- ll[[5]]
+  gg6 <- ll[[6]]
+  
+  nam <- paste(letters[i], "_breakpoint.jpeg", sep="")
+  
+  dat <- l2[[i]]
+  #dat <- arrange(dat, A)
+  
+  #########################################
+  jpeg(paste(nam), width = 25, height = 37, res = 200, units = "cm")
+  
+  par(mfrow = c(3, 2))
+  par("mfg")
+  dat2 <- cbind(dat, "Fitted" = gg$m$fitted())
+  dat2 <- arrange(dat2, A)
+  plot(dat2$A, dat2$S, col = "black", pch = 16)
+  lines(dat2$A, dat2$Fitted, col = "red")
+  
+  par("mfg")
+  dat2 <- cbind(dat, "Fitted" = gg2$m$fitted())
+  dat2 <- arrange(dat2, A)
+  plot(log10(dat2$A), log10(dat2$S), col = "black", pch = 16)
+  lines(log10(dat2$A), dat2$Fitted, col = "red")
+  
+  par("mfg")
+  dat2 <- cbind(dat, "Fitted" = gg3$m$fitted())
+  dat2 <- arrange(dat2, A)
+  plot(dat2$A, dat2$S, col = "black", pch = 16)
+  lines(dat2$A, dat2$Fitted, col = "red")
+  
+  par("mfg")
+  dat2 <- cbind(dat, "Fitted" = gg4$m$fitted())
+  dat2 <- arrange(dat2, A)
+  plot(log10(dat2$A), log10(dat2$S), col = "black", pch = 16)
+  lines(log10(dat2$A), dat2$Fitted, col = "red")
+  
+  par("mfg")
+  if (!i == 5){ 
+  dat2 <- cbind(dat, "Fitted" = gg5$m$fitted())
+  dat2 <- arrange(dat2, A)
+  plot(dat2$A, dat2$S, col = "black", pch = 16)
+  lines(dat2$A, dat2$Fitted, col = "red")
+  } else{
+    plot(dat2$A, dat2$S, col = "black", pch = 16)
+  }
+
+  par("mfg")
+  dat2 <- cbind(dat, "Fitted" = gg6$m$fitted())
+  dat2 <- arrange(dat2, A)
+  plot(log10(dat2$A), log10(dat2$S), col = "black", pch = 16)
+  lines(log10(dat2$A), dat2$Fitted, col = "red")
+  
+  dev.off()
+
+}
+
+
 
 
 
