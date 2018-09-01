@@ -16,7 +16,7 @@ colnames(dat) <- c("A", "S")
 ###Second test dataset#############
 ################################
 
-dat <- ro()#test2
+dat <- read.csv("D:\\documents\\Work\\On-going projects\\Dengler\\test2.csv")#test2
 un <- unique(dat$group)
 l2 <- lapply(un, function(x){
   f <- dplyr::filter(dat, group == x)
@@ -57,6 +57,8 @@ S = 10 ^ (log10(c) + (z2 - z1) * (log(exp(k * log10(B) - k * log10(A)) + 1) / k 
 
 S = log10(c) + (z2 - z1) * (log(exp(k * log10(B) - k * log10(A)) + 1) / k + log10(A)) +
   z1 * log10(A) - (z2 - z1) * (log(exp(k * log10(B)) + 1) /k)
+
+
 
 
 #uses a brute force approach; if number of combinations is very large this can take a long time
@@ -129,7 +131,7 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break", extensive = FALSE){
 
     tryCatch(nls(formula = S ~ 10 ^ (log10(c) +(log10(A) < log10(B)) * (z1 * log10(A)) + 
                             (log10(A) >= log10(B)) * ((z1 * (log10(B) + z2)) * (log10(A) - log10(B)))), 
-      data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4]), lower=c(0.01, 0.01, 0.01, 1),
+      data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4]), lower=c(0.01, 0, 0, 1),
       upper = c(max(dat$S), 1, 1, dr2), algorithm = "port"), error = function(e) list(value = NA))
     })#eo apply
   } else if (mod == "break_log"){
@@ -137,7 +139,7 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break", extensive = FALSE){
       
       tryCatch(nls(formula = log10(S) ~ log10(c) + (log10(A) < log10(B)) * (z1 * log10(A)) + 
                      (log10(A) >= log10(B)) * (z1 * log10(B) + z2 * (log10(A) - log10(B))), 
-                   data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4]), lower=c(0.01, 0.01, 0.01, 1),
+                   data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4]), lower=c(0.01, 0, 0, 1),
                    upper = c(max(dat$S), 1, 1, dr2), algorithm = "port"), error = function(e) list(value = NA))
     })#eo a
   } else if (mod == "smooth4"){
@@ -145,7 +147,7 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break", extensive = FALSE){
       
       tryCatch(nls(formula = S ~ 10 ^ (log10(c) + (z2 - z1) * (log(exp(1 * log10(B) - log10(A)) + 1) + log10(A)) +
                                      z1 * log10(A) - (z2 - z1) * (log(exp(log10(B)) + 1))), 
-                   data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4]), lower=c(0.01, 0.01, 0.01, 1),
+                   data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4]), lower=c(0.01, 0, 0, 1),
                    upper = c(max(dat$S), 1, 1, dr2), algorithm = "port"), error = function(e) list(value = NA))
     })#eo a
   } else if (mod == "smooth4_log"){
@@ -153,7 +155,7 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break", extensive = FALSE){
       
       tryCatch(nls(formula = log10(S) ~ log10(c) + (z2 - z1) * (log(exp(1 * log10(B) - log10(A)) + 1) + log10(A)) +
                      z1 * log10(A) - (z2 - z1) * (log(exp(log10(B)) + 1)), 
-                   data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4]), lower=c(0.01, 0.01, 0.01, 1),
+                   data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4]), lower=c(0.01, 0, 0, 1),
                    upper = c(max(dat$S), 1, 1, dr2), algorithm = "port"), error = function(e) list(value = NA))
     })#eo a
   } else if (mod == "smooth5"){
@@ -162,17 +164,18 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break", extensive = FALSE){
       tryCatch(nls(formula = S ~ 10 ^ (log10(c) + (z2 - z1) * (log(exp(k * log10(B) - k * log10(A)) + 1) / k + log10(A)) +
                                                 z1 * log10(A) - (z2 - z1) * (log(exp(k * log10(B)) + 1) /k)), 
                    data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4], k = x[5]), 
-                   lower=c(0.01, 0.01, 0.01, 1, 0.01),
+                   lower=c(0.01, 0, 0, 1, 0.01),
                    upper = c(max(dat$S), 1, 1, dr2), algorithm = "port"), error = function(e) list(value = NA))
     })#eo a
   } else if (mod == "smooth5_log"){
     reg <- apply(grid_vals, 1, function(x){
       
       tryCatch(nls(formula = log10(S) ~ log10(c) + (z2 - z1) * (log(exp(k * log10(B) - k * log10(A)) + 1) / k + log10(A)) +
-                     z1 * log10(A) - (z2 - z1) * (log(exp(k * log10(B)) + 1) /k), 
-                   data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4], k = x[5]), 
-                   lower=c(0.01, 0.01, 0.01, 1, 0.01),
-                   upper = c(max(dat$S), 1, 1, dr2), algorithm = "port"), error = function(e) list(value = NA))
+                   z1 * log10(A) - (z2 - z1) * (log(exp(k * log10(B)) + 1) /k), 
+                  data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4], k = x[5]), 
+                  lower=c(0.01, 0, 0, 1, 0.01),
+                  upper = c(max(dat$S), 1, 1, dr2), algorithm = "port"), error = function(e) list(value = NA))
+
     })#eo a
   }
   reg2 <- reg[sapply(reg, function(x) all(!is.na(x)))] #remove NA elements (i.e. subset a list)
@@ -197,9 +200,35 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break", extensive = FALSE){
 }
 
 
+##################################
+##power model results
+###############################
+pow <- function(dat){
+  colnames(dat) <- c("A", "S")
+  #Dengler's log zero approach
+  if (any(dat$S == 0)){
+    wh <- which(dat$S == 0)
+    dat$S[wh] <- 0.25
+    message("\n", "Zeros found in richness values: these have been converted to 0.25", "\n")
+  }
+  
+  nlp <- sar_power(dat)
+  
+  nlp2 <- tryCatch(nls(formula = S ~ c*A^z, 
+               data = dat, start = data.frame(c = nlp$par[1], z =  nlp$par[2])), error = function(e) list(value = NA))
+  
+  
+  log.data =  log.data = data.frame(A = log10(dat$A), S = log10(dat$S))
+  lp <- lm(S ~ A, data = log.data)
+  
+  nlpSum <- c(AICcmodavg::AICc(nlp2), nlp2$m$getPars()[1], nlp2$m$getPars()[2])
+  lpSum <- c(AICcmodavg::AICc(lp), 10 ^ lp$coefficients[1], lp$coefficients[2])
+  res <- c(nlpSum, lpSum)
+  return(res)
+}
 
 
-cores = 3
+cores = 9
 cl = makeCluster(cores); on.exit(stopCluster(cl))
 registerDoParallel(cl)
 i = 1 #Dummy line for RStudio warnings
@@ -231,12 +260,8 @@ x <- c(0.6, 0.3, 0.01, 798600, 1)
 nls(formula = S ~ 10 ^ (log10(c) + (z2 - z1) * (log(exp(k * log10(B) - k * log10(A)) + 1) / k + log10(A)) +
                           z1 * log10(A) - (z2 - z1) * (log(exp(k * log10(B)) + 1) /k)), 
     data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4], k = x[5]), 
-    lower=c(0.01, 0.01, 0.01, 1, 0.01),
+    lower=c(0.01, 0, 0, 1, 0.01),
     upper = c(max(dat$S), 1, 1, dr2, 10000), control = list(maxiter = 5000), algorithm = "port", trace = TRUE)
-
-
-
-
 
 
 allList = foreach(i=seq(from=1, to=length(l2), by=1))  %dopar% { 
@@ -247,66 +272,19 @@ allList = foreach(i=seq(from=1, to=length(l2), by=1))  %dopar% {
   
   gg2 <- tryCatch(grid_start_deng(dat, mod = "break_log"), error = function(e) list(value = NA))
   
-  gg3 <-tryCatch(grid_start_deng(dat, mod = "smooth4"), error = function(e) list(value = NA))
+  gg3 <- tryCatch(grid_start_deng(dat, mod = "smooth4"), error = function(e) list(value = NA))
   
   gg4 <- tryCatch(grid_start_deng(dat, mod = "smooth4_log"), error = function(e) list(value = NA))
   
   gg5 <- tryCatch(grid_start_deng(dat, mod = "smooth5"), error = function(e) list(value = NA))
   
-  gg6 <- tryCatch(grid_start_deng(dat, mod = "smooth5_log"), error = function(e) list(value = NA))
+  gg6 <- tryCatch(grid_start_deng(dat, mod = "smooth5_log", extensive = T), error = function(e) list(value = NA))
   
   ll <- list(gg, gg2, gg3, gg4, gg5, gg6)
   ll
 }
 
 save(allList, file = "allList.R")
-
-##extract the best models from the ll list object
-gg <- ll[[1]]
-gg2 <- ll[[2]]
-gg3 <- ll[[3]]
-gg4 <- ll[[4]]
-gg5 <- ll[[5]]
-gg6 <- ll[[6]]
-
-
-######################################
-#test plots for Jurgen
-#########################################
-jpeg("Breakpoint_test.jpeg", width = 25, height = 37, res = 600, units = "cm")
-
-par(mfrow = c(3, 2))
-par("mfg")
-
-plot(dat$A, dat$S, col = "black", pch = 16)
-points(dat$A, gg$m$fitted(), col = "red")
-
-par("mfg")
-plot(log10(dat$A), log10(dat$S), col = "black", pch = 16)
-points(log10(dat$A), gg2$m$fitted(), col = "red")
-
-par("mfg")
-plot(dat$A, dat$S, col = "black", pch = 16)
-points(dat$A, gg3$m$fitted(), col = "red")
-
-par("mfg")
-plot(log10(dat$A), log10(dat$S), col = "black", pch = 16)
-points(log10(dat$A), gg4$m$fitted(), col = "red")
-
-
-par("mfg")
-plot(dat$A, dat$S, col = "black", pch = 16)
-points(dat$A, gg5$m$fitted(), col = "red")
-
-par("mfg")
-plot(log10(dat$A), log10(dat$S), col = "black", pch = 16)
-points(log10(dat$A), gg6$m$fitted(), col = "red")
-
-
-dev.off()
-
-
-
 
 
 ##############################################
@@ -315,6 +293,20 @@ dev.off()
 
 #check if any are NAs
 sapply(allList, function(x) sapply(x, length))
+
+#get AICc and model parameter values
+mod_sum <- function(x){
+ # if (class(x) == "sars"){
+  #  ac <- summary(x)$AICc
+   # pars <- x$par
+ # } else {
+    ac <- AICcmodavg::AICc(x)
+    pars <- x$m$getPars()
+ # }
+  return(c(ac, pars))
+}
+
+allSum <- vector("list", length = length(allList))
 
 
 for (i in 1:length(allList)){
@@ -330,44 +322,88 @@ for (i in 1:length(allList)){
   nam <- paste(letters[i], "_breakpoint.jpeg", sep="")
   
   dat <- l2[[i]]
+  if (any(dat$S == 0)){
+    wh <- which(dat$S == 0)
+    dat$S[wh] <- 0.25
+    message("\n", "Zeros found in richness values: these have been converted to 0.25", "\n")
+  }
+  
   #dat <- arrange(dat, A)
   
+  #get AICc and parameter values for each model object (excluding the one with no fit for i == 4[[5]])
+  if (!i == 4){
+    allSum[[i]] <- lapply(allList[[i]], mod_sum)
+  } else {
+    al2 <- allList[[i]]
+    al2[[5]] <- NA
+    allSum[[i]] <- lapply(allList[[i]], function(x){
+      if (length(x) > 1){
+        mod_sum(x)
+      } else {
+        rep(NA, 6)
+      }})
+  }
+
+  allSum[[i]][[7]] <- pow(dat)
   #########################################
-  jpeg(paste(nam), width = 25, height = 37, res = 200, units = "cm")
+  jpeg(paste(nam), width = 25, height = 49, res = 200, units = "cm")
   
-  par(mfrow = c(3, 2))
+  par(mfrow = c(4, 2))
+  
+  #power model results
+  
+  par("mfg")
+  dat2 <- sar_power(dat)
+  plot(dat2, pcol = "black", lcol = "red")
+  
+  par("mfg")
+  log.data =  log.data = data.frame(A = log10(dat$A), S = log10(dat$S))
+  lp <- lm(S ~ A, data = log.data)
+  dat2 <- cbind(dat, "Fitted" = lp$fitted.values)
+  dat2 <- arrange(dat2, A)
+  plot(log10(dat2$A), log10(dat2$S), col = "black", pch = 16)
+  lines(log10(dat2$A), dat2$Fitted, col = "red")
+  title("Power")
+  
+  #Dengler model results
   par("mfg")
   dat2 <- cbind(dat, "Fitted" = gg$m$fitted())
   dat2 <- arrange(dat2, A)
   plot(dat2$A, dat2$S, col = "black", pch = 16)
   lines(dat2$A, dat2$Fitted, col = "red")
+  title("Breakpoint")
   
   par("mfg")
   dat2 <- cbind(dat, "Fitted" = gg2$m$fitted())
   dat2 <- arrange(dat2, A)
   plot(log10(dat2$A), log10(dat2$S), col = "black", pch = 16)
   lines(log10(dat2$A), dat2$Fitted, col = "red")
+  title("Breakpoint")
   
   par("mfg")
   dat2 <- cbind(dat, "Fitted" = gg3$m$fitted())
   dat2 <- arrange(dat2, A)
   plot(dat2$A, dat2$S, col = "black", pch = 16)
   lines(dat2$A, dat2$Fitted, col = "red")
+  title("Smooth4")
   
   par("mfg")
   dat2 <- cbind(dat, "Fitted" = gg4$m$fitted())
   dat2 <- arrange(dat2, A)
   plot(log10(dat2$A), log10(dat2$S), col = "black", pch = 16)
   lines(log10(dat2$A), dat2$Fitted, col = "red")
+  title("Smooth4")
   
   par("mfg")
-  if (!i == 5){ 
+  if (!i == 4){ 
   dat2 <- cbind(dat, "Fitted" = gg5$m$fitted())
   dat2 <- arrange(dat2, A)
   plot(dat2$A, dat2$S, col = "black", pch = 16)
   lines(dat2$A, dat2$Fitted, col = "red")
+  title("Smooth5")
   } else{
     plot(dat2$A, dat2$S, col = "black", pch = 16)
+    title("Smooth5")
   }
 
   par("mfg")
@@ -375,16 +411,52 @@ for (i in 1:length(allList)){
   dat2 <- arrange(dat2, A)
   plot(log10(dat2$A), log10(dat2$S), col = "black", pch = 16)
   lines(log10(dat2$A), dat2$Fitted, col = "red")
+  title("Smooth5")
   
   dev.off()
 
 }
 
 
+##format AICc and parameter estimates from each model
+matz <- matrix(nrow = 0, ncol = 6)
+colnames(matz) <- c("AICc", "c", "z1", "z2", "B", "k")
+
+for (i in 1:length(allSum)){
+  
+  dum <- allSum[[i]][1:6]
+  pres <- allSum[[i]][[7]]#power model results
+  
+  #fill in k for models with out it
+  for (j in 1:4){
+    dum[[j]] <- c(dum[[j]], NA)
+  }
+  m2 <- matrix(unlist(dum), byrow = TRUE, ncol = 6)
+  
+  m1A <- c(pres[1:3], rep(NA, 3))
+  m1B <- c(pres[4:6], rep(NA, 3))
+  
+  m3 <- rbind(m1A, m1B, m2)
+  matz <- rbind(matz, m3)
+}
+
+matz <- as.data.frame(matz)
+matz <- apply(matz, 2, round, digits = 2)
+matz <- cbind(matz, as.vector(unlist(vapply(1:9, function(x) rep(x, 8), FUN.VALUE = numeric(8)))))
+
+matz <- cbind(matz, rep(c(1,2), (nrow(matz) / 2)))
+matz <- as.data.frame(matz)
+colnames(matz)[7:8] <- c("Sample", "Type")
+
+matzNL <- filter(matz, Type == 1)
+matzNL$Type <- rep(c("Power", "Normal_breakpoint", "Smooth_4", "smooth_5"), 9)
+matzL <- filter(matz, Type == 2)
+matzL$Type <- rep(c("Power", "Normal_breakpoint", "Smooth_4", "smooth_5"), 9)
+
+rbind(matzNL, matzL) %>% wcs()
 
 
-
-
+###################################################################
 
 deng_NB <- function(data, start = NULL, grid_start = NULL, normaTest =  "lillie",
                     homoTest = "cor.fitted"){
