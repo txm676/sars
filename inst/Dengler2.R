@@ -104,7 +104,6 @@ grid_start_deng <- function(dat, pars = NULL, mod = "break", extensive = FALSE){
                    data = dat, start = data.frame(c = x[1], z1 = x[2], z2 = x[3], B = x[4], k = x[5]), 
                    lower=c(0.01, 0, 0, 1, 0.01),
                    upper = c(max(dat$S), 1, 1, dr2), algorithm = "port"), error = function(e) list(value = NA))
-      
     })#eo a
   }
   reg2 <- reg[sapply(reg, function(x) all(!is.na(x)))] #remove NA elements (i.e. subset a list)
