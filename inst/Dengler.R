@@ -26,41 +26,6 @@ l2 <- lapply(un, function(x){
 
 #NB H has some NAs in area column so removed (check with Jurgen)
 
-
-#normal breakpoint
-
-S ~ 10 ^ (log10(c) +(log10(A) < log10(B)) * (z1 * log10(A)) + 
-            (log10(A) >= log10(B)) * ((z1 * (log10(B) + z2)) * (log10(A) - log10(B))))
-
-#log version
-log10(S) ~ log10(c) + (log10(A) < log10(B)) * (z1 * log10(A)) + 
-  (log10(A) >= log10(B)) * (z1 * log10(B) + z2 * (log10(A) - log10(B)))
-
-
-###smooth (k = 1)
-
-S = 10 ^ (log10(c) + (z2 - z1) * (log(exp(1 * log10(B) - log10(A)) + 1) + log10(A)) +
-            z1 * log10(A) - (z2 - z1) * (log(exp(log10(B)) + 1)))
-#log version
-
-S = log10(c) + (z2 - z1) * (log(exp(1 * log10(B) - log10(A)) + 1) + log10(A)) +
-  z1 * log10(A) - (z2 - z1) * (log(exp(log10(B)) + 1))
-
-
-###smooth (k varies)
-
-S = 10 ^ (log10(c) + (z2 - z1) * (log(exp(k * log10(B) - k * log10(A)) + 1) / k + log10(A)) +
-                                    z1 * log10(A) - (z2 - z1) * (log(exp(k * log10(B)) + 1) /k))
-
-
-#log version
-
-S = log10(c) + (z2 - z1) * (log(exp(k * log10(B) - k * log10(A)) + 1) / k + log10(A)) +
-  z1 * log10(A) - (z2 - z1) * (log(exp(k * log10(B)) + 1) /k)
-
-
-
-
 #uses a brute force approach; if number of combinations is very large this can take a long time
 
 #if given, pars should be a data.frame where each column is a 
@@ -287,7 +252,11 @@ allList = foreach(i=seq(from=1, to=length(l2), by=1))  %dopar% {
 save(allList, file = "allList.R")
 
 
-##############################################
+
+replicate(8, tryCatch(grid_start_deng(dat, mod = "smooth5_log", extensive = TRUE), error = function(e) list(value = NA)))
+
+
+g##############################################
 ####extract each element of allList and plot#####
 ######################################################
 
@@ -454,6 +423,57 @@ matzL <- filter(matz, Type == 2)
 matzL$Type <- rep(c("Power", "Normal_breakpoint", "Smooth_4", "smooth_5"), 9)
 
 rbind(matzNL, matzL) %>% wcs()
+
+
+
+
+#############################################################
+###RAW FUNCTIONS###########################
+################################################
+#normal breakpoint
+
+S ~ 10 ^ (log10(c) +(log10(A) < log10(B)) * (z1 * log10(A)) + 
+            (log10(A) >= log10(B)) * ((z1 * (log10(B) + z2)) * (log10(A) - log10(B))))
+
+#log version
+log10(S) ~ log10(c) + (log10(A) < log10(B)) * (z1 * log10(A)) + 
+  (log10(A) >= log10(B)) * (z1 * log10(B) + z2 * (log10(A) - log10(B)))
+
+
+###smooth (k = 1)
+
+S = 10 ^ (log10(c) + (z2 - z1) * (log(exp(1 * log10(B) - log10(A)) + 1) + log10(A)) +
+            z1 * log10(A) - (z2 - z1) * (log(exp(log10(B)) + 1)))
+#log version
+
+S = log10(c) + (z2 - z1) * (log(exp(1 * log10(B) - log10(A)) + 1) + log10(A)) +
+  z1 * log10(A) - (z2 - z1) * (log(exp(log10(B)) + 1))
+
+
+###smooth (k varies)
+
+S = 10 ^ (log10(c) + (z2 - z1) * (log(exp(k * log10(B) - k * log10(A)) + 1) / k + log10(A)) +
+            z1 * log10(A) - (z2 - z1) * (log(exp(k * log10(B)) + 1) /k))
+
+
+#log version
+
+S = log10(c) + (z2 - z1) * (log(exp(k * log10(B) - k * log10(A)) + 1) / k + log10(A)) +
+  z1 * log10(A) - (z2 - z1) * (log(exp(k * log10(B)) + 1) /k)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ###################################################################
