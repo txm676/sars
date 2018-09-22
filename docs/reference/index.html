@@ -21,13 +21,19 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
 <meta property="og:title" content="Function reference" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -50,8 +56,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">sars</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">sars</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.0</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -85,6 +95,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -92,196 +103,234 @@
       
       </header>
 
-      <div class="row">
-  <div class="col-md-9">
+<div class="row">
+  <div class="contents col-md-9">
     <div class="page-header">
-      <h1>
-        Reference
-        <small>version&nbsp;0.1.0</small>
-      </h1>
+      <h1>Reference</h1>
     </div>
 
-    <div class="contents">
-      <table class="ref-index">
+    <table class="ref-index">
 
-      <colgroup>
-        <col class="alias" />
-        <col class="title" />
-      </colgroup>
+    <colgroup>
+      
+      <col class="alias" />
+      <col class="title" />
+    </colgroup>
 
-      <tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-            <p class="section-desc"></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="aegean.html">data</a></code> </p>
-          </td>
-          <td><p>A SAR dataset describing invertebrates on islands in the Aegean Sea, Greece</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="cole_sim.html">data</a></code> </p>
-          </td>
-          <td><p>A simulated species-site abundance matrix with site areas</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="galap.html">data</a></code> </p>
-          </td>
-          <td><p>A SAR dataset describing the plants of the Galapagos Islands</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="lin_pow.html">lin_pow</a></code> </p>
-          </td>
-          <td><p>Fit the log-log version of the power model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="niering.html">data</a></code> </p>
-          </td>
-          <td><p>A SAR dataset describing the plants of the Kaningamarangi Atoll</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="plot.sars.html">plot</a></code> </p>
-          </td>
-          <td><p>Plot Model Fits for an mmsar2 Object</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_asymp.html">sar_asymp</a></code> </p>
-          </td>
-          <td><p>Fit the Asymptotic regression model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_betap.html">sar_betap</a></code> </p>
-          </td>
-          <td><p>Fit the Beta-P cumulative model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_chapman.html">sar_chapman</a></code> </p>
-          </td>
-          <td><p>Fit the Chapman Richards model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_epm1.html">sar_epm1</a></code> </p>
-          </td>
-          <td><p>Fit the Extended Power model 1 model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_epm2.html">sar_epm2</a></code> </p>
-          </td>
-          <td><p>Fit the Extended Power model 2 model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_expo.html">sar_expo</a></code> </p>
-          </td>
-          <td><p>Fit the Exponential model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_gompertz.html">sar_gompertz</a></code> </p>
-          </td>
-          <td><p>Fit the Gompertz model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_heleg.html">sar_heleg</a></code> </p>
-          </td>
-          <td><p>Fit the Logistic (He &amp; Legendre) model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_koba.html">sar_koba</a></code> </p>
-          </td>
-          <td><p>Fit the Kobayashi model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_mmf.html">sar_mmf</a></code> </p>
-          </td>
-          <td><p>Fit the MMF model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_monod.html">sar_monod</a></code> </p>
-          </td>
-          <td><p>Fit the Monod model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_negexpo.html">sar_negexpo</a></code> </p>
-          </td>
-          <td><p>Fit the Negative exponential model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_p1.html">sar_p1</a></code> </p>
-          </td>
-          <td><p>Fit the Persistence function 1 model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_p2.html">sar_p2</a></code> </p>
-          </td>
-          <td><p>Fit the Persistence function 2 model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_power.html">sar_power</a></code> </p>
-          </td>
-          <td><p>Fit the Power model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_powerR.html">sar_powerR</a></code> </p>
-          </td>
-          <td><p>Fit the PowerR model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_ratio.html">sar_ratio</a></code> </p>
-          </td>
-          <td><p>Fit the Rational function model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sars-package.html">sars-package</a></code> </p>
-          </td>
-          <td><p>sars: Fit and compare species-area relationship models using multimodel inference</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_weibull3.html">sar_weibull3</a></code> </p>
-          </td>
-          <td><p>Fit the Cumulative Weibull 3 par. model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sar_weibull4.html">sar_weibull4</a></code> </p>
-          </td>
-          <td><p>Fit the Cumulative Weibull 4 par. model</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="summary.sars.html">summary</a></code> </p>
-          </td>
-          <td><p>Summarising the results of the model fitting functions</p></td>
-        </tr>
-      </tbody>
-      </table>
-    </div>
+    <tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="aegean.html">aegean</a></code> </p>
+        </td>
+        <td><p>A SAR dataset describing invertebrates on islands in the Aegean Sea, Greece</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cole_sim.html">cole_sim</a></code> </p>
+        </td>
+        <td><p>A simulated species-site abundance matrix with site areas</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="coleman.html">coleman()</a></code> </p>
+        </td>
+        <td><p>Fit Coleman's Random Placement Model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="fit_collection.html">fit_collection()</a></code> </p>
+        </td>
+        <td><p>Create a Collection of SAR Model Fits</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="galap.html">galap</a></code> </p>
+        </td>
+        <td><p>A SAR dataset describing the plants of the Galapagos Islands</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="gdm.html">gdm()</a></code> </p>
+        </td>
+        <td><p>Fit the General Dynamic Model of Island Biogeography</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="lin_pow.html">lin_pow()</a></code> </p>
+        </td>
+        <td><p>Fit the log-log version of the power model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="niering.html">niering</a></code> </p>
+        </td>
+        <td><p>A SAR dataset describing the plants of the Kapingamarangi Atoll</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plot.coleman.html">plot(<i>&lt;coleman&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot Model Fits for a 'coleman' Object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plot.multi.html">plot(<i>&lt;multi&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot Model Fits for a 'multi' Object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plot.sars.html">plot(<i>&lt;sars&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot Model Fits for a 'sars' Object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_asymp.html">sar_asymp()</a></code> </p>
+        </td>
+        <td><p>Fit the Asymptotic regression model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_betap.html">sar_betap()</a></code> </p>
+        </td>
+        <td><p>Fit the Beta-P cumulative model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_chapman.html">sar_chapman()</a></code> </p>
+        </td>
+        <td><p>Fit the Chapman Richards model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_epm1.html">sar_epm1()</a></code> </p>
+        </td>
+        <td><p>Fit the Extended Power model 1 model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_epm2.html">sar_epm2()</a></code> </p>
+        </td>
+        <td><p>Fit the Extended Power model 2 model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_expo.html">sar_expo()</a></code> </p>
+        </td>
+        <td><p>Fit the Exponential model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_gompertz.html">sar_gompertz()</a></code> </p>
+        </td>
+        <td><p>Fit the Gompertz model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_heleg.html">sar_heleg()</a></code> </p>
+        </td>
+        <td><p>Fit the Heleg(Logistic) model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_koba.html">sar_koba()</a></code> </p>
+        </td>
+        <td><p>Fit the Kobayashi model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_linear.html">sar_linear()</a></code> </p>
+        </td>
+        <td><p>Fit the linear model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_mmf.html">sar_mmf()</a></code> </p>
+        </td>
+        <td><p>Fit the MMF model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_monod.html">sar_monod()</a></code> </p>
+        </td>
+        <td><p>Fit the Monod model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_multi.html">sar_multi()</a></code> </p>
+        </td>
+        <td><p>Fit a multimodel SAR curve</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_negexpo.html">sar_negexpo()</a></code> </p>
+        </td>
+        <td><p>Fit the Negative exponential model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_p1.html">sar_p1()</a></code> </p>
+        </td>
+        <td><p>Fit the Persistence function 1 model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_p2.html">sar_p2()</a></code> </p>
+        </td>
+        <td><p>Fit the Persistence function 2 model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_power.html">sar_power()</a></code> </p>
+        </td>
+        <td><p>Fit the Power model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_powerR.html">sar_powerR()</a></code> </p>
+        </td>
+        <td><p>Fit the PowerR model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_ratio.html">sar_ratio()</a></code> </p>
+        </td>
+        <td><p>Fit the Rational function model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_weibull3.html">sar_weibull3()</a></code> </p>
+        </td>
+        <td><p>Fit the Cumulative Weibull 3 par. model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sar_weibull4.html">sar_weibull4()</a></code> </p>
+        </td>
+        <td><p>Fit the Cumulative Weibull 4 par. model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sars-package.html">sars-package</a></code> </p>
+        </td>
+        <td><p>sars: Fit and compare species-area relationship models using multimodel inference</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="summary.sars.html">summary(<i>&lt;sars&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Summarising the results of the model fitting functions</p></td>
+      </tr>
+    </tbody>
+    </table>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -304,5 +353,8 @@
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

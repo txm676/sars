@@ -21,21 +21,27 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
 <meta property="og:title" content="Summarising the results of the model fitting functions — summary.sars" />
 
-<meta property="og:description" content="S3 method for class 'mmSAR2'. summary.mmSAR2 creates summary
-  statistics for objects of class mmSAR2. The exact summary statistics
-  computed depends on the 'Type' attribute (e.g. 'lin_pow') of the mmSAR2
-  object (see below). The summary method generates more useful information
-  for the user than the standard model fitting functions. Another S3 method
-  (print.summary.mmSAR2; not documented) is used to print the output." />
+<meta property="og:description" content="S3 method for class 'sars'. summary.sars creates summary
+  statistics for objects of class 'sars'. The exact summary statistics
+  computed depends on the 'Type' attribute (e.g. 'multi') of the 'sars'
+  object. The summary method generates more useful information for the user
+  than the standard model fitting functions. Another S3 method
+  (print.summary.sars; not documented) is used to print the output." />
 <meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -58,8 +64,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">sars</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">sars</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.0</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -93,6 +103,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -100,54 +111,172 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Summarising the results of the model fitting functions</h1>
+    <small class="dont-index">Source: <a href='https://github.com/txm676/sars/blob/master/R/class_summary.R'><code>R/class_summary.R</code></a></small>
+    <div class="hidden name"><code>summary.sars.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
-    <p>S3 method for class 'mmSAR2'. summary.mmSAR2 creates summary
-  statistics for objects of class mmSAR2. The exact summary statistics
-  computed depends on the 'Type' attribute (e.g. 'lin_pow') of the mmSAR2
-  object (see below). The summary method generates more useful information
-  for the user than the standard model fitting functions. Another S3 method
-  (print.summary.mmSAR2; not documented) is used to print the output.</p>
+    <p>S3 method for class 'sars'. <code>summary.sars</code> creates summary
+  statistics for objects of class 'sars'. The exact summary statistics
+  computed depends on the 'Type' attribute (e.g. 'multi') of the 'sars'
+  object. The summary method generates more useful information for the user
+  than the standard model fitting functions. Another S3 method
+  (<code>print.summary.sars</code>; not documented) is used to print the output.</p>
     
+    </div>
 
     <pre class="usage"><span class='co'># S3 method for sars</span>
-<span class='fu'>summary</span>(<span class='no'>object</span>)</pre>
+<span class='fu'>summary</span>(<span class='no'>object</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>object</th>
-      <td><p>An object of class 'mmSAR2'.</p></td>
+      <td><p>An object of class 'sars'.</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>further arguments passed to or from other methods.</p></td>
+      <th>&#8230;</th>
+      <td><p>Further arguments.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The summary function returns an object of class "summary.mmSAR2". A
-  print function is used to obtain and print a summary of the model fit
-  results.</p>
-<p>An object of class "summary.mmSAR2" is a list containing the following
-  components:</p><ul>
-<li><p>"Summary"   A vector of model fit values (e.g. the c, z,
-    z-significance, and R2 value for the linear power model fit).</p></li>
-<li><p>"df"   A dataframe containing the island areas and the models' fitted values.</p></li>
-</ul>
-
+    <p>The <code>summary.sars</code> function returns an object of class
+  "summary.sars". A print function is used to obtain and print a summary of
+  the model fit results.</p>
+<p>For a 'sars' object of Type 'fit', a list with 16 elements is returned that
+  contains useful information from the model fit, including the model
+  parameter table (with t-values, p-values and confidence intervals), model
+  fit statistics (e.g. R2, AIC), the observed shape of the model and whether
+  or not the fit is asymptotic, and the results of any additional model
+  checks undertaken (e.g. normality of the residuals).</p>
+<p>For a 'sars' object of Type 'multi', a list with 4 elements is returned:
+  (i) a vector of the names of the models that were successfully fitted and
+  passed any additional checks, (ii) a character string containing the name
+  of the criterion used to rank models, (iii) a data frame of the ranked
+  models, and (iv) a vector of the names of any models that were not fitted
+  or did not pass any additional checks. In regards to (iii;
+  <code>Model_table</code>), the dataframe contains the fit summaries for each
+  successfully fitted model (including the value of the model criterion used
+  to compare models, the R2 and adjusted R2, and the observed shape of the
+  fit); the models are ranked in decreasing order of information criterion
+  weight.</p>
+<p>For a 'sars' object of Type 'lin_pow', a list with 5 elements is returned:
+  (i) the model fit output from the <code>lm</code> function, (ii) the
+  fitted values of the model, (iii) the observed data, and (iv and v) the
+  results of the residuals normality and heterogeneity tests. If the argument
+  <code>compare = TRUE</code> is used in <code><a href='lin_pow.html'>lin_pow</a></code>, a sixth element is
+  returned that contains the parameter values from the non-linear power
+  model.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>galap</span>)
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='lin_pow.html'>lin_pow</a></span>(<span class='no'>galap</span>, <span class='kw'>a</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>s</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>con</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in lin_pow(galap, a = 1, s = 2, con = 1): arguments inutilisés (a = 1, s = 2)</span></div><div class='input'><span class='fu'>summary</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; <span class='error'>Error in summary(fit): objet 'fit' introuvable</span></div></pre>
+<span class='co'>#fit a multimodel SAR and get the model table</span>
+<span class='no'>mf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sar_multi.html'>sar_multi</a></span>(<span class='no'>galap</span>)</div><div class='output co'>#&gt; 
+#&gt;  Now attempting to fit the 20 SAR models: 
+#&gt;  
+#&gt; ──  multi_sars ────────────────────────────────────────────── multi-model SAR ──
+#&gt; → power    : ✔
+#&gt; → powerR   : ✔
+#&gt; → epm1     : ✔
+#&gt; → epm2     : ✔
+#&gt; → p1       : ✔
+#&gt; → p2       : ✔
+#&gt; → expo     : ✔
+#&gt; → koba     : ✔
+#&gt; → mmf      : ✔
+#&gt; → monod    : ✔
+#&gt; → negexpo  : ✔
+#&gt; → chapman  : Warning: could not compute parameters statistics
+#&gt; → weibull3 : ✔
+#&gt; → asymp    : ✔
+#&gt; → ratio    : ✔
+#&gt; → gompertz : ✔
+#&gt; → weibull4 : ✔
+#&gt; → betap    : ✔
+#&gt; → heleg    : ✔
+#&gt; → linear   : ✔
+#&gt; 
+#&gt;  Model fitting completed - all models succesfully fitted. Now undertaking model validation checks. 
+#&gt;  Additional models will be excluded if necessary: </div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>4 models failed the residuals normality test and have been excluded from the multi SAR:</span>
+#&gt; <span class='message'>Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>1 models have negative fitted values and have been excluded from the multi SAR:</span>
+#&gt; <span class='message'>Exponential</span></div><div class='output co'>#&gt; 15 remaining models used to construct the multi SAR: 
+#&gt;  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
+#&gt; ────────────────────────────────────────────────────────────────────────────────</div><div class='input'><span class='fu'>summary</span>(<span class='no'>mf</span>)</div><div class='output co'>#&gt; 
+#&gt; Sar_multi object summary: 
+#&gt; 
+#&gt; 15  models successfully fitted
+#&gt; 
+#&gt; The following models could not be fitted or were removed due to model checks:
+#&gt; Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model, Exponential 
+#&gt; 
+#&gt; Ranked models based on AICc  weights:
+#&gt; 
+#&gt;                        Model Weight    AICc    R2   R2a     Shape Asymptote
+#&gt; 1       Negative_exponential  0.235 141.426 0.557 0.488 convex up      TRUE
+#&gt; 2                      Monod  0.191 141.840 0.545 0.475 convex up      TRUE
+#&gt; 3                  Kobayashi  0.127 142.667 0.521 0.447 convex up     FALSE
+#&gt; 4                      Power  0.078 143.625 0.491 0.413 convex up     FALSE
+#&gt; 5     Persistence_function_1  0.070 143.840 0.589 0.486 convex up     FALSE
+#&gt; 6                   Gompertz  0.065 143.987 0.585 0.482   sigmoid      TRUE
+#&gt; 7  Cumulative_Weibull_3_par.  0.041 144.918 0.561 0.451 convex up      TRUE
+#&gt; 8           Chapman_Richards  0.038 145.062 0.557 0.446 convex up      TRUE
+#&gt; 9          Rational_function  0.038 145.088 0.556 0.445 convex up      TRUE
+#&gt; 10           Heleg(Logistic)  0.031 145.476 0.545 0.431 convex up      TRUE
+#&gt; 11                       MMF  0.031 145.476 0.545 0.431 convex up      TRUE
+#&gt; 12    Persistence_function_2  0.021 146.306 0.521 0.401   sigmoid     FALSE
+#&gt; 13                    PowerR  0.015 146.877 0.503 0.379 convex up     FALSE
+#&gt; 14    Extended_Power_model_2  0.015 146.923 0.502 0.377   sigmoid     FALSE
+#&gt; 15         Beta-P_cumulative  0.002 150.612 0.522 0.349 convex up     FALSE</div><div class='input'><span class='fu'>summary</span>(<span class='no'>mf</span>)$<span class='no'>Model_table</span></div><div class='output co'>#&gt;                        Model Weight    AICc    R2   R2a     Shape Asymptote
+#&gt; 1       Negative_exponential  0.235 141.426 0.557 0.488 convex up      TRUE
+#&gt; 2                      Monod  0.191 141.840 0.545 0.475 convex up      TRUE
+#&gt; 3                  Kobayashi  0.127 142.667 0.521 0.447 convex up     FALSE
+#&gt; 4                      Power  0.078 143.625 0.491 0.413 convex up     FALSE
+#&gt; 5     Persistence_function_1  0.070 143.840 0.589 0.486 convex up     FALSE
+#&gt; 6                   Gompertz  0.065 143.987 0.585 0.482   sigmoid      TRUE
+#&gt; 7  Cumulative_Weibull_3_par.  0.041 144.918 0.561 0.451 convex up      TRUE
+#&gt; 8           Chapman_Richards  0.038 145.062 0.557 0.446 convex up      TRUE
+#&gt; 9          Rational_function  0.038 145.088 0.556 0.445 convex up      TRUE
+#&gt; 10           Heleg(Logistic)  0.031 145.476 0.545 0.431 convex up      TRUE
+#&gt; 11                       MMF  0.031 145.476 0.545 0.431 convex up      TRUE
+#&gt; 12    Persistence_function_2  0.021 146.306 0.521 0.401   sigmoid     FALSE
+#&gt; 13                    PowerR  0.015 146.877 0.503 0.379 convex up     FALSE
+#&gt; 14    Extended_Power_model_2  0.015 146.923 0.502 0.377   sigmoid     FALSE
+#&gt; 15         Beta-P_cumulative  0.002 150.612 0.522 0.349 convex up     FALSE</div><div class='input'><span class='co'>#Get a summary of the fit of the linear power model</span>
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='lin_pow.html'>lin_pow</a></span>(<span class='no'>galap</span>, <span class='kw'>con</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>compare</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>summary</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; Model =  Log-log power 
+#&gt; 
+#&gt; Call:
+#&gt; lm(formula = S ~ A, data = log.data)
+#&gt; 
+#&gt; Residuals:
+#&gt;     Min      1Q  Median      3Q     Max 
+#&gt; -1.3591 -0.7584  0.1177  0.6009  1.0739 
+#&gt; 
+#&gt; Coefficients:
+#&gt;      Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt; LogC  3.01865    0.35442   8.517 6.56e-07 ***
+#&gt; z     0.33854    0.08523   3.972  0.00139 ** 
+#&gt; ---
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+#&gt; 
+#&gt; Residual standard error: 0.7626 on 14 degrees of freedom
+#&gt; Multiple R-squared:  0.5298,	Adjusted R-squared:  0.4962 
+#&gt; F-statistic: 15.78 on 1 and 14 DF,  p-value: 0.001391
+#&gt; 
+#&gt; Power (non-linear) parameters: 
+#&gt;  c = 33.18 
+#&gt;  z = 0.28</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -174,5 +303,8 @@
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

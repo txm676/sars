@@ -6,15 +6,15 @@ Authors@R: c(person("Thomas J.", "Matthews", email = "txm676@gmail.com",
                   role = c("aut", "cre")),
             person("François", "Guilhaumon", email = "francois.guilhaumon@ird.fr",
                   role = c("aut")))
-Description: Implements the basic elements of the multi-model 
-    inference paradigm for up to twenty species-area relationship models (SAR), using simple 
+Description: Implements the basic elements of the multi-model
+    inference paradigm for up to twenty species-area relationship models (SAR), using simple
     R list-objects and functions, as in Triantis et al. 2012 <DOI:10.1111/j.1365-2699.2011.02652.x>.
-    The package is scalable and users can easily create their own model and data objects. Additional 
+    The package is scalable and users can easily create their own model and data objects. Additional
     SAR related functions are provided.
 License: GPL-3
 URL: https://github.com/txm676/sars
 BugReports: https://github.com/txm676/sars/issues
-Imports: 
+Imports:
     dplyr,
     graphics,
     nortest,
@@ -26,7 +26,6 @@ Imports:
 Depends: R(>= 3.0.0)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Suggests: knitr,
     rmarkdown
-

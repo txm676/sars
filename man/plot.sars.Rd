@@ -78,7 +78,7 @@ S3 method for class 'sars'. \code{plot.sars} creates plots for
   object of Type 'fit_collection' the \code{plot.sars} function returns
   either a grid with n individual plots (corresponding to the n model fits in
   the fit_collection), or a single plot with all n model fits included.
-  
+
   For plotting a 'sar_multi' object, see \code{\link{plot.multi}}.
 }
 \examples{

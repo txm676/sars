@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot Model Fits for an mmsar2 Object — plot.sars • sars</title>
+<title>Plot Model Fits for a 'sars' Object — plot.sars • sars</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -21,22 +21,31 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
-<meta property="og:title" content="Plot Model Fits for an mmsar2 Object — plot.sars" />
 
-<meta property="og:description" content="S3 method for class 'mmSAR2'. plot.mmSAR2 creates plots for
-  objects of class mmSAR2, using the ggplot2 R package. The exact plot(s)
-  constructed depends on the 'Type' attribute (e.g. 'lin_pow') of the mmSAR2
-  object.
-For an mmSAR2 object of Type 'lin_pow' (i.e. linear power model fit), the
-  plot.mmSAR2 function returns a plot of the model fit (black line) and the
-  observed richness values (coloured circles)." />
+
+
+<meta property="og:title" content="Plot Model Fits for a 'sars' Object — plot.sars" />
+
+<meta property="og:description" content="S3 method for class 'sars'. plot.sars creates plots for
+  objects of class 'sars' (type = 'fit', &quot;lin_pow' and 'fit_collection'),
+  using the R base plotting framework. The exact plot(s) constructed depends
+  on the 'Type' attribute of the 'sars' object. For example, for a 'sars'
+  object of Type 'fit', the plot.sars function returns a plot of the
+  model fit (line) and the observed richness values (points). For a 'sars'
+  object of Type 'fit_collection' the plot.sars function returns
+  either a grid with n individual plots (corresponding to the n model fits in
+  the fit_collection), or a single plot with all n model fits included.
+For plotting a 'sar_multi' object, see plot.multi." />
 <meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -59,8 +68,12 @@ For an mmSAR2 object of Type 'lin_pow' (i.e. linear power model fit), the
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">sars</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">sars</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.0</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -94,6 +107,7 @@ For an mmSAR2 object of Type 'lin_pow' (i.e. linear power model fit), the
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -101,65 +115,155 @@ For an mmSAR2 object of Type 'lin_pow' (i.e. linear power model fit), the
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot Model Fits for an mmsar2 Object</h1>
+    <h1>Plot Model Fits for a 'sars' Object</h1>
+    <small class="dont-index">Source: <a href='https://github.com/txm676/sars/blob/master/R/class_plot.R'><code>R/class_plot.R</code></a></small>
+    <div class="hidden name"><code>plot.sars.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
-    <p>S3 method for class 'mmSAR2'. plot.mmSAR2 creates plots for
-  objects of class mmSAR2, using the ggplot2 R package. The exact plot(s)
-  constructed depends on the 'Type' attribute (e.g. 'lin_pow') of the mmSAR2
-  object.</p>
-<p>For an mmSAR2 object of Type 'lin_pow' (i.e. linear power model fit), the
-  plot.mmSAR2 function returns a plot of the model fit (black line) and the
-  observed richness values (coloured circles).</p>
+    <p>S3 method for class 'sars'. <code>plot.sars</code> creates plots for
+  objects of class 'sars' (type = 'fit', "lin_pow' and 'fit_collection'),
+  using the R base plotting framework. The exact plot(s) constructed depends
+  on the 'Type' attribute of the 'sars' object. For example, for a 'sars'
+  object of Type 'fit', the <code>plot.sars</code> function returns a plot of the
+  model fit (line) and the observed richness values (points). For a 'sars'
+  object of Type 'fit_collection' the <code>plot.sars</code> function returns
+  either a grid with n individual plots (corresponding to the n model fits in
+  the fit_collection), or a single plot with all n model fits included.</p>
+<p>For plotting a 'sar_multi' object, see <code><a href='plot.multi.html'>plot.multi</a></code>.</p>
     
+    </div>
 
     <pre class="usage"><span class='co'># S3 method for sars</span>
-<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sh1</span> <span class='kw'>=</span> <span class='fl'>21</span>, <span class='kw'>s1</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>s2</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>s3</span> <span class='kw'>=</span> <span class='fl'>14</span>, <span class='kw'>s4</span> <span class='kw'>=</span> <span class='fl'>13</span>, <span class='kw'>s5</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>c1</span> <span class='kw'>=</span> <span class='st'>"darkred"</span>, <span class='kw'>c2</span> <span class='kw'>=</span> <span class='st'>"#5e5e5e"</span>,
-  <span class='kw'>xl</span> <span class='kw'>=</span> <span class='st'>"Area"</span>, <span class='kw'>yl</span> <span class='kw'>=</span> <span class='st'>"Species richness"</span>, <span class='kw'>p1</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>dimen</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>th</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>mfplot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>pch</span> <span class='kw'>=</span> <span class='fl'>16</span>, <span class='kw'>cex</span> <span class='kw'>=</span> <span class='fl'>1.2</span>, <span class='kw'>pcol</span> <span class='kw'>=</span> <span class='st'>"dodgerblue2"</span>, <span class='kw'>ModTitle</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>TiAdj</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>TiLine</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>cex.main</span> <span class='kw'>=</span> <span class='fl'>1.5</span>, <span class='kw'>cex.lab</span> <span class='kw'>=</span> <span class='fl'>1.3</span>,
+  <span class='kw'>cex.axis</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>yRange</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>lcol</span> <span class='kw'>=</span> <span class='st'>"dodgerblue2"</span>,
+  <span class='kw'>di</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pLeg</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>th</th>
-      <td><p>an additional ggplot2 theme can be added and instructions can be passed.
-As ggplot2 is not *loaded*, th needs to use ggplot2::, e.g. ggplot2::theme_bw</p></td>
+      <th>x</th>
+      <td><p>An object of class 'sars'.</p></td>
     </tr>
     <tr>
-      <th>object</th>
-      <td><p>An object of class 'mmSAR2'.</p></td>
+      <th>mfplot</th>
+      <td><p>Logical argument specifying whether the model fits in a
+fit_collection should be plotted on one single plot (<code>mfplot = TRUE</code>)
+or separate plots (<code>mfplot = FALSE</code>; the default).</p></td>
     </tr>
     <tr>
-      <th>lsi</th>
-      <td><p>Argument for line width (default = 3).</p></td>
+      <th>xlab</th>
+      <td><p>Title for the x-axis (default depends on the Type attribute).</p></td>
     </tr>
     <tr>
-      <th>ps</th>
-      <td><p>Argument for point size (default = 1).</p></td>
+      <th>ylab</th>
+      <td><p>Title for the y-axis (default depends on the Type attribute).</p></td>
     </tr>
     <tr>
-      <th>pc</th>
-      <td><p>Argument for point colour (default = darkgreen).</p></td>
+      <th>pch</th>
+      <td><p>Plotting character (for points).</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>further arguments passed to or from other methods.</p></td>
+      <th>cex</th>
+      <td><p>A numerical vector giving the amount by which plotting symbols
+(points) should be scaled relative to the default.</p></td>
+    </tr>
+    <tr>
+      <th>pcol</th>
+      <td><p>Colour of the points.</p></td>
+    </tr>
+    <tr>
+      <th>ModTitle</th>
+      <td><p>Plot title (default is <code>ModTitle = NULL</code>, which reverts
+to a default name depending on the type of plot). For no title, use
+<code>ModTitle = ""</code>. For a sars object of type fit_collection, a vector of
+names can be provided (e.g. <code>letters[1:3]</code>).</p></td>
+    </tr>
+    <tr>
+      <th>TiAdj</th>
+      <td><p>Which way the plot title is justified.</p></td>
+    </tr>
+    <tr>
+      <th>TiLine</th>
+      <td><p>Places the plot title this many lines outwards from the plot
+edge.</p></td>
+    </tr>
+    <tr>
+      <th>cex.main</th>
+      <td><p>The amount by which the plot title should be scaled relative
+to the default.</p></td>
+    </tr>
+    <tr>
+      <th>cex.lab</th>
+      <td><p>The amount by which the axis titles should be scaled relative
+to the default.</p></td>
+    </tr>
+    <tr>
+      <th>cex.axis</th>
+      <td><p>The amount by which the axis labels should be scaled relative
+to the default.</p></td>
+    </tr>
+    <tr>
+      <th>yRange</th>
+      <td><p>The range of the y-axis.</p></td>
+    </tr>
+    <tr>
+      <th>lwd</th>
+      <td><p>Line width.</p></td>
+    </tr>
+    <tr>
+      <th>lcol</th>
+      <td><p>Line colour.</p></td>
+    </tr>
+    <tr>
+      <th>di</th>
+      <td><p>Dimensions to be passed to <code>par(mfrow=())</code> to specify the size
+of the plotting window, when plotting multiple plots from a sars object of
+Type fit_collection. For example, <code>di = c(1, 3)</code> creates a plotting
+window with 1 row and 3 columns. The default (null) creates a square
+plotting window of the correct size.</p></td>
+    </tr>
+    <tr>
+      <th>pLeg</th>
+      <td><p>Logical argument specifying whether or not the legend should be
+plotted for fit_collection plots (when <code>mfplot = TRUE</code>) or sar_multi
+plots. When a large number of model fits are plotted the legend takes up a
+lot of space, and thus the default is <code>pLeg = FALSE</code>.</p></td>
+    </tr>
+    <tr>
+      <th>&#8230;</th>
+      <td><p>Further graphical parameters (see <code><a href='http://www.rdocumentation.org/packages/graphics/topics/par'>par</a></code>,
+<code><a href='http://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></code>,<code><a href='http://www.rdocumentation.org/packages/graphics/topics/title'>title</a></code>,
+<code><a href='http://www.rdocumentation.org/packages/graphics/topics/lines'>lines</a></code>) may be supplied as arguments.</p></td>
     </tr>
     </table>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>galap</span>)
+<span class='co'>#fit and plot a sars object of Type fit.</span>
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sar_power.html'>sar_power</a></span>(<span class='no'>galap</span>)
+<span class='fu'>plot</span>(<span class='no'>fit</span>, <span class='kw'>ModTitle</span> <span class='kw'>=</span> <span class='st'>"A)"</span>, <span class='kw'>lcol</span> <span class='kw'>=</span> <span class='st'>"blue"</span>)</div><div class='img'><img src='plot.sars-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'>#fit and plot a sars object of Type fit_collection.</span>
+<span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sar_expo.html'>sar_expo</a></span>(<span class='no'>galap</span>)
+<span class='no'>fit3</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sar_epm1.html'>sar_epm1</a></span>(<span class='no'>galap</span>)
+<span class='no'>fc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fit_collection.html'>fit_collection</a></span>(<span class='no'>fit</span>, <span class='no'>fit2</span>, <span class='no'>fit3</span>)
+<span class='fu'>plot</span>(<span class='no'>fc</span>, <span class='kw'>ModTitle</span> <span class='kw'>=</span> <span class='no'>letters</span>[<span class='fl'>1</span>:<span class='fl'>3</span>], <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='st'>"Size of island"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: the condition has length &gt; 1 and only the first element will be used</span></div><div class='img'><img src='plot.sars-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+            
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
@@ -176,5 +280,8 @@ As ggplot2 is not *loaded*, th needs to use ggplot2::, e.g. ggplot2::theme_bw</p
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+
