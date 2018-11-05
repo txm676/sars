@@ -9,7 +9,7 @@
   ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
   cex.lab = 1.3, cex.axis = 1, yRange = NULL, lwd = 2,
   lcol = "dodgerblue2", pLeg = TRUE, modNames = NULL, cex.names = 0.88,
-  subset_weights = NULL, ...)
+  subset_weights = NULL, confInt = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class 'multi'.}
@@ -73,6 +73,10 @@ scaled relative to the default. Only for use with \code{type = bar}.}
 with a weight value above a given threshold (\code{subset_weights}). Only
 for use with \code{type = bar}.}
 
+\item{confInt}{A logical argument specifying whether confidence intervals
+should be plotted around the multimodel curve. Can only be used if
+confidence intervals have been generated in the \code{sar_multi} function.}
+
 \item{\dots}{Further graphical parameters (see \code{\link[graphics]{par}},
 \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 \code{\link[graphics]{lines}}) may be supplied as arguments.}
@@ -90,13 +94,13 @@ When plotting all model fits on the same plot with a legend it is
   the 'Plots' window of R studio) before plotting to ensure the legend fits
   in the plot. Extending the plotting window after plotting simply stretches
   the legend.
-  
-  Occasionally a model fit will converge and pass the model fitting
-  checks (e.g. residual normality) but the resulting fit is nonsensical (e.g.
-  a horizontal line with intercept at zero). Thus, it can be useful to plot
-  the resultant 'multi' object to check the individual model fits. To re-run
-  the \code{sar_multi} function without a particular model, simply remove it
-  from the \code{obj} argument.
+
+  Occasionally a model fit will converge and pass the model fitting checks
+  (e.g. residual normality) but the resulting fit is nonsensical (e.g. a
+  horizontal line with intercept at zero). Thus, it can be useful to plot the
+  resultant 'multi' object to check the individual model fits. To re-run the
+  \code{sar_multi} function without a particular model, simply remove it from
+  the \code{obj} argument.
   
   For visual interpretation of the model weights barplot it is necessary to
   abbreviate the model names when plotting the weights of several models. To
@@ -133,7 +137,7 @@ fit <- sar_multi(galap)
 plot(fit)
 
 #remove the legend
-plot(fit, pLeg = F)
+plot(fit, pLeg = FALSE)
 
 #plot just the multimodel curve
 plot(fit, allCurves = FALSE, ModTitle = "", lcol = "black")

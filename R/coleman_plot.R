@@ -26,7 +26,8 @@
 #'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
 #' @details The resultant plot contains the observed richness values ***
-#' @importFrom dplyr arrange
+#' @importFrom dplyr arrange_
+#' @import graphics 
 #' @examples
 #' data(cole_sim)
 #' fit <- coleman(cole_sim[[1]], cole_sim[[2]])
@@ -44,7 +45,7 @@ plot.coleman <- function(x, xlab = "Relative area (log transformed)",
                    x$Relative_areas, x$Species_richness)
     colnames(df) <- c("pv", "sd", "ra", "os")
     
-    df <- arrange(df, ra)
+    df <- arrange_(df, ~ra)#using standard evaluation
     
     plot(x = log(df$ra), y = df$os, ylim = c(min((df$pv - df$sd)), max((df$pv + df$sd))),
          xlab = xlab, ylab = ylab, pch = pch, cex = cex, col = pcol,

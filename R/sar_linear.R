@@ -23,6 +23,8 @@
 #'   A selection of information criteria (e.g. AIC, BIC) are returned and can be
 #'   used to compare models (see also \code{\link{fit_collection}} and
 #'   \code{\link{sar_multi}}).
+#' @import stats
+#' @importFrom nortest lillie.test
 #' @return A list of class 'sars' with the following components: 
 #'   \itemize{
 #'     \item{par} { The model parameters}
@@ -52,10 +54,10 @@
 #' plot(fit)
 #' @export 
 
-sar_linear <- function(data = galap, normaTest =  "lillie", homoTest = "cor.fitted"){
+sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
   if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe') 
   if (is.matrix(data)) data <- as.data.frame(data) 
-  if (base::anyNA(data)) stop('NAs present in data') 
+  if (anyNA(data)) stop('NAs present in data') 
   data <- data[order(data[,1]),] 
   colnames(data) <- c('A','S') 
   #standard linear regression
@@ -97,7 +99,7 @@ sar_linear <- function(data = galap, normaTest =  "lillie", homoTest = "cor.fitt
   if (normaTest == "shapiro") {
     normaTest <- list("test" = "shapiro", tryCatch(shapiro.test(res), error = function(e)NA))
   } else if (normaTest == "lillie"){ 
-    normaTest <- list("test" = "lillie", tryCatch(nortest::lillie.test(res), error = function(e)NA))
+    normaTest <- list("test" = "lillie", tryCatch(lillie.test(res), error = function(e)NA))
   } else if (normaTest == "kolmo"){ 
     normaTest <- list("test" = "kolmo", tryCatch(ks.test(res, "pnorm"), error = function(e)NA))
   } else{
@@ -112,11 +114,31 @@ sar_linear <- function(data = galap, normaTest =  "lillie", homoTest = "cor.fitt
   } else {
     homoTest = "none"
   }
+
   fit$normaTest <- normaTest
   fit$homoTest <- homoTest
+  #copying the non-linear models (for use in confint calculations)
+  fit$model$exp <- expression(c + m*A)
+  fit$model$mod.fun <- function(A = A, par = par, model = model) { eval(model$exp,list(A=A,c=par[1],m=par[2]))}
+  #rss function (for use in confInts of sar_multi)
+  fit$model$rss.fun <- function(par,data, model, opt = TRUE){
+    S <- data$S
+    A <- data$A
+    res <- sum((S - model$mod.fun(A,par, model = model))^2)
+    res
+  }
   class(fit) <- 'sars' 
   attr(fit, 'type') <- 'fit' 
   return(fit) 
 }#end of sar_linear
+
+
+
+
+
+
+
+
+
 
 

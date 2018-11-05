@@ -5,26 +5,72 @@
 \alias{sars-package}
 \title{sars: Fit and compare species-area relationship models using multimodel inference}
 \description{
-A package to fit twenty species-area relationship models . ..
+This package provides functions to fit twenty models to
+  species-area relationship (SAR) data (see Triantis et al. 2012), plot the
+  model fits, and to construct a multimodel SAR curve using information
+  criterion weights. A number of additional SAR functions are provided, e.g.
+  to fit the log-log power model, the general dynamic model of island
+  biogeography (GDM), and Coleman's Random Placement model.
 }
 \details{
-There are ***
+Functions are provided to fit 20 individual SAR models. Nineteen are
+  fitted using non-linear regression, whilst a single model (the linear
+  model) is fitted using linear regression. Each model has its own function
+  (e.g. \code{\link{sar_power}}). A set of multiple model fits can be
+  combined into a fit collection (\code{\link{fit_collection}}). Plotting
+  functions (\code{\link{plot.sars}}) are provided that enable individual
+  model fits to be plotted on their own, or the fits of multiple models to be
+  overlayed on the same plot. Model fits are validated using a number of
+  checks, e.g. the normality and homogeneity of the model residuals can be
+  assessed.
+
+  A multimodel SAR curve can be constructed using the \code{\link{sar_multi}}
+  function. This fits up to twenty SAR models and constructs the multimodel
+  curve (with confidence intervals) using information criterion weights (see
+  \code{\link{summary.sars}} to calculate a table of models ranked by
+  information criterion weight). The \code{\link{plot.multi}} functions
+  enables the multimodel SAR curve to be plotted with or without the fits of
+  the individual models.
+
+  Other SAR related functions include: (i) \code{\link{lin_pow}}, which fits
+  the log-log power model and enables comparison of the model parameters with
+  those calculated using the non-linear power model, (ii) \code{\link{gdm}},
+  which fits the general dynamic model of island biogeography (Whittaker et
+  al. 2008) using several different functions, and (iii)
+  \code{\link{coleman}}, which fits Coleman's  (1981) random placement model
+  to a species-site abundance matrix.
 }
 \examples{
 data(galap, package = "sars")
-fit = (galap)
+#fit the power model
+fit <- sar_power(galap)
 summary(fit)
 plot(fit)
+
+#Construct a multimodel SAR curve
+fit_multi <- sar_multi(galap)
+summary(fit_multi)
+plot(fit_multi)
 }
 \references{
-Triantis, K.A., Guilhaumon, F. & Whittaker, R.J. (2012) The
-  island species–area relationship: biology and statistics. Journal of
-  Biogeography, 39, 215-231.
+Coleman, B. D. (1981). On random placement and species-area
+  relations. Mathematical Biosciences, 54, 191-215.
+
+  Guilhaumon, F., Mouillot, D., & Gimenez, O. (2010). mmSAR: an R-package for
+  multimodel species–area relationship inference. Ecography, 33, 420-424.
 
   Matthews, T.J., Guilhaumon, F., Triantis, K.A, Borregaard, M.K., &
   Whittaker, R.J. (2015b) On the form of species–area relationships in
   habitat islands and true islands. Global Ecology & Biogeography. DOI:
   10.1111/geb.12269.
+
+  Triantis, K.A., Guilhaumon, F. & Whittaker, R.J. (2012) The island
+  species–area relationship: biology and statistics. Journal of Biogeography,
+  39, 215-231.
+
+  Whittaker, R.J., Triantis, K.A. & Ladle, R.J. (2008) A general dynamic
+  theory of oceanic island biogeography. Journal of Biogeography, 35,
+  977-994.
 }
 \seealso{
 \url{https://github.com/txm676/sars}

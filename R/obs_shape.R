@@ -1,5 +1,7 @@
 ########observed shape#######################
 
+#' @import stats
+
 obs_shape <- function(x){
 
     minMaxVal <- NA

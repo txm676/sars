@@ -1,0 +1,10 @@
+citHeader("To cite sars in a publication:")
+
+citEntry(entry="Article",
+	title = "sars: an R package for fitting, evaluating and comparing species–area relationship models",
+        author = personList(as.person("T.J. Matthews"), as.person("K. Triantis"), as.person("R.J. Whittaker"),                               as.person("F. Guilhaumon")),
+	journal = "MEE",
+    volume="In review",
+    pages="In review",
+    year="2018",
+	textVersion = "Matthews, T.J., Triantis, K., Whittaker, R.J. and Guihaumon, F. (2018) sars: an R package for fitting, evaluating and comparing species–area relationship models. In review.")

@@ -4,10 +4,12 @@
 \alias{fit_collection}
 \title{Create a Collection of SAR Model Fits}
 \usage{
-fit_collection(...)
+fit_collection(..., fits = list(...))
 }
 \arguments{
 \item{...}{A set of one or more SAR model fits (all of class 'sars').}
+
+\item{fits}{Internal argument that creates a list of the model fits.}
 }
 \value{
 A list of class 'sars' with n elements, corresponding to the

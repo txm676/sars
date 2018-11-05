@@ -4,9 +4,13 @@
 \alias{lin_pow}
 \title{Fit the log-log version of the power model}
 \usage{
-lin_pow(dat, con = 1)
+lin_pow(data, con = 1, compare = FALSE, normaTest =  "lillie", homoTest = "cor.fitted")
 }
 \arguments{
+\item{data}{A dataset in the form of a dataframe with two columns: the first
+with island/site areas, and the second with the species richness of each
+island/site.}
+
 \item{con}{The constant to add to the species richness values in cases where
 one of the islands has zero species.}
 
@@ -24,10 +28,6 @@ the model. Can be any of "cor.fitted" (a correlation of the residuals with
 the model fitted values; the default), "cor.area" (a correlation of the
 residuals with the area values), or "none" (no residuals homogeneity test
 is undertaken).}
-
-\item{dat}{A dataset in the form of a dataframe with two columns: the first
-with island/site areas, and the second with the species richness of each
-island/site.}
 }
 \value{
 A list of class "sars" with up to six elements. The first element is

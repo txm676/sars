@@ -7,6 +7,7 @@
 #'   than the standard model fitting functions. Another S3 method
 #'   (\code{print.summary.sars}; not documented) is used to print the output.
 #' @param object An object of class 'sars'.
+#' @param \dots Further arguments.
 #' @return The \code{summary.sars} function returns an object of class
 #'   "summary.sars". A print function is used to obtain and print a summary of
 #'   the model fit results.
@@ -44,11 +45,11 @@
 #' summary(mf)
 #' summary(mf)$Model_table
 #' #Get a summary of the fit of the linear power model
-#' fit <- lin_pow(galap, con = 1, compare = T)
+#' fit <- lin_pow(galap, con = 1, compare = TRUE)
 #' summary(fit)
 #' @export
 
-summary.sars <- function(object){
+summary.sars <- function(object, ...){
   if (attributes(object)$type == "lin_pow"){
     rownames(object$Model$coefficients) <- c("LogC", "z")
     fit_df <- round(data.frame(Area = object$data$A, Fitted = object$calculated), 2) 
@@ -75,12 +76,12 @@ summary.sars <- function(object){
     shape <- object$observed_shape
     asymp <- object$asymptote
     conv <- object$verge
-    neg <- ifelse(any(object$calculated < 0), 1, 0)
+    negCheck <- ifelse(any(object$calculated < 0), 1, 0)
     res <- list("Model" = name, "residuals" = round(resid, 1), "Parameters" = pars_tab, 
                 "parNames" = parN, "formula" = formula, "AIC" = round(ic, 2), "AICc" = round(ic2, 2), "BIC" = round(bi, 2),
                 "R2" = round(R2, 2), "R2a" = round(R2a, 2), "observed_shape" = shape, "asymptote" = asymp, 
                 "convergence" = conv, "Normality_test" = object$normaTest, "Homogeneity_test" = object$homoTest, 
-                "Negative_values" = neg)
+                "Negative_values" = negCheck)
   }
   
   

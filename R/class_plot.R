@@ -49,7 +49,7 @@
 #' @param \dots Further graphical parameters (see \code{\link[graphics]{par}},
 #'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
-#' @importFrom graphics plot lines title
+#' @import graphics 
 #' @examples
 #' data(galap)
 #' #fit and plot a sars object of Type fit.
@@ -268,22 +268,25 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 #' @param subset_weights Only create a barplot of the model weights for models
 #'   with a weight value above a given threshold (\code{subset_weights}). Only
 #'   for use with \code{type = bar}.
+#' @param confInt A logical argument specifying whether confidence intervals
+#'   should be plotted around the multimodel curve. Can only be used if
+#'   confidence intervals have been generated in the \code{sar_multi} function.
 #' @param \dots Further graphical parameters (see \code{\link[graphics]{par}},
 #'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
-#' @importFrom graphics plot lines title
+#' @import graphics
 #' @note When plotting all model fits on the same plot with a legend it is
 #'   necessary to manually extend your plotting window (height and width; e.g.
 #'   the 'Plots' window of R studio) before plotting to ensure the legend fits
 #'   in the plot. Extending the plotting window after plotting simply stretches
 #'   the legend.
-#'   
-#'   Occasionally a model fit will converge and pass the model fitting
-#'   checks (e.g. residual normality) but the resulting fit is nonsensical (e.g.
-#'   a horizontal line with intercept at zero). Thus, it can be useful to plot
-#'   the resultant 'multi' object to check the individual model fits. To re-run
-#'   the \code{sar_multi} function without a particular model, simply remove it
-#'   from the \code{obj} argument.
+#'
+#'   Occasionally a model fit will converge and pass the model fitting checks
+#'   (e.g. residual normality) but the resulting fit is nonsensical (e.g. a
+#'   horizontal line with intercept at zero). Thus, it can be useful to plot the
+#'   resultant 'multi' object to check the individual model fits. To re-run the
+#'   \code{sar_multi} function without a particular model, simply remove it from
+#'   the \code{obj} argument.
 #'   
 #'   For visual interpretation of the model weights barplot it is necessary to
 #'   abbreviate the model names when plotting the weights of several models. To
@@ -319,7 +322,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 #' plot(fit)
 #' 
 #' #remove the legend
-#' plot(fit, pLeg = F)
+#' plot(fit, pLeg = FALSE)
 #' 
 #' #plot just the multimodel curve
 #' plot(fit, allCurves = FALSE, ModTitle = "", lcol = "black")
@@ -337,8 +340,15 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
                       pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
                       cex.lab = 1.3, cex.axis = 1, yRange = NULL, 
                       lwd = 2, lcol = 'dodgerblue2', pLeg = TRUE, modNames = NULL, cex.names=.88,
-                      subset_weights = NULL, ...)
+                      subset_weights = NULL, confInt = FALSE, ...)
 {
+  
+  if (confInt){
+    if (length(x$details$confInt) == 1) stop ("No confidence interval information in the fit object")
+    CI <- x$details$confInt
+  }
+  
+  
   ic <- x[[2]]$ic 
   dat <- x$details$fits
   
@@ -373,7 +383,7 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   for (i in seq_along(aw)) {mf3[ ,i] <- mf2[ ,i] * aw[i]}
   wfv <- rowSums(mf3)
   
-  #this is a test error for development: remove the mmi fitted code from this function before release
+  #this is a test error for development
   if (!all(round(wfv) == round(x$mmi))) stop("Multimodel fitted values do not match between functions")
 
   if (allCurves){
@@ -391,11 +401,21 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
     #set y axis range
     if (is.null(yRange)){
       if (allCurves){
+        if (confInt){ #CIs larger so need to add to ymax and ymin
+          yMax <- max(c(yy,unlist(mf2), CI$U))
+          yMin <- min(c(yy,unlist(mf2), CI$L))
+        } else {
         yMax <- max(c(yy,unlist(mf2)))#fitted line can be above the largest observed data point
         yMin <- min(c(yy,unlist(mf2)))
-      } else{
+      }
+        }else{
+        if (confInt){ #CIs larger so need to add to ymax and ymin
+          yMax <- max(c(yy,wfv, CI$U))#fitted line can be above the largest observed data point
+          yMin <- min(c(yy,wfv, CI$L))
+        } else {
         yMax <- max(c(yy,wfv))#fitted line can be above the largest observed data point
         yMin <- min(c(yy,wfv))
+        }
       }
       yRange = c(yMin, yMax)
     }
@@ -418,29 +438,54 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
      # legHeight <- lSiz$rect$h 
     #  yMAX <- legHeight + (legHeight * 0.3)
      # yRange <- c(yMin, yMAX)
-      matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,xlim = c(min(xx), xMAX), ylim = yRange)
+
+      if (confInt){
+        matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, 
+                cex.lab = cex.lab, cex.axis = cex.axis,xlim = c(min(xx), xMAX), ylim = yRange)
+        polygon(c(xx,rev(xx)),c(CI$L,rev(CI$U)),col="grey87",border=NA)
+        points(x = xx, y = yy, pch = pch, col = pcol, 
+               cex = cex)
+      } else {
+        matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+                cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,xlim = c(min(xx), xMAX), ylim = yRange)
+      }#eo confInt
     } else{ #no legend
-      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-      cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
-    }
+      
+      if (confInt){
+        plot(x = xx, y = yy, xlab = xlab, ylab = ylab, 
+             cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
+        polygon(c(xx,rev(xx)),c(CI$L,rev(CI$U)),col="grey87",border=NA)
+        points(x = xx, y = yy, pch = pch, col = pcol, 
+               cex = cex)
+      } else {
+        plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+        cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
+      }#eo confInt
+    }#eo no legend
       matlines(xx, mf2, lwd = lwd, lty = 1:ncol(mf2), col=1:ncol(mf2))
       if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax, legend = nams2,horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2)) 
       title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main)
   } else if (!allCurves){
     #just multimodel SAR curve
-    plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
-    title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main)
-    lines(x = xx, y = wfv, lwd = lwd, col = lcol)
+    if (confInt){
+      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, 
+            cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
+      polygon(c(xx,rev(xx)),c(CI$L,rev(CI$U)),col="grey87",border=NA)
+      points(x = xx, y = yy, pch = pch, col = pcol, 
+             cex = cex)
+      title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main)
+      lines(x = xx, y = wfv, lwd = lwd, col = lcol)
+    } else {
+      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+      cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
+      title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main)
+      lines(x = xx, y = wfv, lwd = lwd, col = lcol)
+    }#eo confint
   }
   }
   
   if (type == "bar"){  
-  ##barplot of IC weights
-    
-  #often many have very low weight (near 0), so filter out main ones. 
-  #aw2 <- 
+  ##barplot of IC weight
     
   if (!is.null(subset_weights)) aw <- aw[aw > subset_weights]
   
@@ -452,7 +497,7 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   }
   
   barplot(aw, ylim=c(0, max(aw) + 0.05), cex.names= cex.names, ylab = ylab, cex.lab = cex.lab, 
-          names.arg = modNames)
+          cex.axis = cex.axis, names.arg = modNames)
   title(main = ModTitle, cex.main = cex.main, adj = TiAdj, line = TiLine)
   }
 

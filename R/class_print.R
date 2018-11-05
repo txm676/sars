@@ -1,12 +1,13 @@
 
+#' @import stats 
 #' @export
 
 
-print.summary.sars <- function(object){
-  
+print.summary.sars <- function(x, ...){
+  object <- x
   if (attributes(object)$type == "lin_pow"){
     cat("Model = ","Log-log power", "\n")
-   # rownames(object$Model$coefficients) <- c("LogC", "z")
+    # rownames(object$Model$coefficients) <- c("LogC", "z")
     print(object$Model)   
     if (object$Normality_test$test == "shapiro"|| object$Normality_test$test == "lillie" ||
         object$Normality_test$test == "kolmo"){
@@ -35,18 +36,23 @@ print.summary.sars <- function(object){
           "c =", object$power[1], "\n",
           "z =", object$power[2])
     }
-  }#eo if lin_pow
+    }#eo if lin_pow
   
   if (attributes(object)$type == "fit"){
     cat("\n", "Model: ","\n", object$Model, "\n", sep = "")
     cat("\n", "Call: ","\n", as.character(object$formula), "\n", sep = "")
     cat("\n", "Did the model converge: ", object$convergence , "\n", sep = "")
     cat("\n", "Residuals: ", "\n", sep = "")
-    print(stats::quantile(object$residuals))
+    print(quantile(object$residuals))
     cat("\n", "Parameters: ", "\n", sep = "")
     mm <- object$Parameters
-    rownames(mm) <- object$parNames
-    stats::printCoefmat(mm)
+    #if singular gradient at parameter estimates there are no pars to print
+    if (length(mm) == 1){
+      cat("\n","singular gradient at parameter estimates: no parameters significance and conf. interval","\n")
+    } else{
+       rownames(mm) <- object$parNames
+       printCoefmat(mm)
+    }
     cat("\n", "R-squared: ", object$R2 , ", Adjusted R-squared: ", object$R2a, "\n", sep = "")
     cat("AIC: ", object$AIC , ", AICc: ", object$AICc, ", BIC: ", object$BIC, "\n", sep = "")
     cat("Observed shape: ", object$observed_shape, ", Asymptote: ", object$asymptote, "\n", "\n", sep = "")
@@ -63,7 +69,7 @@ print.summary.sars <- function(object){
     } else{
       homoP <- "No homogeneity test undertaken"
     }
-
+    
     if (is.numeric(normP) && normP < 0.05 ){
       cat("\n", "Warning: The normality test selected indicated the model residuals are
           not normally distributed (i.e. P < 0.05)", "\n", sep = "")
@@ -77,7 +83,7 @@ print.summary.sars <- function(object){
     if (object$Negative_values == 1){
       cat("\n", "Warning: The fitted values of the model contain negative values (i.e. negative 
           species richness values)", "\n", sep = "")
-      }
+    }
   }#eo if fit
 
   if (attributes(object)$type == "multi"){ 
@@ -100,11 +106,12 @@ print.summary.sars <- function(object){
 }
 
 
+
 #' @export
 #' 
 
-print.sars <- function(object){
-  
+print.sars <- function(x, ...){
+  object <- x
   if (attributes(object)$type == "lin_pow"){
     cat("Model = ","Log-log power", "\n")
     cat("\n", "Call: ","\n", "logS = logc + z.logA", "\n", sep = "")
@@ -128,7 +135,7 @@ print.sars <- function(object){
   if (attributes(object)$type == "fit_collection"){ 
     cat("\n", "This is a fit collection", "\n", sep = "")
     cat("\n", length(object), " models contained in the fit collection: ","\n", sep = "")
-    cat( "\n", unlist(lapply(object, function(x) x$model$name)), "\n", "\n")
+    cat( "\n", paste(unlist(lapply(object, function(x) x$model$name)), collapse = ", "), "\n", "\n")
   }
   
   if (attributes(object)$type == "multi"){ 
@@ -145,10 +152,58 @@ print.sars <- function(object){
   }
 }
 
+#' @import stats 
+#' @export
 
+print.gdm <- function(x, ...){
+  object <- x
+  if (attributes(object)$Type %in% c("expo", "linear", "power")){
+    mod <- match.arg(attributes(object)$Type, c("exponential", "linear", "power"))
+    if (!attributes(object)$mod_sel){
+      cat("\n",paste("GDM fit using the", mod, "SAR model", sep = " "),
+          "\n", "\n")
+      object2 <- object
+      class(object2) <- "nls" #need to do this as can't export :::print.nls function
+      print(object2)
+    } else {
+      cat("\n",paste("GDM fit using the", mod, "SAR model", sep = " "),
+          "\n")
+      cat("\n","GDM model summary:", "\n", "\n")
+      
+      object2 <- object[[1]]
+      print(object2)
+      cat("\n","All model summaries:", "\n", "\n")
+      obNL <- object[1:3]
+      df <- data.frame("RSE" = vapply(obNL, function(x) summary(x)$sigma, numeric(1)),
+                       "AIC" = vapply(obNL, AIC, numeric(1)))
+      df <- rbind(df, c(summary(object[[4]])$sigma, AIC(object[[4]])))
+      df$Delta.AIC <-  df$AIC - min(df$AIC)
+      rownames(df) <- c("GDM", "A + T", "A", "Intercept")
+      df <- df[order(df$Delta.AIC),]
+      print(df)
+    }
+  }
+    
+    if (attributes(object)$Type == "allMods"){
+      cat("\n","GDM model comparison:", "\n", "\n")
+      
+      if (!attributes(object)$mod_sel){
+        df <- data.frame("RSE" = vapply(object, function(x) summary(x)$sigma, numeric(1)),
+                       "AIC" = vapply(object, AIC, numeric(1)))
+      } else {
+        df <- data.frame("RSE" = vapply(object, function(x) summary(x[[1]])$sigma, numeric(1)),
+                         "AIC" = vapply(object, function(x) AIC(x[[1]]), numeric(1)))
+      }
+      df$Delta.AIC <-  df$AIC - min(df$AIC)
+      rownames(df) <- c("Exponential", "Linear", "Power")
+      df <- df[order(df$Delta.AIC),]
+      print(df)
+    }
+  }
+  
+  
+  
 
-#print.gdm.sars <- function(object){
-
-#}
+      
   
   

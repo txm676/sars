@@ -2,14 +2,14 @@
 #'
 #' @description Fit the log-log version of the power model to SAR data and
 #'   return parameter values, summary statistics and the fitted values.
-#' @usage lin_pow(dat, con = 1)
-#' @param dat A dataset in the form of a dataframe with two columns: the first
+#' @usage lin_pow(data, con = 1, compare = FALSE, normaTest =  "lillie", homoTest = "cor.fitted")
+#' @param data A dataset in the form of a dataframe with two columns: the first
 #'   with island/site areas, and the second with the species richness of each
 #'   island/site.
 #' @param con The constant to add to the species richness values in cases where
 #'   one of the islands has zero species.
 #' @param compare Fit the standard (non-linear) power model and return the
-#' z-value for comparison (default: \code{compare = FALSE}).
+#'   z-value for comparison (default: \code{compare = FALSE}).
 #' @param normaTest The test used to test the normality of the residuals of the
 #'   model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
 #'   default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
@@ -28,6 +28,8 @@
 #'   The \code{compare} argument can be used to compare the c and z values
 #'   calculated using the log-log power model with that calculated using the
 #'   non-linear power model. Note that the log-log function returns logc.
+#' @import stats
+#' @importFrom nortest lillie.test
 #' @return A list of class "sars" with up to six elements. The first element is
 #'   an object of class 'summary.lm'. This is the summary of the linear model
 #'   fit using the \link[stats]{lm} function and the user's data. The second
@@ -47,7 +49,7 @@
 #' @export
 
 
-lin_pow <- function(data, con = 1, compare = F, normaTest =  "lillie", homoTest = "cor.fitted") {
+lin_pow <- function(data, con = 1, compare = FALSE, normaTest =  "lillie", homoTest = "cor.fitted") {
 
   if (!(is.matrix(data) || is.data.frame(data))) stop("data must be a matrix or dataframe")
   if (is.matrix(data)) data <- as.data.frame(data)
@@ -61,10 +63,10 @@ lin_pow <- function(data, con = 1, compare = F, normaTest =  "lillie", homoTest 
   } else {
        log.data = data.frame(A = log(data$A), S = log(data$S))
   }
-  linearPower.fit = stats::lm(S ~ A, data = log.data)
+  linearPower.fit = lm(S ~ A, data = log.data)
 
   fv <- linearPower.fit$fitted.values
-  linearPower.fit <- stats::summary.lm(linearPower.fit)
+  linearPower.fit <- summary.lm(linearPower.fit)
   resid <- linearPower.fit$residuals
   res <- list(Model = linearPower.fit, calculated = fv, data = log.data)
   
@@ -80,7 +82,7 @@ lin_pow <- function(data, con = 1, compare = F, normaTest =  "lillie", homoTest 
   if (normaTest == "shapiro") {
     normaTest <- list("test" = "shapiro", tryCatch(shapiro.test(resid), error = function(e)NA))
   } else if (normaTest == "lillie"){ 
-    normaTest <- list("test" = "lillie", tryCatch(nortest::lillie.test(resid), error = function(e)NA))
+    normaTest <- list("test" = "lillie", tryCatch(lillie.test(resid), error = function(e)NA))
   } else if (normaTest == "kolmo"){ 
     normaTest <- list("test" = "kolmo", tryCatch(ks.test(resid, "pnorm"), error = function(e)NA))
   } else{
