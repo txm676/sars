@@ -4,12 +4,12 @@
 \alias{plot.multi}
 \title{Plot Model Fits for a 'multi' Object}
 \usage{
-\method{plot}{multi}(x, type = "multi", allCurves = TRUE, xlab = NULL,
-  ylab = NULL, pch = 16, cex = 1.2, pcol = "dodgerblue2",
-  ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
-  cex.lab = 1.3, cex.axis = 1, yRange = NULL, lwd = 2,
-  lcol = "dodgerblue2", pLeg = TRUE, modNames = NULL, cex.names = 0.88,
-  subset_weights = NULL, confInt = FALSE, ...)
+\method{plot}{multi}(x, type = "multi", allCurves = TRUE,
+  xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
+  pcol = "dodgerblue2", ModTitle = NULL, TiAdj = 0, TiLine = 0.5,
+  cex.main = 1.5, cex.lab = 1.3, cex.axis = 1, yRange = NULL,
+  lwd = 2, lcol = "dodgerblue2", pLeg = TRUE, modNames = NULL,
+  cex.names = 0.88, subset_weights = NULL, confInt = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class 'multi'.}
@@ -101,7 +101,7 @@ When plotting all model fits on the same plot with a legend it is
   resultant 'multi' object to check the individual model fits. To re-run the
   \code{sar_multi} function without a particular model, simply remove it from
   the \code{obj} argument.
-  
+
   For visual interpretation of the model weights barplot it is necessary to
   abbreviate the model names when plotting the weights of several models. To
   plot fewer bars, use the \code{subset_weights} argument to filter out

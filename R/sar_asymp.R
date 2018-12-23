@@ -3,7 +3,7 @@
 #' @description Fit the Asymptotic regression model to SAR data.
 #' @usage sar_asymp(data, start = NULL, grid_start = NULL, normaTest =  'lillie',
 #'   homoTest = 'cor.fitted')
-#' @param data A dataset in the form of a dataframe with two columns: 
+#' @param data A dataset in the form of a dataframe with two columns:
 #'   the first with island/site areas, and the second with the species richness
 #'   of each island/site.
 #' @param start NULL or custom parameter start values for the optimisation algorithm.
@@ -30,7 +30,7 @@
 
 #'   A selection of information criteria (e.g. AIC, BIC) are returned and can be used to compare models
 #'   (see also \code{\link{fit_collection}} and \code{\link{sar_multi}}).
-#' @return A list of class 'sars' with the following components: 
+#' @return A list of class 'sars' with the following components:
 #'   \itemize{
 #'     \item{par} { The model parameters}
 #'     \item{value} { Residual sum of squares}
@@ -68,11 +68,11 @@
 
 sar_asymp <- function(data, start = NULL, grid_start = NULL, normaTest =  "lillie",
               homoTest = "cor.fitted"){
-if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe') 
-if (is.matrix(data)) data <- as.data.frame(data) 
-if (anyNA(data)) stop('NAs present in data') 
-data <- data[order(data[,1]),] 
-colnames(data) <- c('A','S') 
+if (!(is.matrix(data) | is.data.frame(data))) stop('data must be a matrix or dataframe')
+if (is.matrix(data)) data <- as.data.frame(data)
+if (anyNA(data)) stop('NAs present in data')
+data <- data[order(data[,1]),]
+colnames(data) <- c('A','S')
 #Asymptotic Regression
 model <- list(
   name=c("Asymptotic regression"),
@@ -90,21 +90,21 @@ model <- list(
     #we have also Z=log(c)+Xlog(z) -> linear regression
     dat=data.frame("a"=data$A,"Z"=Z)
     zf=stats::lm(Z~a,dat)$coefficients
-    c(d,exp(zf[1]),exp(zf[2]))
+    c(d,exp(zf[1L]),exp(zf[2L]))
   }
 )
 
-model <- compmod(model) 
-fit <- get_fit(model = model, data = data, start = start, grid_start = grid_start, algo = 'Nelder-Mead', 
-       normaTest =  normaTest, homoTest = homoTest, verb = TRUE) 
-if(is.na(fit$value)){ 
-  return(list(value = NA)) 
-}else{ 
-  obs <- obs_shape(fit) 
-  fit$observed_shape <- obs$fitShape 
-  fit$asymptote <- obs$asymp 
-  class(fit) <- 'sars' 
-  attr(fit, 'type') <- 'fit' 
-  return(fit) 
-} 
+model <- compmod(model)
+fit <- get_fit(model = model, data = data, start = start, grid_start = grid_start, algo = 'Nelder-Mead',
+       normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
+if(is.na(fit$value)){
+  return(list(value = NA))
+}else{
+  obs <- obs_shape(fit)
+  fit$observed_shape <- obs$fitShape
+  fit$asymptote <- obs$asymp
+  class(fit) <- 'sars'
+  attr(fit, 'type') <- 'fit'
+  return(fit)
+}
 }#end of sar_asymp

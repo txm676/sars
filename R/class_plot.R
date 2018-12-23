@@ -9,7 +9,7 @@
 #'   object of Type 'fit_collection' the \code{plot.sars} function returns
 #'   either a grid with n individual plots (corresponding to the n model fits in
 #'   the fit_collection), or a single plot with all n model fits included.
-#'   
+#'
 #'   For plotting a 'sar_multi' object, see \code{\link{plot.multi}}.
 #' @param x An object of class 'sars'.
 #' @param mfplot Logical argument specifying whether the model fits in a
@@ -49,7 +49,7 @@
 #' @param \dots Further graphical parameters (see \code{\link[graphics]{par}},
 #'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
-#' @import graphics 
+#' @import graphics
 #' @examples
 #' data(galap)
 #' #fit and plot a sars object of Type fit.
@@ -65,16 +65,16 @@
 #' @export
 
 
-plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
+plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
                       pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
                       cex.lab = 1.3, cex.axis = 1, yRange = NULL,
                       lwd = 2, lcol = 'dodgerblue2', di = NULL, pLeg = FALSE, ...)
 {
-  
-  
-  if (mfplot && attributes(x)$type != "fit_collection") stop("mfplot argument only for use with Type 'fit_collection'")
-  
-  
+
+
+  if (mfplot & attributes(x)$type != "fit_collection") stop("mfplot argument only for use with Type 'fit_collection'")
+
+
   if (is.null(xlab)){
     if (attributes(x)$type == "fit" || attributes(x)$type == "fit_collection"){
         xlab = "Area"
@@ -84,18 +84,18 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
       stop ("Type attribute not recognised")
     }
   }
-  
+
   if (is.null(ylab)){
-    if (attributes(x)$type == "fit" || attributes(x)$type == "fit_collection"){
+    if (attributes(x)$type == "fit" | attributes(x)$type == "fit_collection"){
       ylab = "Species richness"
     } else if (attributes(x)$type == "lin_pow"){
       ylab = "Log(Species richness)"
     }
   }
-  
+
   if (attributes(x)$type == "fit"){
     if (is.null(ModTitle)) ModTitle <- x$model$name
-    
+
     df <- x$data
     xx <- df$A
     yy <- df$S
@@ -105,26 +105,26 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
     yMin <- min(c(yy,ff))
     yRange = c(yMin, yMax)
     }
-    
-    plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+
+    plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
          cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange, ...)
     title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
     lines(x = xx, y = ff, lwd = lwd, col = lcol,  ...)
-    
+
   }
-  
+
   if (attributes(x)$type == "fit_collection"){
-    
+
     if (!mfplot){
 
     if (!is.null(ModTitle)){
-      if (length(ModTitle) == 1 && ModTitle == "") ModTitle <- rep("", length(x))
+      if (length(ModTitle) == 1 & ModTitle == "") ModTitle <- rep("", length(x))
       if (length(ModTitle) != length(x)) stop("The length of ModTitle does not match the length of x")
       for (i in seq_along(x)){
         x[[i]]$model$name <- ModTitle[i]
       }
     }
-    
+
     if (is.null(di)) {
       if (length(x) == 2){ #of length(x) = 2 the dividing by two does not work
         par(mfrow = c(1, 2))
@@ -136,33 +136,33 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
       par(mfrow = di)
     }#eo is.null if
       lapply(x, function(x){
-      
+
       df <- x$data
       xx <- df$A
       yy <- df$S
       ff <- x$calculated
-      ModTitle <- x$model$name 
+      ModTitle <- x$model$name
       if (is.null(yRange)){
         yMax <- max(c(yy,ff))#fitted line can be above the largest observed data point
         yMin <- min(c(yy,ff))
         yRange = c(yMin, yMax)
       }
-      
-      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+
+      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
            cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,ylim = yRange, ...)
       title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
       lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
     })
      par(mfrow = c(1,1))#change par back to default
     }# !mfplot
-    
+
     if (mfplot){
       #observed data
-      df <- x[[1]]$data 
+      df <- x[[1]]$data
       xx <- df$A
       yy <- df$S
       nams <-  vapply(x, function(x) x$model$name, FUN.VALUE = character(1))
-      
+
       #fitted values for each model
       mf <- lapply(x, function(x) x$calculated)
       mf2 <- matrix(unlist(mf), ncol = length(x), byrow = FALSE)
@@ -174,34 +174,34 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
         yMin <- min(c(yy,unlist(mf)))
         yRange = c(yMin, yMax)
       }
-      
+
       #main title
       if (is.null(ModTitle)) ModTitle <- ""
-      
+
       #if legend to be included, work out size of plot
       if (pLeg == TRUE){
         #xMax <- max(xx)*0.05
         #lSiz <- legend(max(xx) +xMax, max(yy), legend = nams, horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2), plot = F)
         #legWid <- lSiz$rect$left + lSiz$rect$w
         xMAX <- max(xx) + max(xx) * 0.5
-        matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+        matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
              cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, xlim = c(min(xx), xMAX),
              ylim = yRange, bty = "L")
       } else {
-      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
            cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,ylim = yRange, bty = "L")
       }
       matlines(xx, mf2, lwd = lwd, lty = 1:ncol(mf2), col=1:ncol(mf2))
       title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main)
-     if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax, legend = nams, horiz = F, lty = 1:ncol(mf2), 
+     if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax, legend = nams, horiz = F, lty = 1:ncol(mf2),
                               col=1:ncol(mf2))
     }#eo mfplot
-  
+
   }#eo if fit_collection
-  
+
   if (attributes(x)$type == "lin_pow"){
     if (is.null(ModTitle)) ModTitle <- "Log-log power"
- 
+
     df <- x$data
     xx <- df$A
     yy <- df$S
@@ -211,8 +211,8 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
       yMin <- min(c(yy,ff))
       yRange = c(yMin, yMax)
     }
-    
-    plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+
+    plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
          cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,ylim = yRange, ...)
     title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
     lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
@@ -287,7 +287,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 #'   resultant 'multi' object to check the individual model fits. To re-run the
 #'   \code{sar_multi} function without a particular model, simply remove it from
 #'   the \code{obj} argument.
-#'   
+#'
 #'   For visual interpretation of the model weights barplot it is necessary to
 #'   abbreviate the model names when plotting the weights of several models. To
 #'   plot fewer bars, use the \code{subset_weights} argument to filter out
@@ -320,13 +320,13 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 #' #plot a multimodel SAR curve with all model fits included
 #' fit <- sar_multi(galap)
 #' plot(fit)
-#' 
+#'
 #' #remove the legend
 #' plot(fit, pLeg = FALSE)
-#' 
+#'
 #' #plot just the multimodel curve
 #' plot(fit, allCurves = FALSE, ModTitle = "", lcol = "black")
-#' 
+#'
 #' #Plot a barplot of the model weights
 #' plot(fit, type = "bar")
 #' #subset to plot only models with weight > 0.05
@@ -336,39 +336,39 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 
 
 plot.multi <- function(x, type = "multi", allCurves = TRUE,
-                            xlab = NULL, ylab = NULL, pch = 16, cex = 1.2, 
+                            xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
                       pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
-                      cex.lab = 1.3, cex.axis = 1, yRange = NULL, 
+                      cex.lab = 1.3, cex.axis = 1, yRange = NULL,
                       lwd = 2, lcol = 'dodgerblue2', pLeg = TRUE, modNames = NULL, cex.names=.88,
                       subset_weights = NULL, confInt = FALSE, ...)
 {
-  
+
   if (confInt){
     if (length(x$details$confInt) == 1) stop ("No confidence interval information in the fit object")
     CI <- x$details$confInt
   }
-  
-  
-  ic <- x[[2]]$ic 
+
+
+  ic <- x[[2]]$ic
   dat <- x$details$fits
-  
+
   #filter out bad models
   #bad <- vapply(dat, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
   #dat2 <- dat[-which(bad)]
   dat2 <- dat
-  
+
   #observed data
-  df <- dat[[1]]$data 
+  df <- dat[[1]]$data
   xx <- df$A
   yy <- df$S
   nams <-  vapply(dat2, function(x) x$model$name, FUN.VALUE = character(1))
-  
+
   #fitted values for each model
   mf <- lapply(dat2, function(x) x$calculated)
   mf2 <- matrix(unlist(mf), ncol = length(dat2), byrow = FALSE)
   mf2 <- as.data.frame(mf2)
   colnames(mf2) <- nams
-  
+
   #get correct IC info
   icv <- vapply(dat2, function(x) unlist(x[[ic]]), FUN.VALUE = double(1))
   #delta
@@ -377,12 +377,12 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   akaikesum <- sum(exp( -0.5*(delt)))
   aw <- exp(-0.5*delt) / akaikesum
   if (round(sum(aw), 0) != 1) stop("IC weights do not sum to 1")#have to round as sometimes fractionally different to 1
-  
+
   #get weighted fitted values for each model
   mf3 <- matrix(nrow = nrow(mf2), ncol = ncol(mf2))
   for (i in seq_along(aw)) {mf3[ ,i] <- mf2[ ,i] * aw[i]}
   wfv <- rowSums(mf3)
-  
+
   #this is a test error for development
   if (!all(round(wfv) == round(x$mmi))) stop("Multimodel fitted values do not match between functions")
 
@@ -390,14 +390,14 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
     mf2$MultiModel <- wfv
     nams2 <- c(nams, "Multimodel SAR")
   }
-  
+
   if (type == "multi"){
-    
+
     #set axis names
     if (is.null(xlab)) xlab <- "Area"
     if (is.null(ylab)) ylab <- "Species richness"
-    
-    
+
+
     #set y axis range
     if (is.null(yRange)){
       if (allCurves){
@@ -419,10 +419,10 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
       }
       yRange = c(yMin, yMax)
     }
-    
+
   #main title
   if (is.null(ModTitle)) ModTitle <- "Multimodel SAR"
-    
+
   #first plot with all curves
   if (allCurves){
     #if legend to be included, work out size of plot
@@ -432,71 +432,71 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
      # lSiz <- legend(max(xx) + xMax, max(c(yy,unlist(mf2))), legend = nams2, horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2), plot = F)
      # legWid <- lSiz$rect$left + lSiz$rect$w
       #xMAX <- legWid + (legWid * 0.01)
-      
+
       xMAX <- max(xx) + max(xx) * 0.5
-      
-     # legHeight <- lSiz$rect$h 
+
+     # legHeight <- lSiz$rect$h
     #  yMAX <- legHeight + (legHeight * 0.3)
      # yRange <- c(yMin, yMAX)
 
       if (confInt){
-        matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, 
+        matplot(x = xx, y = yy, xlab = xlab, ylab = ylab,
                 cex.lab = cex.lab, cex.axis = cex.axis,xlim = c(min(xx), xMAX), ylim = yRange)
         polygon(c(xx,rev(xx)),c(CI$L,rev(CI$U)),col="grey87",border=NA)
-        points(x = xx, y = yy, pch = pch, col = pcol, 
+        points(x = xx, y = yy, pch = pch, col = pcol,
                cex = cex)
       } else {
-        matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+        matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
                 cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,xlim = c(min(xx), xMAX), ylim = yRange)
       }#eo confInt
     } else{ #no legend
-      
+
       if (confInt){
-        plot(x = xx, y = yy, xlab = xlab, ylab = ylab, 
+        plot(x = xx, y = yy, xlab = xlab, ylab = ylab,
              cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
         polygon(c(xx,rev(xx)),c(CI$L,rev(CI$U)),col="grey87",border=NA)
-        points(x = xx, y = yy, pch = pch, col = pcol, 
+        points(x = xx, y = yy, pch = pch, col = pcol,
                cex = cex)
       } else {
-        plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+        plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
       }#eo confInt
     }#eo no legend
       matlines(xx, mf2, lwd = lwd, lty = 1:ncol(mf2), col=1:ncol(mf2))
-      if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax, legend = nams2,horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2)) 
+      if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax, legend = nams2,horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2))
       title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main)
   } else if (!allCurves){
     #just multimodel SAR curve
     if (confInt){
-      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, 
+      plot(x = xx, y = yy, xlab = xlab, ylab = ylab,
             cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
       polygon(c(xx,rev(xx)),c(CI$L,rev(CI$U)),col="grey87",border=NA)
-      points(x = xx, y = yy, pch = pch, col = pcol, 
+      points(x = xx, y = yy, pch = pch, col = pcol,
              cex = cex)
       title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main)
       lines(x = xx, y = wfv, lwd = lwd, col = lcol)
     } else {
-      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
       cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
       title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main)
       lines(x = xx, y = wfv, lwd = lwd, col = lcol)
     }#eo confint
   }
   }
-  
-  if (type == "bar"){  
+
+  if (type == "bar"){
   ##barplot of IC weight
-    
+
   if (!is.null(subset_weights)) aw <- aw[aw > subset_weights]
-  
+
   if (is.null(ylab)) ylab <- "IC weights"
   if (is.null(ModTitle)) ModTitle <- "Model weights"
   if (is.null(modNames)){
     modNames <- names(aw)
     modNames <- mod_abbrev(modNames)
   }
-  
-  barplot(aw, ylim=c(0, max(aw) + 0.05), cex.names= cex.names, ylab = ylab, cex.lab = cex.lab, 
+
+  barplot(aw, ylim=c(0, max(aw) + 0.05), cex.names= cex.names, ylab = ylab, cex.lab = cex.lab,
           cex.axis = cex.axis, names.arg = modNames)
   title(main = ModTitle, cex.main = cex.main, adj = TiAdj, line = TiLine)
   }
@@ -507,39 +507,17 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
 #function to convert vector of model
 #names into abbreviated versions depending on which models are provided
 mod_abbrev <- function(nams){
-  
-x1 <- c("Power", "PowerR", "Extended_Power_model_1", "Extended_Power_model_2", "Persistence_function_1", 
-        "Persistence_function_2", "Exponential", "Kobayashi", "MMF", "Monod", "Negative_exponential", 
-        "Chapman_Richards", "Cumulative_Weibull_3_par.", "Asymptotic_regression", "Rational_function", 
+
+x1 <- c("Power", "PowerR", "Extended_Power_model_1", "Extended_Power_model_2", "Persistence_function_1",
+        "Persistence_function_2", "Exponential", "Kobayashi", "MMF", "Monod", "Negative_exponential",
+        "Chapman_Richards", "Cumulative_Weibull_3_par.", "Asymptotic_regression", "Rational_function",
         "Gompertz", "Cumulative_Weibull_4_par.", "Beta-P_cumulative", "Heleg(Logistic)", "Linear_model")
 
-x2 <- c("Pow", "PowR", "E1", "E2", "P1", "P2", "Exp", "Kob", "MMF", "Mon", "NegE", 
+x2 <- c("Pow", "PowR", "E1", "E2", "P1", "P2", "Exp", "Kob", "MMF", "Mon", "NegE",
         "CR", "CW3", "AR", "RF", "Gom", "CW4", "BP", "Hel", "Lin")
 
-df <- data.frame("Full_name" = x1, "Abbreviated_name" = x2)  
+df <- data.frame("Full_name" = x1, "Abbreviated_name" = x2)
 df2 <- df[(which(df$Full_name %in% nams)),]
 if (nrow(df2) != length(nams)) stop("Not enough matched model names")
 return(as.vector(df2$Abbreviated_name))
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

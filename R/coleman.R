@@ -56,8 +56,8 @@ sa2 <- function(x, a){
 
 coleman <- function(data, area){
   if (any(area <= 0)) stop("Area value <=0")
-  if (anyNA(data) || anyNA(area)) stop("NAs present in data")
-  if (!(is.matrix(data) || is.data.frame(data))) stop("data must be a matrix or dataframe")
+  if (anyNA(data) | anyNA(area)) stop("NAs present in data")
+  if (!(is.matrix(data) | is.data.frame(data))) stop("data must be a matrix or dataframe")
   if (is.matrix(data)) data <- as.data.frame(data)
 
   ##check each species has 1 or more individuals/each sites as at least one species present
@@ -106,5 +106,3 @@ res <- list("Predicted_values" = s_hat, "Standard_deviation" = sd,
 class(res) <- "coleman"
 return(res)
 }
-
-

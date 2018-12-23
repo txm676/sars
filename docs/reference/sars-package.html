@@ -21,16 +21,27 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
 <meta property="og:title" content="sars: Fit and compare species-area relationship models using multimodel inference — sars-package" />
 
-<meta property="og:description" content="A package to fit twenty species-area relationship models . .." />
+<meta property="og:description" content="This package provides functions to fit twenty models to
+  species-area relationship (SAR) data (see Triantis et al. 2012), plot the
+  model fits, and to construct a multimodel SAR curve using information
+  criterion weights. A number of additional SAR functions are provided, e.g.
+  to fit the log-log power model, the general dynamic model of island
+  biogeography (GDM), and Coleman's Random Placement model." />
 <meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -53,8 +64,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">sars</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">sars</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">1.0.0</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -88,6 +103,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -95,46 +111,160 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>sars: Fit and compare species-area relationship models using multimodel inference</h1>
+    <small class="dont-index">Source: <a href='https://github.com/txm676/sars/blob/master/R/mmSAR2.R'><code>R/mmSAR2.R</code></a></small>
+    <div class="hidden name"><code>sars-package.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
-    <p>A package to fit twenty species-area relationship models . ..</p>
+    <p>This package provides functions to fit twenty models to
+  species-area relationship (SAR) data (see Triantis et al. 2012), plot the
+  model fits, and to construct a multimodel SAR curve using information
+  criterion weights. A number of additional SAR functions are provided, e.g.
+  to fit the log-log power model, the general dynamic model of island
+  biogeography (GDM), and Coleman's Random Placement model.</p>
     
+    </div>
 
         
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>There are ***</p>
+    <p>Functions are provided to fit 20 individual SAR models. Nineteen are
+  fitted using non-linear regression, whilst a single model (the linear
+  model) is fitted using linear regression. Each model has its own function
+  (e.g. <code><a href='sar_power.html'>sar_power</a></code>). A set of multiple model fits can be
+  combined into a fit collection (<code><a href='fit_collection.html'>fit_collection</a></code>). Plotting
+  functions (<code><a href='plot.sars.html'>plot.sars</a></code>) are provided that enable individual
+  model fits to be plotted on their own, or the fits of multiple models to be
+  overlayed on the same plot. Model fits are validated using a number of
+  checks, e.g. the normality and homogeneity of the model residuals can be
+  assessed.</p>
+<p>A multimodel SAR curve can be constructed using the <code><a href='sar_multi.html'>sar_multi</a></code>
+  function. This fits up to twenty SAR models and constructs the multimodel
+  curve (with confidence intervals) using information criterion weights (see
+  <code><a href='summary.sars.html'>summary.sars</a></code> to calculate a table of models ranked by
+  information criterion weight). The <code><a href='plot.multi.html'>plot.multi</a></code> functions
+  enables the multimodel SAR curve to be plotted with or without the fits of
+  the individual models.</p>
+<p>Other SAR related functions include: (i) <code><a href='lin_pow.html'>lin_pow</a></code>, which fits
+  the log-log power model and enables comparison of the model parameters with
+  those calculated using the non-linear power model, (ii) <code><a href='gdm.html'>gdm</a></code>,
+  which fits the general dynamic model of island biogeography (Whittaker et
+  al. 2008) using several different functions, and (iii)
+  <code><a href='coleman.html'>coleman</a></code>, which fits Coleman's  (1981) random placement model
+  to a species-site abundance matrix.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Triantis, K.A., Guilhaumon, F. &amp; Whittaker, R.J. (2012) The
-  island species–area relationship: biology and statistics. Journal of
-  Biogeography, 39, 215-231.</p>
+    <p>Coleman, B. D. (1981). On random placement and species-area
+  relations. Mathematical Biosciences, 54, 191-215.</p>
+<p>Guilhaumon, F., Mouillot, D., &amp; Gimenez, O. (2010). mmSAR: an R-package for
+  multimodel species–area relationship inference. Ecography, 33, 420-424.</p>
 <p>Matthews, T.J., Guilhaumon, F., Triantis, K.A, Borregaard, M.K., &amp;
   Whittaker, R.J. (2015b) On the form of species–area relationships in
   habitat islands and true islands. Global Ecology &amp; Biogeography. DOI:
   10.1111/geb.12269.</p>
+<p>Triantis, K.A., Guilhaumon, F. &amp; Whittaker, R.J. (2012) The island
+  species–area relationship: biology and statistics. Journal of Biogeography,
+  39, 215-231.</p>
+<p>Whittaker, R.J., Triantis, K.A. &amp; Ladle, R.J. (2008) A general dynamic
+  theory of oceanic island biogeography. Journal of Biogeography, 35,
+  977-994.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><a href='https://github.com/txm676/sars'>https://github.com/txm676/sars</a></p>
+    <div class='dont-index'><p><a href='https://github.com/txm676/sars'>https://github.com/txm676/sars</a></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>galap</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sars"</span>)
-<span class='no'>fit</span> <span class='kw'>=</span> (<span class='no'>galap</span>)
-<span class='fu'>summary</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;        a                 s         
-#&gt;  Min.   :  0.200   Min.   :  7.00  
-#&gt;  1st Qu.:  1.853   1st Qu.: 45.75  
-#&gt;  Median : 12.750   Median : 65.50  
-#&gt;  Mean   : 75.236   Mean   :106.44  
-#&gt;  3rd Qu.: 96.750   3rd Qu.:137.50  
-#&gt;  Max.   :389.000   Max.   :319.00  </div><div class='input'><span class='fu'>plot</span>(<span class='no'>fit</span>)</div><div class='img'><img src='sars-package-1.png' alt='' width='700' height='432.632880098887' /></div></pre>
+<span class='co'>#fit the power model</span>
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sar_power.html'>sar_power</a></span>(<span class='no'>galap</span>)
+<span class='fu'>summary</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; 
+#&gt; Model: 
+#&gt; Power
+#&gt; 
+#&gt; Call: 
+#&gt; S == c * A^z
+#&gt; 
+#&gt; Did the model converge: TRUE
+#&gt; 
+#&gt; Residuals: 
+#&gt;       0%      25%      50%      75%     100% 
+#&gt; -177.900  -22.125   14.700   38.525  126.300 
+#&gt; 
+#&gt; Parameters: 
+#&gt;    Estimate Std. Error   t value  Pr(&gt;|t|)      2.5%   97.5%
+#&gt; c 33.179155  19.241710  1.724335  0.106646 -5.304264 71.6626
+#&gt; z  0.283187   0.099363  2.850028  0.012849  0.084461  0.4819
+#&gt; 
+#&gt; R-squared: 0.49, Adjusted R-squared: 0.41
+#&gt; AIC: 141.62, AICc: 143.62, BIC: 143.94
+#&gt; Observed shape: convex up, Asymptote: FALSE
+#&gt; </div><div class='input'><span class='fu'>plot</span>(<span class='no'>fit</span>)</div><div class='img'><img src='sars-package-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'>#Construct a multimodel SAR curve</span>
+<span class='no'>fit_multi</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sar_multi.html'>sar_multi</a></span>(<span class='no'>galap</span>)</div><div class='output co'>#&gt; 
+#&gt;  Now attempting to fit the 20 SAR models: 
+#&gt;  
+#&gt; ──  multi_sars ────────────────────────────────────────────── multi-model SAR ──
+#&gt; → power    : ✔
+#&gt; → powerR   : ✔
+#&gt; → epm1     : ✔
+#&gt; → epm2     : ✔
+#&gt; → p1       : ✔
+#&gt; → p2       : ✔
+#&gt; → expo     : ✔
+#&gt; → koba     : ✔
+#&gt; → mmf      : ✔
+#&gt; → monod    : ✔
+#&gt; → negexpo  : ✔
+#&gt; → chapman  : Warning: could not compute parameters statistics
+#&gt; → weibull3 : ✔
+#&gt; → asymp    : ✔
+#&gt; → ratio    : ✔
+#&gt; → gompertz : ✔
+#&gt; → weibull4 : ✔
+#&gt; → betap    : ✔
+#&gt; → heleg    : ✔
+#&gt; → linear   : ✔
+#&gt; 
+#&gt;  Model fitting completed - all models succesfully fitted. Now undertaking model validation checks. 
+#&gt;  Additional models will be excluded if necessary: </div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>4 models failed the residuals normality test and have been excluded from the multi SAR:</span>
+#&gt; <span class='message'>Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>1 models have negative fitted values and have been excluded from the multi SAR:</span>
+#&gt; <span class='message'>Exponential</span></div><div class='output co'>#&gt; 15 remaining models used to construct the multi SAR: 
+#&gt;  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
+#&gt; ────────────────────────────────────────────────────────────────────────────────</div><div class='input'><span class='fu'>summary</span>(<span class='no'>fit_multi</span>)</div><div class='output co'>#&gt; 
+#&gt; Sar_multi object summary: 
+#&gt; 
+#&gt; 15  models successfully fitted
+#&gt; 
+#&gt; The following models could not be fitted or were removed due to model checks:
+#&gt; Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model, Exponential 
+#&gt; 
+#&gt; Ranked models based on AICc  weights:
+#&gt; 
+#&gt;                        Model Weight    AICc    R2   R2a     Shape Asymptote
+#&gt; 1       Negative_exponential  0.235 141.426 0.557 0.488 convex up      TRUE
+#&gt; 2                      Monod  0.191 141.840 0.545 0.475 convex up      TRUE
+#&gt; 3                  Kobayashi  0.127 142.667 0.521 0.447 convex up     FALSE
+#&gt; 4                      Power  0.078 143.625 0.491 0.413 convex up     FALSE
+#&gt; 5     Persistence_function_1  0.070 143.840 0.589 0.486 convex up     FALSE
+#&gt; 6                   Gompertz  0.065 143.987 0.585 0.482   sigmoid      TRUE
+#&gt; 7  Cumulative_Weibull_3_par.  0.041 144.918 0.561 0.451 convex up      TRUE
+#&gt; 8           Chapman_Richards  0.038 145.062 0.557 0.446 convex up      TRUE
+#&gt; 9          Rational_function  0.038 145.088 0.556 0.445 convex up      TRUE
+#&gt; 10           Heleg(Logistic)  0.031 145.476 0.545 0.431 convex up      TRUE
+#&gt; 11                       MMF  0.031 145.476 0.545 0.431 convex up      TRUE
+#&gt; 12    Persistence_function_2  0.021 146.306 0.521 0.401   sigmoid     FALSE
+#&gt; 13                    PowerR  0.015 146.877 0.503 0.379 convex up     FALSE
+#&gt; 14    Extended_Power_model_2  0.015 146.923 0.502 0.377   sigmoid     FALSE
+#&gt; 15         Beta-P_cumulative  0.002 150.612 0.522 0.349 convex up     FALSE</div><div class='input'><span class='fu'>plot</span>(<span class='no'>fit_multi</span>)</div><div class='img'><img src='sars-package-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -168,5 +298,8 @@ Thomas J. Matthews and Francois Guilhaumon
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

@@ -1,8 +1,7 @@
 ---
 output:
-  md_document:
-    variant: markdown_github
-bibliography: "`r here::here('inst/REFERENCES.bib')`"
+  md_document
+bibliography: "inst/REFERENCES.bib"
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -15,6 +14,7 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 ```
+
 # The **'sars'** R Package <img src="man/figures/sars_logo.png" align="right" width="10%"/>
 
 [![Build Status](https://travis-ci.org/txm676/sars.svg?branch=master)](https://travis-ci.org/txm676/sars)
