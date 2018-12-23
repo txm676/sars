@@ -1,3 +1,10 @@
+#' @export
+#' #LINK TO SAR MULTI HELP FILE
+sars_models <- function() {
+  c("power","powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg", "linear")
+}
+
+
 #' Fit a multimodel SAR curve
 #'
 #' @description Construct a multimodel species-area relationship curve using
@@ -68,6 +75,10 @@
 #'   curve itself). When several SAR models are used and the number of bootstraps
 #'   (\code{ciN}) is large, generating the confidence intervals can take a long
 #'   time.
+#'   
+#'   The \code{sar_models()} function can be used to bring up a list of the 20
+#'   model names. \code{display_sars_models()} generates a table of the 20 models
+#'   with model information.
 #'
 #' @return A list of class "multi" and class "sars" with two elements. The first
 #'   element ('mmi') contains the fitted values of the multimodel sar curve. The
@@ -142,7 +153,7 @@ sar_multi <- function(data,
                        ciN = 100,
                        verb = TRUE){
 
-  if (!((is.character(obj))  || (class(obj) == "sars")) ) stop("obj must be of class character or sars")
+  if (!((is.character(obj))  | (class(obj) == "sars")) ) stop("obj must be of class character or sars")
 
   if (nrow(data) < 4) stop("Multi SAR needs at least four data points")
   if (nrow(data) == 4 & normaTest == "lillie") stop("The Lilliefors test cannot be performed with less than 5 data points")
@@ -163,7 +174,7 @@ sar_multi <- function(data,
 
   #if (verb) cat_line(rule(left = paste0(cyan(symbol$bullet),bold(" multi_sars")),right="multi-model SAR"))
   if (verb & is.character(obj)) {
-    cat("\n", paste("Now attempting to fit the", length(obj), "SAR models:"), "\n", "\n")
+    cat("\n", paste("Now attempting to fit the", length(obj), "SAR models:"), "\n\n")
     cat_line(rule(left = bold(" multi_sars"),right="multi-model SAR"))
   }
   #if (verb) cat_line(magenta(symbol$arrow_right)," Data set is: ")
@@ -235,7 +246,7 @@ sar_multi <- function(data,
 
   if(any(is.na(f_nas))){
     badNames <- is.na(f_nas)
-    message("\n", paste(length(which(is.na(f_nas))), "models could not be fitted and have been excluded from the multi SAR"), "\n")
+    message("\n", paste(sum(is.na(f_nas)), "models could not be fitted and have been excluded from the multi SAR"), "\n")
     badMods <- obj[badNames] #extract the bad model names from the obj vector (not from fits, as no model name if NA)
     fits <- fits[!is.na(f_nas)]
   }
@@ -246,12 +257,12 @@ sar_multi <- function(data,
   if ((normaTest != "none" | homoTest != "none" | neg_check) & verb){
     if (is.character(obj)){
       if (any(is.na(f_nas))){
-       cat("\n", "Model fitting completed. Now undertaking model validation checks.", "\n", "Additional models will be excluded if necessary:", "\n")
+       cat("\nModel fitting completed. Now undertaking model validation checks.\nAdditional models will be excluded if necessary:\n")
       } else {
-        cat("\n", "Model fitting completed - all models succesfully fitted. Now undertaking model validation checks.", "\n", "Additional models will be excluded if necessary:", "\n")
+        cat("\nModel fitting completed - all models succesfully fitted. Now undertaking model validation checks.\nAdditional models will be excluded if necessary:\n")
       }
     } else {
-      cat("\n", "Now undertaking model validation checks. Additional models will" , "\n", "be excluded if necessary:", "\n")
+      cat("\nNow undertaking model validation checks. Additional models will\nbe excluded if necessary\n")
     }
   }
 
@@ -264,7 +275,7 @@ sar_multi <- function(data,
     if (anyNA(np)){
       wnn <- is.na(np)
       mn <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
-      message("\n", paste(length(which(is.na(np))),"models returned NAs in the residuals normality test and have been excluded from the multi SAR:"), "\n",
+      message("\n", paste(sum(is.na(np)),"models returned NAs in the residuals normality test and have been excluded from the multi SAR:"), "\n",
               paste(mn[wnn], collapse = ", "), "\n")
       badMods <- c(badMods, mn[wnn])#select the model names with NAs
       fits <- fits[!wnn]
@@ -273,7 +284,7 @@ sar_multi <- function(data,
     whp <- np < alpha_normtest
     if (any(whp)) {
       mn2 <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
-      message("\n", paste(length(which(np < alpha_normtest)), "models failed the residuals normality test and have been excluded from the multi SAR:"), "\n",
+      message("\n", paste(sum(np < alpha_normtest), "models failed the residuals normality test and have been excluded from the multi SAR:"), "\n",
               paste(mn2[whp], collapse = ", "), "\n")
       badMods <- c(badMods, mn2[whp])#select the model names for models with p < 0.05
       fits <- fits[!whp]#then remove these models from the fit collection
@@ -287,7 +298,7 @@ sar_multi <- function(data,
     if (anyNA(hp)){
       whn <- is.na(hp)
       mn3 <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
-      message("\n", paste(length(which(is.na(hp))),"returned NAs in the residuals homogeneity test and have been excluded from the multi SAR:"), "\n",
+      message("\n", paste(sum(is.na(hp)),"returned NAs in the residuals homogeneity test and have been excluded from the multi SAR:"), "\n",
               paste(mn3[whn], collapse = ", "), "\n")
       badMods <- c(badMods, mn3[whn])#select the model names with NAs
       fits <- fits[!whn]
@@ -296,7 +307,7 @@ sar_multi <- function(data,
     whh <- hp < alpha_homotest
     if (any(whh)) {
       mn4 <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
-      message("\n", paste(length(which(hp < alpha_homotest)),"models failed the residuals homogeneity test and have been excluded from the multi SAR:"), "\n",
+      message("\n", paste(sum(hp < alpha_homotest),"models failed the residuals homogeneity test and have been excluded from the multi SAR:"), "\n",
               paste(mn4[whh], collapse = ", "), "\n")
       badMods <- c(badMods, mn4[whh])#select the model names for models with p < 0.05
       fits <- fits[!whh]
@@ -307,7 +318,7 @@ sar_multi <- function(data,
     nc <- vapply(fits, function(x) any(x$calculated < 0), FUN.VALUE = logical(1))
     if (any(nc)) {
       mn5 <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))#get all names in fit collection
-      message("\n", paste(length(which(nc)), "models have negative fitted values and have been excluded from the multi SAR:"), "\n",
+      message("\n", paste(sum(nc), "models have negative fitted values and have been excluded from the multi SAR:"), "\n",
               paste(mn5[nc], collapse = ", "), "\n")
       badMods <- c(badMods, mn5[nc])#select the model names for models with p < 0.05
       fits <- fits[!nc]
@@ -321,7 +332,7 @@ sar_multi <- function(data,
 
 
   sf <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))
-  if (verb) cat(length(sf), "remaining models used to construct the multi SAR:", "\n",
+  if (verb) cat(length(sf), "remaining models used to construct the multi SAR:\n",
        paste(sf, collapse = ", "), "\n")
 
   if (is.character(obj)) fits <- fit_collection(fits = fits)
@@ -388,7 +399,7 @@ sar_multi <- function(data,
   if (verb) cat_line(rule())
 
   if (confInt){
-    cat("\n", "Calculating sar_multi confidence intervals - this may take some time:", "\n")
+    cat("\nCalculating sar_multi confidence intervals - this may take some time:\n")
     cis <- sar_conf_int(res, n = ciN, crit = crit, normaTest = normaTest,
                         homoTest = homoTest,
                         neg_check = neg_check,

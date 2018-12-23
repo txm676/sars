@@ -33,9 +33,9 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#'   and the \\code{\\link{optim}} function. To avoid numerical problems and speed up the convergence process,", "\n")) 
   cat1(paste0("#'   the starting values used to run the optimization algorithm are carefully chosen, or custom values can be provided", "\n")) 
   cat1(paste0("#'   using the argument \\code{start}. The fitting process also determines the observed shape of the model fit,", "\n")) 
-  cat1(paste0("#'   and whether or not the observed fit is asymptotic (see Triantis et al. 2012 for further details).", "\n", "\n"))
+  cat1(paste0("#'   and whether or not the observed fit is asymptotic (see Triantis et al. 2012 for further details).", "\n\n"))
   cat1(paste0("#'   Model validation is undertaken by assessing the normality (\\code{normaTest}) and homogeneity (\\code{homoTest})", "\n")) 
-  cat1(paste0("#'   of the residuals and a warning is provided in \\code{\\link{summary.sars}} if either test is failed.", "\n", "\n")) 
+  cat1(paste0("#'   of the residuals and a warning is provided in \\code{\\link{summary.sars}} if either test is failed.", "\n\n")) 
   cat1(paste0("#'   A selection of information criteria (e.g. AIC, BIC) are returned and can be used to compare models", "\n")) 
   cat1(paste0("#'   (see also \\code{\\link{fit_collection}} and \\code{\\link{sar_multi}}).", "\n")) 
   
@@ -115,7 +115,7 @@ model_factory <- function(f, overwrite = FALSE){
               homoTest = "cor.fitted"){',"\n"))
   
   #checks
-  cat1("if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe')","\n")
+  cat1("if (!(is.matrix(data) | is.data.frame(data))) stop('data must be a matrix or dataframe')","\n")
   cat1("if (is.matrix(data)) data <- as.data.frame(data)","\n")
   cat1("if (anyNA(data)) stop('NAs present in data')","\n")
   #cat1("normtest <- match.arg(normtest, c('none', 'shapiro', 'kolmo', 'lillie'))","\n")
@@ -152,6 +152,8 @@ model_factory <- function(f, overwrite = FALSE){
 }#eo model_factory
 
 #using it
+
+#setwd("C:/Users/Tom2/Desktop/sars")
 
 modFiles <- list.files(file.path(getwd(),"inst","non_lin_models"))
 

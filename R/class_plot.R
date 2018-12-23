@@ -76,7 +76,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 
 
   if (is.null(xlab)){
-    if (attributes(x)$type == "fit" || attributes(x)$type == "fit_collection"){
+    if (attributes(x)$type == "fit" | attributes(x)$type == "fit_collection"){
         xlab = "Area"
     } else if (attributes(x)$type == "lin_pow"){
       xlab = "Log(Area)"

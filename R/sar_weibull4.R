@@ -8,7 +8,7 @@
 #'   of each island/site.
 #' @param start NULL or custom parameter start values for the optimisation algorithm.
 #' @param grid_start NULL or the number of points sampled in the model parameter space
-#'   or FALSE to prevent any grid start after a fail in inital optimization
+#'   or FALSE to prevent any grid start after a fail in initial optimization
 #'   to run a grid search.
 #' @param normaTest The test used to test the normality of the residuals of the
 #'   model. Can be any of 'lillie' (Lilliefors Kolmogorov-Smirnov test; the
@@ -68,7 +68,7 @@
 
 sar_weibull4 <- function(data, start = NULL, grid_start = NULL, normaTest =  "lillie",
               homoTest = "cor.fitted"){
-if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe') 
+if (!(is.matrix(data) | is.data.frame(data))) stop('data must be a matrix or dataframe') 
 if (is.matrix(data)) data <- as.data.frame(data) 
 if (anyNA(data)) stop('NAs present in data') 
 data <- data[order(data[,1]),] 

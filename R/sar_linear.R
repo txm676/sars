@@ -55,7 +55,7 @@
 #' @export 
 
 sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
-  if (!(is.matrix(data) || is.data.frame(data))) stop('data must be a matrix or dataframe') 
+  if (!(is.matrix(data) | is.data.frame(data))) stop('data must be a matrix or dataframe') 
   if (is.matrix(data)) data <- as.data.frame(data) 
   if (anyNA(data)) stop('NAs present in data') 
   data <- data[order(data[,1]),] 

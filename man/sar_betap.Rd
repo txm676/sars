@@ -8,14 +8,14 @@ sar_betap(data, start = NULL, grid_start = NULL, normaTest =  'lillie',
   homoTest = 'cor.fitted')
 }
 \arguments{
-\item{data}{A dataset in the form of a dataframe with two columns:
+\item{data}{A dataset in the form of a dataframe with two columns: 
 the first with island/site areas, and the second with the species richness
 of each island/site.}
 
 \item{start}{NULL or custom parameter start values for the optimisation algorithm.}
 
 \item{grid_start}{NULL or the number of points sampled in the model parameter space
-or FALSE to prevent any grid start after a fail in inital optimization
+or FALSE to prevent any grid start after a fail in initial optimization
 to run a grid search.}
 
 \item{normaTest}{The test used to test the normality of the residuals of the
@@ -29,7 +29,7 @@ the model fitted values; the default), 'cor.area' (a correlation of the
 residuals with the area values), or 'none' (no residuals homogeneity test is undertaken).}
 }
 \value{
-A list of class 'sars' with the following components:
+A list of class 'sars' with the following components: 
   \itemize{
     \item{par} { The model parameters}
     \item{value} { Residual sum of squares}

@@ -75,8 +75,8 @@ coleman <- function(data, area){
   abun <- rowSums(data) #abundance of each species
 
   ##obtain predicted values from random placement model
-  s_alp <- c()
-  s_hat <- c()
+  s_alp <- vector(length = length(ra))
+  s_hat <- vector(length = length(ra))
   for (j in seq_along(ra)){
     for (i in seq_along(abun)){
       s_alp[i] <- sa(ra[j],abun[i])
@@ -85,10 +85,10 @@ coleman <- function(data, area){
   } #eo j
 
   ##Obtain the model variance
-  varz <- c()
+  varz <- vector(length = length(ra))
   for (j in seq_along(ra)){
-    s_alp2 <- c()
-    s_alp3 <- c()
+    s_alp2 <- vector(length = length(abun))
+    s_alp3 <- vector(length = length(abun))
     for (i in seq_along(abun)){
       s_alp2[i] <- sa(ra[j],abun[i])
       s_alp3[i] <- sa2(ra[j],abun[i])
@@ -97,7 +97,7 @@ coleman <- function(data, area){
   } #eo j
 
   ##Standard deviation
-  sd <- sqrt (varz)
+  sd <- sqrt(varz)
   plus_sd <- s_hat + sd
   min_sd <- s_hat - sd
 

@@ -15,7 +15,7 @@ of each island/site.}
 \item{start}{NULL or custom parameter start values for the optimisation algorithm.}
 
 \item{grid_start}{NULL or the number of points sampled in the model parameter space
-or FALSE to prevent any grid start after a fail in inital optimization
+or FALSE to prevent any grid start after a fail in initial optimization
 to run a grid search.}
 
 \item{normaTest}{The test used to test the normality of the residuals of the

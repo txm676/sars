@@ -90,7 +90,7 @@
 
 gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3)){
   if (anyNA(data)) stop("NAs present in data")
-  if (!(is.matrix(data) || is.data.frame(data))) stop("data must be a matrix or dataframe")
+  if (!(is.matrix(data) | is.data.frame(data))) stop("data must be a matrix or dataframe")
   if (is.matrix(data)) data <- as.data.frame(data)
   if (ncol(data) < 3) stop("Not enough columns/variables to fit GDM")
   if (ncol(data) > 3) {
@@ -111,7 +111,7 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3)){
   
   if (model == "all") allMods <- vector("list", length = 3)
 
-  if (model == "expo" || model == "all"){
+  if (model == "expo" | model == "all"){
       
     #cat("\n","Fitting the GDM using the exponential model", "\n")
 
@@ -137,7 +137,7 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3)){
      if (model == "all") allMods[[1]] <- fit
      
   } 
-  if (model == "linear" || model == "all"){
+  if (model == "linear" | model == "all"){
    # cat("\n","Fitting the GDM using the linear model", "\n")
     fit <- nls(SR ~ Int + A * Area + Ti * Time + Ti2 * Time ^ 2, 
                data = data, start = data.frame(Int = 0, A = 1, Ti = 1, Ti2 = 0))
@@ -162,7 +162,7 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3)){
     if (model == "all") allMods[[2]] <- fit
   }
   
-  if (model == "power" || model == "all"){
+  if (model == "power" | model == "all"){
    
     fit <- nls(SR ~ exp(Int + A * log(Area) + Ti * Time + Ti2 * Time ^ 2), 
                data = data, start = data.frame(Int = 0, A = 1, Ti = 1, Ti2 = 0))

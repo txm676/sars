@@ -86,7 +86,7 @@ summary.sars <- function(object, ...){
   
   
   if (attributes(object)$type == "fit_collection"){ 
-    return(cat("\n", "No summary method for fit_collection", "\n", sep = ""))
+    return(cat("\nNo summary method for fit_collection\n", sep = ""))
     
   }
   

@@ -16,7 +16,7 @@ transLink = function(x,boundType) {
     )#end of switch
   } else {
 
-    res=vector()
+    res = vector(length = length(x))
 
     for (i in 1:length(x)) {
 
@@ -35,7 +35,7 @@ transLink = function(x,boundType) {
 backLink = function(x,boundType) {
 
   # fonction reciproque de la fonction logit
-  invlogit=function(x) {
+  invlogit = function(x) {
     1/(1+exp(-x))
   }#end of invlogit
 
@@ -47,7 +47,7 @@ backLink = function(x,boundType) {
     )#end of switch
   } else {
 
-    res=vector()
+    res = vector(length = length(x))
 
     for (i in 1:length(x)) {
 

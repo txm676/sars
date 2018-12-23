@@ -110,6 +110,10 @@ The multimodel SAR curve is constructed using information criterion
   curve itself). When several SAR models are used and the number of bootstraps
   (\code{ciN}) is large, generating the confidence intervals can take a long
   time.
+  
+  The \code{sar_models()} function can be used to bring up a list of the 20
+  model names. \code{display_sars_models()} generates a table of the 20 models
+  with model information.
 }
 \note{
 Occasionally a model fit will converge and pass the model fitting

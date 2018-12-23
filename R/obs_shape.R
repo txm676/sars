@@ -74,7 +74,7 @@ obs_shape <- function(x){
       min.area <- min(data$A)
       max.area <- max(data$A)
       ts <- seq(0,1, .01)
-      dif <- vector()
+      #dif <- vector()
       
       dif <- vapply(seq_along(ts), FUN = function(x){
         model$mod.fun((ts[x]  * min.area + (1 - ts[x]) * max.area), pars) - 

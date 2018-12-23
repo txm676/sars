@@ -81,7 +81,7 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
 
   ##occasionally the jaccobis function returns Inf, which errors below,
   #so need to removed this model
-  if (anyNA(jacobbis)  || any(jacobbis == "Inf")){
+  if (anyNA(jacobbis)  | any(jacobbis == "Inf")){
     calculated[i, ] <- NA
     residuals[i, ] <- NA
     transResiduals[i, ] <- NA
