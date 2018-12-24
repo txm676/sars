@@ -8,7 +8,7 @@ sar_multi(data, obj = c("power",
   "powerR","epm1","epm2","p1","p2","expo","koba",
   "mmf","monod","negexpo","chapman","weibull3","asymp",
   "ratio","gompertz","weibull4","betap","heleg", "linear"), crit = "Info",
-  normaTest = "lillie", homoTest = "cor.fitted", neg_check = TRUE,
+  normaTest = "lillie", homoTest = "cor.fitted", neg_check = FALSE,
   alpha_normtest = 0.05, alpha_homotest = 0.05, confInt = FALSE, ciN = 100,
   verb = TRUE)
 }

@@ -17,13 +17,11 @@ sars_models <- function() {
 #' @usage display_sars_models()
 #' @return A table of model information for the twenty SAR models, including the
 #'   model function, number of parameters and general model shape.
-#' @note Loads the table using \code{data(Table1)}.
 #' @references Matthews et al. (2019) sars: an R package for fitting, evaluating
 #'   and comparing species–area relationship models. Ecography, In Review.
 #' @export
 display_sars_models <- function() {
   # display table 1 of the manuscript
-  if (!"Table1" %in% ls()) data(Table1)
   print(Table1)
 }
 
@@ -36,7 +34,7 @@ display_sars_models <- function() {
 #'   "powerR","epm1","epm2","p1","p2","expo","koba",
 #'   "mmf","monod","negexpo","chapman","weibull3","asymp",
 #'   "ratio","gompertz","weibull4","betap","heleg", "linear"), crit = "Info",
-#'   normaTest = "lillie", homoTest = "cor.fitted", neg_check = TRUE,
+#'   normaTest = "lillie", homoTest = "cor.fitted", neg_check = FALSE,
 #'   alpha_normtest = 0.05, alpha_homotest = 0.05, confInt = FALSE, ciN = 100,
 #'   verb = TRUE)
 #' @param data A dataset in the form of a dataframe with two columns: the first

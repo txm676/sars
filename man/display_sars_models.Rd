@@ -14,9 +14,6 @@ A table of model information for the twenty SAR models, including the
 Display Table 1 of Matthews et al. (2019). See
   \code{\link{sar_multi}} for further information.
 }
-\note{
-Loads the table using \code{data(Table1)}.
-}
 \references{
 Matthews et al. (2019) sars: an R package for fitting, evaluating
   and comparing species–area relationship models. Ecography, In Review.
