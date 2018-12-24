@@ -1,7 +1,30 @@
+#' Display the 20 SAR model names
+#' 
+#' @description Display the 20 SAR model names as a vector. See
+#'   \code{\link{sar_multi}} for further information.
+#' @usage sars_models()
+#' @return A vector of model names.
 #' @export
-#' #LINK TO SAR MULTI HELP FILE
 sars_models <- function() {
   c("power","powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg", "linear")
+}
+
+
+#' Display the model information table
+#' 
+#' @description Display Table 1 of Matthews et al. (2019). See
+#'   \code{\link{sar_multi}} for further information.
+#' @usage display_sars_models()
+#' @return A table of model information for the twenty SAR models, including the
+#'   model function, number of parameters and general model shape.
+#' @note Loads the table using \code{data(Table1)}.
+#' @references Matthews et al. (2019) sars: an R package for fitting, evaluating
+#'   and comparing species–area relationship models. Ecography, In Review.
+#' @export
+display_sars_models <- function() {
+  # display table 1 of the manuscript
+  if (!"Table1" %in% ls()) data(Table1)
+  print(Table1)
 }
 
 
