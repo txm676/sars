@@ -16,5 +16,3 @@
 #' @examples
 #' data(galap)
 "galap"
-
-

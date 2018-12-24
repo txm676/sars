@@ -14,7 +14,7 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   }
 
   #if outside ranges : rescaling
-  for (i in 1:length(start)) {
+  for (i in seq_along(start)) {
     if (model$parLim[i] != "R") {
       if (start[i] <= 0) { start[i] <- 0.1 }
     }
@@ -90,7 +90,7 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   } else if (homoTest == "cor.fitted"){
     homoTest  <- list("test" = "cor.fitted", tryCatch(cor.test(residu,S.calc), error = function(e)list(estimate=NA,p.value=NA)))
   } else {
-    homoTest = "none"
+    homoTest <- "none"
   }
   
   #R2, AIC, AICc, BIC
@@ -114,7 +114,7 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   #BIC
   BIC <- n *log(res1$value / n) + log(n) * P
 
-  res3 = list(AIC=AIC, AICc=AICc, BIC=BIC, R2=R2, R2a=R2a)
+  res3 <- list(AIC=AIC, AICc=AICc, BIC=BIC, R2=R2, R2a=R2a)
 
   #convergence verif -> 71 is R2<=0
   verge <- ifelse(res1$convergence==0, TRUE, FALSE)
@@ -193,7 +193,7 @@ grid_start_fit <- function(model, data, n, algo = "Nelder-Mead", normaTest = "li
   }
   
   start.list <- lapply(model$parLim,function(x){
-    res = switch(x,
+    res <- switch(x,
                  R = sample(seq(-500,500),ns),
                  Rplus = seq(.1,500,length.out = ns),
                  unif = runif(ns)

@@ -6,7 +6,9 @@
 #' @return A vector of model names.
 #' @export
 sars_models <- function() {
-  c("power","powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg", "linear")
+  c("power","powerR","epm1","epm2","p1","p2","expo","koba","mmf",
+    "monod","negexpo","chapman","weibull3","asymp","ratio",
+    "gompertz","weibull4","betap","heleg", "linear")
 }
 
 
@@ -163,7 +165,10 @@ display_sars_models <- function() {
 
 
 sar_multi <- function(data,
-                       obj = c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg", "linear"),
+                       obj = c("power", "powerR","epm1","epm2","p1","p2","expo",
+                               "koba","mmf","monod","negexpo","chapman",
+                               "weibull3","asymp","ratio","gompertz",
+                               "weibull4","betap","heleg", "linear"),
                        crit = "Info",
                        normaTest = "lillie",
                        homoTest = "cor.fitted",
@@ -174,29 +179,41 @@ sar_multi <- function(data,
                        ciN = 100,
                        verb = TRUE){
 
-  if (!((is.character(obj))  | (class(obj) == "sars")) ) stop("obj must be of class character or sars")
+  if (!((is.character(obj))  | (class(obj) == "sars")) ) 
+    stop("obj must be of class character or sars")
 
-  if (nrow(data) < 4) stop("Multi SAR needs at least four data points")
-  if (nrow(data) == 4 & normaTest == "lillie") stop("The Lilliefors test cannot be performed with less than 5 data points")
+  if (nrow(data) < 4) 
+    stop("Multi SAR needs at least four data points")
+  if (nrow(data) == 4 & normaTest == "lillie") 
+    stop("The Lilliefors test cannot be performed with less than 5 data points")
 
-  if (is.character(obj) & is.null(data)) stop("if obj is character then data should be provided")
+  if (is.character(obj) & is.null(data)) 
+    stop("if obj is character then data should be provided")
 
   if (is.character(obj)) {
-    if (any(!(obj %in% c("linear","power","powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman","weibull3","asymp","ratio","gompertz","weibull4","betap","heleg")))) stop("provided model names do not match with model functions")
+    if (any(!(obj %in% c("linear","power","powerR","epm1","epm2","p1",
+                         "p2","expo","koba","mmf","monod","negexpo",
+                         "chapman","weibull3","asymp","ratio","gompertz",
+                         "weibull4","betap","heleg")))) 
+      stop("provided model names do not match with model functions")
   }
 
   if (length(obj) < 2) stop("more than 1 fit is required to construct a sar_multi")
 
-  normaTest <- match.arg(normaTest, c("none", "shapiro", "kolmo", "lillie"))
-  homoTest <- match.arg(homoTest, c("none","cor.area","cor.fitted"))
+  normaTest <- match.arg(normaTest, c("none", "shapiro", 
+                                      "kolmo", "lillie"))
+  homoTest <- match.arg(homoTest, c("none","cor.area",
+                                    "cor.fitted"))
 
   if (normaTest == "none") alpha_normtest <- "none"
   if (homoTest == "none") alpha_homotest <- "none"
 
   #if (verb) cat_line(rule(left = paste0(cyan(symbol$bullet),bold(" multi_sars")),right="multi-model SAR"))
   if (verb & is.character(obj)) {
-    cat("\n", paste("Now attempting to fit the", length(obj), "SAR models:"), "\n\n")
-    cat_line(rule(left = bold(" multi_sars"),right="multi-model SAR"))
+    cat("\n", paste("Now attempting to fit the", 
+                    length(obj), "SAR models:"), "\n\n")
+    cat_line(rule(left = bold(" multi_sars"),
+                  right="multi-model SAR"))
   }
   #if (verb) cat_line(magenta(symbol$arrow_right)," Data set is: ")
   #if (verb) cat_line(rule(left = paste0(magenta(symbol$bullet))))
@@ -210,17 +227,24 @@ sar_multi <- function(data,
 
     fits <- suppressWarnings(lapply(obj, function(x){
 
-      f <- eval(parse(text = paste0(mods[x],"(data", ", normaTest = ", paste0("'", normaTest, "'"), ", homoTest = ", paste0("'", homoTest, "'"), ")")))
+      f <- eval(parse(text = paste0(mods[x],
+                                    "(data", ", normaTest = ", 
+                                    paste0("'", normaTest, "'"),
+                                    ", homoTest = ", paste0("'", homoTest, "'"), ")")))
 
       if (verb) {
         if(is.na(f$value)) {
-          cat_line( paste0(red(symbol$arrow_right)," ",col_align(x,max(nchar(obj)))," : ", red(symbol$cross)))
+          cat_line( paste0(red(symbol$arrow_right)," ",
+                           col_align(x,max(nchar(obj)))," : ", red(symbol$cross)))
         }else{
 
           if (!is.matrix(f$sigConf)){
-            cat_line( paste0(yellow(symbol$arrow_right)," ",col_align(x,max(nchar(obj)))," : Warning: could not compute parameters statistics"))
+            cat_line( paste0(yellow(symbol$arrow_right)," ",
+                             col_align(x,max(nchar(obj))),
+                             " : Warning: could not compute parameters statistics"))
           }else{
-            cat_line( paste0(cyan(symbol$arrow_right)," ",col_align(x,max(nchar(obj)))," : ",green(symbol$tick)))
+            cat_line( paste0(cyan(symbol$arrow_right)," ",
+                             col_align(x,max(nchar(obj)))," : ",green(symbol$tick)))
           }
         }
       }
@@ -267,7 +291,9 @@ sar_multi <- function(data,
 
   if(any(is.na(f_nas))){
     badNames <- is.na(f_nas)
-    message("\n", paste(sum(is.na(f_nas)), "models could not be fitted and have been excluded from the multi SAR"), "\n")
+    
+    message("\n", paste(sum(is.na(f_nas)), "models could not be fitted and have been excluded from the multi SAR"), 
+            "\n")
     badMods <- obj[badNames] #extract the bad model names from the obj vector (not from fits, as no model name if NA)
     fits <- fits[!is.na(f_nas)]
   }

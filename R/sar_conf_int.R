@@ -133,7 +133,7 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   }
   nBoot <- n
 
-  pointsNames <- paste("S",c(1:nrow(dat)))
+  pointsNames <- paste("S",c(seq_len(nrow(dat))))
 
   #Matrix of boot Samples
   bootMatrix <- matrix(0, nBoot, nrow(dat))
@@ -160,11 +160,11 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   while (nGoodBoot < nBoot+1) {
 
     test <- 1
-    chousModel = filtModelList[rmultinom(1, 1, wei)==1]
+    chousModel <- filtModelList[rmultinom(1, 1, wei)==1]
 
     while (test != 0 ) {
 
-      for (l in 1:nrow(dat)) {
+      for (l in seq_len(nrow(dat))) {
         positives <- transResiduals[chousModel, ][transResiduals[chousModel, ] > 0]
         negatives <- transResiduals[chousModel, ][transResiduals[chousModel, ] < 0]
         vtci <- negatives[abs(negatives) <= calculated[chousModel, l] ]
@@ -185,7 +185,7 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
     optimres <- tryCatch(suppressMessages(sar_multi(df, obj = nams_short, verb = FALSE)), error = function(e) NA)
 
     if (length(optimres) == 1) {
-      badBoot=TRUE
+      badBoot <- TRUE
     } else {
       #progress bar
       if (verb) {
@@ -200,7 +200,7 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
       rownames( optimBootResult[[nGoodBoot]]) <- as.vector(optimres$details$mod_names)
       colnames(optimBootResult[[nGoodBoot]]) <- c(paste(IC), "Delta", "Weights")
 
-      for (k in 1:length(optimres$details$mod_names)){
+      for (k in seq_along(optimres$details$mod_names)){
       bootCalculated[[nGoodBoot]][k, ] <- optimres$details$fits[[k]]$calculated
       optimBootResult[[nGoodBoot]][k, 1] <- as.vector(unlist(optimres$details$fits[[k]][IC]))
       optimBootResult[[nGoodBoot]][k, 2:3] <- 0
@@ -243,7 +243,7 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
       optimBootResult[[k]][, 3] <- akaikeweightvect
 
       #Averaging
-      for (i in 1:nrow(dat)) {
+      for (i in seq_len(nrow(dat))) {
         bootHat[k,i] <- sum(akaikeweightvect * bootCalculated[[k]][,i])
       }#end of for i
 

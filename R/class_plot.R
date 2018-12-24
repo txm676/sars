@@ -77,9 +77,9 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 
   if (is.null(xlab)){
     if (attributes(x)$type == "fit" | attributes(x)$type == "fit_collection"){
-        xlab = "Area"
+        xlab <- "Area"
     } else if (attributes(x)$type == "lin_pow"){
-      xlab = "Log(Area)"
+      xlab <- "Log(Area)"
     } else {
       stop ("Type attribute not recognised")
     }
@@ -87,9 +87,9 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 
   if (is.null(ylab)){
     if (attributes(x)$type == "fit" | attributes(x)$type == "fit_collection"){
-      ylab = "Species richness"
+      ylab <- "Species richness"
     } else if (attributes(x)$type == "lin_pow"){
-      ylab = "Log(Species richness)"
+      ylab <- "Log(Species richness)"
     }
   }
 
@@ -103,7 +103,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
     if (is.null(yRange)){
     yMax <- max(c(yy,ff))#fitted line can be above the largest observed data point
     yMin <- min(c(yy,ff))
-    yRange = c(yMin, yMax)
+    yRange <- c(yMin, yMax)
     }
 
     plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
@@ -145,7 +145,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
       if (is.null(yRange)){
         yMax <- max(c(yy,ff))#fitted line can be above the largest observed data point
         yMin <- min(c(yy,ff))
-        yRange = c(yMin, yMax)
+        yRange <- c(yMin, yMax)
       }
 
       plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
@@ -172,7 +172,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
       if (is.null(yRange)){
         yMax <- max(c(yy,unlist(mf)))#fitted line can be above the largest observed data point
         yMin <- min(c(yy,unlist(mf)))
-        yRange = c(yMin, yMax)
+        yRange <- c(yMin, yMax)
       }
 
       #main title
@@ -191,10 +191,10 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
       plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
            cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,ylim = yRange, bty = "L")
       }
-      matlines(xx, mf2, lwd = lwd, lty = 1:ncol(mf2), col=1:ncol(mf2))
+      matlines(xx, mf2, lwd = lwd, lty = seq_along(mf2), col=seq_along(mf2))
       title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main)
-     if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax, legend = nams, horiz = F, lty = 1:ncol(mf2),
-                              col=1:ncol(mf2))
+     if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax, legend = nams, horiz = FALSE, lty = seq_along(mf2),
+                              col=seq_along(mf2))
     }#eo mfplot
 
   }#eo if fit_collection
@@ -209,7 +209,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
     if (is.null(yRange)){
       yMax <- max(c(yy,ff))#fitted line can be above the largest observed data point
       yMin <- min(c(yy,ff))
-      yRange = c(yMin, yMax)
+      yRange <- c(yMin, yMax)
     }
 
     plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
@@ -417,7 +417,7 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
         yMin <- min(c(yy,wfv))
         }
       }
-      yRange = c(yMin, yMax)
+      yRange <- c(yMin, yMax)
     }
 
   #main title
@@ -462,8 +462,9 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
       }#eo confInt
     }#eo no legend
-      matlines(xx, mf2, lwd = lwd, lty = 1:ncol(mf2), col=1:ncol(mf2))
-      if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax, legend = nams2,horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2))
+      matlines(xx, mf2, lwd = lwd, lty = seq_along(mf2), col=seq_along(mf2))
+      if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax, legend = nams2, horiz = FALSE, 
+                               lty = seq_along(mf2), col=seq_along(mf2))
       title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main)
   } else if (!allCurves){
     #just multimodel SAR curve

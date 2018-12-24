@@ -59,18 +59,18 @@ lin_pow <- function(data, con = 1, compare = FALSE, normaTest =  "lillie", homoT
   colnames(data) <- c("A", "S")
 
   if (any(data$S == 0)){
-      log.data = data.frame(A = log(data$A), S = log(data$S + con))
+      log.data <- data.frame(A = log(data$A), S = log(data$S + con))
   } else {
-       log.data = data.frame(A = log(data$A), S = log(data$S))
+       log.data <- data.frame(A = log(data$A), S = log(data$S))
   }
-  linearPower.fit = lm(S ~ A, data = log.data)
+  linearPower.fit <- lm(S ~ A, data = log.data)
 
   fv <- linearPower.fit$fitted.values
   linearPower.fit <- summary.lm(linearPower.fit)
   resid <- linearPower.fit$residuals
   res <- list(Model = linearPower.fit, calculated = fv, data = log.data)
   
-  if (compare == T){
+  if (compare == TRUE){
     pow <- sar_power(data)
     res$power <- pow
   }
@@ -95,7 +95,7 @@ lin_pow <- function(data, con = 1, compare = FALSE, normaTest =  "lillie", homoT
     homoTest  <- list("test" = "cor.fitted", tryCatch(cor.test(resid,as.vector(res$calculated)), 
                                                       error = function(e)list(estimate=NA,p.value=NA)))
   } else {
-    homoTest = "none"
+    homoTest <- "none"
   }
   res$normaTest <- normaTest
   res$homoTest <- homoTest

@@ -14,7 +14,7 @@ compmod <- function(model){
 
   #parameters extraction
   model$parNames <- unique(chars[!is.element(chars,modChars)])
-  names(model$parNames) <- 1:length(model$parNames)
+  names(model$parNames) <- seq_along(model$parNames)
 
   #1rst & 2nd derivatives
   model$d1.exp <- D(mod.exp,"A")

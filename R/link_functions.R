@@ -4,23 +4,23 @@
 transLink = function(x,boundType) {
 
   # fonction logit
-  logit=function(y) {
+  logit <- function(y) {
     log(y/(1-y))
   }#end of logit
 
   if (length(x) ==1) {
-    res = switch(boundType,
+    res <- switch(boundType,
                  R = x,
                  Rplus = log(x),
                  unif = logit(x)
     )#end of switch
   } else {
 
-    res = vector(length = length(x))
+    res <- vector(length = length(x))
 
-    for (i in 1:length(x)) {
+    for (i in seq_along(x)) {
 
-      res[i] = switch(boundType[i],
+      res[i] <- switch(boundType[i],
                       R = x[i],
                       Rplus = log(x[i]),
                       unif = logit(x[i])
@@ -35,23 +35,23 @@ transLink = function(x,boundType) {
 backLink = function(x,boundType) {
 
   # fonction reciproque de la fonction logit
-  invlogit = function(x) {
+  invlogit <- function(x) {
     1/(1+exp(-x))
   }#end of invlogit
 
   if (length(x) ==1) {
-    res = switch(boundType,
+    res <- switch(boundType,
                  R = x,
                  Rplus = exp(x),
                  unif = invlogit(x)
     )#end of switch
   } else {
 
-    res = vector(length = length(x))
+    res <- vector(length = length(x))
 
-    for (i in 1:length(x)) {
+    for (i in seq_along(x)) {
 
-      res[i] = switch(boundType[i],
+      res[i] <- switch(boundType[i],
                       R = x[i],
                       Rplus = exp(x[i]),
                       unif = invlogit(x[i])

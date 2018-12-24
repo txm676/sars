@@ -112,7 +112,7 @@ sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
     homoTest  <- list("test" = "cor.fitted", tryCatch(cor.test(res,as.vector(mod$fitted.values)), 
                                                    error = function(e)list(estimate=NA,p.value=NA)))
   } else {
-    homoTest = "none"
+    homoTest <- "none"
   }
 
   fit$normaTest <- normaTest

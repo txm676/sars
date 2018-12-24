@@ -5,7 +5,7 @@
 obs_shape <- function(x){
 
     minMaxVal <- NA
-    asymp <- F
+    asymp <- FALSE
     model <- x$model
     data <- x$data
     pars <- x$par
@@ -82,16 +82,16 @@ obs_shape <- function(x){
       }, FUN.VALUE = double(1))
       
       #is linear?
-      if (sum(abs(dif) < 0.001) == length(ts)) possFits = c(1, 0, 0, 0)
+      if (sum(abs(dif) < 0.001) == length(ts)) possFits <- c(1, 0, 0, 0)
 
       #is it convex upward/downward?
-      if ((sum(abs(dif) < 0.001) != length(ts)) & (sum(dif <= 0) == length(dif))) possFits = c(0,0,1,0)
-      if ((sum(abs(dif) < 0.001) !=length(ts))  & (sum(dif >= 0) == length(dif))) possFits = c(0,1,0,0)
+      if ((sum(abs(dif) < 0.001) != length(ts)) & (sum(dif <= 0) == length(dif))) possFits <- c(0,0,1,0)
+      if ((sum(abs(dif) < 0.001) !=length(ts))  & (sum(dif >= 0) == length(dif))) possFits <- c(0,1,0,0)
       
       #is the asymptote reached?
       asymptote <- model$asymp(pars)
       if (asymptote){
-        if (asymptote > range(data$S)[1] & asymptote < range(data$S)[2]) asymp = T
+        if (asymptote > range(data$S)[1] & asymptote < range(data$S)[2]) asymp <- TRUE
       }#eo if 
       
       roots.d1 <- tryCatch(getRoots(model$d1.fun, Areas, pars), error = function(e) list(sigCh = NA, roots = NA, minMax = NA))
