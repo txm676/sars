@@ -283,6 +283,7 @@ get_fit <- function(model = model, data = data, start = NULL, grid_start = NULL,
 
 #' @import stats
 
+
 stats_nlsModel <- function (form, data, start, wts, upper = NULL) 
 {
   thisEnv <- environment()
@@ -305,7 +306,7 @@ stats_nlsModel <- function (form, data, start, wts, upper = NULL)
   useParams <- rep_len(TRUE, parLength)
   lhs <- eval(form[[2L]], envir = env)
   rhs <- eval(form[[3L]], envir = env)
-  .swts <- if (!missing(wts) & length(wts)) 
+  .swts <- if (!missing(wts) && length(wts)) 
     sqrt(wts)
   else rep_len(1, length(rhs))
   assign(".swts", .swts, envir = env)
@@ -383,7 +384,7 @@ stats_nlsModel <- function (form, data, start, wts, upper = NULL)
                                                                          temp <- logical(length(useParams))
                                                                          temp[unlist(ind[vary])] <- TRUE
                                                                          temp
-                                                                       } else if (is.logical(vary) & length(vary) != length(useParams)) stop("setVarying : 'vary' length must match length of parameters") else {
+                                                                       } else if (is.logical(vary) && length(vary) != length(useParams)) stop("setVarying : 'vary' length must match length of parameters") else {
                                                                          vary
                                                                        }, envir = thisEnv)
                                                                        gradCall[[length(gradCall) - 1L]] <<- useParams

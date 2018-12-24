@@ -54,7 +54,7 @@ summary.sars <- function(object, ...){
     rownames(object$Model$coefficients) <- c("LogC", "z")
     fit_df <- round(data.frame(Area = object$data$A, Fitted = object$calculated), 2) 
     res <- list("Model" = object$Model, df = fit_df,
-                "Normality_test" = object$normaTest, "Homogeneity_test" = object$homoTest)
+                "normaTest" = object$normaTest, "homoTest" = object$homoTest)
     if ("power" %in% names(object)){
       cp <- object$power$par[1]
       zp <- object$power$par[2]
@@ -80,7 +80,7 @@ summary.sars <- function(object, ...){
     res <- list("Model" = name, "residuals" = round(resid, 1), "Parameters" = pars_tab, 
                 "parNames" = parN, "formula" = formula, "AIC" = round(ic, 2), "AICc" = round(ic2, 2), "BIC" = round(bi, 2),
                 "R2" = round(R2, 2), "R2a" = round(R2a, 2), "observed_shape" = shape, "asymptote" = asymp, 
-                "convergence" = conv, "Normality_test" = object$normaTest, "Homogeneity_test" = object$homoTest, 
+                "convergence" = conv, "normaTest" = object$normaTest, "homoTest" = object$homoTest, 
                 "Negative_values" = negCheck)
   }
   
