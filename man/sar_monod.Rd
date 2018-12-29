@@ -14,11 +14,11 @@ of each island/site.}
 
 \item{start}{NULL or custom parameter start values for the optimisation algorithm.}
 
-\item{grid_start}{NULL or the number of pointssampled in the model parameter space
+\item{grid_start}{NULL or the number of points sampled in the model parameter space
 or FALSE to prevent any grid start after a fail in initial optimization
 to run a grid search.}
 
-\item{normaTest}{The test used to test the normalityof the residuals of the
+\item{normaTest}{The test used to test the normality of the residuals of the
 model. Can be any of 'lillie' (Lilliefors Kolmogorov-Smirnov test; the
 default), 'shapiro' (Shapiro-Wilk test of normality), 'kolmo'
 (Kolmogorov-Smirnov test), or 'none' (no residuals normality test is undertaken).}
@@ -69,7 +69,7 @@ The model is fitted using non-linear regression. The model parameters are estima
   Model validation is undertaken by assessing the normality (\code{normaTest}) and homogeneity (\code{homoTest})
   of the residuals and a warning is provided in \code{\link{summary.sars}} if either test is failed.
   A selection of information criteria (e.g. AIC, BIC) are returned and can be used to compare models
-  (see also \code{\link{fit_collection}} and \code{\link{sar_multi}}).
+  (see also \code{\link{fit_collection}} and \code{\link{sar_multi}})
 }
 \examples{
 data(galap)

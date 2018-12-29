@@ -9,22 +9,29 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
                          alpha_homotest = 0.05, verb = TRUE){
 
   if (!"multi" %in% class(fit)) stop ("class of 'fit' should be 'multi'")
-  if (length(fit$details$mod_names) < 2) stop ("less than two models in the sar multi object")
+  if (length(fit$details$mod_names) < 2) 
+    stop ("less than two models in the sar multi object")
 
   #model names for matching
 
-  x1 <- c("Power", "PowerR", "Extended_Power_model_1", "Extended_Power_model_2", "Persistence_function_1",
-          "Persistence_function_2", "Exponential", "Kobayashi", "MMF", "Monod", "Negative_exponential",
-          "Chapman_Richards", "Cumulative_Weibull_3_par.", "Asymptotic_regression", "Rational_function",
-          "Gompertz", "Cumulative_Weibull_4_par.", "Beta-P_cumulative", "Heleg(Logistic)", "Linear_model")
+  x1 <- c("Power", "PowerR", "Extended_Power_model_1", 
+          "Extended_Power_model_2", "Persistence_function_1",
+          "Persistence_function_2", "Exponential", "Kobayashi", "MMF", 
+          "Monod", "Negative_exponential", "Chapman_Richards", 
+          "Cumulative_Weibull_3_par.", "Asymptotic_regression", 
+          "Rational_function","Gompertz", "Cumulative_Weibull_4_par.", 
+          "Beta-P_cumulative", "Heleg(Logistic)", "Linear_model")
 
-  x2 <- c("sar_power(", "sar_powerR(", "sar_epm1(", "sar_epm2(", "sar_p1(", "sar_p2(",
-          "sar_expo(", "sar_koba(", "sar_mmf(", "sar_monod(", "sar_negexpo(",
-          "sar_chapman(", "sar_weibull3(", "sar_asymp(", "sar_ratio(", "sar_gompertz(",
-          "sar_weibull4(", "sar_betap(", "sar_heleg(", "sar_linear(")
+  x2 <- c("sar_power(", "sar_powerR(", "sar_epm1(", "sar_epm2(", "sar_p1(",
+          "sar_p2(", "sar_expo(", "sar_koba(", "sar_mmf(", "sar_monod(",
+          "sar_negexpo(", "sar_chapman(", "sar_weibull3(", "sar_asymp(", 
+          "sar_ratio(", "sar_gompertz(", "sar_weibull4(", "sar_betap(", 
+          "sar_heleg(", "sar_linear(")
 
-  x3 <-   c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf","monod","negexpo","chapman",
-            "weibull3","asymp","ratio","gompertz","weibull4","betap","heleg", "linear")
+  x3 <-   c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf",
+            "monod","negexpo","chapman",
+            "weibull3","asymp","ratio","gompertz","weibull4","betap","heleg",
+            "linear")
 
 
   #observed data
@@ -36,8 +43,10 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   ns1 <- which(x1 %in% nams)
   nams_short <- x3[ns1]#for use below
 
-  #loop over all models in sar_multi fit and fill matrices of fitted values and, resids & transformed residuals
-  calculated <- residuals <- transResiduals <- matrix(nrow = length(nams), ncol = nrow(dat))
+  #loop over all models in sar_multi fit and fill matrices of fitted values
+  #and, resids & transformed residuals
+  calculated <- residuals <- transResiduals <- matrix(nrow = length(nams),
+                                                      ncol = nrow(dat))
 
   for (i in seq_along(nams))
   {
@@ -54,21 +63,26 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
 
   if (nams[i] == "Linear_model"){
   #based on code from mmSAR in Rforge
-   jacob <- numDeriv::jacobian(me$model$rss.fun, me$par, data = me$data[1, ], model = me$model,  opt = FALSE)
+   jacob <- numDeriv::jacobian(me$model$rss.fun, me$par, data = me$data[1, ],
+                               model = me$model,  opt = FALSE)
 
    for (k in 2:nrow(dat)) {
-     jacob <- rbind(jacob, numDeriv::jacobian(me$model$rss.fun, me$par, data = me$data[k, ],model = me$model, opt = FALSE))
+     jacob <- rbind(jacob, numDeriv::jacobian(me$model$rss.fun, me$par,
+                          data = me$data[k, ],model = me$model, opt = FALSE))
   }
   } else {
   #based on code from mmSAR in Rforge
-  jacob <- jacobian(me$model$rss.fun, me$par, data = me$data[1, ], opt = FALSE)
+  jacob <- jacobian(me$model$rss.fun, me$par, data = me$data[1, ],
+                    opt = FALSE)
 
   for (k in 2:nrow(dat)) {
-    jacob <- rbind(jacob, jacobian(me$model$rss.fun, me$par, data = me$data[k, ], opt = FALSE))
+    jacob <- rbind(jacob, jacobian(me$model$rss.fun, me$par,
+                                   data = me$data[k, ], opt = FALSE))
   }
   }#eo if linear
 
-  ##occasionally the jacobian function returns NA for certain models: need to remove these,
+  ##occasionally the jacobian function returns NA for certain models: 
+  #need to remove these,
   #so just fill all NAs for this model and it will be removed below
   if (anyNA(jacob)){
     calculated[i, ] <- NA
@@ -93,7 +107,8 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   hatMat <- jacob %*% jacobbismun %*% t(jacob)
   matList <- list(jacob = jacob, hatMat = hatMat)
 
-  #Residuals transformation from Davidson and Hinkley, 1997 "Bootstrap methods and their applications" p 259 eq (6.9)
+  #Residuals transformation from Davidson and Hinkley, 1997 "Bootstrap
+  #methods and their applications" p 259 eq (6.9)
   diagHatMat <- diag(hatMat)
   tr <- meR - mean(meR)
   tr <- tr / sqrt(1 - diagHatMat)#checked and this gives same values as mmSAR
@@ -105,15 +120,19 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
 
   }#eo for
 
-  rownames(calculated) <- rownames(residuals) <- rownames(transResiduals) <- nams
+ rownames(transResiduals) <- nams
+ rownames(residuals) <- rownames(transResiduals)
+ rownames(calculated) <- rownames(residuals)
 
-
-  #some models have NANs in the transResiduals calculation; so remove them from all the matrices (and names vectors)
+  #some models have NANs in the transResiduals calculation; so remove them 
+ #from all the matrices (and names vectors)
  if (anyNA(transResiduals)){
 
   wna <- which(apply(transResiduals, 1, anyNA))
-  warning(paste("The following model(s) has been removed from the confidence interval calculations as NAs/Infs are
-                present in the transformed residuals:", paste(names(wna), collapse = ", ")))
+  warning(paste("The following model(s) has been removed from the", 
+                 " confidence interval calculations as NAs/Infs are
+                present in the transformed residuals:", 
+                paste(names(wna), collapse = ", ")))
   calculated <- calculated[-wna, ]
   residuals <- residuals[-wna, ]
   transResiduals <- transResiduals[-wna, ]
@@ -121,8 +140,9 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   nams <- nams[-wna]
   nams_short <- nams_short[-wna]
   if (identical(!nrow(calculated), nrow(residuals),
-                nrow(transResiduals), length(wei), length(nams), length(nams_short))) stop ("Problem with removed models
-                                                                                            following transResiduals checks")
+                nrow(transResiduals), length(wei),
+length(nams), length(nams_short))) 
+    stop ("Problem with removed models following transResiduals checks")
  }
 
   #run the boostrapping (based on code in mmSAR)
@@ -141,7 +161,8 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   #list of optimisation results
   optimBootResult <- vector("list", length = nBoot)
 
-  #choosing an IC criterion (AIC or AICc or BIC): same code as within sar_multi as needs to be identical
+  #choosing an IC criterion (AIC or AICc or BIC): same code as within
+  #sar_multi as needs to be identical
   IC <- switch(crit,
                Info= if ( (nrow(dat) / 3) < 40 ) { "AICc" } else { "AIC" },
                Bayes= "BIC")
@@ -164,14 +185,14 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
 
     while (test != 0 ) {
 
-      for (l in seq_len(nrow(dat))) {
-        positives <- transResiduals[chousModel, ][transResiduals[chousModel, ] > 0]
-        negatives <- transResiduals[chousModel, ][transResiduals[chousModel, ] < 0]
-        vtci <- negatives[abs(negatives) <= calculated[chousModel, l] ]
-        vtci <- c(vtci, positives)
-        value <- sample(vtci, 1)
-        bootMatrix[nGoodBoot, l] <- calculated[chousModel, l] + value
-      }#end of for
+for (l in seq_len(nrow(dat))) {
+  positives <- transResiduals[chousModel, ][transResiduals[chousModel, ] > 0]
+  negatives <- transResiduals[chousModel, ][transResiduals[chousModel, ] < 0]
+  vtci <- negatives[abs(negatives) <= calculated[chousModel, l] ]
+  vtci <- c(vtci, positives)
+  value <- sample(vtci, 1)
+  bootMatrix[nGoodBoot, l] <- calculated[chousModel, l] + value
+}#end of for
 
       #test if one species richness is negative
       test <- length( which(bootMatrix[nGoodBoot, ] < 0) )
@@ -182,7 +203,8 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
     badBoot <- FALSE
 
     df <- data.frame("A" = dat$A, "S" = bootMatrix[nGoodBoot, ])
-    optimres <- tryCatch(suppressMessages(sar_multi(df, obj = nams_short, verb = FALSE)), error = function(e) NA)
+    optimres <- tryCatch(suppressMessages(sar_multi(df, obj = nams_short, 
+                                      verb = FALSE)), error = function(e) NA)
 
     if (length(optimres) == 1) {
       badBoot <- TRUE
@@ -193,16 +215,23 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
         z <- z + 1
       }
       #matrix for the fitted values
-      bootCalculated[[nGoodBoot]] <- matrix(nrow = length(optimres$details$fits), ncol = nrow(df))
-      rownames(bootCalculated[[nGoodBoot]]) <- as.vector(optimres$details$mod_names)
+      bootCalculated[[nGoodBoot]] <- 
+        matrix(nrow = length(optimres$details$fits), ncol = nrow(df))
+      rownames(bootCalculated[[nGoodBoot]]) <- 
+        as.vector(optimres$details$mod_names)
       #matrix for AIC etc
-      optimBootResult[[nGoodBoot]] <- matrix(nrow = length(optimres$details$fits), ncol = 3)
-      rownames( optimBootResult[[nGoodBoot]]) <- as.vector(optimres$details$mod_names)
-      colnames(optimBootResult[[nGoodBoot]]) <- c(paste(IC), "Delta", "Weights")
+      optimBootResult[[nGoodBoot]] <- 
+        matrix(nrow = length(optimres$details$fits), ncol = 3)
+      rownames( optimBootResult[[nGoodBoot]]) <- 
+        as.vector(optimres$details$mod_names)
+      colnames(optimBootResult[[nGoodBoot]]) <- 
+        c(paste(IC), "Delta", "Weights")
 
       for (k in seq_along(optimres$details$mod_names)){
-      bootCalculated[[nGoodBoot]][k, ] <- optimres$details$fits[[k]]$calculated
-      optimBootResult[[nGoodBoot]][k, 1] <- as.vector(unlist(optimres$details$fits[[k]][IC]))
+      bootCalculated[[nGoodBoot]][k, ] <- 
+        optimres$details$fits[[k]]$calculated
+      optimBootResult[[nGoodBoot]][k, 1] <- 
+        as.vector(unlist(optimres$details$fits[[k]][IC]))
       optimBootResult[[nGoodBoot]][k, 2:3] <- 0
       }#eo k
     }#eo if
@@ -228,8 +257,8 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
       for (i in 1:filtNlig){
 
         #Delta IC = ICi - ICmin
-        DeltaIC <- optimBootResult[[k]][i, 1] - min(optimBootResult[[k]][, 1])
-        DeltaICvect <- c(DeltaICvect, DeltaIC)
+      DeltaIC <- optimBootResult[[k]][i, 1] - min(optimBootResult[[k]][, 1])
+      DeltaICvect <- c(DeltaICvect, DeltaIC)
       }#end of for i
 
       for (i in 1:filtNlig){

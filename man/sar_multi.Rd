@@ -143,7 +143,8 @@ fit2 <- sar_multi(galap, obj = ff)
 summary(fit2)
 
 # construct a multimodel SAR curve without conducting any model checks
-fit3 <- sar_multi(galap, normaTest = "none", homoTest = "none", neg_check = FALSE)
+fit3 <- sar_multi(galap, normaTest = "none", homoTest = "none", 
+                  neg_check = FALSE)
 
 }
 \references{

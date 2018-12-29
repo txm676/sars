@@ -1,4 +1,4 @@
-#'  Plot Model Fits for a 'coleman' Object
+#' Plot Model Fits for a 'coleman' Object
 #'
 #' @description S3 method for class 'coleman'. \code{plot.coleman} creates a
 #'   plot for objects of class coleman, using the R base plotting framework.
@@ -16,18 +16,24 @@
 #' @param lwd Line width.
 #' @param lcol1 Line colour of the fitted model curve.
 #' @param lcol2 Line colour of the model standard deviation curves.
-#' @param ModTitle Plot title (default is null, which equates to no main title).
+#' @param ModTitle Plot title (default is null, which equates to no main
+#'   title).
 #' @param TiAdj Which way the plot title (if included) is justified.
 #' @param TiLine Places the plot title (if included) this many lines outwards
 #'   from the plot edge.
-#' @param cex.main The amount by which the the plot title (if included) should
-#'   be scaled relative to the default.
-#' @param \dots Further graphical parameters (see \code{\link[graphics]{par}},
+#' @param cex.main The amount by which the the plot title (if included)
+#'   should be scaled relative to the default.
+#' @param \dots Further graphical parameters (see
+#'   \code{\link[graphics]{par}},
 #'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
-#' @details The resultant plot contains the observed richness values ***
+#' @details The resultant plot contains the observed richness values with the
+#'   model fit and confidence intervals. Following Wang et al. (2010), the
+#'   model is rejected if more than a third of the observed data points fall
+#'   beyond one standard deviation from the expected curve.
+#' @usage coleman(data, area)
 #' @importFrom dplyr arrange_
-#' @import graphics 
+#' @import graphics
 #' @examples
 #' data(cole_sim)
 #' fit <- coleman(cole_sim[[1]], cole_sim[[2]])
@@ -47,13 +53,15 @@ plot.coleman <- function(x, xlab = "Relative area (log transformed)",
     
     df <- arrange_(df, ~ra)#using standard evaluation
     
-    plot(x = log(df$ra), y = df$os, ylim = c(min((df$pv - df$sd)), max((df$pv + df$sd))),
+    plot(x = log(df$ra), y = df$os, ylim = c(min((df$pv - df$sd)),
+                                             max((df$pv + df$sd))),
          xlab = xlab, ylab = ylab, pch = pch, cex = cex, col = pcol,
          cex.lab = cex.lab, cex.axis = cex.axis, ...)
     lines(x = log(df$ra), y = (df$pv + df$sd), col = lcol2, lwd = lwd, ...)
     lines(x = log(df$ra), y = (df$pv - df$sd), col = lcol2, lwd = lwd, ...)
     lines(x = log(df$ra), y = df$pv, col = lcol1, lwd = lwd, ...)
-    if (!is.null(ModTitle)) title(main = ModTitle, adj = TiAdj, line = TiLine, 
+    if (!is.null(ModTitle)) title(main = ModTitle, adj = TiAdj,
+                                  line = TiLine, 
                                   cex.main = cex.main, ...)
     }
 

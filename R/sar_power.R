@@ -8,10 +8,10 @@
 #'   the first with island/site areas, and the second with the species richness
 #'   of each island/site.
 #' @param start NULL or custom parameter start values for the optimisation algorithm.
-#' @param grid_start NULL or the number of pointssampled in the model parameter space
+#' @param grid_start NULL or the number of points sampled in the model parameter space
 #'   or FALSE to prevent any grid start after a fail in initial optimization
 #'   to run a grid search.
-#' @param normaTest The test used to test the normalityof the residuals of the
+#' @param normaTest The test used to test the normality of the residuals of the
 #'   model. Can be any of 'lillie' (Lilliefors Kolmogorov-Smirnov test; the
 #'   default), 'shapiro' (Shapiro-Wilk test of normality), 'kolmo'
 #'   (Kolmogorov-Smirnov test), or 'none' (no residuals normality test is undertaken).
@@ -30,7 +30,7 @@
 #'   of the residuals and a warning is provided in \code{\link{summary.sars}} if either test is failed.
 
 #'   A selection of information criteria (e.g. AIC, BIC) are returned and can be used to compare models
-#'   (see also \code{\link{fit_collection}} and \code{\link{sar_multi}}).
+#'   (see also \code{\link{fit_collection}} and \code{\link{sar_multi}})
 #' @return A list of class 'sars' with the following components: 
 #'   \itemize{
 #'     \item{par} { The model parameters}
@@ -67,12 +67,14 @@
 #' plot(fit)
 #' @export
 
-sar_power <- function(data, start = NULL, grid_start = NULL, normaTest =  "lillie", homoTest = "cor.fitted"){
-if (!(is.matrix(data) | is.data.frame(data)))  stop('data must be a matrix or dataframe') 
-if (is.matrix(data)) data <- as.data.frame(data) 
-if (anyNA(data)) stop('NAs present in data') 
-data <- data[order(data[,1]),] 
-colnames(data) <- c('A','S') 
+sar_power <- function(data, start = NULL, grid_start = NULL, 
+normaTest =  "lillie", homoTest = "cor.fitted"){
+if (!(is.matrix(data) | is.data.frame(data)))  
+stop('data must be a matrix or dataframe')
+if (is.matrix(data)) data <- as.data.frame(data)
+if (anyNA(data)) stop('NAs present in data')
+data <- data[order(data[,1]),]
+colnames(data) <- c('A','S')
 # POWER MODEL (ARRHENIUS 1921)
 model <- list(
     name = c("Power"),
@@ -95,17 +97,19 @@ model <- list(
     }
 )
 
-model <- compmod(model) 
-fit <- get_fit(model = model, data = data, start = start,  grid_start = grid_start, algo = 'Nelder-Mead', 
-       normaTest =  normaTest, homoTest = homoTest, verb = TRUE) 
-if(is.na(fit$value)){ 
-  return(list(value = NA)) 
+model <- compmod(model)
+fit <- get_fit(model = model, data = data, start = start,  
+grid_start = grid_start, algo = 'Nelder-Mead', 
+       
+normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
+if(is.na(fit$value)){
+  return(list(value = NA))
 }else{ 
-  obs <- obs_shape(fit) 
-  fit$observed_shape <- obs$fitShape 
-  fit$asymptote <- obs$asymp 
-  class(fit) <- 'sars' 
-  attr(fit, 'type') <- 'fit' 
-  return(fit) 
-} 
+  obs <- obs_shape(fit)
+  fit$observed_shape <- obs$fitShape
+  fit$asymptote <- obs$asymp
+  class(fit) <- 'sars'
+  attr(fit, 'type') <- 'fit'
+  return(fit)
+}
 }#end of sar_power

@@ -27,7 +27,7 @@ obs_shape <- function(x){
             dc <- as.list(match.call())
             if (as.character(dc$fun)[3] == "d1.fun") {
               if (nMinMax > 1){
-                warning("more than one minimum and/or maximum in the derivative,
+             warning("more than one minimum and/or maximum in the derivative,
                       check the model plot to asses whether the model fit
                       looks sensible")
                 for (i in 1:nMinMax) {
@@ -56,7 +56,8 @@ obs_shape <- function(x){
           #roots
           roots <- vapply(seq_along(sigCh), FUN = function(x){
                             uniroot(fun, c(Areas[sigCh[x]], 
-                                           Areas[sigCh[x] + 1]), par = pars)$root},
+                                        Areas[sigCh[x] + 1]), 
+                                    par = pars)$root},
                             FUN.VALUE = double(1))
           res <- list(sigCh = sigCh, roots = roots, minMax = minMax)
           return(res)
@@ -78,37 +79,47 @@ obs_shape <- function(x){
       
       dif <- vapply(seq_along(ts), FUN = function(x){
         model$mod.fun((ts[x]  * min.area + (1 - ts[x]) * max.area), pars) - 
-        (ts[x] * model$mod.fun(min.area, pars) + (1 - ts[x]) * model$mod.fun(max.area, pars))
+        (ts[x] * model$mod.fun(min.area, pars) + 
+           (1 - ts[x]) * model$mod.fun(max.area, pars))
       }, FUN.VALUE = double(1))
       
       #is linear?
       if (sum(abs(dif) < 0.001) == length(ts)) possFits <- c(1, 0, 0, 0)
 
       #is it convex upward/downward?
-      if ((sum(abs(dif) < 0.001) != length(ts)) & (sum(dif <= 0) == length(dif))) possFits <- c(0,0,1,0)
-      if ((sum(abs(dif) < 0.001) !=length(ts))  & (sum(dif >= 0) == length(dif))) possFits <- c(0,1,0,0)
+      if ((sum(abs(dif) < 0.001) != length(ts)) & 
+          (sum(dif <= 0) == length(dif))) possFits <- c(0,0,1,0)
+      if ((sum(abs(dif) < 0.001) !=length(ts))  & 
+          (sum(dif >= 0) == length(dif))) possFits <- c(0,1,0,0)
       
       #is the asymptote reached?
       asymptote <- model$asymp(pars)
       if (asymptote){
-        if (asymptote > range(data$S)[1] & asymptote < range(data$S)[2]) asymp <- TRUE
+        if (asymptote > range(data$S)[1] & asymptote < range(data$S)[2]) 
+          asymp <- TRUE
       }#eo if 
       
-      roots.d1 <- tryCatch(getRoots(model$d1.fun, Areas, pars), error = function(e) list(sigCh = NA, roots = NA, minMax = NA))
+      roots.d1 <- tryCatch(getRoots(model$d1.fun, Areas, pars), 
+                           error = function(e) list(sigCh = NA, roots = NA, 
+                                                    minMax = NA))
       if (model$shape =="sigmoid") {
-        roots.d2 <- tryCatch(getRoots(model$d2.fun, Areas, pars), error = function(e) list(sigCh = NA, roots = NA, minMax = NA))
+        roots.d2 <- tryCatch(getRoots(model$d2.fun, Areas, pars), 
+                             error = function(e) list(sigCh = NA, 
+                                                    roots = NA, minMax = NA))
       } else {
           roots.d2 <- list(sigCh = NA, roots = NA, minMax = NA)
           }
     
       #getting the min/max value from the first derivative analysis
       minMax <- roots.d1$minMax
-      if (!is.na(roots.d1$minMax[1])) minMaxVal <- model$mod.fun(roots.d1$roots, pars)
+      if (!is.na(roots.d1$minMax[1])) minMaxVal <- 
+        model$mod.fun(roots.d1$roots, pars)
       
       #is it sigmoid?
       if (!is.na(roots.d2$roots[1])) possFits <- c(0, 0, 0, 1)
       
-      #if the model is sigmoid but the shape study failed then we will said the fit to be sigmoid
+      #if the model is sigmoid but the shape study failed then 
+      #we will said the fit to be sigmoid
       if (model$shape == "sigmoid" & sum(possFits) == 0) {
           message("observed shape algorithm failed: observed shape set to
                 theoretical shape (sigmoid)")

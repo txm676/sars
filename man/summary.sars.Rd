@@ -13,43 +13,44 @@
 }
 \value{
 The \code{summary.sars} function returns an object of class
-  "summary.sars". A print function is used to obtain and print a summary of
-  the model fit results.
+  "summary.sars". A print function is used to obtain and print a summary
+  of the model fit results.
 
-  For a 'sars' object of Type 'fit', a list with 16 elements is returned that
-  contains useful information from the model fit, including the model
-  parameter table (with t-values, p-values and confidence intervals), model
-  fit statistics (e.g. R2, AIC), the observed shape of the model and whether
-  or not the fit is asymptotic, and the results of any additional model
-  checks undertaken (e.g. normality of the residuals).
+  For a 'sars' object of Type 'fit', a list with 16 elements is returned
+  that contains useful information from the model fit, including the model
+  parameter table (with t-values, p-values and confidence intervals),
+  model fit statistics (e.g. R2, AIC), the observed shape of the model and
+  whether or not the fit is asymptotic, and the results of any additional
+  model checks undertaken (e.g. normality of the residuals).
 
   For a 'sars' object of Type 'multi', a list with 4 elements is returned:
-  (i) a vector of the names of the models that were successfully fitted and
-  passed any additional checks, (ii) a character string containing the name
-  of the criterion used to rank models, (iii) a data frame of the ranked
-  models, and (iv) a vector of the names of any models that were not fitted
-  or did not pass any additional checks. In regards to (iii;
+  (i) a vector of the names of the models that were successfully fitted
+  and passed any additional checks, (ii) a character string containing the
+  name of the criterion used to rank models, (iii) a data frame of the
+  ranked models, and (iv) a vector of the names of any models that were
+  not fitted or did not pass any additional checks. In regards to (iii;
   \code{Model_table}), the dataframe contains the fit summaries for each
-  successfully fitted model (including the value of the model criterion used
-  to compare models, the R2 and adjusted R2, and the observed shape of the
-  fit); the models are ranked in decreasing order of information criterion
-  weight.
+  successfully fitted model (including the value of the model criterion
+  used to compare models, the R2 and adjusted R2, and the observed shape
+  of the fit); the models are ranked in decreasing order of information
+  criterion weight.
 
-  For a 'sars' object of Type 'lin_pow', a list with 5 elements is returned:
-  (i) the model fit output from the \code{\link{lm}} function, (ii) the
-  fitted values of the model, (iii) the observed data, and (iv and v) the
-  results of the residuals normality and heterogeneity tests. If the argument
-  \code{compare = TRUE} is used in \code{\link{lin_pow}}, a sixth element is
-  returned that contains the parameter values from the non-linear power
-  model.
+  For a 'sars' object of Type 'lin_pow', a list with 5 elements is
+  returned: (i) the model fit output from the \code{\link{lm}} function,
+  (ii) the fitted values of the model, (iii) the observed data, and (iv
+  and v) the results of the residuals normality and heterogeneity tests.
+  If the argument \code{compare = TRUE} is used in \code{\link{lin_pow}},
+  a sixth element is returned that contains the parameter values from the
+  non-linear power model.
 }
 \description{
-S3 method for class 'sars'. \code{summary.sars} creates summary
-  statistics for objects of class 'sars'. The exact summary statistics
-  computed depends on the 'Type' attribute (e.g. 'multi') of the 'sars'
-  object. The summary method generates more useful information for the user
-  than the standard model fitting functions. Another S3 method
-  (\code{print.summary.sars}; not documented) is used to print the output.
+S3 method for class 'sars'. \code{summary.sars} creates
+  summary statistics for objects of class 'sars'. The exact summary
+  statistics computed depends on the 'Type' attribute (e.g. 'multi') of
+  the 'sars' object. The summary method generates more useful information
+  for the user than the standard model fitting functions. Another S3
+  method (\code{print.summary.sars}; not documented) is used to print the
+  output.
 }
 \examples{
 data(galap)

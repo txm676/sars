@@ -8,5 +8,12 @@ model <- list(
   parLim  =  c("Rplus","R","R"),
   custStart = function(data)c(5,.25,.15),
   #initials values function
-  init = function(data){if(any(data$S==0)){log.data=data.frame(S=log(data$a),S=log(data$S+.5))}else{log.data=log(data)};res=stats::lm(S~A,log.data)$coefficients;res=c(exp(res[1]),res[2],.15);names(res)=model$parNames;return(res)}
+  init = function(data){
+    if(any(data$S==0)){
+    log.data=data.frame(S=log(data$a),S=log(data$S+.5))
+    }else{log.data=log(data)}
+    res=stats::lm(S~A,log.data)$coefficients
+    res=c(exp(res[1]),res[2],.15)
+    names(res)=model$parNames
+    return(res)}
 )

@@ -8,5 +8,9 @@ model <- list(
   #limits for parameters
   parLim  =  c("Rplus","R","R"),
   #initials values function
-  init = function(data){d=max(data$S); Z=( -log( (-data$S/(max(data$S)+1))+1))/data$A; z = mean(Z); c(d,z,1)}
+  init = function(data){
+    d=max(data$S) 
+    Z=(-log((-data$S/(max(data$S)+1))+1))/data$A
+    z = mean(Z)
+    c(d,z,1)}
 )

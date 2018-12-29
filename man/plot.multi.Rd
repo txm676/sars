@@ -15,13 +15,13 @@
 \item{x}{An object of class 'multi'.}
 
 \item{type}{The type of plot to be constructed: either \code{type = multi}
-for a plot of the multimodel SAR curve, or \code{type = bar} for a barplot
-of the information criterion weights of each model.}
+for a plot of the multimodel SAR curve, or \code{type = bar} for a
+barplot of the information criterion weights of each model.}
 
 \item{allCurves}{A logical argument for use with \code{type = multi} that
-specifies whether all the model fits should be plotted with the multimodel
-SAR curve (\code{allCurves = TRUE}; the default) or that only the
-multimodel SAR curve should be plotted (\code{allCurves = FALSE}).}
+specifies whether all the model fits should be plotted with the
+multimodel SAR curve (\code{allCurves = TRUE}; the default) or that only
+the multimodel SAR curve should be plotted (\code{allCurves = FALSE}).}
 
 \item{xlab}{Title for the x-axis. Only for use with \code{type = multi}.}
 
@@ -35,100 +35,93 @@ multi}.}
 
 \item{pcol}{Colour of the points. Only for use with \code{type = multi}.}
 
-\item{ModTitle}{Plot title (default is \code{ModTitle = NULL}, which reverts
-to "Multimodel SAR" for \code{type = multi} and to "Model weights" for
-\code{type = bar}). For no title, use \code{ModTitle = ""}.}
+\item{ModTitle}{Plot title (default is \code{ModTitle = NULL}, which
+reverts to "Multimodel SAR" for \code{type = multi} and to "Model
+weights" for \code{type = bar}). For no title, use \code{ModTitle = ""}.}
 
 \item{TiAdj}{Which way the plot title is justified.}
 
 \item{TiLine}{Places the plot title this many lines outwards from the plot
 edge.}
 
-\item{cex.main}{The amount by which the plot title should be scaled relative
-to the default.}
+\item{cex.main}{The amount by which the plot title should be scaled
+relative to the default.}
 
-\item{cex.lab}{The amount by which the axis titles should be scaled relative
-to the default.}
+\item{cex.lab}{The amount by which the axis titles should be scaled
+relative to the default.}
 
-\item{cex.axis}{The amount by which the axis labels should be scaled relative
-to the default.}
+\item{cex.axis}{The amount by which the axis labels should be scaled
+relative to the default.}
 
-\item{yRange}{The range of the y-axis. Only for use with \code{type = multi}.}
+\item{yRange}{The range of the y-axis. Only for use with \code{type =
+multi}.}
 
 \item{lwd}{Line width. Only for use with \code{type = multi}.}
 
 \item{lcol}{Line colour. Only for use with \code{type = multi}.}
 
-\item{pLeg}{Logical argument specifying whether or not the legend should be
-plotted  (when \code{type = multi} and \code{allCurves = TRUE}).}
+\item{pLeg}{Logical argument specifying whether or not the legend should
+be plotted  (when \code{type = multi} and \code{allCurves = TRUE}).}
 
 \item{modNames}{A vector of model names for the barplot of weights (when
-\code{type = bar}). The default (\code{modNames = NULL}) uses abbreviated
-versions (see below) of the names from the \code{sar_multi} function.}
+\code{type = bar}). The default (\code{modNames = NULL}) uses
+abbreviated versions (see below) of the names from the \code{sar_multi}
+function.}
 
-\item{cex.names}{The amount by which the axis labels (model names) should be
-scaled relative to the default. Only for use with \code{type = bar}.}
+\item{cex.names}{The amount by which the axis labels (model names) should
+be scaled relative to the default. Only for use with \code{type = bar}.}
 
-\item{subset_weights}{Only create a barplot of the model weights for models
-with a weight value above a given threshold (\code{subset_weights}). Only
-for use with \code{type = bar}.}
+\item{subset_weights}{Only create a barplot of the model weights for
+models with a weight value above a given threshold
+(\code{subset_weights}). Only for use with \code{type = bar}.}
 
 \item{confInt}{A logical argument specifying whether confidence intervals
 should be plotted around the multimodel curve. Can only be used if
-confidence intervals have been generated in the \code{sar_multi} function.}
+confidence intervals have been generated in the \code{sar_multi}
+function.}
 
-\item{\dots}{Further graphical parameters (see \code{\link[graphics]{par}},
+\item{\dots}{Further graphical parameters (see
+\code{\link[graphics]{par}},
 \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 \code{\link[graphics]{lines}}) may be supplied as arguments.}
 }
 \description{
-S3 method for class 'multi'. \code{plot.multi} creates plots for
-  objects of class multi, using the R base plotting framework. Plots of all
-  model fits, the multimodel SAR curve (with confidence intervals) and a
-  barplot of the information criterion weights of the different models can be
-  constructed.
+S3 method for class 'multi'. \code{plot.multi} creates plots
+  for objects of class multi, using the R base plotting framework. Plots
+  of all model fits, the multimodel SAR curve (with confidence intervals)
+  and a barplot of the information criterion weights of the different
+  models can be constructed.
 }
 \note{
 When plotting all model fits on the same plot with a legend it is
-  necessary to manually extend your plotting window (height and width; e.g.
-  the 'Plots' window of R studio) before plotting to ensure the legend fits
-  in the plot. Extending the plotting window after plotting simply stretches
-  the legend.
+  necessary to manually extend your plotting window (height and width;
+  e.g. the 'Plots' window of R studio) before plotting to ensure the
+  legend fits in the plot. Extending the plotting window after plotting
+  simply stretches the legend.
 
   Occasionally a model fit will converge and pass the model fitting checks
   (e.g. residual normality) but the resulting fit is nonsensical (e.g. a
-  horizontal line with intercept at zero). Thus, it can be useful to plot the
-  resultant 'multi' object to check the individual model fits. To re-run the
-  \code{sar_multi} function without a particular model, simply remove it from
-  the \code{obj} argument.
+  horizontal line with intercept at zero). Thus, it can be useful to plot
+  the resultant 'multi' object to check the individual model fits. To
+  re-run the \code{sar_multi} function without a particular model, simply
+  remove it from the \code{obj} argument.
 
-  For visual interpretation of the model weights barplot it is necessary to
-  abbreviate the model names when plotting the weights of several models. To
-  plot fewer bars, use the \code{subset_weights} argument to filter out
-  models with lower weights than a threshold value. To provide a different
-  set of names use the \code{modNames} argument. The model abbreviations used
-  as the default are:
-  \itemize{
-    \item{Pow = } { Power}
-    \item{PowR = } { PowerR}
-    \item{E1 = } { Extended_Power_model_1}
-    \item{E2 = } { Extended_Power_model_2}
-    \item{P1 = } { Persistence_function_1}
-    \item{P2 = } { Persistence_function_2}
-    \item{Exp = } { Exponential}
-    \item{Kob = } { Kobayashi}
-    \item{MMF = } { MMF}
-    \item{Mon = } { Monod}
-    \item{NegE = } { Negative_exponential}
-    \item{CR = } { Chapman_Richards}
-    \item{CW3 = } { Cumulative_Weibull_3_par.}
-    \item{AR = } { Asymptotic_regression}
-    \item{RF = } { Rational_function}
-    \item{Gom = } { Gompertz}
-    \item{CW4 = } { Cumulative_Weibull_4_par.}
-    \item{BP = } { Beta-P_cumulative}
-    \item{Hel = } { Heleg(Logistic)}
-    \item{Lin = } { Linear_model}}
+  For visual interpretation of the model weights barplot it is necessary
+  to abbreviate the model names when plotting the weights of several
+  models. To plot fewer bars, use the \code{subset_weights} argument to
+  filter out models with lower weights than a threshold value. To provide
+  a different set of names use the \code{modNames} argument. The model
+  abbreviations used as the default are: \itemize{ \item{Pow = } { Power}
+  \item{PowR = } { PowerR} \item{E1 = } { Extended_Power_model_1} \item{E2
+  = } { Extended_Power_model_2} \item{P1 = } { Persistence_function_1}
+  \item{P2 = } { Persistence_function_2} \item{Exp = } { Exponential}
+  \item{Kob = } { Kobayashi} \item{MMF = } { MMF} \item{Mon = } { Monod}
+  \item{NegE = } { Negative_exponential} \item{CR = } { Chapman_Richards}
+  \item{CW3 = } { Cumulative_Weibull_3_par.} \item{AR = } {
+  Asymptotic_regression} \item{RF = } { Rational_function} \item{Gom = } {
+  Gompertz} \item{CW4 = } { Cumulative_Weibull_4_par.} \item{BP = } {
+  Beta-P_cumulative} \item{Hel = } { Heleg(Logistic)} \item{Lin = } {
+  Linear_model}}
 }
 \examples{
 data(galap)

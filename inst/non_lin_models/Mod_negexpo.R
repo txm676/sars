@@ -9,5 +9,9 @@ model <- list(
   parLim = c("Rplus","unif"),
   custStart=function(data)c(max(data$S),.01),
   #initials values function
-  init=function(data){d=max(data$S); Z=( -log( (-data$S/(max(data$S)+1))+1))/data$A; z = mean(Z); c(d,z)}
+  init=function(data){
+    d=max(data$S) 
+    Z=(-log( (-data$S/(max(data$S)+1))+1))/data$A
+    z = mean(Z)
+    c(d,z)}
 )

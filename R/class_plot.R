@@ -1,52 +1,55 @@
-#'  Plot Model Fits for a 'sars' Object
+#' Plot Model Fits for a 'sars' Object
 #'
-#' @description S3 method for class 'sars'. \code{plot.sars} creates plots for
-#'   objects of class 'sars' (type = 'fit', "lin_pow' and 'fit_collection'),
-#'   using the R base plotting framework. The exact plot(s) constructed depends
-#'   on the 'Type' attribute of the 'sars' object. For example, for a 'sars'
-#'   object of Type 'fit', the \code{plot.sars} function returns a plot of the
-#'   model fit (line) and the observed richness values (points). For a 'sars'
-#'   object of Type 'fit_collection' the \code{plot.sars} function returns
-#'   either a grid with n individual plots (corresponding to the n model fits in
-#'   the fit_collection), or a single plot with all n model fits included.
+#' @description S3 method for class 'sars'. \code{plot.sars} creates plots
+#'   for objects of class 'sars' (type = 'fit', "lin_pow' and
+#'   'fit_collection'), using the R base plotting framework. The exact
+#'   plot(s) constructed depends on the 'Type' attribute of the 'sars'
+#'   object. For example, for a 'sars' object of Type 'fit', the
+#'   \code{plot.sars} function returns a plot of the model fit (line) and the
+#'   observed richness values (points). For a 'sars' object of Type
+#'   'fit_collection' the \code{plot.sars} function returns either a grid
+#'   with n individual plots (corresponding to the n model fits in the
+#'   fit_collection), or a single plot with all n model fits included.
 #'
 #'   For plotting a 'sar_multi' object, see \code{\link{plot.multi}}.
 #' @param x An object of class 'sars'.
 #' @param mfplot Logical argument specifying whether the model fits in a
-#'   fit_collection should be plotted on one single plot (\code{mfplot = TRUE})
-#'   or separate plots (\code{mfplot = FALSE}; the default).
+#'   fit_collection should be plotted on one single plot (\code{mfplot =
+#'   TRUE}) or separate plots (\code{mfplot = FALSE}; the default).
 #' @param xlab Title for the x-axis (default depends on the Type attribute).
 #' @param ylab Title for the y-axis (default depends on the Type attribute).
 #' @param pch Plotting character (for points).
 #' @param cex A numerical vector giving the amount by which plotting symbols
 #'   (points) should be scaled relative to the default.
 #' @param pcol Colour of the points.
-#' @param ModTitle Plot title (default is \code{ModTitle = NULL}, which reverts
-#'   to a default name depending on the type of plot). For no title, use
-#'   \code{ModTitle = ""}. For a sars object of type fit_collection, a vector of
-#'   names can be provided (e.g. \code{letters[1:3]}).
+#' @param ModTitle Plot title (default is \code{ModTitle = NULL}, which
+#'   reverts to a default name depending on the type of plot). For no title,
+#'   use \code{ModTitle = ""}. For a sars object of type fit_collection, a
+#'   vector of names can be provided (e.g. \code{letters[1:3]}).
 #' @param TiAdj Which way the plot title is justified.
 #' @param TiLine Places the plot title this many lines outwards from the plot
 #'   edge.
-#' @param cex.main The amount by which the plot title should be scaled relative
-#'   to the default.
-#' @param cex.lab The amount by which the axis titles should be scaled relative
-#'   to the default.
-#' @param cex.axis The amount by which the axis labels should be scaled relative
-#'   to the default.
+#' @param cex.main The amount by which the plot title should be scaled
+#'   relative to the default.
+#' @param cex.lab The amount by which the axis titles should be scaled
+#'   relative to the default.
+#' @param cex.axis The amount by which the axis labels should be scaled
+#'   relative to the default.
 #' @param yRange The range of the y-axis.
 #' @param lwd Line width.
 #' @param lcol Line colour.
-#' @param di Dimensions to be passed to \code{par(mfrow=())} to specify the size
-#'   of the plotting window, when plotting multiple plots from a sars object of
-#'   Type fit_collection. For example, \code{di = c(1, 3)} creates a plotting
-#'   window with 1 row and 3 columns. The default (null) creates a square
-#'   plotting window of the correct size.
-#' @param pLeg Logical argument specifying whether or not the legend should be
-#'   plotted for fit_collection plots (when \code{mfplot = TRUE}) or sar_multi
-#'   plots. When a large number of model fits are plotted the legend takes up a
-#'   lot of space, and thus the default is \code{pLeg = FALSE}.
-#' @param \dots Further graphical parameters (see \code{\link[graphics]{par}},
+#' @param di Dimensions to be passed to \code{par(mfrow=())} to specify the
+#'   size of the plotting window, when plotting multiple plots from a sars
+#'   object of Type fit_collection. For example, \code{di = c(1, 3)} creates
+#'   a plotting window with 1 row and 3 columns. The default (null) creates a
+#'   square plotting window of the correct size.
+#' @param pLeg Logical argument specifying whether or not the legend should
+#'   be plotted for fit_collection plots (when \code{mfplot = TRUE}) or
+#'   sar_multi plots. When a large number of model fits are plotted the
+#'   legend takes up a lot of space, and thus the default is \code{pLeg =
+#'   FALSE}.
+#' @param \dots Further graphical parameters (see
+#'   \code{\link[graphics]{par}},
 #'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
 #' @import graphics
@@ -65,18 +68,23 @@
 #' @export
 
 
-plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
-                      pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
+plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, 
+                      pch = 16, cex = 1.2,
+                      pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, 
+                      TiLine = 0.5, cex.main = 1.5,
                       cex.lab = 1.3, cex.axis = 1, yRange = NULL,
-                      lwd = 2, lcol = 'dodgerblue2', di = NULL, pLeg = FALSE, ...)
+                      lwd = 2, lcol = 'dodgerblue2', di = NULL, 
+                      pLeg = FALSE, ...)
 {
 
 
-  if (mfplot & attributes(x)$type != "fit_collection") stop("mfplot argument only for use with Type 'fit_collection'")
+  if (mfplot & attributes(x)$type != "fit_collection") 
+    stop("mfplot argument only for use with Type 'fit_collection'")
 
 
   if (is.null(xlab)){
-    if (attributes(x)$type == "fit" | attributes(x)$type == "fit_collection"){
+    if (attributes(x)$type == "fit" | 
+        attributes(x)$type == "fit_collection"){
         xlab <- "Area"
     } else if (attributes(x)$type == "lin_pow"){
       xlab <- "Log(Area)"
@@ -86,7 +94,8 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
   }
 
   if (is.null(ylab)){
-    if (attributes(x)$type == "fit" | attributes(x)$type == "fit_collection"){
+    if (attributes(x)$type == "fit" | 
+        attributes(x)$type == "fit_collection"){
       ylab <- "Species richness"
     } else if (attributes(x)$type == "lin_pow"){
       ylab <- "Log(Species richness)"
@@ -101,15 +110,17 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
     yy <- df$S
     ff <- x$calculated
     if (is.null(yRange)){
-    yMax <- max(c(yy,ff))#fitted line can be above the largest observed data point
+    yMax <- max(c(yy,ff))#fitted line can be above the largest observed point
     yMin <- min(c(yy,ff))
     yRange <- c(yMin, yMax)
     }
 
     plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
-         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange, ...)
-    title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
-    lines(x = xx, y = ff, lwd = lwd, col = lcol,  ...)
+         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, 
+         ylim = yRange, ...)
+    title(main = ModTitle, adj = TiAdj, line = TiLine, 
+          cex.main = cex.main, ...)
+    lines(x = xx, y = ff, lwd = lwd, col = lcol,  ...) 
 
   }
 
@@ -118,15 +129,17 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
     if (!mfplot){
 
     if (!is.null(ModTitle)){
-      if (length(ModTitle) == 1 & ModTitle == "") ModTitle <- rep("", length(x))
-      if (length(ModTitle) != length(x)) stop("The length of ModTitle does not match the length of x")
+      if (length(ModTitle) == 1 & ModTitle == "")
+        ModTitle <- rep("", length(x))
+      if (length(ModTitle) != length(x)) 
+        stop("The length of ModTitle does not match the length of x")
       for (i in seq_along(x)){
         x[[i]]$model$name <- ModTitle[i]
       }
     }
 
     if (is.null(di)) {
-      if (length(x) == 2){ #of length(x) = 2 the dividing by two does not work
+      if (length(x) == 2){ #of length(x) = 2 the dividing by two doesnt work
         par(mfrow = c(1, 2))
       }else{
       di <- ceiling(length(x) / 2)
@@ -143,14 +156,16 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
       ff <- x$calculated
       ModTitle <- x$model$name
       if (is.null(yRange)){
-        yMax <- max(c(yy,ff))#fitted line can be above the largest observed data point
+        yMax <- max(c(yy,ff))#fitted line can be above the largest observed 
         yMin <- min(c(yy,ff))
         yRange <- c(yMin, yMax)
       }
 
       plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
-           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,ylim = yRange, ...)
-      title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
+           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,
+           ylim = yRange, ...)
+      title(main = ModTitle, adj = TiAdj, line = TiLine, 
+            cex.main = cex.main, ...)
       lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
     })
      par(mfrow = c(1,1))#change par back to default
@@ -170,7 +185,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
       colnames(mf2) <- nams
       ###
       if (is.null(yRange)){
-        yMax <- max(c(yy,unlist(mf)))#fitted line can be above the largest observed data point
+        yMax <- max(c(yy,unlist(mf)))
         yMin <- min(c(yy,unlist(mf)))
         yRange <- c(yMin, yMax)
       }
@@ -181,20 +196,25 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
       #if legend to be included, work out size of plot
       if (pLeg == TRUE){
         #xMax <- max(xx)*0.05
-        #lSiz <- legend(max(xx) +xMax, max(yy), legend = nams, horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2), plot = F)
+        #lSiz <- legend(max(xx) +xMax, max(yy), legend = nams, 
+        #horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2), plot = F)
         #legWid <- lSiz$rect$left + lSiz$rect$w
         xMAX <- max(xx) + max(xx) * 0.5
-        matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
-             cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, xlim = c(min(xx), xMAX),
+        matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, 
+                col = pcol,
+             cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, 
+             xlim = c(min(xx), xMAX),
              ylim = yRange, bty = "L")
       } else {
       plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
-           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,ylim = yRange, bty = "L")
+           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,
+           ylim = yRange, bty = "L")
       }
       matlines(xx, mf2, lwd = lwd, lty = seq_along(mf2), col=seq_along(mf2))
       title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main)
-     if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax, legend = nams, horiz = FALSE, lty = seq_along(mf2),
-                              col=seq_along(mf2))
+     if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax, 
+                              legend = nams, horiz = FALSE, 
+                              lty = seq_along(mf2),col=seq_along(mf2))
     }#eo mfplot
 
   }#eo if fit_collection
@@ -207,14 +227,17 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
     yy <- df$S
     ff <- x$calculated
     if (is.null(yRange)){
-      yMax <- max(c(yy,ff))#fitted line can be above the largest observed data point
+      yMax <- max(c(yy,ff))#
       yMin <- min(c(yy,ff))
       yRange <- c(yMin, yMax)
     }
 
-    plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
-         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,ylim = yRange, ...)
-    title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, ...)
+    plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, 
+         col = pcol,
+         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,
+         ylim = yRange, ...)
+    title(main = ModTitle, adj = TiAdj, line = TiLine, 
+          cex.main = cex.main, ...)
     lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
   }
  }
@@ -223,19 +246,19 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 
 #' Plot Model Fits for a 'multi' Object
 #'
-#' @description S3 method for class 'multi'. \code{plot.multi} creates plots for
-#'   objects of class multi, using the R base plotting framework. Plots of all
-#'   model fits, the multimodel SAR curve (with confidence intervals) and a
-#'   barplot of the information criterion weights of the different models can be
-#'   constructed.
+#' @description S3 method for class 'multi'. \code{plot.multi} creates plots
+#'   for objects of class multi, using the R base plotting framework. Plots
+#'   of all model fits, the multimodel SAR curve (with confidence intervals)
+#'   and a barplot of the information criterion weights of the different
+#'   models can be constructed.
 #' @param x An object of class 'multi'.
 #' @param type The type of plot to be constructed: either \code{type = multi}
-#'   for a plot of the multimodel SAR curve, or \code{type = bar} for a barplot
-#'   of the information criterion weights of each model.
+#'   for a plot of the multimodel SAR curve, or \code{type = bar} for a
+#'   barplot of the information criterion weights of each model.
 #' @param allCurves A logical argument for use with \code{type = multi} that
-#'   specifies whether all the model fits should be plotted with the multimodel
-#'   SAR curve (\code{allCurves = TRUE}; the default) or that only the
-#'   multimodel SAR curve should be plotted (\code{allCurves = FALSE}).
+#'   specifies whether all the model fits should be plotted with the
+#'   multimodel SAR curve (\code{allCurves = TRUE}; the default) or that only
+#'   the multimodel SAR curve should be plotted (\code{allCurves = FALSE}).
 #' @param xlab Title for the x-axis. Only for use with \code{type = multi}.
 #' @param ylab Title for the y-axis.
 #' @param pch Plotting character (for points). Only for use with \code{type =
@@ -243,78 +266,71 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 #' @param cex A numerical vector giving the amount by which plotting symbols
 #'   (points) should be scaled relative to the default.
 #' @param pcol Colour of the points. Only for use with \code{type = multi}.
-#' @param ModTitle Plot title (default is \code{ModTitle = NULL}, which reverts
-#'   to "Multimodel SAR" for \code{type = multi} and to "Model weights" for
-#'   \code{type = bar}). For no title, use \code{ModTitle = ""}.
+#' @param ModTitle Plot title (default is \code{ModTitle = NULL}, which
+#'   reverts to "Multimodel SAR" for \code{type = multi} and to "Model
+#'   weights" for \code{type = bar}). For no title, use \code{ModTitle = ""}.
 #' @param TiAdj Which way the plot title is justified.
 #' @param TiLine Places the plot title this many lines outwards from the plot
 #'   edge.
-#' @param cex.main The amount by which the plot title should be scaled relative
-#'   to the default.
-#' @param cex.lab The amount by which the axis titles should be scaled relative
-#'   to the default.
-#' @param cex.axis The amount by which the axis labels should be scaled relative
-#'   to the default.
-#' @param yRange The range of the y-axis. Only for use with \code{type = multi}.
+#' @param cex.main The amount by which the plot title should be scaled
+#'   relative to the default.
+#' @param cex.lab The amount by which the axis titles should be scaled
+#'   relative to the default.
+#' @param cex.axis The amount by which the axis labels should be scaled
+#'   relative to the default.
+#' @param yRange The range of the y-axis. Only for use with \code{type =
+#'   multi}.
 #' @param lwd Line width. Only for use with \code{type = multi}.
 #' @param lcol Line colour. Only for use with \code{type = multi}.
-#' @param pLeg Logical argument specifying whether or not the legend should be
-#'   plotted  (when \code{type = multi} and \code{allCurves = TRUE}).
+#' @param pLeg Logical argument specifying whether or not the legend should
+#'   be plotted  (when \code{type = multi} and \code{allCurves = TRUE}).
 #' @param modNames A vector of model names for the barplot of weights (when
-#'   \code{type = bar}). The default (\code{modNames = NULL}) uses abbreviated
-#'   versions (see below) of the names from the \code{sar_multi} function.
-#' @param cex.names The amount by which the axis labels (model names) should be
-#'   scaled relative to the default. Only for use with \code{type = bar}.
-#' @param subset_weights Only create a barplot of the model weights for models
-#'   with a weight value above a given threshold (\code{subset_weights}). Only
-#'   for use with \code{type = bar}.
+#'   \code{type = bar}). The default (\code{modNames = NULL}) uses
+#'   abbreviated versions (see below) of the names from the \code{sar_multi}
+#'   function.
+#' @param cex.names The amount by which the axis labels (model names) should
+#'   be scaled relative to the default. Only for use with \code{type = bar}.
+#' @param subset_weights Only create a barplot of the model weights for
+#'   models with a weight value above a given threshold
+#'   (\code{subset_weights}). Only for use with \code{type = bar}.
 #' @param confInt A logical argument specifying whether confidence intervals
 #'   should be plotted around the multimodel curve. Can only be used if
-#'   confidence intervals have been generated in the \code{sar_multi} function.
-#' @param \dots Further graphical parameters (see \code{\link[graphics]{par}},
+#'   confidence intervals have been generated in the \code{sar_multi}
+#'   function.
+#' @param \dots Further graphical parameters (see
+#'   \code{\link[graphics]{par}},
 #'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
 #' @import graphics
 #' @note When plotting all model fits on the same plot with a legend it is
-#'   necessary to manually extend your plotting window (height and width; e.g.
-#'   the 'Plots' window of R studio) before plotting to ensure the legend fits
-#'   in the plot. Extending the plotting window after plotting simply stretches
-#'   the legend.
+#'   necessary to manually extend your plotting window (height and width;
+#'   e.g. the 'Plots' window of R studio) before plotting to ensure the
+#'   legend fits in the plot. Extending the plotting window after plotting
+#'   simply stretches the legend.
 #'
 #'   Occasionally a model fit will converge and pass the model fitting checks
 #'   (e.g. residual normality) but the resulting fit is nonsensical (e.g. a
-#'   horizontal line with intercept at zero). Thus, it can be useful to plot the
-#'   resultant 'multi' object to check the individual model fits. To re-run the
-#'   \code{sar_multi} function without a particular model, simply remove it from
-#'   the \code{obj} argument.
+#'   horizontal line with intercept at zero). Thus, it can be useful to plot
+#'   the resultant 'multi' object to check the individual model fits. To
+#'   re-run the \code{sar_multi} function without a particular model, simply
+#'   remove it from the \code{obj} argument.
 #'
-#'   For visual interpretation of the model weights barplot it is necessary to
-#'   abbreviate the model names when plotting the weights of several models. To
-#'   plot fewer bars, use the \code{subset_weights} argument to filter out
-#'   models with lower weights than a threshold value. To provide a different
-#'   set of names use the \code{modNames} argument. The model abbreviations used
-#'   as the default are:
-#'   \itemize{
-#'     \item{Pow = } { Power}
-#'     \item{PowR = } { PowerR}
-#'     \item{E1 = } { Extended_Power_model_1}
-#'     \item{E2 = } { Extended_Power_model_2}
-#'     \item{P1 = } { Persistence_function_1}
-#'     \item{P2 = } { Persistence_function_2}
-#'     \item{Exp = } { Exponential}
-#'     \item{Kob = } { Kobayashi}
-#'     \item{MMF = } { MMF}
-#'     \item{Mon = } { Monod}
-#'     \item{NegE = } { Negative_exponential}
-#'     \item{CR = } { Chapman_Richards}
-#'     \item{CW3 = } { Cumulative_Weibull_3_par.}
-#'     \item{AR = } { Asymptotic_regression}
-#'     \item{RF = } { Rational_function}
-#'     \item{Gom = } { Gompertz}
-#'     \item{CW4 = } { Cumulative_Weibull_4_par.}
-#'     \item{BP = } { Beta-P_cumulative}
-#'     \item{Hel = } { Heleg(Logistic)}
-#'     \item{Lin = } { Linear_model}}
+#'   For visual interpretation of the model weights barplot it is necessary
+#'   to abbreviate the model names when plotting the weights of several
+#'   models. To plot fewer bars, use the \code{subset_weights} argument to
+#'   filter out models with lower weights than a threshold value. To provide
+#'   a different set of names use the \code{modNames} argument. The model
+#'   abbreviations used as the default are: \itemize{ \item{Pow = } { Power}
+#'   \item{PowR = } { PowerR} \item{E1 = } { Extended_Power_model_1} \item{E2
+#'   = } { Extended_Power_model_2} \item{P1 = } { Persistence_function_1}
+#'   \item{P2 = } { Persistence_function_2} \item{Exp = } { Exponential}
+#'   \item{Kob = } { Kobayashi} \item{MMF = } { MMF} \item{Mon = } { Monod}
+#'   \item{NegE = } { Negative_exponential} \item{CR = } { Chapman_Richards}
+#'   \item{CW3 = } { Cumulative_Weibull_3_par.} \item{AR = } {
+#'   Asymptotic_regression} \item{RF = } { Rational_function} \item{Gom = } {
+#'   Gompertz} \item{CW4 = } { Cumulative_Weibull_4_par.} \item{BP = } {
+#'   Beta-P_cumulative} \item{Hel = } { Heleg(Logistic)} \item{Lin = } {
+#'   Linear_model}}
 #' @examples
 #' data(galap)
 #' #plot a multimodel SAR curve with all model fits included
@@ -337,14 +353,17 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, pch = 16, cex
 
 plot.multi <- function(x, type = "multi", allCurves = TRUE,
                             xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
-                      pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
+                      pcol = 'dodgerblue2', ModTitle = NULL, 
+                      TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
                       cex.lab = 1.3, cex.axis = 1, yRange = NULL,
-                      lwd = 2, lcol = 'dodgerblue2', pLeg = TRUE, modNames = NULL, cex.names=.88,
+                      lwd = 2, lcol = 'dodgerblue2', pLeg = TRUE, 
+                      modNames = NULL, cex.names=.88,
                       subset_weights = NULL, confInt = FALSE, ...)
 {
 
   if (confInt){
-    if (length(x$details$confInt) == 1) stop ("No confidence interval information in the fit object")
+    if (length(x$details$confInt) == 1) 
+      stop ("No confidence interval information in the fit object")
     CI <- x$details$confInt
   }
 
@@ -353,7 +372,8 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   dat <- x$details$fits
 
   #filter out bad models
-  #bad <- vapply(dat, function(x) any(is.na(x$sigConf)), FUN.VALUE = logical(1))
+  #bad <- vapply(dat, function(x) any(is.na(x$sigConf)), 
+  #FUN.VALUE = logical(1))
   #dat2 <- dat[-which(bad)]
   dat2 <- dat
 
@@ -376,7 +396,8 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   #weight
   akaikesum <- sum(exp( -0.5*(delt)))
   aw <- exp(-0.5*delt) / akaikesum
-  if (round(sum(aw), 0) != 1) stop("IC weights do not sum to 1")#have to round as sometimes fractionally different to 1
+  if (round(sum(aw), 0) != 1) stop("IC weights do not sum to 1")#have to 
+  #round as sometimes fractionally different to 1
 
   #get weighted fitted values for each model
   mf3 <- matrix(nrow = nrow(mf2), ncol = ncol(mf2))
@@ -384,7 +405,8 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   wfv <- rowSums(mf3)
 
   #this is a test error for development
-  if (!all(round(wfv) == round(x$mmi))) stop("Multimodel fitted values do not match between functions")
+  if (!all(round(wfv) == round(x$mmi))) 
+    stop("Multimodel fitted values do not match between functions")
 
   if (allCurves){
     mf2$MultiModel <- wfv
@@ -405,15 +427,15 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
           yMax <- max(c(yy,unlist(mf2), CI$U))
           yMin <- min(c(yy,unlist(mf2), CI$L))
         } else {
-        yMax <- max(c(yy,unlist(mf2)))#fitted line can be above the largest observed data point
+        yMax <- max(c(yy,unlist(mf2)))
         yMin <- min(c(yy,unlist(mf2)))
       }
         }else{
         if (confInt){ #CIs larger so need to add to ymax and ymin
-          yMax <- max(c(yy,wfv, CI$U))#fitted line can be above the largest observed data point
+          yMax <- max(c(yy,wfv, CI$U))
           yMin <- min(c(yy,wfv, CI$L))
         } else {
-        yMax <- max(c(yy,wfv))#fitted line can be above the largest observed data point
+        yMax <- max(c(yy,wfv))
         yMin <- min(c(yy,wfv))
         }
       }
@@ -429,7 +451,9 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
     if (pLeg == TRUE){
      # xMax <- max(xx)*0.05
       #plot(x = xx, y = yy, xlim = c(min(xx), xMAX), ylim = yRange)
-     # lSiz <- legend(max(xx) + xMax, max(c(yy,unlist(mf2))), legend = nams2, horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2), plot = F)
+     # lSiz <- legend(max(xx) + xMax, max(c(yy,unlist(mf2))), 
+      #legend = nams2, horiz = F, lty = 1:ncol(mf2), 
+      #col=1:ncol(mf2), plot = F)
      # legWid <- lSiz$rect$left + lSiz$rect$w
       #xMAX <- legWid + (legWid * 0.01)
 
@@ -441,13 +465,16 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
 
       if (confInt){
         matplot(x = xx, y = yy, xlab = xlab, ylab = ylab,
-                cex.lab = cex.lab, cex.axis = cex.axis,xlim = c(min(xx), xMAX), ylim = yRange)
+                cex.lab = cex.lab, cex.axis = cex.axis,
+                xlim = c(min(xx), xMAX), ylim = yRange)
         polygon(c(xx,rev(xx)),c(CI$L,rev(CI$U)),col="grey87",border=NA)
         points(x = xx, y = yy, pch = pch, col = pcol,
                cex = cex)
       } else {
-        matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
-                cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,xlim = c(min(xx), xMAX), ylim = yRange)
+        matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch,
+                col = pcol,
+                cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,
+                xlim = c(min(xx), xMAX), ylim = yRange)
       }#eo confInt
     } else{ #no legend
 
@@ -463,7 +490,8 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
       }#eo confInt
     }#eo no legend
       matlines(xx, mf2, lwd = lwd, lty = seq_along(mf2), col=seq_along(mf2))
-      if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax, legend = nams2, horiz = FALSE, 
+      if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax,
+                               legend = nams2, horiz = FALSE, 
                                lty = seq_along(mf2), col=seq_along(mf2))
       title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main)
   } else if (!allCurves){
@@ -497,7 +525,8 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
     modNames <- mod_abbrev(modNames)
   }
 
-  barplot(aw, ylim=c(0, max(aw) + 0.05), cex.names= cex.names, ylab = ylab, cex.lab = cex.lab,
+  barplot(aw, ylim=c(0, max(aw) + 0.05), cex.names= cex.names,
+          ylab = ylab, cex.lab = cex.lab,
           cex.axis = cex.axis, names.arg = modNames)
   title(main = ModTitle, cex.main = cex.main, adj = TiAdj, line = TiLine)
   }
@@ -509,12 +538,17 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
 #names into abbreviated versions depending on which models are provided
 mod_abbrev <- function(nams){
 
-x1 <- c("Power", "PowerR", "Extended_Power_model_1", "Extended_Power_model_2", "Persistence_function_1",
-        "Persistence_function_2", "Exponential", "Kobayashi", "MMF", "Monod", "Negative_exponential",
-        "Chapman_Richards", "Cumulative_Weibull_3_par.", "Asymptotic_regression", "Rational_function",
-        "Gompertz", "Cumulative_Weibull_4_par.", "Beta-P_cumulative", "Heleg(Logistic)", "Linear_model")
+x1 <- c("Power", "PowerR", "Extended_Power_model_1", 
+        "Extended_Power_model_2", "Persistence_function_1",
+        "Persistence_function_2", "Exponential", "Kobayashi", "MMF", "Monod",
+        "Negative_exponential",
+        "Chapman_Richards", "Cumulative_Weibull_3_par.", 
+        "Asymptotic_regression", "Rational_function",
+        "Gompertz", "Cumulative_Weibull_4_par.", "Beta-P_cumulative",
+        "Heleg(Logistic)", "Linear_model")
 
-x2 <- c("Pow", "PowR", "E1", "E2", "P1", "P2", "Exp", "Kob", "MMF", "Mon", "NegE",
+x2 <- c("Pow", "PowR", "E1", "E2", "P1", "P2", "Exp", "Kob", "MMF",
+        "Mon", "NegE",
         "CR", "CW3", "AR", "RF", "Gom", "CW4", "BP", "Hel", "Lin")
 
 df <- data.frame("Full_name" = x1, "Abbreviated_name" = x2)

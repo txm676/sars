@@ -4,11 +4,7 @@
 \alias{plot.coleman}
 \title{Plot Model Fits for a 'coleman' Object}
 \usage{
-\method{plot}{coleman}(x, xlab = "Relative area (log transformed)",
-  ylab = "Species richness", pch = 16, cex = 1.2, pcol = "black",
-  cex.lab = 1.3, cex.axis = 1, lwd = 2, lcol1 = "black",
-  lcol2 = "darkgrey", ModTitle = NULL, TiAdj = 0, TiLine = 0.5,
-  cex.main = 1.5, ...)
+coleman(data, area)
 }
 \arguments{
 \item{x}{An object of class 'coleman'.}
@@ -36,17 +32,19 @@ relative to the default.}
 
 \item{lcol2}{Line colour of the model standard deviation curves.}
 
-\item{ModTitle}{Plot title (default is null, which equates to no main title).}
+\item{ModTitle}{Plot title (default is null, which equates to no main
+title).}
 
 \item{TiAdj}{Which way the plot title (if included) is justified.}
 
 \item{TiLine}{Places the plot title (if included) this many lines outwards
 from the plot edge.}
 
-\item{cex.main}{The amount by which the the plot title (if included) should
-be scaled relative to the default.}
+\item{cex.main}{The amount by which the the plot title (if included)
+should be scaled relative to the default.}
 
-\item{\dots}{Further graphical parameters (see \code{\link[graphics]{par}},
+\item{\dots}{Further graphical parameters (see
+\code{\link[graphics]{par}},
 \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 \code{\link[graphics]{lines}}) may be supplied as arguments.}
 }
@@ -55,7 +53,10 @@ S3 method for class 'coleman'. \code{plot.coleman} creates a
   plot for objects of class coleman, using the R base plotting framework.
 }
 \details{
-The resultant plot contains the observed richness values ***
+The resultant plot contains the observed richness values with the
+  model fit and confidence intervals. Following Wang et al. (2010), the
+  model is rejected if more than a third of the observed data points fall
+  beyond one standard deviation from the expected curve.
 }
 \examples{
 data(cole_sim)
