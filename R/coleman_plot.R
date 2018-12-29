@@ -31,7 +31,6 @@
 #'   model fit and confidence intervals. Following Wang et al. (2010), the
 #'   model is rejected if more than a third of the observed data points fall
 #'   beyond one standard deviation from the expected curve.
-#' @usage coleman(data, area)
 #' @importFrom dplyr arrange_
 #' @import graphics
 #' @examples
