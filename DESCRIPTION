@@ -4,7 +4,7 @@ Title: Fit and Compare Species-Area Relationship Models Using Multimodel Inferen
 Version: 1.0.0
 Authors@R: c(person("Thomas J.", "Matthews", email = "txm676@gmail.com",
                   role = c("aut", "cre")),
-            person("FranÃ§ois", "Guilhaumon", email = "francois.guilhaumon@ird.fr",
+            person("François", "Guilhaumon", email = "francois.guilhaumon@ird.fr",
                   role = c("aut")))
 Description: Implements the basic elements of the multi-model
     inference paradigm for up to twenty species-area relationship models (SAR), using simple
@@ -28,4 +28,5 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
 Suggests: knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
