@@ -12,7 +12,7 @@ test_that("sar_expo returns correct results", {
 })
 
 
-test_that("sar_power summary returns correct results", {
+test_that("sar_expo summary returns correct results", {
   data(galap)
   fit <- sar_expo(galap)
   fs <- summary(fit)
