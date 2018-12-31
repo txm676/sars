@@ -1,10 +1,10 @@
 Package: sars
 Type: Package
 Title: Fit and Compare Species-Area Relationship Models Using Multimodel Inference
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: c(person("Thomas J.", "Matthews", email = "txm676@gmail.com",
                   role = c("aut", "cre")),
-            person("François", "Guilhaumon", email = "francois.guilhaumon@ird.fr",
+            person("Fran?ois", "Guilhaumon", email = "francois.guilhaumon@ird.fr",
                   role = c("aut")))
 Description: Implements the basic elements of the multi-model
     inference paradigm for up to twenty species-area relationship models (SAR), using simple

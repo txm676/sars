@@ -30,7 +30,7 @@ include fitting the linear version of the power model and comparing parameters w
 the general dynamic model of island biogeography, and fitting the random placement model to a species abundance -
 site matrix.
 
-As this is version 1.0.0 of the package, it is possible that there are some bugs in places. Please report any
+As this is version 1.1.0 of the package, it is possible that there are some bugs in places. Please report any
 issues to us via GitHub.
 
 ## Table of Contents
