@@ -15,5 +15,14 @@ test_that("sar_multi returns correct results", {
 })
 
 
-
+test_that("confidence intervals are correct", {
+  skip_on_cran()
+  data("galap")
+  fit3 <- sar_multi(galap, normaTest = "none", homoTest = "none", 
+                    neg_check = FALSE, confInt = TRUE, ciN = 20)
+  ci <- fit3$details$confInt
+  expect_equal(nrow(ci), nrow(galap))
+  expect_output(str(ci), "data.frame")
+  expect_true(all(ci[ ,1] < ci[ ,2]))
+})
 
