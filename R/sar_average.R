@@ -179,7 +179,7 @@ sar_multi <- function(data,
 #' @param obj Either a vector of model names or a fit_collection object created
 #'   using \code{\link{sar_multi}}. If a vector of names is provided,
 #'   \code{sar_average} first calls \code{sar_multi} before generating the
-#'   averaged multmodel curve.
+#'   averaged multimodel curve.
 #' @param data A dataset in the form of a dataframe with two columns: the first
 #'   with island/site areas, and the second with the species richness of each
 #'   island/site. If \code{obj} is a fit_collection object, \code{data} should 
@@ -217,16 +217,17 @@ sar_multi <- function(data,
 #'   the dataset provided using the \code{sar_multi} function. A dataset must
 #'   have four or more datapoints to fit the multimodel curve. If any models
 #'   cannot be fitted they are removed from the multimodel SAR. If \code{obj} is
-#'   a fit_collection object, any model fits in the collection which are NA are
-#'   removed. In addition, if any other model checks have been selected (i.e.
-#'   residual normality and heterogeneity tests, and checks for negative
-#'   predicted richness values), these are undertaken and any model that fails
-#'   the selected test(s) is removed from the multimodel SAR. The order of the
-#'   additional checks inside the function is: normality of residuals,
-#'   homogeneity of residuals, and a check for negative fitted values. Once a
-#'   model fails one test it is removed and thus is not available for further
-#'   tests. Thus, a model may fail multiple tests but the returned warning will
-#'   only provide information on a single test.
+#'   a fit_collection object (created using the \code{sar_multi} function), any
+#'   model fits in the collection which are NA are removed. In addition, if any
+#'   other model checks have been selected (i.e. residual normality and
+#'   heterogeneity tests, and checks for negative predicted richness values),
+#'   these are undertaken and any model that fails the selected test(s) is
+#'   removed from the multimodel SAR. The order of the additional checks inside
+#'   the function is: normality of residuals, homogeneity of residuals, and a
+#'   check for negative fitted values. Once a model fails one test it is removed
+#'   and thus is not available for further tests. Thus, a model may fail
+#'   multiple tests but the returned warning will only provide information on a
+#'   single test.
 #'
 #'   The resultant models are then used to construct the multimodel SAR curve.
 #'   For each model in turn, the model fitted values are multiplied by the
