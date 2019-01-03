@@ -30,7 +30,7 @@
 #'   of the residuals and a warning is provided in \code{\link{summary.sars}} if either test is failed.
 
 #'   A selection of information criteria (e.g. AIC, BIC) are returned and can be used to compare models
-#'   (see also \code{\link{fit_collection}} and \code{\link{sar_multi}})
+#'   (see also \code{\link{sar_average}})
 #' @return A list of class 'sars' with the following components: 
 #'   \itemize{
 #'     \item{par} { The model parameters}

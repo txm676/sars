@@ -65,7 +65,7 @@ be plotted  (when \code{type = multi} and \code{allCurves = TRUE}).}
 
 \item{modNames}{A vector of model names for the barplot of weights (when
 \code{type = bar}). The default (\code{modNames = NULL}) uses
-abbreviated versions (see below) of the names from the \code{sar_multi}
+abbreviated versions (see below) of the names from the \code{sar_average}
 function.}
 
 \item{cex.names}{The amount by which the axis labels (model names) should
@@ -77,7 +77,7 @@ models with a weight value above a given threshold
 
 \item{confInt}{A logical argument specifying whether confidence intervals
 should be plotted around the multimodel curve. Can only be used if
-confidence intervals have been generated in the \code{sar_multi}
+confidence intervals have been generated in the \code{sar_average}
 function.}
 
 \item{\dots}{Further graphical parameters (see
@@ -103,7 +103,7 @@ When plotting all model fits on the same plot with a legend it is
   (e.g. residual normality) but the resulting fit is nonsensical (e.g. a
   horizontal line with intercept at zero). Thus, it can be useful to plot
   the resultant 'multi' object to check the individual model fits. To
-  re-run the \code{sar_multi} function without a particular model, simply
+  re-run the \code{sar_average} function without a particular model, simply
   remove it from the \code{obj} argument.
 
   For visual interpretation of the model weights barplot it is necessary
@@ -126,7 +126,7 @@ When plotting all model fits on the same plot with a legend it is
 \examples{
 data(galap)
 #plot a multimodel SAR curve with all model fits included
-fit <- sar_multi(galap)
+fit <- sar_average(data = galap)
 plot(fit)
 
 #remove the legend

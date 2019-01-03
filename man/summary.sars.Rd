@@ -55,7 +55,7 @@ S3 method for class 'sars'. \code{summary.sars} creates
 \examples{
 data(galap)
 #fit a multimodel SAR and get the model table
-mf <- sar_multi(galap)
+mf <- sar_average(data = galap)
 summary(mf)
 summary(mf)$Model_table
 #Get a summary of the fit of the linear power model

@@ -27,22 +27,163 @@ display_sars_models <- function() {
   print(Table1)
 }
 
-
-#' Fit a multimodel SAR curve
+#' Create a Collection of SAR Model Fits
 #'
-#' @description Construct a multimodel species-area relationship curve using
-#'   information criterion weights and up to twenty SAR models.
+#' @description Creates a fit collection of SAR model fits, which can then be
+#'   plotted using \code{\link{plot.sars}}.
 #' @usage sar_multi(data, obj = c("power",
 #'   "powerR","epm1","epm2","p1","p2","expo","koba",
 #'   "mmf","monod","negexpo","chapman","weibull3","asymp",
-#'   "ratio","gompertz","weibull4","betap","heleg", "linear"), crit = "Info",
-#'   normaTest = "lillie", homoTest = "cor.fitted", neg_check = FALSE,
-#'   alpha_normtest = 0.05, alpha_homotest = 0.05, confInt = FALSE, ciN = 100,
-#'   verb = TRUE)
+#'   "ratio","gompertz","weibull4","betap","heleg","linear"), normaTest =
+#'   "lillie", homoTest = "cor.fitted",verb = TRUE)
 #' @param data A dataset in the form of a dataframe with two columns: the first
 #'   with island/site areas, and the second with the species richness of each
 #'   island/site.
-#' @param obj Either a vector of model names or a fit_collection object.
+#' @param obj A vector of model names.
+#' @param normaTest The test used to test the normality of the residuals of each
+#'   model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
+#'   default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
+#'   (Kolmogorov-Smirnov test), or "none" (no residuals normality test is
+#'   undertaken).
+#' @param homoTest The test used to check for homogeneity of the residuals of
+#'   each model. Can be any of "cor.fitted" (a correlation of the residuals with
+#'   the model fitted values; the default), "cor.area" (a correlation of the
+#'   residuals with the area values), or "none" (no residuals homogeneity test
+#'   is undertaken).
+#' @param verb verbose (default: \code{verb == TRUE}).
+#' @details The \code{sar_models()} function can be used to bring up a list of
+#'   the 20 model names. \code{display_sars_models()} generates a table of the
+#'   20 models with model information.
+#' @return A list of class 'sars' with n elements, corresponding to the n
+#'   individual SAR model fits.
+#' @import stats
+#' @import cli
+#' @import crayon
+#' @examples
+#' data(galap)
+#' # construct a fit_collection object of 3 SAR model fits
+#' fit2 <- sar_multi(galap, obj = c("power", "expo", "linear"))
+#' plot(fit2)
+#'
+#' # construct a fit_collection object of all 20 SAR model fits
+#' fit3 <- sar_multi(galap)
+#'
+#' @export
+
+
+sar_multi <- function(data,
+                      obj = c("power", "powerR","epm1","epm2","p1","p2",
+                              "expo","koba","mmf","monod","negexpo",
+                              "chapman","weibull3","asymp","ratio",
+                              "gompertz", "weibull4","betap","heleg", 
+                              "linear"),
+                      normaTest = "lillie",
+                      homoTest = "cor.fitted",
+                      verb = TRUE){
+  
+  if (!((is.character(obj))  | (class(obj) == "sars")) ) 
+    stop("obj must be of class character or sars")
+  
+  if (nrow(data) < 4) 
+    stop("Multi SAR needs at least four data points")
+  if (nrow(data) == 4 & normaTest == "lillie") 
+    stop("The Lilliefors test cannot be performed with less than 5 data", 
+         " points")
+  
+  if (is.character(obj) & is.null(data)) 
+    stop("if obj is character then data should be provided")
+  
+  if (is.character(obj)) {
+    if (any(!(obj %in% c("linear","power","powerR","epm1","epm2","p1",
+                         "p2","expo","koba","mmf","monod","negexpo",
+                         "chapman","weibull3","asymp","ratio","gompertz",
+                         "weibull4","betap","heleg")))) 
+      stop("provided model names do not match with model functions")
+  }
+  
+  if (length(obj) < 2) 
+    stop("more than 1 fit is required to use sar_multi")
+  
+  normaTest <- match.arg(normaTest, c("none", "shapiro", 
+                                      "kolmo", "lillie"))
+  homoTest <- match.arg(homoTest, c("none","cor.area",
+                                    "cor.fitted"))
+  
+  #if (verb) cat_line(rule(left = paste0(cyan(symbol$bullet),
+  #bold(" multi_sars")),right="multi-model SAR"))
+  if (verb & is.character(obj)) {
+    cat("\n", paste("Now attempting to fit the", 
+                    length(obj), "SAR models:"), "\n\n")
+    cat_line(rule(left = bold(" multi_sars"),
+                  right="multi-model SAR"))
+  }
+  #if (verb) cat_line(magenta(symbol$arrow_right)," Data set is: ")
+  #if (verb) cat_line(rule(left = paste0(magenta(symbol$bullet))))
+  #if (verb) bullet("O | S : model", bullet = blue_arrow())
+  
+  #if not yet fitted, fit the models to the datasquare_small_filled
+  if (!is.character(obj)) 
+    stop("obj should be a character vector of model names")
+    
+    mods <- paste0("sar_",obj)
+    names(mods) <- obj
+    
+    fits <- suppressWarnings(lapply(obj, function(x){
+      
+      f <- eval(parse(text = paste0(mods[x],
+                                    "(data", ", normaTest = ", 
+                                    paste0("'", normaTest, "'"),
+                                    ", homoTest = ", paste0("'", homoTest,
+                                                            "'"), ")")))
+      
+      if (verb) {
+        if(is.na(f$value)) {
+          cat_line( paste0(red(symbol$arrow_right)," ",
+                           col_align(x,max(nchar(obj)))," : ",
+                           red(symbol$cross)))
+        }else{
+          
+          if (!is.matrix(f$sigConf)){
+            cat_line( paste0(yellow(symbol$arrow_right)," ",
+                             col_align(x,max(nchar(obj))),
+                        " : Warning: could not compute parameters statistics"))
+          }else{
+            cat_line( paste0(cyan(symbol$arrow_right)," ",
+                             col_align(x,max(nchar(obj)))," : ",
+                             green(symbol$tick)))
+          }
+        }
+      }
+      
+      f
+      
+    }))#eo suppressWarnings(lapply)
+    names(fits) <- obj
+    class(fits) <- "sars"
+    attr(fits, "type") <- "fit_collection"
+    return(fits)
+}#end of multi_sars
+
+
+#' Fit a multimodel averaged SAR curve
+#'
+#' @description Construct a multimodel averaged species-area relationship curve
+#'   using information criterion weights and up to twenty SAR models.
+#' @usage sar_average(obj = c("power",
+#'   "powerR","epm1","epm2","p1","p2","expo","koba",
+#'   "mmf","monod","negexpo","chapman","weibull3","asymp",
+#'   "ratio","gompertz","weibull4","betap","heleg", "linear"), data = NULL, crit
+#'   = "Info", normaTest = "lillie", homoTest = "cor.fitted", neg_check = FALSE,
+#'   alpha_normtest = 0.05, alpha_homotest = 0.05, confInt = FALSE, ciN = 100,
+#'   verb = TRUE)
+#' @param obj Either a vector of model names or a fit_collection object created
+#'   using \code{\link{sar_multi}}. If a vector of names is provided,
+#'   \code{sar_average} first calls \code{sar_multi} before generating the
+#'   averaged multmodel curve.
+#' @param data A dataset in the form of a dataframe with two columns: the first
+#'   with island/site areas, and the second with the species richness of each
+#'   island/site. If \code{obj} is a fit_collection object, \code{data} should 
+#'   be NULL.
 #' @param crit The criterion used to compare models and compute the model
 #'   weights. The default \code{crit = "Info"} switches to AIC or AICc depending
 #'   on the number of data points in the dataset. For BIC, use \code{crit =
@@ -73,18 +214,19 @@ display_sars_models <- function() {
 #' @details The multimodel SAR curve is constructed using information criterion
 #'   weights (see Burnham & Anderson, 2002; Guilhaumon et al. 2010). If
 #'   \code{obj} is a vector of n model names the function fits the n models to
-#'   the dataset provided. A dataset must have four or more datapoints to fit
-#'   the multimodel curve. If any models cannot be fitted they are removed from
-#'   the multimodel SAR. If \code{obj} is a fit_collection object, any model
-#'   fits in the collection which are NA are removed. In addition, if any other
-#'   model checks have been selected (i.e. residual normality and heterogeneity
-#'   tests, and checks for negative predicted richness values), these are
-#'   undertaken and any model that fails the selected test(s) is removed from
-#'   the multimodel SAR. The order of the additional checks inside the function
-#'   is: normality of residuals, homogeneity of residuals, and a check for
-#'   negative fitted values. Once a model fails one test it is removed and thus
-#'   is not available for further tests. Thus, a model may fail multiple tests
-#'   but the returned warning will only provide information on a single test.
+#'   the dataset provided using the \code{sar_multi} function. A dataset must
+#'   have four or more datapoints to fit the multimodel curve. If any models
+#'   cannot be fitted they are removed from the multimodel SAR. If \code{obj} is
+#'   a fit_collection object, any model fits in the collection which are NA are
+#'   removed. In addition, if any other model checks have been selected (i.e.
+#'   residual normality and heterogeneity tests, and checks for negative
+#'   predicted richness values), these are undertaken and any model that fails
+#'   the selected test(s) is removed from the multimodel SAR. The order of the
+#'   additional checks inside the function is: normality of residuals,
+#'   homogeneity of residuals, and a check for negative fitted values. Once a
+#'   model fails one test it is removed and thus is not available for further
+#'   tests. Thus, a model may fail multiple tests but the returned warning will
+#'   only provide information on a single test.
 #'
 #'   The resultant models are then used to construct the multimodel SAR curve.
 #'   For each model in turn, the model fitted values are multiplied by the
@@ -95,13 +237,13 @@ display_sars_models <- function() {
 #'   procedure transforms the residuals from the individual model fits and
 #'   occasionally NAs / Inf values can be produced - in these cases, the model
 #'   is removed from the confidence interval calculation (but not the multimodel
-#'   curve itself). When several SAR models are used and the number of bootstraps
-#'   (\code{ciN}) is large, generating the confidence intervals can take a long
-#'   time.
-#'   
+#'   curve itself). When several SAR models are used and the number of
+#'   bootstraps (\code{ciN}) is large, generating the confidence intervals can
+#'   take a long time.
+#'
 #'   The \code{sar_models()} function can be used to bring up a list of the 20
-#'   model names. \code{display_sars_models()} generates a table of the 20 models
-#'   with model information.
+#'   model names. \code{display_sars_models()} generates a table of the 20
+#'   models with model information.
 #'
 #' @return A list of class "multi" and class "sars" with two elements. The first
 #'   element ('mmi') contains the fitted values of the multimodel sar curve. The
@@ -146,53 +288,39 @@ display_sars_models <- function() {
 #' @examples
 #' data(galap)
 #' #attempt to construct a multimodel SAR curve using all twenty sar models
-#' fit <- sar_multi(galap)
+#' fit <- sar_average(data = galap)
 #' summary(fit)
 #' plot(fit)
 #'
 #' # construct a multimodel SAR curve using a fit_collection object
-#' s1 <- sar_power(galap)
-#' s2 <- sar_expo(galap)
-#' s3 <- sar_koba(galap)
-#' ff <- fit_collection(s1, s2, s3)
-#' fit2 <- sar_multi(galap, obj = ff)
+#' ff <- sar_multi(galap, obj = c("power", "expo", "monod", "weibull3"))
+#' fit2 <- sar_average(obj = ff, data = NULL)
 #' summary(fit2)
-#'
-#' # construct a multimodel SAR curve without conducting any model checks
-#' fit3 <- sar_multi(galap, normaTest = "none", homoTest = "none", 
-#'                   neg_check = FALSE)
 #'
 #' @export
 
 
-sar_multi <- function(data,
-                       obj = c("power", "powerR","epm1","epm2","p1","p2",
-                               "expo","koba","mmf","monod","negexpo",
-                               "chapman","weibull3","asymp","ratio",
-                               "gompertz", "weibull4","betap","heleg", 
-                               "linear"),
-                       crit = "Info",
-                       normaTest = "lillie",
-                       homoTest = "cor.fitted",
-                       neg_check = FALSE,
-                       alpha_normtest = 0.05,
-                       alpha_homotest = 0.05,
-                       confInt = FALSE,
-                       ciN = 100,
-                       verb = TRUE){
-
+sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
+                                "expo","koba","mmf","monod","negexpo",
+                                "chapman","weibull3","asymp","ratio",
+                                "gompertz", "weibull4","betap","heleg", 
+                                "linear"), data = NULL,
+                      crit = "Info",
+                      normaTest = "lillie",
+                      homoTest = "cor.fitted",
+                      neg_check = FALSE,
+                      alpha_normtest = 0.05,
+                      alpha_homotest = 0.05,
+                      confInt = FALSE,
+                      ciN = 100,
+                      verb = TRUE){
+  
   if (!((is.character(obj))  | (class(obj) == "sars")) ) 
     stop("obj must be of class character or sars")
-
-  if (nrow(data) < 4) 
-    stop("Multi SAR needs at least four data points")
-  if (nrow(data) == 4 & normaTest == "lillie") 
-    stop("The Lilliefors test cannot be performed with less than 5 data", 
-         " points")
-
+  
   if (is.character(obj) & is.null(data)) 
     stop("if obj is character then data should be provided")
-
+  
   if (is.character(obj)) {
     if (any(!(obj %in% c("linear","power","powerR","epm1","epm2","p1",
                          "p2","expo","koba","mmf","monod","negexpo",
@@ -200,125 +328,78 @@ sar_multi <- function(data,
                          "weibull4","betap","heleg")))) 
       stop("provided model names do not match with model functions")
   }
-
+  
   if (length(obj) < 2) 
     stop("more than 1 fit is required to construct a sar_multi")
-
+  
+  #if a vector of names is provided, then call sar_multi first
+  if (is.character(obj)){
+    fits <- sar_multi(data = data, obj = obj,
+                                            normaTest = normaTest,
+                                            homoTest = homoTest, verb = verb)
+  } else{
+    fits <- obj
+  }
+  
+  #####BAD MODEL CHECKS#######################
+  
   normaTest <- match.arg(normaTest, c("none", "shapiro", 
                                       "kolmo", "lillie"))
   homoTest <- match.arg(homoTest, c("none","cor.area",
                                     "cor.fitted"))
-
+  
+  #if obj = character vector, check the test names match up with 
+  #those provide here. Doesn't actually matter but can be brought to 
+  #attention of use
+  if (!is.character(obj)){
+    wn <- obj[[1]]$normaTest[[1]]
+    wh <- obj[[1]]$homoTest[[1]]
+    if (wn != normaTest) {warning("normaTest argument does not match the 
+                                 normaTest stored in the fit collection
+                                 object. The multi SAR curve will proceed
+                                 with the test used in the fit collection
+                                 object.")
+      normaTest <- wn
+    }
+    if (wh != homoTest){warning("normaTest argument does not match the 
+                                 normaTest stored in the fit collection
+                                 object. The multi SAR curve will proceed
+                                 with the test used in the fit collection
+                                 object.")
+      homoTest <- wh
+    }}
+  
   if (normaTest == "none") alpha_normtest <- "none"
   if (homoTest == "none") alpha_homotest <- "none"
 
-  #if (verb) cat_line(rule(left = paste0(cyan(symbol$bullet),
-  #bold(" multi_sars")),right="multi-model SAR"))
-  if (verb & is.character(obj)) {
-    cat("\n", paste("Now attempting to fit the", 
-                    length(obj), "SAR models:"), "\n\n")
-    cat_line(rule(left = bold(" multi_sars"),
-                  right="multi-model SAR"))
-  }
-  #if (verb) cat_line(magenta(symbol$arrow_right)," Data set is: ")
-  #if (verb) cat_line(rule(left = paste0(magenta(symbol$bullet))))
-  #if (verb) bullet("O | S : model", bullet = blue_arrow())
-
-  #if not yet fitted, fit the models to the datasquare_small_filled
-  if (is.character(obj)) {
-
-    mods <- paste0("sar_",obj)
-    names(mods) <- obj
-
-    fits <- suppressWarnings(lapply(obj, function(x){
-
-      f <- eval(parse(text = paste0(mods[x],
-                                    "(data", ", normaTest = ", 
-                                    paste0("'", normaTest, "'"),
-                                    ", homoTest = ", paste0("'", homoTest,
-                                                            "'"), ")")))
-
-      if (verb) {
-        if(is.na(f$value)) {
-          cat_line( paste0(red(symbol$arrow_right)," ",
-                           col_align(x,max(nchar(obj)))," : ",
-                           red(symbol$cross)))
-        }else{
-
-          if (!is.matrix(f$sigConf)){
-            cat_line( paste0(yellow(symbol$arrow_right)," ",
-                             col_align(x,max(nchar(obj))),
-                     " : Warning: could not compute parameters statistics"))
-          }else{
-            cat_line( paste0(cyan(symbol$arrow_right)," ",
-                             col_align(x,max(nchar(obj)))," : ",
-                             green(symbol$tick)))
-          }
-        }
-      }
-
-      f
-
-    }))#eo suppressWarnings(lapply)
-
-    #remove models with no parameter estimates
-  #  sigC <- vapply(fits, function(x) any(is.na(x$sigConf)), 
-    #FUN.VALUE = logical(1))
-    #if(all(sigC)) stop("No model could be fitted, aborting multi_sars\n")
-
-   # if (any(sigC)){
-    #  warning("Could not compute parameter statistics for one or more 
-    #models and these have been excluded from the multi SAR", call. = FALSE)
-    #  badNames2 <- vapply(fits[sigC], FUN = function(x){x$model$name}, 
-    #FUN.VALUE = character(1))
-    #  if (badMods != 0) {
-    #    badMods <- c(badMods, badNames2)
-    #  } else{
-     #   badMods <- badNames2
-      #}
-      #fits <- fits[!sigC]
-   #}
-  }else{
-    if (attributes(obj)$type == "fit_collection"){
-      fits <- obj
-      if(all(is.na(fits))){
-        stop("The fit collection had no fits, aborting multi_sars\n")
-      }
-    }else{
-      stop("an object of class 'sars' is passed but not of type", 
-           " 'fit_collection':(")
-    }
-  }#eo if else is.character(obj)
-
-  #####BAD MODEL CHECKS#######################
-
   #NA CHECKS
   f_nas <- unlist(lapply(fits,function(b)b$value))
-
+  
   if(all(is.na(f_nas))){
     stop("No model could be fitted, aborting multi_sars\n")
   }
-
+  
   badMods <- vector(length = 0, mode = "character")
-
+  
   if(any(is.na(f_nas))){
     badNames <- is.na(f_nas)
     
     message("\n", paste(sum(is.na(f_nas)), 
-     "models could not be fitted and have been excluded from the multi SAR"), 
+                        "models could not be fitted and have been excluded", 
+                        " from the multi SAR"), 
             "\n")
     badMods <- obj[badNames] #extract the bad model names from the obj 
     fits <- fits[!is.na(f_nas)]
   }
-
+  
   bml <- length(badMods)
-
-
+  
+  
   if ((normaTest != "none" | homoTest != "none" | neg_check) & verb){
     if (is.character(obj)){
       if (any(is.na(f_nas))){
-       cat("\nModel fitting completed. Now undertaking model validation", 
-           " checks.\nAdditional models will be excluded if necessary:\n")
+        cat("\nModel fitting completed. Now undertaking model validation", 
+            " checks.\nAdditional models will be excluded if necessary:\n")
       } else {
         cat("\nModel fitting completed - all models succesfully fitted.", 
             " Now undertaking model validation checks.\nAdditional models", 
@@ -329,10 +410,10 @@ sar_multi <- function(data,
           " will\nbe excluded if necessary\n")
     }
   }
-
+  
   #if checks for normality and / or homoscedasticity enabled, then check 
   #and remove bad fits from fits
-
+  
   if (normaTest != "none") {
     np <- vapply(fits, function(x) x$normaTest[[2]]$p.value, 
                  FUN.VALUE = numeric(1))
@@ -342,8 +423,9 @@ sar_multi <- function(data,
       wnn <- is.na(np)
       mn <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))
       message("\n", paste(sum(is.na(np)),"models returned NAs in the", 
-    " residuals normality test and have been excluded from the multi SAR:"),
-    "\n",
+                          " residuals normality test and have been excluded", 
+                          " from the multi SAR:"),
+              "\n",
               paste(mn[wnn], collapse = ", "), "\n")
       badMods <- c(badMods, mn[wnn])#select the model names with NAs
       fits <- fits[!wnn]
@@ -353,8 +435,9 @@ sar_multi <- function(data,
     if (any(whp)) {
       mn2 <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))
       message("\n", paste(sum(np < alpha_normtest), 
-      "models failed the residuals normality test and have been excluded", 
-      " from the multi SAR:"), "\n",
+                          "models failed the residuals normality test and", 
+                          " have been excluded", 
+                          " from the multi SAR:"), "\n",
               paste(mn2[whp], collapse = ", "), "\n")
       badMods <- c(badMods, mn2[whp])
       fits <- fits[!whp]#then remove these models from the fit collection
@@ -363,15 +446,15 @@ sar_multi <- function(data,
   if (homoTest != "none") {
     hp <- vapply(fits, function(x) x$homoTest[[2]]$p.value, 
                  FUN.VALUE = numeric(1))
-
+    
     #sometimes bad models produce calculated values with all same richness
     #values and no correlation can be done. Remove these
     if (anyNA(hp)){
       whn <- is.na(hp)
       mn3 <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))
       message("\n", paste(sum(is.na(hp)),
-            "returned NAs in the residuals homogeneity test and have", 
-            " been excluded from the multi SAR:"), "\n",
+                    "returned NAs in the residuals homogeneity test and have", 
+                          " been excluded from the multi SAR:"), "\n",
               paste(mn3[whn], collapse = ", "), "\n")
       badMods <- c(badMods, mn3[whn])#select the model names with NAs
       fits <- fits[!whn]
@@ -381,8 +464,8 @@ sar_multi <- function(data,
     if (any(whh)) {
       mn4 <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))
       message("\n", paste(sum(hp < alpha_homotest),
-        "models failed the residuals homogeneity test and have been", 
-        " excluded from the multi SAR:"), "\n",
+                  "models failed the residuals homogeneity test and have been", 
+                          " excluded from the multi SAR:"), "\n",
               paste(mn4[whh], collapse = ", "), "\n")
       badMods <- c(badMods, mn4[whh])
       fits <- fits[!whh]
@@ -401,88 +484,85 @@ sar_multi <- function(data,
       fits <- fits[!nc]
     }
   }
-
+  
   if (length(badMods) == bml & verb) cat("\nAll models passed the model", 
                                          " validation checks\n\n")
-
+  
   if (length(badMods) == 0) badMods <- 0
   if (length(fits) < 2) stop("Fewer than two models could be fitted and /",  
                              " or passed the model checks")
-
-
+  
+  
   sf <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))
   if (verb) cat(length(sf), "remaining models used to construct the multi", 
                 " SAR:\n",
-       paste(sf, collapse = ", "), "\n")
-
-  if (is.character(obj)) fits <- fit_collection(fits = fits)
-
-####################################
-
+                paste(sf, collapse = ", "), "\n")
+  
+  ####################################
+  
   #setting variables
   nPoints <- length(fits[[1]]$data$A)
   nMods <- length(fits)
-
+  
   modNames <- vapply(fits, FUN = function(x){x$model$name}, 
                      FUN.VALUE = character(1))
-
+  
   #choosing an IC criterion (AIC or AICc or BIC)
   IC <- switch(crit,
-         Info= if ( (nPoints / 3) < 40 ) { "AICc" } else { "AIC" },
-         Bayes= "BIC"
-  )
-
+               Info= if ( (nPoints / 3) < 40 ) { "AICc" } else { "AIC" },
+               Bayes= "BIC")
+  
   #get ICs
   ICs <- vapply(X = fits, FUN = function(x){x[[IC]]}, FUN.VALUE = double(1))
-
+  
   #get delta ICs
   delta_ICs <- ICs - min(ICs)
-
+  
   #get akaike weights
   akaikesum <- sum(exp( -0.5*(delta_ICs)))
   weights_ICs <- exp(-0.5*delta_ICs) / akaikesum
-
+  
   #ERROR: produce weight averaged diversity measures
-# mmi <- vapply(fits,FUN=function(x){x$calculated},FUN.VALUE=double(nPoints))
- # mmi <- apply((mmi * weights_ICs), 1 , sum)
-
+  # mmi <- vapply(fits,FUN=function(x){x$calculated},FUN.VALUE=double(nPoints))
+  # mmi <- apply((mmi * weights_ICs), 1 , sum)
+  
   #produce weight averaged diversity measures
   mmi <- vapply(fits,FUN=function(x){x$calculated},FUN.VALUE=double(nPoints))
   wm <- matrix(nrow = nPoints, ncol = length(fits))
   for (i in seq_along(weights_ICs)) {wm[ ,i] <- mmi[ ,i] * weights_ICs[i]}
   mmi <- apply(wm, 1 , sum)
-
+  
   res <- mmi
-
-    details <- list(
-      mod_names = modNames,
-      fits = fits,
-      crit = crit,
-      ic = IC,
-      norm_test = normaTest,
-      homo_test = homoTest,
-      alpha_norm_test = alpha_normtest,
-      alpha_homo_test = alpha_homotest,
-      ics = ICs,
-      delta_ics = delta_ICs,
-      weights_ics = weights_ICs,
-      n_points = nPoints,
-      n_mods = nMods,
-      no_fit = as.vector(badMods)
-    )
-
+  
+  details <- list(
+    mod_names = modNames,
+    fits = fits,
+    crit = crit,
+    ic = IC,
+    norm_test = normaTest,
+    homo_test = homoTest,
+    alpha_norm_test = alpha_normtest,
+    alpha_homo_test = alpha_homotest,
+    ics = ICs,
+    delta_ics = delta_ICs,
+    weights_ics = weights_ICs,
+    n_points = nPoints,
+    n_mods = nMods,
+    no_fit = as.vector(badMods)
+  )
+  
   res <- list(mmi = mmi, details = details)
-
+  
   class(res) <- c("multi", "sars")
   attr(res, "type") <- "multi"
-
+  
   #if (verb) cat_line(rule(left = cyan(symbol$bullet)))
   if (verb) cat_line(rule())
-
+  
   if (confInt){
     cat("\nCalculating sar_multi confidence intervals - this may take", 
         " some time:\n")
-    cis <- sar_conf_int(res, n = ciN, crit = crit, normaTest = normaTest,
+    cis <- sar_conf_int(fit = res, n = ciN, crit = crit, normaTest = normaTest,
                         homoTest = homoTest,
                         neg_check = neg_check,
                         alpha_normtest = alpha_normtest,
@@ -491,7 +571,16 @@ sar_multi <- function(data,
   } else {
     res$details$confInt <- NA
   }
-
+  
   invisible(res)
+  
+}#end of sar_average
 
-}#end of multi_sars
+
+
+
+
+
+
+
+

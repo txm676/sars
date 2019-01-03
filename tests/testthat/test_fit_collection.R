@@ -1,11 +1,9 @@
-context("fit_collection")
+context("sar_multi")
 library(sars)
 
-test_that("fit_collection returns correct results", {
+test_that("sar_multi returns correct results", {
   data(galap)
-  fit <- sar_linear(galap)
-  fit2 <- sar_power(galap)
-  fitC <- fit_collection(fit, fit2)
+  fitC <- sar_multi(galap, obj = c("linear", "power"))
   expect_output(str(fitC), "List of 2")
   expect_is(fitC, "sars")
 })

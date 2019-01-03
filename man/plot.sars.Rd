@@ -59,11 +59,10 @@ object of Type fit_collection. For example, \code{di = c(1, 3)} creates
 a plotting window with 1 row and 3 columns. The default (null) creates a
 square plotting window of the correct size.}
 
-\item{pLeg}{Logical argument specifying whether or not the legend should
-be plotted for fit_collection plots (when \code{mfplot = TRUE}) or
-sar_multi plots. When a large number of model fits are plotted the
-legend takes up a lot of space, and thus the default is \code{pLeg =
-FALSE}.}
+\item{pLeg}{Logical argument specifying whether or not the legend should be
+plotted for fit_collection plots (when \code{mfplot = TRUE}) or. When a
+large number of model fits are plotted the legend takes up a lot of space,
+and thus the default is \code{pLeg = FALSE}.}
 
 \item{\dots}{Further graphical parameters (see
 \code{\link[graphics]{par}},
@@ -82,7 +81,7 @@ S3 method for class 'sars'. \code{plot.sars} creates plots
   with n individual plots (corresponding to the n model fits in the
   fit_collection), or a single plot with all n model fits included.
 
-  For plotting a 'sar_multi' object, see \code{\link{plot.multi}}.
+  For plotting a 'sar_average' object, see \code{\link{plot.multi}}.
 }
 \examples{
 data(galap)
@@ -91,8 +90,6 @@ fit <- sar_power(galap)
 plot(fit, ModTitle = "A)", lcol = "blue")
 
 #fit and plot a sars object of Type fit_collection.
-fit2 <- sar_expo(galap)
-fit3 <- sar_epm1(galap)
-fc <- fit_collection(fit, fit2, fit3)
+fc <- sar_multi(data = galap, obj = c("power", "expo", "epm1"))
 plot(fc, ModTitle = letters[1:3], xlab = "Size of island")
 }

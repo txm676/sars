@@ -13,20 +13,20 @@
 #'   fitted using non-linear regression, whilst a single model (the linear
 #'   model) is fitted using linear regression. Each model has its own function
 #'   (e.g. \code{\link{sar_power}}). A set of multiple model fits can be
-#'   combined into a fit collection (\code{\link{fit_collection}}). Plotting
+#'   combined into a fit collection (\code{\link{sar_multi}}). Plotting
 #'   functions (\code{\link{plot.sars}}) are provided that enable individual
 #'   model fits to be plotted on their own, or the fits of multiple models to be
 #'   overlayed on the same plot. Model fits are validated using a number of
 #'   checks, e.g. the normality and homogeneity of the model residuals can be
 #'   assessed.
 #'
-#'   A multimodel SAR curve can be constructed using the \code{\link{sar_multi}}
-#'   function. This fits up to twenty SAR models and constructs the multimodel
-#'   curve (with confidence intervals) using information criterion weights (see
-#'   \code{\link{summary.sars}} to calculate a table of models ranked by
-#'   information criterion weight). The \code{\link{plot.multi}} functions
-#'   enables the multimodel SAR curve to be plotted with or without the fits of
-#'   the individual models.
+#'   A multimodel SAR curve can be constructed using the
+#'   \code{\link{sar_average}} function. This fits up to twenty SAR models and
+#'   constructs the multimodel curve (with confidence intervals) using
+#'   information criterion weights (see \code{\link{summary.sars}} to calculate
+#'   a table of models ranked by information criterion weight). The
+#'   \code{\link{plot.multi}} functions enables the multimodel SAR curve to be
+#'   plotted with or without the fits of the individual models.
 #'
 #'   Other SAR related functions include: (i) \code{\link{lin_pow}}, which fits
 #'   the log-log power model and enables comparison of the model parameters with
@@ -62,8 +62,8 @@
 #' summary(fit)
 #' plot(fit)
 #' 
-#' #Construct a multimodel SAR curve
-#' fit_multi <- sar_multi(galap)
+#' #Construct a multimodel averaged SAR curve
+#' fit_multi <- sar_average(data = galap)
 #' summary(fit_multi)
 #' plot(fit_multi)
 

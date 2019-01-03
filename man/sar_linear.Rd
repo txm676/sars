@@ -53,8 +53,7 @@ The model is fitted using linear regression and the
   either test is failed.
 
   A selection of information criteria (e.g. AIC, BIC) are returned and can
-  be used to compare models (see also \code{\link{fit_collection}} and
-  \code{\link{sar_multi}}).
+  be used to compare models (see also \code{\link{sar_average}}).
 }
 \examples{
 data(galap)

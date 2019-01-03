@@ -10,17 +10,17 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
 
   if (!"multi" %in% class(fit)) stop ("class of 'fit' should be 'multi'")
   if (length(fit$details$mod_names) < 2) 
-    stop ("less than two models in the sar multi object")
+    stop ("less than two models in the sar average object")
 
   #model names for matching
 
-  x1 <- c("Power", "PowerR", "Extended_Power_model_1", 
-          "Extended_Power_model_2", "Persistence_function_1",
-          "Persistence_function_2", "Exponential", "Kobayashi", "MMF", 
-          "Monod", "Negative_exponential", "Chapman_Richards", 
-          "Cumulative_Weibull_3_par.", "Asymptotic_regression", 
-          "Rational_function","Gompertz", "Cumulative_Weibull_4_par.", 
-          "Beta-P_cumulative", "Heleg(Logistic)", "Linear_model")
+#  x1 <- c("Power", "PowerR", "Extended_Power_model_1", 
+          #"Extended_Power_model_2", "Persistence_function_1",
+         # "Persistence_function_2", "Exponential", "Kobayashi", "MMF", 
+         # "Monod", "Negative_exponential", "Chapman_Richards", 
+        #  "Cumulative_Weibull_3_par.", "Asymptotic_regression", 
+        #  "Rational_function","Gompertz", "Cumulative_Weibull_4_par.", 
+        #  "Beta-P_cumulative", "Heleg(Logistic)", "Linear_model")
 
   x2 <- c("sar_power(", "sar_powerR(", "sar_epm1(", "sar_epm2(", "sar_p1(",
           "sar_p2(", "sar_expo(", "sar_koba(", "sar_mmf(", "sar_monod(",
@@ -40,10 +40,10 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   #weights and model names
   wei <- fit$details$weights_ics
   nams <- as.vector(names(wei))
-  ns1 <- which(x1 %in% nams)
+  ns1 <- which(x3 %in% nams)
   nams_short <- x3[ns1]#for use below
-
-  #loop over all models in sar_multi fit and fill matrices of fitted values
+  
+  #loop over all models in sar_average fit and fill matrices of fitted values
   #and, resids & transformed residuals
   calculated <- residuals <- transResiduals <- matrix(nrow = length(nams),
                                                       ncol = nrow(dat))
@@ -52,16 +52,15 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   {
 
   #select the expression of the selected model
-  wn <- which(x1 %in% nams[i])
+  wn <- which(x3 %in% nams[i])
   w2 <- x2[wn]
-
 
   #fit the best model to observed data; extract fitted values and residuals
   me <- suppressWarnings(eval(parse(text = paste(w2, "dat)", sep = ""))))
   meF <- me$calculated
   meR <- me$residuals
 
-  if (nams[i] == "Linear_model"){
+  if (nams[i] == "linear"){
   #based on code from mmSAR in Rforge
    jacob <- numDeriv::jacobian(me$model$rss.fun, me$par, data = me$data[1, ],
                                model = me$model,  opt = FALSE)
@@ -72,11 +71,11 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   }
   } else {
   #based on code from mmSAR in Rforge
-  jacob <- jacobian(me$model$rss.fun, me$par, data = me$data[1, ],
+  jacob <- numDeriv::jacobian(me$model$rss.fun, me$par, data = me$data[1, ],
                     opt = FALSE)
 
   for (k in 2:nrow(dat)) {
-    jacob <- rbind(jacob, jacobian(me$model$rss.fun, me$par,
+    jacob <- rbind(jacob, numDeriv::jacobian(me$model$rss.fun, me$par,
                                    data = me$data[k, ], opt = FALSE))
   }
   }#eo if linear
@@ -117,7 +116,6 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   calculated[i, ] <- meF
   residuals[i, ] <- meR
   transResiduals[i, ] <- tr
-
   }#eo for
 
  rownames(transResiduals) <- nams
@@ -162,7 +160,7 @@ length(nams), length(nams_short)))
   optimBootResult <- vector("list", length = nBoot)
 
   #choosing an IC criterion (AIC or AICc or BIC): same code as within
-  #sar_multi as needs to be identical
+  #sar_average as needs to be identical
   IC <- switch(crit,
                Info= if ( (nrow(dat) / 3) < 40 ) { "AICc" } else { "AIC" },
                Bayes= "BIC")
@@ -203,7 +201,8 @@ for (l in seq_len(nrow(dat))) {
     badBoot <- FALSE
 
     df <- data.frame("A" = dat$A, "S" = bootMatrix[nGoodBoot, ])
-    optimres <- tryCatch(suppressMessages(sar_multi(df, obj = nams_short, 
+    optimres <- tryCatch(suppressMessages(sar_average(obj = nams_short,
+                                                      data = df, 
                                       verb = FALSE)), error = function(e) NA)
 
     if (length(optimres) == 1) {

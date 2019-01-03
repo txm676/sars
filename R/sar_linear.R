@@ -22,8 +22,7 @@
 #'   either test is failed.
 #'
 #'   A selection of information criteria (e.g. AIC, BIC) are returned and can
-#'   be used to compare models (see also \code{\link{fit_collection}} and
-#'   \code{\link{sar_multi}}).
+#'   be used to compare models (see also \code{\link{sar_average}}).
 #' @import stats
 #' @importFrom nortest lillie.test
 #' @return A list of class 'sars' with the following components: \itemize{
@@ -130,7 +129,7 @@ sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
   fit$model$exp <- expression(c + m*A)
   fit$model$mod.fun <- function(A = A, par = par, model = model) {
     eval(model$exp,list(A=A,c=par[1],m=par[2]))}
-  #rss function (for use in confInts of sar_multi)
+  #rss function (for use in confInts of sar_average)
   fit$model$rss.fun <- function(par,data, model, opt = TRUE){
     S <- data$S
     A <- data$A

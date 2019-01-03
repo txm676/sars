@@ -11,7 +11,7 @@
 #'   with n individual plots (corresponding to the n model fits in the
 #'   fit_collection), or a single plot with all n model fits included.
 #'
-#'   For plotting a 'sar_multi' object, see \code{\link{plot.multi}}.
+#'   For plotting a 'sar_average' object, see \code{\link{plot.multi}}.
 #' @param x An object of class 'sars'.
 #' @param mfplot Logical argument specifying whether the model fits in a
 #'   fit_collection should be plotted on one single plot (\code{mfplot =
@@ -43,11 +43,10 @@
 #'   object of Type fit_collection. For example, \code{di = c(1, 3)} creates
 #'   a plotting window with 1 row and 3 columns. The default (null) creates a
 #'   square plotting window of the correct size.
-#' @param pLeg Logical argument specifying whether or not the legend should
-#'   be plotted for fit_collection plots (when \code{mfplot = TRUE}) or
-#'   sar_multi plots. When a large number of model fits are plotted the
-#'   legend takes up a lot of space, and thus the default is \code{pLeg =
-#'   FALSE}.
+#' @param pLeg Logical argument specifying whether or not the legend should be
+#'   plotted for fit_collection plots (when \code{mfplot = TRUE}) or. When a
+#'   large number of model fits are plotted the legend takes up a lot of space,
+#'   and thus the default is \code{pLeg = FALSE}.
 #' @param \dots Further graphical parameters (see
 #'   \code{\link[graphics]{par}},
 #'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
@@ -60,9 +59,7 @@
 #' plot(fit, ModTitle = "A)", lcol = "blue")
 #'
 #' #fit and plot a sars object of Type fit_collection.
-#' fit2 <- sar_expo(galap)
-#' fit3 <- sar_epm1(galap)
-#' fc <- fit_collection(fit, fit2, fit3)
+#' fc <- sar_multi(data = galap, obj = c("power", "expo", "epm1"))
 #' plot(fc, ModTitle = letters[1:3], xlab = "Size of island")
 #' @rdname plot.sars
 #' @export
@@ -129,7 +126,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
     if (!mfplot){
 
     if (!is.null(ModTitle)){
-      if (length(ModTitle) == 1 & ModTitle == "")
+      if (length(ModTitle) == 1 && ModTitle == "")
         ModTitle <- rep("", length(x))
       if (length(ModTitle) != length(x)) 
         stop("The length of ModTitle does not match the length of x")
@@ -286,7 +283,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
 #'   be plotted  (when \code{type = multi} and \code{allCurves = TRUE}).
 #' @param modNames A vector of model names for the barplot of weights (when
 #'   \code{type = bar}). The default (\code{modNames = NULL}) uses
-#'   abbreviated versions (see below) of the names from the \code{sar_multi}
+#'   abbreviated versions (see below) of the names from the \code{sar_average}
 #'   function.
 #' @param cex.names The amount by which the axis labels (model names) should
 #'   be scaled relative to the default. Only for use with \code{type = bar}.
@@ -295,7 +292,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
 #'   (\code{subset_weights}). Only for use with \code{type = bar}.
 #' @param confInt A logical argument specifying whether confidence intervals
 #'   should be plotted around the multimodel curve. Can only be used if
-#'   confidence intervals have been generated in the \code{sar_multi}
+#'   confidence intervals have been generated in the \code{sar_average}
 #'   function.
 #' @param \dots Further graphical parameters (see
 #'   \code{\link[graphics]{par}},
@@ -312,7 +309,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
 #'   (e.g. residual normality) but the resulting fit is nonsensical (e.g. a
 #'   horizontal line with intercept at zero). Thus, it can be useful to plot
 #'   the resultant 'multi' object to check the individual model fits. To
-#'   re-run the \code{sar_multi} function without a particular model, simply
+#'   re-run the \code{sar_average} function without a particular model, simply
 #'   remove it from the \code{obj} argument.
 #'
 #'   For visual interpretation of the model weights barplot it is necessary
@@ -334,7 +331,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
 #' @examples
 #' data(galap)
 #' #plot a multimodel SAR curve with all model fits included
-#' fit <- sar_multi(galap)
+#' fit <- sar_average(data = galap)
 #' plot(fit)
 #'
 #' #remove the legend
@@ -538,14 +535,10 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
 #names into abbreviated versions depending on which models are provided
 mod_abbrev <- function(nams){
 
-x1 <- c("Power", "PowerR", "Extended_Power_model_1", 
-        "Extended_Power_model_2", "Persistence_function_1",
-        "Persistence_function_2", "Exponential", "Kobayashi", "MMF", "Monod",
-        "Negative_exponential",
-        "Chapman_Richards", "Cumulative_Weibull_3_par.", 
-        "Asymptotic_regression", "Rational_function",
-        "Gompertz", "Cumulative_Weibull_4_par.", "Beta-P_cumulative",
-        "Heleg(Logistic)", "Linear_model")
+x1 <-  c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf",
+         "monod","negexpo","chapman",
+         "weibull3","asymp","ratio","gompertz","weibull4","betap","heleg",
+         "linear")
 
 x2 <- c("Pow", "PowR", "E1", "E2", "P1", "P2", "Exp", "Kob", "MMF",
         "Mon", "NegE",

@@ -100,7 +100,7 @@ print.summary.sars <- function(x, ...){
   }#eo if fit
 
   if (attributes(object)$type == "multi"){
-    cat("\nSar_multi object summary:\n", sep = "")
+    cat("\nSar_average object summary:\n", sep = "")
     cat("\n", paste(length(object$Models), " models successfully fitted"),
         "\n", sep = "")
     if (length(object$no_fit) > 1) {
@@ -158,7 +158,7 @@ print.sars <- function(x, ...){
   }
 
   if (attributes(object)$type == "multi"){
-    cat("\nThis is a sar_multi fit object:\n", sep = "")
+    cat("\nThis is a sar_average fit object:\n", sep = "")
     cat("\n", paste(length(object$details$mod_names),
                     "models successfully fitted"), "\n", sep = "")
     if (length(object$details$no_fit) > 1) {

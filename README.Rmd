@@ -70,7 +70,7 @@ fit_pow <- sar_power(data = galap)
 
 Attempting to fit all 20 sar models to the 'galapagos' [@Preston1962] data set and get a multi-model SAR:
 ```{r warning = FALSE}
-mm_galap <- sar_multi(data = galap)
+mm_galap <- sar_average(data = galap)
 ```
 
 Each of the 'fitted' objects have corresponding plot methods:
@@ -84,7 +84,7 @@ plot(fit_expo)
 
 to fit a multimodel SAR curve to the 'galapagos' data set and plot it
 ```{r}
-mm_galap <- suppressMessages(sar_multi(data = galap, verb = FALSE))
+mm_galap <- suppressMessages(sar_average(data = galap, verb = FALSE))
 
 plot(mm_galap, pLeg = FALSE)
 ```

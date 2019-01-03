@@ -1,5 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-The **'sars'** R Package <img src="man/figures/sars_logo.png" align="right" width="10%"/>
+The **‘sars’** R Package <img src="man/figures/sars_logo.png" align="right" width="10%"/>
 =========================================================================================
 
 [![Build
@@ -50,19 +50,19 @@ Example usage
 
 Basic usage of **sars** will result in using two types of functions:
 
-To fit the power sar model (Arrhenius 1921) to the 'galapagos' (Preston
+To fit the power sar model (Arrhenius 1921) to the ‘galapagos’ (Preston
 1962) data set:
 
     fit_pow <- sar_power(data = galap)
 
-Attempting to fit all 20 sar models to the 'galapagos' (Preston 1962)
+Attempting to fit all 20 sar models to the ‘galapagos’ (Preston 1962)
 data set and get a multi-model SAR:
 
-    mm_galap <- sar_multi(data = galap)
+    mm_galap <- sar_average(data = galap)
     #> 
     #>  Now attempting to fit the 20 SAR models: 
     #> 
-    #> --  multi_sars ------------------------------------------------------------------------ multi-model SAR --
+    #> --  multi_sars ----------------------------------------------------------- multi-model SAR --
     #> > power    : v
     #> > powerR   : v
     #> > epm1     : v
@@ -87,15 +87,15 @@ data set and get a multi-model SAR:
     #> Model fitting completed - all models succesfully fitted.  Now undertaking model validation checks.
     #> Additional models  will be excluded if necessary:
     #> 
-    #> 4 models failed the residuals normality test and have been excluded  from the multi SAR:
+    #> 4 models failed the residuals normality test and  have been excluded  from the multi SAR:
     #> Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model
     #> 16 remaining models used to construct the multi  SAR:
     #>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Exponential, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-    #> ----------------------------------------------------------------------------------------------------------
+    #> ---------------------------------------------------------------------------------------------
 
-Each of the 'fitted' objects have corresponding plot methods:
+Each of the ‘fitted’ objects have corresponding plot methods:
 
-to fit the exponential SAR model (Gleason 1922) to the 'galapagos' data
+to fit the exponential SAR model (Gleason 1922) to the ‘galapagos’ data
 set and plot it
 
     fit_expo <- sar_expo(data = galap)
@@ -104,9 +104,9 @@ set and plot it
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
-to fit a multimodel SAR curve to the 'galapagos' data set and plot it
+to fit a multimodel SAR curve to the ‘galapagos’ data set and plot it
 
-    mm_galap <- suppressMessages(sar_multi(data = galap, verb = FALSE))
+    mm_galap <- suppressMessages(sar_average(data = galap, verb = FALSE))
 
     plot(mm_galap, pLeg = FALSE)
 
@@ -125,13 +125,12 @@ References
 ----------
 
 Arrhenius, Olof. 1921. “Species and Area.” *The Journal of Ecology* 9
-(1). British Ecological Society: 95.
-doi:[10.2307/2255763](https://doi.org/10.2307/2255763).
+(1). British Ecological Society:95. <https://doi.org/10.2307/2255763>.
 
 Gleason, Henry Allan. 1922. “On the Relation Between Species and Area.”
-*Ecology* 3 (2). Ecological Society of America: 158–62.
-doi:[10.2307/1929150](https://doi.org/10.2307/1929150).
+*Ecology* 3 (2). Ecological Society of America:158–62.
+<https://doi.org/10.2307/1929150>.
 
 Preston, F. W. 1962. “The Canonical Distribution of Commonness and
-Rarity: Part I.” *Ecology* 43 (2). Ecological Society of America: 185.
-doi:[10.2307/1931976](https://doi.org/10.2307/1931976).
+Rarity: Part I.” *Ecology* 43 (2). Ecological Society of America:185.
+<https://doi.org/10.2307/1931976>.
