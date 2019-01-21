@@ -75,11 +75,11 @@ mm_galap <- sar_average(data = galap)
 
 Each of the 'fitted' objects have corresponding plot methods:
 
-to fit the exponential SAR model [@Gleason1922] to the 'galapagos' data set and plot it
+to fit the logarithmic SAR model [@Gleason1922] to the 'galapagos' data set and plot it
 ```{r}
-fit_expo <- sar_expo(data = galap)
+fit_loga <- sar_loga(data = galap)
 
-plot(fit_expo)
+plot(fit_loga)
 ```
 
 to fit a multimodel SAR curve to the 'galapagos' data set and plot it

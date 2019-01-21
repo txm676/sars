@@ -6,7 +6,7 @@
 #' @return A vector of model names.
 #' @export
 sars_models <- function() {
-  c("power","powerR","epm1","epm2","p1","p2","expo","koba","mmf",
+  c("power","powerR","epm1","epm2","p1","p2","loga","koba","mmf",
     "monod","negexpo","chapman","weibull3","asymp","ratio",
     "gompertz","weibull4","betap","heleg", "linear")
 }
@@ -32,7 +32,7 @@ display_sars_models <- function() {
 #' @description Creates a fit collection of SAR model fits, which can then be
 #'   plotted using \code{\link{plot.sars}}.
 #' @usage sar_multi(data, obj = c("power",
-#'   "powerR","epm1","epm2","p1","p2","expo","koba",
+#'   "powerR","epm1","epm2","p1","p2","loga","koba",
 #'   "mmf","monod","negexpo","chapman","weibull3","asymp",
 #'   "ratio","gompertz","weibull4","betap","heleg","linear"), normaTest =
 #'   "lillie", homoTest = "cor.fitted",verb = TRUE)
@@ -62,7 +62,7 @@ display_sars_models <- function() {
 #' @examples
 #' data(galap)
 #' # construct a fit_collection object of 3 SAR model fits
-#' fit2 <- sar_multi(galap, obj = c("power", "expo", "linear"))
+#' fit2 <- sar_multi(galap, obj = c("power", "loga", "linear"))
 #' plot(fit2)
 #'
 #' # construct a fit_collection object of all 20 SAR model fits
@@ -73,7 +73,7 @@ display_sars_models <- function() {
 
 sar_multi <- function(data,
                       obj = c("power", "powerR","epm1","epm2","p1","p2",
-                              "expo","koba","mmf","monod","negexpo",
+                              "loga","koba","mmf","monod","negexpo",
                               "chapman","weibull3","asymp","ratio",
                               "gompertz", "weibull4","betap","heleg", 
                               "linear"),
@@ -95,7 +95,7 @@ sar_multi <- function(data,
   
   if (is.character(obj)) {
     if (any(!(obj %in% c("linear","power","powerR","epm1","epm2","p1",
-                         "p2","expo","koba","mmf","monod","negexpo",
+                         "p2","loga","koba","mmf","monod","negexpo",
                          "chapman","weibull3","asymp","ratio","gompertz",
                          "weibull4","betap","heleg")))) 
       stop("provided model names do not match with model functions")
@@ -170,7 +170,7 @@ sar_multi <- function(data,
 #' @description Construct a multimodel averaged species-area relationship curve
 #'   using information criterion weights and up to twenty SAR models.
 #' @usage sar_average(obj = c("power",
-#'   "powerR","epm1","epm2","p1","p2","expo","koba",
+#'   "powerR","epm1","epm2","p1","p2","loga","koba",
 #'   "mmf","monod","negexpo","chapman","weibull3","asymp",
 #'   "ratio","gompertz","weibull4","betap","heleg", "linear"), data = NULL, crit
 #'   = "Info", normaTest = "lillie", homoTest = "cor.fitted", neg_check = FALSE,
@@ -294,7 +294,7 @@ sar_multi <- function(data,
 #' plot(fit)
 #'
 #' # construct a multimodel SAR curve using a fit_collection object
-#' ff <- sar_multi(galap, obj = c("power", "expo", "monod", "weibull3"))
+#' ff <- sar_multi(galap, obj = c("power", "loga", "monod", "weibull3"))
 #' fit2 <- sar_average(obj = ff, data = NULL)
 #' summary(fit2)
 #'
@@ -302,7 +302,7 @@ sar_multi <- function(data,
 
 
 sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
-                                "expo","koba","mmf","monod","negexpo",
+                                "loga","koba","mmf","monod","negexpo",
                                 "chapman","weibull3","asymp","ratio",
                                 "gompertz", "weibull4","betap","heleg", 
                                 "linear"), data = NULL,
@@ -324,7 +324,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   
   if (is.character(obj)) {
     if (any(!(obj %in% c("linear","power","powerR","epm1","epm2","p1",
-                         "p2","expo","koba","mmf","monod","negexpo",
+                         "p2","loga","koba","mmf","monod","negexpo",
                          "chapman","weibull3","asymp","ratio","gompertz",
                          "weibull4","betap","heleg")))) 
       stop("provided model names do not match with model functions")

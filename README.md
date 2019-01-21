@@ -62,14 +62,14 @@ data set and get a multi-model SAR:
     #> 
     #>  Now attempting to fit the 20 SAR models: 
     #> 
-    #> --  multi_sars ----------------------------------------------------------- multi-model SAR --
+    #> --  multi_sars -------------------------------------------------------------- multi-model SAR --
     #> > power    : v
     #> > powerR   : v
     #> > epm1     : v
     #> > epm2     : v
     #> > p1       : v
     #> > p2       : v
-    #> > expo     : v
+    #> > loga     : v
     #> > koba     : v
     #> > mmf      : v
     #> > monod    : v
@@ -90,17 +90,17 @@ data set and get a multi-model SAR:
     #> 4 models failed the residuals normality test and  have been excluded  from the multi SAR:
     #> Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model
     #> 16 remaining models used to construct the multi  SAR:
-    #>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Exponential, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-    #> ---------------------------------------------------------------------------------------------
+    #>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
+    #> ------------------------------------------------------------------------------------------------
 
 Each of the ‘fitted’ objects have corresponding plot methods:
 
-to fit the exponential SAR model (Gleason 1922) to the ‘galapagos’ data
+to fit the logarithmic SAR model (Gleason 1922) to the ‘galapagos’ data
 set and plot it
 
-    fit_expo <- sar_expo(data = galap)
+    fit_loga <- sar_loga(data = galap)
 
-    plot(fit_expo)
+    plot(fit_loga)
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 

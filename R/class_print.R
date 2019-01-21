@@ -180,8 +180,8 @@ print.sars <- function(x, ...){
 
 print.gdm <- function(x, ...){
   object <- x
-  if (attributes(object)$Type %in% c("expo", "linear", "power")){
-    mod <- match.arg(attributes(object)$Type, c("exponential", 
+  if (attributes(object)$Type %in% c("loga", "linear", "power")){
+    mod <- match.arg(attributes(object)$Type, c("logarithmic", 
                                                 "linear", "power"))
     if (!attributes(object)$mod_sel){
       cat("\n",paste("GDM fit using the", mod, "SAR model", sep = " "),
@@ -224,7 +224,7 @@ print.gdm <- function(x, ...){
                                         numeric(1)))
       }
       df$Delta.AIC <-  df$AIC - min(df$AIC)
-      rownames(df) <- c("Exponential", "Linear", "Power")
+      rownames(df) <- c("Logarithmic", "Linear", "Power")
       df <- df[order(df$Delta.AIC),]
       print(df)
     }

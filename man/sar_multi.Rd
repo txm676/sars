@@ -5,7 +5,7 @@
 \title{Create a Collection of SAR Model Fits}
 \usage{
 sar_multi(data, obj = c("power",
-  "powerR","epm1","epm2","p1","p2","expo","koba",
+  "powerR","epm1","epm2","p1","p2","loga","koba",
   "mmf","monod","negexpo","chapman","weibull3","asymp",
   "ratio","gompertz","weibull4","betap","heleg","linear"), normaTest =
   "lillie", homoTest = "cor.fitted",verb = TRUE)
@@ -47,7 +47,7 @@ The \code{sar_models()} function can be used to bring up a list of
 \examples{
 data(galap)
 # construct a fit_collection object of 3 SAR model fits
-fit2 <- sar_multi(galap, obj = c("power", "expo", "linear"))
+fit2 <- sar_multi(galap, obj = c("power", "loga", "linear"))
 plot(fit2)
 
 # construct a fit_collection object of all 20 SAR model fits

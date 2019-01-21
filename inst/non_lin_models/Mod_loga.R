@@ -1,6 +1,6 @@
-# EXPONENTIAL MODEL (GLEASON 1922)
+# Logarithmic MODEL (GLEASON 1922)
 model <- list(
-    name=c("Exponential"),
+    name=c("Logarithmic"),
     formula=expression(S==c+z*log(A)),
     exp=expression(c+z*log(A)),
     shape="convex",

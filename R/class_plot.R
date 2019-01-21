@@ -59,7 +59,7 @@
 #' plot(fit, ModTitle = "A)", lcol = "blue")
 #'
 #' #fit and plot a sars object of Type fit_collection.
-#' fc <- sar_multi(data = galap, obj = c("power", "expo", "epm1"))
+#' fc <- sar_multi(data = galap, obj = c("power", "loga", "epm1"))
 #' plot(fc, ModTitle = letters[1:3], xlab = "Size of island")
 #' @rdname plot.sars
 #' @export
@@ -320,7 +320,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
 #'   abbreviations used as the default are: \itemize{ \item{Pow = } { Power}
 #'   \item{PowR = } { PowerR} \item{E1 = } { Extended_Power_model_1} \item{E2
 #'   = } { Extended_Power_model_2} \item{P1 = } { Persistence_function_1}
-#'   \item{P2 = } { Persistence_function_2} \item{Exp = } { Exponential}
+#'   \item{P2 = } { Persistence_function_2} \item{Loga = } { Logarithmic}
 #'   \item{Kob = } { Kobayashi} \item{MMF = } { MMF} \item{Mon = } { Monod}
 #'   \item{NegE = } { Negative_exponential} \item{CR = } { Chapman_Richards}
 #'   \item{CW3 = } { Cumulative_Weibull_3_par.} \item{AR = } {
@@ -535,12 +535,12 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
 #names into abbreviated versions depending on which models are provided
 mod_abbrev <- function(nams){
 
-x1 <-  c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf",
+x1 <-  c("power", "powerR","epm1","epm2","p1","p2","loga","koba","mmf",
          "monod","negexpo","chapman",
          "weibull3","asymp","ratio","gompertz","weibull4","betap","heleg",
          "linear")
 
-x2 <- c("Pow", "PowR", "E1", "E2", "P1", "P2", "Exp", "Kob", "MMF",
+x2 <- c("Pow", "PowR", "E1", "E2", "P1", "P2", "Loga", "Kob", "MMF",
         "Mon", "NegE",
         "CR", "CW3", "AR", "RF", "Gom", "CW4", "BP", "Hel", "Lin")
 

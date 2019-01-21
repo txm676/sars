@@ -1,7 +1,7 @@
-#' Fit the Exponential model
+#' Fit the Logarithmic model
 
-#' @description Fit the Exponential model to SAR data.
-#' @usage sar_expo(data, start = NULL, grid_start = NULL, normaTest =  'lillie',
+#' @description Fit the Logarithmic model to SAR data.
+#' @usage sar_loga(data, start = NULL, grid_start = NULL, normaTest =  'lillie',
               
 #'   homoTest = 'cor.fitted')
 #' @param data A dataset in the form of a dataframe with two columns: 
@@ -62,12 +62,12 @@
 #'   relationship: biology and statistics. Journal of Biogeography, 39, 215-231.
 #' @examples
 #' data(galap)
-#' fit <- sar_expo(galap)
+#' fit <- sar_loga(galap)
 #' summary(fit)
 #' plot(fit)
 #' @export
 
-sar_expo <- function(data, start = NULL, grid_start = NULL, 
+sar_loga <- function(data, start = NULL, grid_start = NULL, 
 normaTest =  "lillie", homoTest = "cor.fitted"){
 if (!(is.matrix(data) | is.data.frame(data)))  
 stop('data must be a matrix or dataframe')
@@ -75,9 +75,9 @@ if (is.matrix(data)) data <- as.data.frame(data)
 if (anyNA(data)) stop('NAs present in data')
 data <- data[order(data[,1]),]
 colnames(data) <- c('A','S')
-# EXPONENTIAL MODEL (GLEASON 1922)
+# Logarithmic MODEL (GLEASON 1922)
 model <- list(
-    name=c("Exponential"),
+    name=c("Logarithmic"),
     formula=expression(S==c+z*log(A)),
     exp=expression(c+z*log(A)),
     shape="convex",
@@ -110,4 +110,4 @@ if(is.na(fit$value)){
   attr(fit, 'type') <- 'fit'
   return(fit)
 }
-}#end of sar_expo
+}#end of sar_loga

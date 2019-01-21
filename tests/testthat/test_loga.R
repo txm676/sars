@@ -1,9 +1,9 @@
-context("sar_expo")
+context("sar_loga")
 library(sars)
 
-test_that("sar_expo returns correct results", {
+test_that("sar_loga returns correct results", {
   data(galap)
-  fit <- sar_expo(galap)
+  fit <- sar_loga(galap)
   expect_equal(round(fit$AICc, 2), 143.78)
   expect_equal(as.vector(round(fit$par[2], 2)), 30.28)
   expect_is(fit, "sars")
@@ -12,9 +12,9 @@ test_that("sar_expo returns correct results", {
 })
 
 
-test_that("sar_expo summary returns correct results", {
+test_that("sar_loga summary returns correct results", {
   data(galap)
-  fit <- sar_expo(galap)
+  fit <- sar_loga(galap)
   fs <- summary(fit)
   expect_equal(sum(fs$residuals), 6.439294e-15)
   expect_output(str(fs), "List of 16")

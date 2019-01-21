@@ -114,7 +114,7 @@ When plotting all model fits on the same plot with a legend it is
   abbreviations used as the default are: \itemize{ \item{Pow = } { Power}
   \item{PowR = } { PowerR} \item{E1 = } { Extended_Power_model_1} \item{E2
   = } { Extended_Power_model_2} \item{P1 = } { Persistence_function_1}
-  \item{P2 = } { Persistence_function_2} \item{Exp = } { Exponential}
+  \item{P2 = } { Persistence_function_2} \item{Loga = } { Logarithmic}
   \item{Kob = } { Kobayashi} \item{MMF = } { MMF} \item{Mon = } { Monod}
   \item{NegE = } { Negative_exponential} \item{CR = } { Chapman_Richards}
   \item{CW3 = } { Cumulative_Weibull_3_par.} \item{AR = } {

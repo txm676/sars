@@ -17,7 +17,7 @@ test_that("sar_average returns correct results", {
 
 test_that("sar_average using fit_collection object works", {
   data("galap")
-  ff <- sar_multi(data = galap, obj = c("power", "p1", "expo", "monod", 
+  ff <- sar_multi(data = galap, obj = c("power", "p1", "loga", "monod", 
                                         "linear"))
   expect_warning(sar_average(obj = ff, data = galap, normaTest = "none",
                     neg_check = FALSE), "normaTest argument does not match the 

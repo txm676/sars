@@ -16,19 +16,19 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
 
 #  x1 <- c("Power", "PowerR", "Extended_Power_model_1", 
           #"Extended_Power_model_2", "Persistence_function_1",
-         # "Persistence_function_2", "Exponential", "Kobayashi", "MMF", 
+         # "Persistence_function_2", "Logarithmic", "Kobayashi", "MMF", 
          # "Monod", "Negative_exponential", "Chapman_Richards", 
         #  "Cumulative_Weibull_3_par.", "Asymptotic_regression", 
         #  "Rational_function","Gompertz", "Cumulative_Weibull_4_par.", 
         #  "Beta-P_cumulative", "Heleg(Logistic)", "Linear_model")
 
   x2 <- c("sar_power(", "sar_powerR(", "sar_epm1(", "sar_epm2(", "sar_p1(",
-          "sar_p2(", "sar_expo(", "sar_koba(", "sar_mmf(", "sar_monod(",
+          "sar_p2(", "sar_loga(", "sar_koba(", "sar_mmf(", "sar_monod(",
           "sar_negexpo(", "sar_chapman(", "sar_weibull3(", "sar_asymp(", 
           "sar_ratio(", "sar_gompertz(", "sar_weibull4(", "sar_betap(", 
           "sar_heleg(", "sar_linear(")
 
-  x3 <-   c("power", "powerR","epm1","epm2","p1","p2","expo","koba","mmf",
+  x3 <-   c("power", "powerR","epm1","epm2","p1","p2","loga","koba","mmf",
             "monod","negexpo","chapman",
             "weibull3","asymp","ratio","gompertz","weibull4","betap","heleg",
             "linear")

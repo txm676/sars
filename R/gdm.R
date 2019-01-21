@@ -11,7 +11,7 @@
 #'   column should include island area values, one island richness values and
 #'   one island age values.
 #' @param model Name of the SAR model to be used to fit the GDM. Can be any
-#'   of 'expo', 'linear', 'power', or 'all'.
+#'   of 'logo', 'linear', 'power', or 'all'.
 #' @param mod_sel Logical argument specifying whether, for a given SAR model,
 #'   a model comparison of the GDM with other nested candidate models should
 #'   be undertaken.
@@ -22,16 +22,16 @@
 #'   S = richness, A =area, and T = island age. The T^2 term is included as
 #'   the GDM predicts a hump-shaped relationship between island richness and
 #'   island age. However, a variety of different SAR models have been used to
-#'   fit the GDM and three options are available here: the exponential,
+#'   fit the GDM and three options are available here: the logarithmic,
 #'   linear and power SAR model. Model fitting follows the procedure in
 #'   Cardoso et al. (2015). For example, when the linear SAR model is used,
 #'   the GDM can be fitted using the expression: S ~ c + z*Area + k*T +
 #'   j*T^2, where c,z,k,j are free parameters to be estimated.
 #'
 #'   For all three SAR models, the GDM is fitted using non-linear regression
-#'   and the \code{\link{nls}} function. For ease of fitting, the exponential
+#'   and the \code{\link{nls}} function. For ease of fitting, the logarithmic
 #'   and power SAR models are included in their logarithmic form, e.g. the
-#'   exponential model is fitted using: S ~ c + x*log(A), where c and x are
+#'   logarithmic model is fitted using: S ~ c + x*log(A), where c and x are
 #'   parameters to be estimated.
 #'
 #'   For each model fit, the residual standard error (RSE) and AIC values are
@@ -44,9 +44,9 @@
 #'   time (i.e. no time^2 term), just area, and an intercept only model. The
 #'   intercept only model is fitted using \code{lm} rather than \code{nls}.
 #'   If \code{model == "all"}, the GDM is fitted three times (using the
-#'   power, expo and linear SAR models), and the fits compared using
+#'   power, loga and linear SAR models), and the fits compared using
 #'   \code{AIC}.
-#' @return An object of class 'gdm'. If \code{model} is one of "expo",
+#' @return An object of class 'gdm'. If \code{model} is one of "loga",
 #'   "linear" or "power" the returned object is a \code{\link{nls}} model fit
 #'   object. If \code{model == "all"}, the returned object is a list with
 #'   three elements; each element being a \code{nls} fit object.
@@ -77,16 +77,16 @@
 #'   alpha and beta taxon, phylogenetic and functional diversity. Methods in
 #'   Ecology and Evolution, 6, 232-236.
 #' @examples
-#' #create an example dataset and fit the GDM using the exponential SAR model
+#' #create an example dataset and fit the GDM using the logarithmic SAR model
 #' data(galap)
 #' galap$t <- rgamma(16, 5, scale = 2)
-#' g <- gdm(galap, model = "expo", mod_sel = FALSE)
+#' g <- gdm(galap, model = "loga", mod_sel = FALSE)
 #'
-#' #Compare the GDM (using the exponential model) with other nested candidate
+#' #Compare the GDM (using the logarithmic model) with other nested candidate
 #' #models 
-#' g2 <- gdm(galap, model = "expo", mod_sel = TRUE)
+#' g2 <- gdm(galap, model = "loga", mod_sel = TRUE)
 #' 
-#' #compare the GDM fitted using the linear, exponential and power SAR models
+#' #compare the GDM fitted using the linear, logarithmic and power SAR models
 #' g3 <- gdm(galap, model = "all", mod_sel = FALSE)
 #' @export
 
@@ -101,7 +101,7 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3)){
     warning("More than three columns in dataframe: using the first three")
     data <- data[, 1:3]
   }
-  if (!(model %in% c("power", "expo", "linear", "all"))) {
+  if (!(model %in% c("power", "loga", "linear", "all"))) {
     stop("provided model name not available")
   }
   if (!is.logical(mod_sel)) stop("mod_sel argument should be TRUE or FALSE")
@@ -115,9 +115,9 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3)){
   
   if (model == "all") allMods <- vector("list", length = 3)
 
-  if (model == "expo" | model == "all"){
+  if (model == "loga" | model == "all"){
       
-    #cat("\n","Fitting the GDM using the exponential model", "\n")
+    #cat("\n","Fitting the GDM using the logarithmic model", "\n")
 
      fit <- nls(formula = 
                   SR ~ Int + A * log(Area) + Ti * Time + Ti2 * Time ^ 2, 
@@ -140,7 +140,7 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3)){
      } else {
        class(fit) <- c("gdm", "nls")
      }
-     attr(fit, "Type") <- "expo"
+     attr(fit, "Type") <- "loga"
      attr(fit, "mod_sel") <- mod_sel
      if (model == "all") allMods[[1]] <- fit
      
