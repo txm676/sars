@@ -38,7 +38,7 @@ print.summary.sars <- function(x, ...){
     if ("power" %in% names(object)){
       cat("Power (non-linear) parameters:\n",
           "c =", object$power[1], "\n",
-          "z =", object$power[2])
+          "z =", object$power[2], "\n")
     }
     }#eo if lin_pow
 
