@@ -24,6 +24,9 @@ abundance - site matrix.
 As this is version 1.1.0 of the package, it is possible that there are
 some bugs in places. Please report any issues to us via GitHub.
 
+A website for the package can be found here:
+<https://txm676.github.io/sars/>
+
 Table of Contents
 -----------------
 
@@ -62,7 +65,7 @@ data set and get a multi-model SAR:
     #> 
     #>  Now attempting to fit the 20 SAR models: 
     #> 
-    #> --  multi_sars -------------------------------------------------------------- multi-model SAR --
+    #> --  multi_sars -------------------------------------------------------- multi-model SAR --
     #> > power    : v
     #> > powerR   : v
     #> > epm1     : v
@@ -91,7 +94,7 @@ data set and get a multi-model SAR:
     #> Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model
     #> 16 remaining models used to construct the multi  SAR:
     #>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-    #> ------------------------------------------------------------------------------------------------
+    #> ------------------------------------------------------------------------------------------
 
 Each of the ‘fitted’ objects have corresponding plot methods:
 

@@ -33,6 +33,8 @@ site matrix.
 As this is version 1.1.0 of the package, it is possible that there are some bugs in places. Please report any
 issues to us via GitHub.
 
+A website for the package can be found here: https://txm676.github.io/sars/
+
 ## Table of Contents
 
 - [Installation](#installation)
@@ -98,5 +100,6 @@ plot(mm_galap, pLeg = FALSE)
 ## Troubleshoutting
 
 If, despite the :heart: brought during the programming of this R :package: and writing of this documentation, you have difficulties to install or run sars, if you have questions about the procedures or calculations, or if you want to report bugs :beetle:, do not hesitate to connect with us on [GitHub](https://github.com/txm676/sars).
+
 
 ## References
