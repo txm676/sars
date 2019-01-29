@@ -12,7 +12,7 @@ Description: Implements the basic elements of the multi-model
     The package is scalable and users can easily create their own model and data objects. Additional
     SAR related functions are provided.
 License: GPL-3
-URL: https://github.com/txm676/sars
+URL: https://github.com/txm676/sars, file:///C:/Users/Tom/Desktop/sars/docs/index.html
 BugReports: https://github.com/txm676/sars/issues
 Imports:
     dplyr,

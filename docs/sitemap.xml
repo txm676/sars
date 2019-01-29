@@ -7,13 +7,13 @@
     <loc>https://txm676.github.io/sars//reference/aegean.html</loc>
   </url>
   <url>
-    <loc>https://txm676.github.io/sars//reference/cole_sim.html</loc>
-  </url>
-  <url>
     <loc>https://txm676.github.io/sars//reference/coleman.html</loc>
   </url>
   <url>
-    <loc>https://txm676.github.io/sars//reference/fit_collection.html</loc>
+    <loc>https://txm676.github.io/sars//reference/cole_sim.html</loc>
+  </url>
+  <url>
+    <loc>https://txm676.github.io/sars//reference/display_sars_models.html</loc>
   </url>
   <url>
     <loc>https://txm676.github.io/sars//reference/galap.html</loc>
@@ -37,7 +37,16 @@
     <loc>https://txm676.github.io/sars//reference/plot.sars.html</loc>
   </url>
   <url>
+    <loc>https://txm676.github.io/sars//reference/sars-package.html</loc>
+  </url>
+  <url>
+    <loc>https://txm676.github.io/sars//reference/sars_models.html</loc>
+  </url>
+  <url>
     <loc>https://txm676.github.io/sars//reference/sar_asymp.html</loc>
+  </url>
+  <url>
+    <loc>https://txm676.github.io/sars//reference/sar_average.html</loc>
   </url>
   <url>
     <loc>https://txm676.github.io/sars//reference/sar_betap.html</loc>
@@ -52,9 +61,6 @@
     <loc>https://txm676.github.io/sars//reference/sar_epm2.html</loc>
   </url>
   <url>
-    <loc>https://txm676.github.io/sars//reference/sar_expo.html</loc>
-  </url>
-  <url>
     <loc>https://txm676.github.io/sars//reference/sar_gompertz.html</loc>
   </url>
   <url>
@@ -65,6 +71,9 @@
   </url>
   <url>
     <loc>https://txm676.github.io/sars//reference/sar_linear.html</loc>
+  </url>
+  <url>
+    <loc>https://txm676.github.io/sars//reference/sar_loga.html</loc>
   </url>
   <url>
     <loc>https://txm676.github.io/sars//reference/sar_mmf.html</loc>
@@ -98,9 +107,6 @@
   </url>
   <url>
     <loc>https://txm676.github.io/sars//reference/sar_weibull4.html</loc>
-  </url>
-  <url>
-    <loc>https://txm676.github.io/sars//reference/sars-package.html</loc>
   </url>
   <url>
     <loc>https://txm676.github.io/sars//reference/summary.sars.html</loc>

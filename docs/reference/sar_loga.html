@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fit the Monod model — sar_monod • sars</title>
+<title>Fit the Logarithmic model — sar_loga • sars</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Fit the Monod model — sar_monod" />
+<meta property="og:title" content="Fit the Logarithmic model — sar_loga" />
 
-<meta property="og:description" content="Fit the Monod model to SAR data." />
+<meta property="og:description" content="Fit the Logarithmic model to SAR data." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -111,18 +111,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fit the Monod model</h1>
-    <small class="dont-index">Source: <a href='https://github.com/txm676/sars/blob/master/R/sar_monod.R'><code>R/sar_monod.R</code></a></small>
-    <div class="hidden name"><code>sar_monod.Rd</code></div>
+    <h1>Fit the Logarithmic model</h1>
+    <small class="dont-index">Source: <a href='https://github.com/txm676/sars/blob/master/R/sar_loga.R'><code>R/sar_loga.R</code></a></small>
+    <div class="hidden name"><code>sar_loga.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Fit the Monod model to SAR data.</p>
+    <p>Fit the Logarithmic model to SAR data.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>sar_monod</span>(<span class='no'>data</span>, <span class='kw'>start</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>grid_start</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>normaTest</span> <span class='kw'>=</span>  <span class='st'>'lillie'</span>,
+    <pre class="usage"><span class='fu'>sar_loga</span>(<span class='no'>data</span>, <span class='kw'>start</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>grid_start</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>normaTest</span> <span class='kw'>=</span>  <span class='st'>'lillie'</span>,
   <span class='kw'>homoTest</span> <span class='kw'>=</span> <span class='st'>'cor.fitted'</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -209,29 +209,31 @@ residuals with the area values), or 'none' (no residuals homogeneity test is und
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>galap</span>)
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>sar_monod</span>(<span class='no'>galap</span>)
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>sar_loga</span>(<span class='no'>galap</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; 
 #&gt; Model:
-#&gt; Monod
+#&gt; Logarithmic
 #&gt; 
 #&gt; Call: 
-#&gt; S == d/(1 + c * A^(-1))
+#&gt; S == c + z * log(A)
 #&gt; 
 #&gt; Did the model converge: TRUE
 #&gt; 
 #&gt; Residuals:
 #&gt;       0%      25%      50%      75%     100% 
-#&gt; -145.600  -40.225    0.750   19.950  127.000 
+#&gt; -164.000  -25.675   11.350   38.725  115.700 
 #&gt; 
 #&gt; Parameters:
 #&gt;      Estimate  Std. Error     t value    Pr(&gt;|t|)        2.5%  97.5%
-#&gt; d  2.2230e+02  4.2520e+01  5.2281e+00  1.2785e-04  1.3726e+02 307.34
-#&gt; c  4.6736e+01  3.5353e+01  1.3220e+00  2.0737e-01 -2.3970e+01 117.44
+#&gt; c   0.2915341  34.5985767   0.0084262   0.9933958 -68.9056193 69.489
+#&gt; z  30.2802630   8.3203931   3.6392827   0.0026812  13.6394768 46.921
 #&gt; 
-#&gt; R-squared: 0.54, Adjusted R-squared: 0.47
-#&gt; AIC: 139.84, AICc: 141.84, BIC: 142.16
-#&gt; Observed shape: convex up, Asymptote: TRUE
-#&gt; </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>)</div><div class='img'><img src='sar_monod-1.png' alt='' width='700' height='433' /></div></pre>
+#&gt; R-squared: 0.49, Adjusted R-squared: 0.41
+#&gt; AIC: 141.78, AICc: 143.78, BIC: 144.1
+#&gt; Observed shape: convex up, Asymptote: FALSE
+#&gt; 
+#&gt; 
+#&gt; Warning: The fitted values of the model contain negative values (i.e. negative species richness values)</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>)</div><div class='img'><img src='sar_loga-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
