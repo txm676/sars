@@ -3,7 +3,7 @@ Type: Package
 Title: Fit and Compare Species-Area Relationship Models Using Multimodel Inference
 Version: 1.1.0
 Authors@R: c(person("Thomas J.", "Matthews", email = "txm676@gmail.com",
-                  role = c("aut", "cre")),
+                  role = c("aut", "cre"), comment = c(ORCID = "0000-0002-7624-244X")),
             person("Francois", "Guilhaumon", email = "francois.guilhaumon@ird.fr",
                   role = c("aut"), comment = c(ORCID = "0000-0003-4707-8932")))
 Description: Implements the basic elements of the multi-model
