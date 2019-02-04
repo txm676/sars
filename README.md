@@ -55,27 +55,27 @@ mm_galap <- sar_average(data = galap)
 #> 
 #>  Now attempting to fit the 20 SAR models: 
 #> 
-#> ──  multi_sars ───────────────────────────────────────────────────────────────────────────── multi-model SAR ──
-#> → power    : ✔
-#> → powerR   : ✔
-#> → epm1     : ✔
-#> → epm2     : ✔
-#> → p1       : ✔
-#> → p2       : ✔
-#> → loga     : ✔
-#> → koba     : ✔
-#> → mmf      : ✔
-#> → monod    : ✔
-#> → negexpo  : ✔
-#> → chapman  : Warning: could not compute parameters statistics
-#> → weibull3 : ✔
-#> → asymp    : ✔
-#> → ratio    : ✔
-#> → gompertz : ✔
-#> → weibull4 : ✔
-#> → betap    : ✔
-#> → heleg    : ✔
-#> → linear   : ✔
+#> --  multi_sars ------------------------------------------------------------------------- multi-model SAR --
+#> > power    : v
+#> > powerR   : v
+#> > epm1     : v
+#> > epm2     : v
+#> > p1       : v
+#> > p2       : v
+#> > loga     : v
+#> > koba     : v
+#> > mmf      : v
+#> > monod    : v
+#> > negexpo  : v
+#> > chapman  : Warning: could not compute parameters statistics
+#> > weibull3 : v
+#> > asymp    : v
+#> > ratio    : v
+#> > gompertz : v
+#> > weibull4 : v
+#> > betap    : v
+#> > heleg    : v
+#> > linear   : v
 #> 
 #> Model fitting completed - all models succesfully fitted.  Now undertaking model validation checks.
 #> Additional models  will be excluded if necessary:
@@ -84,7 +84,7 @@ mm_galap <- sar_average(data = galap)
 #> Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model
 #> 16 remaining models used to construct the multi  SAR:
 #>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-#> ───────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#> -----------------------------------------------------------------------------------------------------------
 ```
 
 Each of the 'fitted' objects have corresponding plot methods:
@@ -109,8 +109,8 @@ plot(mm_galap, pLeg = FALSE)
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
-Troubleshoutting
-----------------
+Troubleshooting
+---------------
 
 If, despite the :heart: brought during the programming of this R :package: and writing of this documentation, you have difficulties to install or run sars, if you have questions about the procedures or calculations, or if you want to report bugs :beetle:, do not hesitate to connect with us on [GitHub](https://github.com/txm676/sars).
 
