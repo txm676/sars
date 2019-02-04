@@ -5,7 +5,7 @@ Version: 1.1.0
 Authors@R: c(person("Thomas J.", "Matthews", email = "txm676@gmail.com",
                   role = c("aut", "cre")),
             person("Francois", "Guilhaumon", email = "francois.guilhaumon@ird.fr",
-                  role = c("aut")))
+                  role = c("aut"), comment = c(ORCID = "0000-0003-4707-8932")))
 Description: Implements the basic elements of the multi-model
     inference paradigm for up to twenty species-area relationship models (SAR), using simple
     R list-objects and functions, as in Triantis et al. 2012 <DOI:10.1111/j.1365-2699.2011.02652.x>.

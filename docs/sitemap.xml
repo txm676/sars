@@ -7,10 +7,10 @@
     <loc>https://txm676.github.io/sars//reference/aegean.html</loc>
   </url>
   <url>
-    <loc>https://txm676.github.io/sars//reference/coleman.html</loc>
+    <loc>https://txm676.github.io/sars//reference/cole_sim.html</loc>
   </url>
   <url>
-    <loc>https://txm676.github.io/sars//reference/cole_sim.html</loc>
+    <loc>https://txm676.github.io/sars//reference/coleman.html</loc>
   </url>
   <url>
     <loc>https://txm676.github.io/sars//reference/display_sars_models.html</loc>
@@ -35,12 +35,6 @@
   </url>
   <url>
     <loc>https://txm676.github.io/sars//reference/plot.sars.html</loc>
-  </url>
-  <url>
-    <loc>https://txm676.github.io/sars//reference/sars-package.html</loc>
-  </url>
-  <url>
-    <loc>https://txm676.github.io/sars//reference/sars_models.html</loc>
   </url>
   <url>
     <loc>https://txm676.github.io/sars//reference/sar_asymp.html</loc>
@@ -107,6 +101,12 @@
   </url>
   <url>
     <loc>https://txm676.github.io/sars//reference/sar_weibull4.html</loc>
+  </url>
+  <url>
+    <loc>https://txm676.github.io/sars//reference/sars-package.html</loc>
+  </url>
+  <url>
+    <loc>https://txm676.github.io/sars//reference/sars_models.html</loc>
   </url>
   <url>
     <loc>https://txm676.github.io/sars//reference/summary.sars.html</loc>

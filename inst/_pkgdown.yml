@@ -10,10 +10,6 @@ navbar:
   left:
     - icon: fa-home fa-lg
       href: index.html
-    - text: "Articles"
-      menu:
-        - text: "package manuscript"
-          href: articles/sars_ms.html
     - text: "Reference"
       href: reference/index.html
   right:

@@ -1,3 +1,25 @@
+################################################################################
+#
+#              MODEL FACTORY
+#
+# This file contains the "model factory" machinery of the sars R package
+# The function "model_factory" is applied over all the files present in
+# the "inst/non_lin_models" directory. Each of these file define a particular
+# non linear SAR model (see files in the "inst/non_lin_models" for examples).
+# The function "model_factory" creates the individual non linear models .R files 
+# present in the "R" directory, providing a mechanism for expanding the number
+# of non linear SAR models included in the R package:
+#
+# 1. clone the "https://github.com/txm676/sars" repository
+# 2. create a "model file" containing the (list) description of the model and
+#    save it in the "inst/non_lin_models" directory
+# 3. source the "cat_roxygen" and "model_factory" functions
+# 4. run the "model_factory" fucntion (see comand lines at the end of this file)
+# 5. build the sars package
+# 
+################################################################################
+
+
 ########################
 #function to cat rOxygen comments
 ########################
@@ -205,14 +227,14 @@ model_factory <- function(f, overwrite = FALSE){
   
 }#eo model_factory
 
-#using it
 
-#setwd("C:/Users/Tom/Desktop/sars")
+########################
+#using the model factory
+########################
 
 modFiles <- list.files(file.path(getwd(),"inst","non_lin_models"))
 
 lapply(modFiles, model_factory, overwrite = TRUE)
 
-#setwd("C:/Users/Tom/Desktop")
 
 

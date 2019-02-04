@@ -1,6 +1,6 @@
 ---
 output:
-  md_document
+  github_document
 bibliography: "inst/REFERENCES.bib"
 ---
 
