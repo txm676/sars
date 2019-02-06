@@ -3,13 +3,11 @@
 #predicted values:
 
 sa <- function(x, a){
-  sa <- (1 - x) ^ a
-  return(sa)
+  (1 - x) ^ a
 }
 
 sa2 <- function(x, a){
-  sa2 <- (1 - x)^(2 * a)
-  return(sa2)
+  (1 - x)^(2 * a)
 }
 
 
@@ -59,15 +57,15 @@ sa2 <- function(x, a){
 coleman <- function(data, area){
   if (any(area <= 0)) stop("Area value <=0")
   if (anyNA(data) | anyNA(area)) stop("NAs present in data")
-  if (!(is.matrix(data) | is.data.frame(data))) 
+  if (!(is.matrix(data) | is.data.frame(data)))
     stop("data must be a matrix or dataframe")
   if (is.matrix(data)) data <- as.data.frame(data)
 
-  ##check each species has 1 or more individuals/each sites as at 
+  ##check each species has 1 or more individuals/each sites as at
   #least one species present
-  if (any(colSums(data) == 0)) 
+  if (any(colSums(data) == 0))
     warning("Matrix contains sites with no species")
-  if (any(rowSums(data) == 0)) 
+  if (any(rowSums(data) == 0))
     warning("Matrix contains species which were not sampled")
 
   tot_sp <- nrow(data) #Number of species
@@ -110,5 +108,5 @@ coleman <- function(data, area){
 res <- list("Predicted_values" = s_hat, "Standard_deviation" = sd,
             "Relative_areas" = ra, "Species_richness" = ob_sp)
 class(res) <- "coleman"
-return(res)
+res
 }

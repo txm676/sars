@@ -53,8 +53,8 @@
 summary.sars <- function(object, ...){
   if (attributes(object)$type == "lin_pow"){
     rownames(object$Model$coefficients) <- c("LogC", "z")
-    fit_df <- round(data.frame(Area = object$data$A, 
-                               Fitted = object$calculated), 2) 
+    fit_df <- round(data.frame(Area = object$data$A,
+                               Fitted = object$calculated), 2)
     res <- list("Model" = object$Model, df = fit_df,
                 "normaTest" = object$normaTest, "homoTest" = object$homoTest)
     if ("power" %in% names(object)){
@@ -63,7 +63,7 @@ summary.sars <- function(object, ...){
       res$power <- round(c("logc" = cp, "z" = zp), 2)
     }
   }
-  
+
   if (attributes(object)$type == "fit"){
     name <- object$model$name
     resid <- object$residuals
@@ -80,39 +80,38 @@ summary.sars <- function(object, ...){
     conv <- object$verge
     negCheck <- ifelse(any(object$calculated < 0), 1, 0)
     res <- list("Model" = name, "residuals" = round(resid, 1),
-                "Parameters" = pars_tab, 
+                "Parameters" = pars_tab,
                 "parNames" = parN, "formula" = formula, "AIC" = round(ic, 2),
                 "AICc" = round(ic2, 2), "BIC" = round(bi, 2),
                 "R2" = round(R2, 2), "R2a" = round(R2a, 2),
-                "observed_shape" = shape, "asymptote" = asymp, 
+                "observed_shape" = shape, "asymptote" = asymp,
                 "convergence" = conv, "normaTest" = object$normaTest,
-                "homoTest" = object$homoTest, 
+                "homoTest" = object$homoTest,
                 "Negative_values" = negCheck)
   }
-  
-  
-  if (attributes(object)$type == "fit_collection"){ 
+
+
+  if (attributes(object)$type == "fit_collection"){
     return(cat("\nNo summary method for fit_collection\n", sep = ""))
-    
   }
-  
+
   if (attributes(object)$type == "multi"){
     Mods <- as.vector(object$details$mod_names)
     nf <- as.vector(object$details$no_fit)
     cri <- object$details$ic
     ranks <- object$details$weights_ics
-    df <- data.frame("Model" = names(ranks), 
+    df <- data.frame("Model" = names(ranks),
                      "Weight" = as.vector(ranks))
-    df$IC <- vapply(object$details$fits, 
+    df$IC <- vapply(object$details$fits,
                     function(x){x[[cri]]}, FUN.VALUE = numeric(1))
     colnames(df)[3] <- paste(cri)
-    df$R2 <- vapply(object$details$fits, 
+    df$R2 <- vapply(object$details$fits,
                     function(x){x$R2}, FUN.VALUE = numeric(1))
-    df$R2a <- vapply(object$details$fits, 
+    df$R2a <- vapply(object$details$fits,
                      function(x){x$R2a}, FUN.VALUE = numeric(1))
-    df$Shape <- vapply(object$details$fits, 
+    df$Shape <- vapply(object$details$fits,
                     function(x){x$observed_shape}, FUN.VALUE = character(1))
-    df$Asymptote <- vapply(object$details$fits, 
+    df$Asymptote <- vapply(object$details$fits,
                            function(x){x$asymptote}, FUN.VALUE = logical(1))
     df <- df[order(-df$Weight),]
     df[, 2:5] <- round(df[, 2:5], 3)
@@ -120,10 +119,8 @@ summary.sars <- function(object, ...){
     res <- list("Models" = Mods, "Criterion" = cri, "Model_table" = df,
                 "no_fit" = nf)
   }
-  
+
   class(res) <- "summary.sars"
   attr(res, "type") <- attr(object, "type")
-  return(res)
+  res
 }
-
-
