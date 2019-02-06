@@ -20,7 +20,7 @@ averaged multimodel curve.}
 
 \item{data}{A dataset in the form of a dataframe with two columns: the first
 with island/site areas, and the second with the species richness of each
-island/site. If \code{obj} is a fit_collection object, \code{data} should 
+island/site. If \code{obj} is a fit_collection object, \code{data} should
 be NULL.}
 
 \item{crit}{The criterion used to compare models and compute the model
