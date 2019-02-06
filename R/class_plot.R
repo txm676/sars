@@ -51,7 +51,8 @@
 #'   \code{\link[graphics]{par}},
 #'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
-#' @import graphics
+#' @importFrom graphics par plot legend barplot
+#' @importFrom graphics points lines polygon title matlines matplot
 #' @examples
 #' data(galap)
 #' #fit and plot a sars object of Type fit.
@@ -65,33 +66,33 @@
 #' @export
 
 
-plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL, 
+plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
                       pch = 16, cex = 1.2,
-                      pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0, 
+                      pcol = 'dodgerblue2', ModTitle = NULL, TiAdj = 0,
                       TiLine = 0.5, cex.main = 1.5,
                       cex.lab = 1.3, cex.axis = 1, yRange = NULL,
-                      lwd = 2, lcol = 'dodgerblue2', di = NULL, 
+                      lwd = 2, lcol = 'dodgerblue2', di = NULL,
                       pLeg = FALSE, ...)
 {
 
 
-  if (mfplot & attributes(x)$type != "fit_collection") 
+  if (mfplot & attributes(x)$type != "fit_collection")
     stop("mfplot argument only for use with Type 'fit_collection'")
 
 
   if (is.null(xlab)){
-    if (attributes(x)$type == "fit" | 
+    if (attributes(x)$type == "fit" |
         attributes(x)$type == "fit_collection"){
         xlab <- "Area"
     } else if (attributes(x)$type == "lin_pow"){
       xlab <- "Log(Area)"
     } else {
-      stop ("Type attribute not recognised")
+      stop("Type attribute not recognised")
     }
   }
 
   if (is.null(ylab)){
-    if (attributes(x)$type == "fit" | 
+    if (attributes(x)$type == "fit" |
         attributes(x)$type == "fit_collection"){
       ylab <- "Species richness"
     } else if (attributes(x)$type == "lin_pow"){
@@ -107,17 +108,17 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
     yy <- df$S
     ff <- x$calculated
     if (is.null(yRange)){
-    yMax <- max(c(yy,ff))#fitted line can be above the largest observed point
-    yMin <- min(c(yy,ff))
-    yRange <- c(yMin, yMax)
+      yMax <- max(c(yy,ff))#fitted line can be above the largest observed point
+      yMin <- min(c(yy,ff))
+      yRange <- c(yMin, yMax)
     }
 
     plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
-         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, 
+         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,
          ylim = yRange, ...)
-    title(main = ModTitle, adj = TiAdj, line = TiLine, 
+    title(main = ModTitle, adj = TiAdj, line = TiLine,
           cex.main = cex.main, ...)
-    lines(x = xx, y = ff, lwd = lwd, col = lcol,  ...) 
+    lines(x = xx, y = ff, lwd = lwd, col = lcol,  ...)
 
   }
 
@@ -128,7 +129,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
     if (!is.null(ModTitle)){
       if (length(ModTitle) == 1 && ModTitle == "")
         ModTitle <- rep("", length(x))
-      if (length(ModTitle) != length(x)) 
+      if (length(ModTitle) != length(x))
         stop("The length of ModTitle does not match the length of x")
       for (i in seq_along(x)){
         x[[i]]$model$name <- ModTitle[i]
@@ -138,7 +139,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
     if (is.null(di)) {
       if (length(x) == 2){ #of length(x) = 2 the dividing by two doesnt work
         par(mfrow = c(1, 2))
-      }else{
+      } else{
       di <- ceiling(length(x) / 2)
       par(mfrow = c(di, di))
       }#eo if x==2
@@ -153,7 +154,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
       ff <- x$calculated
       ModTitle <- x$model$name
       if (is.null(yRange)){
-        yMax <- max(c(yy,ff))#fitted line can be above the largest observed 
+        yMax <- max(c(yy,ff))#fitted line can be above the largest observed
         yMin <- min(c(yy,ff))
         yRange <- c(yMin, yMax)
       }
@@ -161,7 +162,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
       plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
            cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,
            ylim = yRange, ...)
-      title(main = ModTitle, adj = TiAdj, line = TiLine, 
+      title(main = ModTitle, adj = TiAdj, line = TiLine,
             cex.main = cex.main, ...)
       lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
     })
@@ -193,24 +194,24 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
       #if legend to be included, work out size of plot
       if (pLeg == TRUE){
         #xMax <- max(xx)*0.05
-        #lSiz <- legend(max(xx) +xMax, max(yy), legend = nams, 
+        #lSiz <- legend(max(xx) +xMax, max(yy), legend = nams,
         #horiz = F, lty = 1:ncol(mf2), col=1:ncol(mf2), plot = F)
         #legWid <- lSiz$rect$left + lSiz$rect$w
         xMAX <- max(xx) + max(xx) * 0.5
-        matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, 
+        matplot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch,
                 col = pcol,
-             cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, 
+             cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,
              xlim = c(min(xx), xMAX),
              ylim = yRange, bty = "L")
       } else {
-      plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
+        plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
            cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,
            ylim = yRange, bty = "L")
       }
       matlines(xx, mf2, lwd = lwd, lty = seq_along(mf2), col=seq_along(mf2))
       title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main)
-     if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax, 
-                              legend = nams, horiz = FALSE, 
+     if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax,
+                              legend = nams, horiz = FALSE,
                               lty = seq_along(mf2),col=seq_along(mf2))
     }#eo mfplot
 
@@ -229,11 +230,11 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
       yRange <- c(yMin, yMax)
     }
 
-    plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, 
+    plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch,
          col = pcol,
          cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,
          ylim = yRange, ...)
-    title(main = ModTitle, adj = TiAdj, line = TiLine, 
+    title(main = ModTitle, adj = TiAdj, line = TiLine,
           cex.main = cex.main, ...)
     lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
   }
@@ -298,7 +299,6 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
 #'   \code{\link[graphics]{par}},
 #'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
-#' @import graphics
 #' @note When plotting all model fits on the same plot with a legend it is
 #'   necessary to manually extend your plotting window (height and width;
 #'   e.g. the 'Plots' window of R studio) before plotting to ensure the
@@ -350,17 +350,17 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
 
 plot.multi <- function(x, type = "multi", allCurves = TRUE,
                             xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
-                      pcol = 'dodgerblue2', ModTitle = NULL, 
+                      pcol = 'dodgerblue2', ModTitle = NULL,
                       TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
                       cex.lab = 1.3, cex.axis = 1, yRange = NULL,
-                      lwd = 2, lcol = 'dodgerblue2', pLeg = TRUE, 
+                      lwd = 2, lcol = 'dodgerblue2', pLeg = TRUE,
                       modNames = NULL, cex.names=.88,
                       subset_weights = NULL, confInt = FALSE, ...)
 {
 
   if (confInt){
-    if (length(x$details$confInt) == 1) 
-      stop ("No confidence interval information in the fit object")
+    if (length(x$details$confInt) == 1)
+      stop("No confidence interval information in the fit object")
     CI <- x$details$confInt
   }
 
@@ -369,7 +369,7 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   dat <- x$details$fits
 
   #filter out bad models
-  #bad <- vapply(dat, function(x) any(is.na(x$sigConf)), 
+  #bad <- vapply(dat, function(x) any(is.na(x$sigConf)),
   #FUN.VALUE = logical(1))
   #dat2 <- dat[-which(bad)]
   dat2 <- dat
@@ -393,16 +393,16 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   #weight
   akaikesum <- sum(exp( -0.5*(delt)))
   aw <- exp(-0.5*delt) / akaikesum
-  if (round(sum(aw), 0) != 1) stop("IC weights do not sum to 1")#have to 
+  if (round(sum(aw), 0) != 1) stop("IC weights do not sum to 1")#have to
   #round as sometimes fractionally different to 1
 
   #get weighted fitted values for each model
   mf3 <- matrix(nrow = nrow(mf2), ncol = ncol(mf2))
-  for (i in seq_along(aw)) {mf3[ ,i] <- mf2[ ,i] * aw[i]}
+  for (i in seq_along(aw)) mf3[ ,i] <- mf2[ ,i] * aw[i]
   wfv <- rowSums(mf3)
 
   #this is a test error for development
-  if (!all(round(wfv) == round(x$mmi))) 
+  if (!all(round(wfv) == round(x$mmi)))
     stop("Multimodel fitted values do not match between functions")
 
   if (allCurves){
@@ -448,8 +448,8 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
     if (pLeg == TRUE){
      # xMax <- max(xx)*0.05
       #plot(x = xx, y = yy, xlim = c(min(xx), xMAX), ylim = yRange)
-     # lSiz <- legend(max(xx) + xMax, max(c(yy,unlist(mf2))), 
-      #legend = nams2, horiz = F, lty = 1:ncol(mf2), 
+     # lSiz <- legend(max(xx) + xMax, max(c(yy,unlist(mf2))),
+      #legend = nams2, horiz = F, lty = 1:ncol(mf2),
       #col=1:ncol(mf2), plot = F)
      # legWid <- lSiz$rect$left + lSiz$rect$w
       #xMAX <- legWid + (legWid * 0.01)
@@ -487,8 +487,8 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
       }#eo confInt
     }#eo no legend
       matlines(xx, mf2, lwd = lwd, lty = seq_along(mf2), col=seq_along(mf2))
-      if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax,
-                               legend = nams2, horiz = FALSE, 
+      if (pLeg) legend(max(xx) + (max(xx) * 0.05), yMax,
+                               legend = nams2, horiz = FALSE,
                                lty = seq_along(mf2), col=seq_along(mf2))
       title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main)
   } else if (!allCurves){
@@ -547,5 +547,5 @@ x2 <- c("Pow", "PowR", "E1", "E2", "P1", "P2", "Loga", "Kob", "MMF",
 df <- data.frame("Full_name" = x1, "Abbreviated_name" = x2)
 df2 <- df[(which(df$Full_name %in% nams)),]
 if (nrow(df2) != length(nams)) stop("Not enough matched model names")
-return(as.vector(df2$Abbreviated_name))
+as.vector(df2$Abbreviated_name)
 }

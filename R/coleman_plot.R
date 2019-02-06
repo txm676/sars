@@ -32,7 +32,6 @@
 #'   model is rejected if more than a third of the observed data points fall
 #'   beyond one standard deviation from the expected curve.
 #' @importFrom dplyr arrange_
-#' @import graphics
 #' @examples
 #' data(cole_sim)
 #' fit <- coleman(cole_sim[[1]], cole_sim[[2]])
@@ -40,18 +39,18 @@
 #' @export
 
 
-plot.coleman <- function(x, xlab = "Relative area (log transformed)", 
-                         ylab = "Species richness", pch = 16, cex = 1.2, 
+plot.coleman <- function(x, xlab = "Relative area (log transformed)",
+                         ylab = "Species richness", pch = 16, cex = 1.2,
            pcol = 'black', cex.lab = 1.3, cex.axis = 1,
-           lwd = 2, lcol1 = 'black', lcol2 = "darkgrey", ModTitle = NULL, 
+           lwd = 2, lcol1 = 'black', lcol2 = "darkgrey", ModTitle = NULL,
            TiAdj = 0, TiLine = 0.5, cex.main = 1.5, ...)
 {
     df <- data.frame(x$Predicted_values, x$Standard_deviation,
                    x$Relative_areas, x$Species_richness)
     colnames(df) <- c("pv", "sd", "ra", "os")
-    
+
     df <- arrange_(df, ~ra)#using standard evaluation
-    
+
     plot(x = log(df$ra), y = df$os, ylim = c(min((df$pv - df$sd)),
                                              max((df$pv + df$sd))),
          xlab = xlab, ylab = ylab, pch = pch, cex = cex, col = pcol,
@@ -60,7 +59,6 @@ plot.coleman <- function(x, xlab = "Relative area (log transformed)",
     lines(x = log(df$ra), y = (df$pv - df$sd), col = lcol2, lwd = lwd, ...)
     lines(x = log(df$ra), y = df$pv, col = lcol1, lwd = lwd, ...)
     if (!is.null(ModTitle)) title(main = ModTitle, adj = TiAdj,
-                                  line = TiLine, 
+                                  line = TiLine,
                                   cex.main = cex.main, ...)
     }
-
