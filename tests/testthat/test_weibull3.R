@@ -1,8 +1,6 @@
 context("sar_weibull3")
-library(sars)
 
 test_that("sar_weibull3 returns correct results", {
-  data(galap)
   fit <- sar_weibull3(galap)
   expect_equal(round(fit$AICc, 2), 144.92)
   expect_equal(as.vector(round(fit$par[2], 2)), 0.03)
@@ -13,7 +11,6 @@ test_that("sar_weibull3 returns correct results", {
 
 
 test_that("sar_weibull3 summary returns correct results", {
-  data(galap)
   fit <- sar_weibull3(galap)
   fs <- summary(fit)
   expect_equal(sum(fs$residuals), -77.2)
