@@ -55,7 +55,7 @@ A check is made for any islands with zero species. If any zero
 
   The \code{compare} argument can be used to compare the c and z values
   calculated using the log-log power model with that calculated using the
-  non-linear power model. Note that the log-log function returns logc.
+  non-linear power model. Note that the log-log function returns log(c).
 }
 \examples{
 data(galap)

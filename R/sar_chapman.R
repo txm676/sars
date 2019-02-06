@@ -2,9 +2,9 @@
 
 #' @description Fit the Chapman Richards model to SAR data.
 #' @usage sar_chapman(data, start = NULL, grid_start = NULL, normaTest =  'lillie',
-              
+
 #'   homoTest = 'cor.fitted')
-#' @param data A dataset in the form of a dataframe with two columns: 
+#' @param data A dataset in the form of a dataframe with two columns:
 #'   the first with island/site areas, and the second with the species richness
 #'   of each island/site.
 #' @param start NULL or custom parameter start values for the optimisation algorithm.
@@ -31,7 +31,7 @@
 
 #'   A selection of information criteria (e.g. AIC, BIC) are returned and can be used to compare models
 #'   (see also \code{\link{sar_average}})
-#' @return A list of class 'sars' with the following components: 
+#' @return A list of class 'sars' with the following components:
 #'   \itemize{
 #'     \item{par} { The model parameters}
 #'     \item{value} { Residual sum of squares}
@@ -67,9 +67,9 @@
 #' plot(fit)
 #' @export
 
-sar_chapman <- function(data, start = NULL, grid_start = NULL, 
+sar_chapman <- function(data, start = NULL, grid_start = NULL,
 normaTest =  "lillie", homoTest = "cor.fitted"){
-if (!(is.matrix(data) | is.data.frame(data)))  
+if (!(is.matrix(data) | is.data.frame(data)))
 stop('data must be a matrix or dataframe')
 if (is.matrix(data)) data <- as.data.frame(data)
 if (anyNA(data)) stop('NAs present in data')
@@ -86,20 +86,20 @@ model <- list(
   parLim  =  c("Rplus","R","R"),
   #initials values function
   init = function(data){
-    d=max(data$S) 
+    d=max(data$S)
     Z=(-log((-data$S/(max(data$S)+1))+1))/data$A
     z = mean(Z)
     c(d,z,1)}
 )
 
 model <- compmod(model)
-fit <- get_fit(model = model, data = data, start = start,  
-grid_start = grid_start, algo = 'Nelder-Mead', 
-       
+fit <- get_fit(model = model, data = data, start = start,
+grid_start = grid_start, algo = 'Nelder-Mead',
+
 normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
-if(is.na(fit$value)){
+if (is.na(fit$value)){
   return(list(value = NA))
-}else{ 
+} else{ 
   obs <- obs_shape(fit)
   fit$observed_shape <- obs$fitShape
   fit$asymptote <- obs$asymp

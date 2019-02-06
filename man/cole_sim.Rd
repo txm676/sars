@@ -9,7 +9,7 @@
   sites/islands. Each value in the matrix is the abundance of a species at a
   given site. The second element contains a vector of the areas of each site.}
 \source{
-Matthews et al. 2015. i
+Matthews et al. 2015.
 }
 \usage{
 data(cole_sim)

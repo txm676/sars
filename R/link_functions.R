@@ -1,14 +1,14 @@
 
 #  LINK FUNCTIONS FOR CONSTRAINT OPTIMIZATION (internal)
 
-transLink = function(x,boundType) {
+transLink <- function(x,boundType) {
 
   # fonction logit
   logit <- function(y) {
     log(y/(1-y))
   }#end of logit
 
-  if (length(x) ==1) {
+  if (length(x) == 1) {
     res <- switch(boundType,
                  R = x,
                  Rplus = log(x),
@@ -32,7 +32,7 @@ transLink = function(x,boundType) {
 
 ##
 
-backLink = function(x,boundType) {
+backLink <- function(x,boundType) {
 
   # fonction reciproque de la fonction logit
   invlogit <- function(x) {

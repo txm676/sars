@@ -1,6 +1,6 @@
 ########observed shape#######################
 
-#' @import stats
+#' @importFrom stats uniroot
 
 obs_shape <- function(x){
 
@@ -10,7 +10,7 @@ obs_shape <- function(x){
     data <- x$data
     pars <- x$par
     Areas <- seq(range(data$A)[1], range(data$A)[2], length.out = 9999)
-      
+
     #function to detect sign changes and provide roots
     getRoots <- function(fun, Areas, pars) {
         #values and sign of the function evaluated
@@ -18,7 +18,7 @@ obs_shape <- function(x){
         signs <- sign(values)
         minMax <- NA
         sigCh <- vector()
-        
+
         for (i in 1:(length(signs)-1)) {
           if (sign(signs[i]) != sign(signs[i + 1])) sigCh <- c(sigCh, i)
         }
@@ -38,7 +38,7 @@ obs_shape <- function(x){
                   }
                   if (sigBef == 1 & sigAft == -1){
                      minMax[i] <- "maxima"
-                  }	
+                  }
               }#eo for i
             } else {
               sigBef <- signs[sigCh]
@@ -50,13 +50,13 @@ obs_shape <- function(x){
                 minMax <- "maxima"
                 }
             }#eo if/else
-            
+
           }#eo if
-          
+
           #roots
           roots <- vapply(seq_along(sigCh), FUN = function(x){
-                            uniroot(fun, c(Areas[sigCh[x]], 
-                                        Areas[sigCh[x] + 1]), 
+                            uniroot(fun, c(Areas[sigCh[x]],
+                                        Areas[sigCh[x] + 1]),
                                     par = pars)$root},
                             FUN.VALUE = double(1))
           res <- list(sigCh = sigCh, roots = roots, minMax = minMax)
@@ -66,59 +66,59 @@ obs_shape <- function(x){
           return(res)
         }
       }#eo getRoots
-      
+
       #Possible fits
       possFits <- rep(0, 4)
       names(possFits) <- c("linear", "convex up", "convex do", "sigmoid")
-      
+
       #if the fit is linear
       min.area <- min(data$A)
       max.area <- max(data$A)
       ts <- seq(0,1, .01)
       #dif <- vector()
-      
+
       dif <- vapply(seq_along(ts), FUN = function(x){
-        model$mod.fun((ts[x]  * min.area + (1 - ts[x]) * max.area), pars) - 
-        (ts[x] * model$mod.fun(min.area, pars) + 
+        model$mod.fun((ts[x]  * min.area + (1 - ts[x]) * max.area), pars) -
+        (ts[x] * model$mod.fun(min.area, pars) +
            (1 - ts[x]) * model$mod.fun(max.area, pars))
       }, FUN.VALUE = double(1))
-      
+
       #is linear?
       if (sum(abs(dif) < 0.001) == length(ts)) possFits <- c(1, 0, 0, 0)
 
       #is it convex upward/downward?
-      if ((sum(abs(dif) < 0.001) != length(ts)) & 
+      if ((sum(abs(dif) < 0.001) != length(ts)) &
           (sum(dif <= 0) == length(dif))) possFits <- c(0,0,1,0)
-      if ((sum(abs(dif) < 0.001) !=length(ts))  & 
+      if ((sum(abs(dif) < 0.001) !=length(ts))  &
           (sum(dif >= 0) == length(dif))) possFits <- c(0,1,0,0)
-      
+
       #is the asymptote reached?
       asymptote <- model$asymp(pars)
       if (asymptote){
-        if (asymptote > range(data$S)[1] & asymptote < range(data$S)[2]) 
+        if (asymptote > range(data$S)[1] & asymptote < range(data$S)[2])
           asymp <- TRUE
-      }#eo if 
-      
-      roots.d1 <- tryCatch(getRoots(model$d1.fun, Areas, pars), 
-                           error = function(e) list(sigCh = NA, roots = NA, 
+      }#eo if
+
+      roots.d1 <- tryCatch(getRoots(model$d1.fun, Areas, pars),
+                           error = function(e) list(sigCh = NA, roots = NA,
                                                     minMax = NA))
       if (model$shape =="sigmoid") {
-        roots.d2 <- tryCatch(getRoots(model$d2.fun, Areas, pars), 
-                             error = function(e) list(sigCh = NA, 
+        roots.d2 <- tryCatch(getRoots(model$d2.fun, Areas, pars),
+                             error = function(e) list(sigCh = NA,
                                                     roots = NA, minMax = NA))
       } else {
           roots.d2 <- list(sigCh = NA, roots = NA, minMax = NA)
           }
-    
+
       #getting the min/max value from the first derivative analysis
       minMax <- roots.d1$minMax
-      if (!is.na(roots.d1$minMax[1])) minMaxVal <- 
+      if (!is.na(roots.d1$minMax[1])) minMaxVal <-
         model$mod.fun(roots.d1$roots, pars)
-      
+
       #is it sigmoid?
       if (!is.na(roots.d2$roots[1])) possFits <- c(0, 0, 0, 1)
-      
-      #if the model is sigmoid but the shape study failed then 
+
+      #if the model is sigmoid but the shape study failed then
       #we will said the fit to be sigmoid
       if (model$shape == "sigmoid" & sum(possFits) == 0) {
           message("observed shape algorithm failed: observed shape set to
@@ -126,8 +126,7 @@ obs_shape <- function(x){
           possFits <- c(0, 0, 0, 1)
       }
       names(possFits) <- c("linear", "convex up", "convex down", "sigmoid")
-  
+
       res <- list(asymp = asymp, fitShape = names(possFits[possFits == 1]))
       return(res)
 }
-      

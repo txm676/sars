@@ -28,7 +28,7 @@
 #'
 #'   The \code{compare} argument can be used to compare the c and z values
 #'   calculated using the log-log power model with that calculated using the
-#'   non-linear power model. Note that the log-log function returns logc.
+#'   non-linear power model. Note that the log-log function returns log(c).
 #' @import stats
 #' @importFrom nortest lillie.test
 #' @return A list of class "sars" with up to six elements. The first element
@@ -50,14 +50,14 @@
 #' @export
 
 
-lin_pow <- function(data, con = 1, compare = FALSE, normaTest =  "lillie", 
+lin_pow <- function(data, con = 1, compare = FALSE, normaTest =  "lillie",
                     homoTest = "cor.fitted") {
 
-  if (!(is.matrix(data) | is.data.frame(data))) 
+  if (!(is.matrix(data) | is.data.frame(data)))
     stop("data must be a matrix or dataframe")
   if (is.matrix(data)) data <- as.data.frame(data)
   if (anyNA(data)) stop("NAs present in data")
-  
+
   data <- data[order(data[,1]),]
   colnames(data) <- c("A", "S")
 
@@ -72,35 +72,35 @@ lin_pow <- function(data, con = 1, compare = FALSE, normaTest =  "lillie",
   linearPower.fit <- summary.lm(linearPower.fit)
   resid <- linearPower.fit$residuals
   res <- list(Model = linearPower.fit, calculated = fv, data = log.data)
-  
+
   if (compare == TRUE){
     pow <- sar_power(data)
     res$power <- pow
   }
-  
+
   #normality and homogeneity tests
   normaTest <- match.arg(normaTest, c("none", "shapiro", "kolmo", "lillie"))
   homoTest <- match.arg(homoTest, c("none","cor.area","cor.fitted"))
   #normality of residuals
   if (normaTest == "shapiro") {
-    normaTest <- list("test" = "shapiro", tryCatch(shapiro.test(resid), 
+    normaTest <- list("test" = "shapiro", tryCatch(shapiro.test(resid),
                                                    error = function(e)NA))
-  } else if (normaTest == "lillie"){ 
+  } else if (normaTest == "lillie"){
     normaTest <- list("test" = "lillie", tryCatch(lillie.test(resid),
                                                   error = function(e)NA))
-  } else if (normaTest == "kolmo"){ 
-    normaTest <- list("test" = "kolmo", tryCatch(ks.test(resid, "pnorm"), 
+  } else if (normaTest == "kolmo"){
+    normaTest <- list("test" = "kolmo", tryCatch(ks.test(resid, "pnorm"),
                                                  error = function(e)NA))
   } else{
     normaTest <- "none"
   }
   #Homogeneity of variance
   if (homoTest == "cor.area"){
-    homoTest  <- list("test" = "cor.area", tryCatch(cor.test(resid,data$A), 
+    homoTest  <- list("test" = "cor.area", tryCatch(cor.test(resid,data$A),
                             error = function(e)list(estimate=NA,p.value=NA)))
   } else if (homoTest == "cor.fitted"){
-    homoTest  <- list("test" = "cor.fitted", 
-                  tryCatch(cor.test(resid,as.vector(res$calculated)), 
+    homoTest  <- list("test" = "cor.fitted",
+                  tryCatch(cor.test(resid,as.vector(res$calculated)),
                   error = function(e)list(estimate=NA,p.value=NA)))
   } else {
     homoTest <- "none"
@@ -111,10 +111,3 @@ lin_pow <- function(data, con = 1, compare = FALSE, normaTest =  "lillie",
   attr(res, "type") <- "lin_pow"
   return(res)
 }
-
-
-
-
-
-
-
