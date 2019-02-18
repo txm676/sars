@@ -33,6 +33,8 @@ site matrix.
 As this is version 1.1.0 of the package, it is possible that there are some bugs in places. Please report any
 issues to us via GitHub.
 
+The package has an associated vignette that provides examples of how to use the package.
+
 A website for the package can be found here: https://txm676.github.io/sars/
 
 ## Table of Contents
