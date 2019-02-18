@@ -42,20 +42,20 @@ Example usage
 
 Basic usage of **sars** will result in using two types of functions:
 
-To fit the power sar model (Arrhenius 1921) to the 'galapagos' (Preston 1962) data set:
+To fit the power sar model (Arrhenius 1921) to the 'galapagos' (<span class="citeproc-not-found" data-reference-id="Preston1962">**???**</span>) data set:
 
 ``` r
 fit_pow <- sar_power(data = galap)
 ```
 
-Attempting to fit all 20 sar models to the 'galapagos' (Preston 1962) data set and get a multi-model SAR:
+Attempting to fit all 20 sar models to the 'galapagos' (<span class="citeproc-not-found" data-reference-id="Preston1962">**???**</span>) data set and get a multi-model SAR:
 
 ``` r
 mm_galap <- sar_average(data = galap)
 #> 
 #>  Now attempting to fit the 20 SAR models: 
 #> 
-#> --  multi_sars ------------------------------------------------------------------------- multi-model SAR --
+#> --  multi_sars ------------------------------------------------------------------- multi-model SAR --
 #> > power    : v
 #> > powerR   : v
 #> > epm1     : v
@@ -84,12 +84,12 @@ mm_galap <- sar_average(data = galap)
 #> Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model
 #> 16 remaining models used to construct the multi  SAR:
 #>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-#> -----------------------------------------------------------------------------------------------------------
+#> -----------------------------------------------------------------------------------------------------
 ```
 
 Each of the 'fitted' objects have corresponding plot methods:
 
-to fit the logarithmic SAR model (Gleason 1922) to the 'galapagos' data set and plot it
+to fit the logarithmic SAR model (<span class="citeproc-not-found" data-reference-id="Gleason1922">**???**</span>) to the 'galapagos' data set and plot it
 
 ``` r
 fit_loga <- sar_loga(data = galap)
@@ -109,16 +109,7 @@ plot(mm_galap, pLeg = FALSE)
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
-Troubleshooting
----------------
-
-If, despite the :heart: brought during the programming of this R :package: and writing of this documentation, you have difficulties to install or run sars, if you have questions about the procedures or calculations, or if you want to report bugs :beetle:, do not hesitate to connect with us on [GitHub](https://github.com/txm676/sars).
-
 References
 ----------
 
 Arrhenius, Olof. 1921. “Species and Area.” *The Journal of Ecology* 9 (1). British Ecological Society: 95. doi:[10.2307/2255763](https://doi.org/10.2307/2255763).
-
-Gleason, Henry Allan. 1922. “On the Relation Between Species and Area.” *Ecology* 3 (2). Ecological Society of America: 158–62. doi:[10.2307/1929150](https://doi.org/10.2307/1929150).
-
-Preston, F. W. 1962. “The Canonical Distribution of Commonness and Rarity: Part I.” *Ecology* 43 (2). Ecological Society of America: 185. doi:[10.2307/1931976](https://doi.org/10.2307/1931976).
