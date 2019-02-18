@@ -30,7 +30,6 @@ sa2 <- function(x, a){
 #'   species in a given site.
 #' @param area A vector of site (island) area values. The order of the vector
 #'   must match the order of the columns in \code{data}.
-#' @import stats
 #' @return A list of class "coleman" with four elements. The first element
 #'   contains the fitted values of the model. The second element contains the
 #'   standard deviations of the fitted values, and the third and fourth

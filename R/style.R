@@ -1,3 +1,5 @@
+#### INTERNAL FUNCTION(S)
+
 #shamelessly stollen from: https://raw.githubusercontent.com/r-lib/usethis/82f3e2ec17113bd0126bb9c47dd322c143377411/R/style.R 
 
 # bullet <- function(lines, bullet) {

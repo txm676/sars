@@ -56,7 +56,6 @@ display_sars_models <- function() {
 #'   20 models with model information.
 #' @return A list of class 'sars' with n elements, corresponding to the n
 #'   individual SAR model fits.
-#' @import stats
 #' @importFrom cli rule symbol
 #' @importFrom crayon bold col_align cyan green red yellow
 #' @examples
@@ -283,7 +282,6 @@ sar_multi <- function(data,
 #'
 #'   Guilhaumon, F., Mouillot, D., & Gimenez, O. (2010). mmSAR: an R-package for
 #'   multimodel species-area relationship inference. Ecography, 33, 420-424.
-#' @import stats
 #' @examples
 #' data(galap)
 #' #attempt to construct a multimodel SAR curve using all twenty sar models

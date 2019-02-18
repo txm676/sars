@@ -1,3 +1,7 @@
+
+#### INTERNAL FUNCTION(S)
+
+
 ###complete models
 ### add derivatives, residual sum of square function ...
 

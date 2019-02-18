@@ -1,6 +1,8 @@
+#### INTERNAL FUNCTION(S)
+
 ######################################## optimization function
 
-#' @import stats
+#' @importFrom stats optim shapiro.test ks.test cor.test pt
 #' @importFrom nortest lillie.test
 
 rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
@@ -199,7 +201,7 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
 
 ######################################## Multiple starting values optimization function
 
-#' @import stats
+#' @importFrom stats runif
 
 grid_start_fit <- function(model, data, n, algo = "Nelder-Mead", 
                            normaTest = "lillie", homoTest = "cor.fitted",
@@ -309,7 +311,7 @@ get_fit <- function(model = model, data = data, start = NULL,
 #this is the stats:::nlsModel function. It needs to be manually included
 #as CRAN does not allow :::
 
-#' @import stats
+#' @importFrom stats start numericDeriv
 
 
 stats_nlsModel <- function (form, data, start, wts, upper = NULL) 

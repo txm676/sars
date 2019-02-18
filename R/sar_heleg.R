@@ -2,9 +2,9 @@
 
 #' @description Fit the Heleg(Logistic) model to SAR data.
 #' @usage sar_heleg(data, start = NULL, grid_start = NULL, normaTest =  'lillie',
-
+              
 #'   homoTest = 'cor.fitted')
-#' @param data A dataset in the form of a dataframe with two columns:
+#' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness
 #'   of each island/site.
 #' @param start NULL or custom parameter start values for the optimisation algorithm.
@@ -31,7 +31,8 @@
 
 #'   A selection of information criteria (e.g. AIC, BIC) are returned and can be used to compare models
 #'   (see also \code{\link{sar_average}})
-#' @return A list of class 'sars' with the following components:
+#' @importFrom stats lm quantile
+#' @return A list of class 'sars' with the following components: 
 #'   \itemize{
 #'     \item{par} { The model parameters}
 #'     \item{value} { Residual sum of squares}
@@ -67,9 +68,9 @@
 #' plot(fit)
 #' @export
 
-sar_heleg <- function(data, start = NULL, grid_start = NULL,
+sar_heleg <- function(data, start = NULL, grid_start = NULL, 
 normaTest =  "lillie", homoTest = "cor.fitted"){
-if (!(is.matrix(data) | is.data.frame(data)))
+if (!(is.matrix(data) | is.data.frame(data)))  
 stop('data must be a matrix or dataframe')
 if (is.matrix(data)) data <- as.data.frame(data)
 if (anyNA(data)) stop('NAs present in data')
@@ -77,15 +78,15 @@ data <- data[order(data[,1]),]
 colnames(data) <- c('A','S')
 #LOGISTIC FUNCTION (HE & LEGENDRE 1996)
 model <- list(
-  name = c("Heleg(Logistic)"),
-  formula = expression(S == c/(f + A^(-z))),
-  exp = expression(c/(f + A^(-z))),
-  shape = "sigmoid",
-  asymp = function(pars)pars["c"]/pars["f"],
+  name=c("Heleg(Logistic)"),
+  formula=expression(S == c/(f + A^(-z))),
+  exp=expression(c/(f + A^(-z))),
+  shape="sigmoid",
+  asymp=function(pars)pars["c"]/pars["f"],
   parLim = c("Rplus","Rplus","Rplus"),
-  custStart = function(data)c(max(data$S),10,.01),
+  custStart=function(data)c(max(data$S),10,.01),
   #initial values function
-  init = function(data){
+  init=function(data){
     if(any(data$S==0)){data=data[data$S!=0,]}
     #c calculation (asymptote)
     c=max(data$S)+1
@@ -100,13 +101,13 @@ model <- list(
 )
 
 model <- compmod(model)
-fit <- get_fit(model = model, data = data, start = start,
-grid_start = grid_start, algo = 'Nelder-Mead',
-
+fit <- get_fit(model = model, data = data, start = start,  
+grid_start = grid_start, algo = 'Nelder-Mead', 
+       
 normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
 if(is.na(fit$value)){
   return(list(value = NA))
-}else{
+}else{ 
   obs <- obs_shape(fit)
   fit$observed_shape <- obs$fitShape
   fit$asymptote <- obs$asymp

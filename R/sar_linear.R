@@ -23,7 +23,7 @@
 #'
 #'   A selection of information criteria (e.g. AIC, BIC) are returned and can
 #'   be used to compare models (see also \code{\link{sar_average}}).
-#' @import stats
+#' @importFrom stats lm confint shapiro.test ks.test cor.test
 #' @importFrom nortest lillie.test
 #' @return A list of class 'sars' with the following components: \itemize{
 #'   \item{par} { The model parameters} \item{value} { Residual sum of

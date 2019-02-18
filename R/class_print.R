@@ -174,7 +174,7 @@ print.sars <- function(x, ...){
   }
 }
 
-#' @import stats
+
 #' @export
 
 print.gdm <- function(x, ...){

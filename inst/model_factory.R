@@ -88,6 +88,7 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#'   A selection of information criteria (e.g. AIC, BIC) are", 
               " returned and can be used to compare models\n")) 
   cat1(paste0("#'   (see also \\code{\\link{sar_average}})\n")) 
+  cat1(paste0("#' @importFrom ", "stats lm quantile\n")) 
   
   cat1(paste0("#' @return ", "A list of class 'sars' with the following", 
               " components: \n"))
@@ -231,10 +232,10 @@ model_factory <- function(f, overwrite = FALSE){
 ########################
 #using the model factory
 ########################
-
+#setwd("C:\\Users\\Tom\\Desktop\\sars")
 modFiles <- list.files(file.path(getwd(),"inst","non_lin_models"))
 
 lapply(modFiles, model_factory, overwrite = TRUE)
-
+#setwd("C:\\Users\\Tom\\Desktop")
 
 

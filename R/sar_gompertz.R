@@ -31,6 +31,7 @@
 
 #'   A selection of information criteria (e.g. AIC, BIC) are returned and can be used to compare models
 #'   (see also \code{\link{sar_average}})
+#' @importFrom stats lm quantile
 #' @return A list of class 'sars' with the following components: 
 #'   \itemize{
 #'     \item{par} { The model parameters}

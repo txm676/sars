@@ -1,6 +1,8 @@
+#### INTERNAL FUNCTION(S)
 
-#' @import numDeriv
-#' @import utils
+#' @importFrom numDeriv jacobian
+#' @importFrom utils txtProgressBar setTxtProgressBar
+#' @importFrom stats rmultinom
 
 sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
                          homoTest = "cor.fitted",

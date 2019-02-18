@@ -1,3 +1,5 @@
+#### INTERNAL FUNCTION(S)
+
 ########observed shape#######################
 
 #' @importFrom stats uniroot

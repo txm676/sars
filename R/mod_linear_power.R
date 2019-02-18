@@ -29,7 +29,7 @@
 #'   The \code{compare} argument can be used to compare the c and z values
 #'   calculated using the log-log power model with that calculated using the
 #'   non-linear power model. Note that the log-log function returns log(c).
-#' @import stats
+#' @importFrom stats lm summary.lm shapiro.test ks.test cor.test
 #' @importFrom nortest lillie.test
 #' @return A list of class "sars" with up to six elements. The first element
 #'   is an object of class 'summary.lm'. This is the summary of the linear

@@ -63,7 +63,7 @@
 #'   A plot generic function enabling 3-d plotting of the GDM fit will be
 #'   provided in a future version of the package.
 #'
-#' @import stats
+#' @importFrom stats nls lm
 #' @references Whittaker, R. J., Triantis, K. A., & Ladle, R. J. (2008). A
 #'   general dynamic theory of oceanic island biogeography. Journal of
 #'   Biogeography, 35, 977-994.
