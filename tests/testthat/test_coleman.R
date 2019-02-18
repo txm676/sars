@@ -1,5 +1,4 @@
 context("coleman")
-library(sars)
 
 test_that("coleman main returns correct results", {
   data(cole_sim)
@@ -8,9 +7,3 @@ test_that("coleman main returns correct results", {
   expect_output(str(fit), "List of 4")
   expect_is(fit, "coleman")
 })
-
-
-
-
-
-

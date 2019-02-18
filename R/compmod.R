@@ -46,7 +46,7 @@ compmod <- function(model){
   model$rss.fun <- function(par,data,parLim=model$parLim,opt=TRUE){
     #cat(".....",opt,"\n")
     #cat("bef trans : ",par,"\n")
-    if(opt) { par <- backLink(par,parLim) }
+    if (opt) par <- backLink(par,parLim)
     #cat("aft trans : ",par,"\n")
     S <- data$S
     A <- data$A

@@ -2,7 +2,6 @@ context("sar_power")
 library(sars)
 
 test_that("sar_power returns correct results", {
-  data(galap)
   fit <- sar_power(galap)
   expect_equal(round(fit$AICc, 2), 143.62)
   expect_equal(as.vector(round(fit$par[2], 2)), 0.28)
@@ -13,7 +12,6 @@ test_that("sar_power returns correct results", {
 
 
 test_that("sar_power summary returns correct results", {
-  data(galap)
   fit <- sar_power(galap)
   fs <- summary(fit)
   expect_equal(sum(fs$residuals), 31.4)
@@ -21,7 +19,3 @@ test_that("sar_power summary returns correct results", {
   expect_is(fs, "summary.sars")
   expect_equal(round(fs$normaTest[[2]]$p.value, 3), 0.056)
 })
-
-
-
-

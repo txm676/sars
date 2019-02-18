@@ -1,5 +1,4 @@
 context("sar_monod")
-library(sars)
 
 test_that("sar_monod returns correct results", {
   data(niering)

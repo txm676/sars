@@ -1,8 +1,6 @@
 context("sar_linear")
-library(sars)
 
 test_that("sar_linear returns correct results", {
-  data(galap)
   fit <- sar_linear(galap)
   expect_equal(round(fit$AICc, 2), 148.36)
   expect_equal(as.vector(round(fit$par[2], 2)), 0.19)
@@ -13,7 +11,6 @@ test_that("sar_linear returns correct results", {
 
 
 test_that("sar_linear summary returns correct results", {
-  data(galap)
   fit <- sar_linear(galap)
   fs <- summary(fit)
   expect_equal(sum(fs$residuals), 0.2)
@@ -21,8 +18,3 @@ test_that("sar_linear summary returns correct results", {
   expect_is(fs, "summary.sars")
   expect_equal(round(fs$normaTest[[2]]$p.value, 3), 0.047)
 })
-
-
-
-
-
