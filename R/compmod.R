@@ -22,32 +22,20 @@ compmod <- function(model){
   names(model$parNames) <- seq_along(model$parNames)
 
   #1rst & 2nd derivatives
-  model$d1.exp <- D(mod.exp,"A")
-  model$d2.exp <- D(model$d1.exp,"A")
+  model$d1.exp <- stats::D(mod.exp,"A")
+  model$d2.exp <- stats::D(model$d1.exp,"A")
 
   ##########################################################################
   ######### creating functions
-  stringStartFun <- " <- function(A,par){ eval("
-  stringStartFunRss <- " <- function(data,par,opt){ eval("
-  stringStartList <- "list(A=A,"
-  stringPars <- paste(model$parNames,"=par[",names(model$parNames),"]",
-                      sep="")
-  stringEnd <- ")) }"
+  model$mod.fun <- create_fun_mod(model$exp, model$parNames)
+  # first derivative function
+  model$d1.fun <- create_fun_mod(model$d1.fun, model$parNames)
+  # second derivative function
+  model$d2.fun <- create_fun_mod(model$d2.fun, model$parNames)
 
-  #model function
-  eval(parse(text=paste("model$mod.fun",stringStartFun,"model$exp,",
-        stringStartList,paste(stringPars,collapse=","),stringEnd ,sep="")))
 
-  #first derivative function
-  eval(parse(text=paste("model$d1.fun",stringStartFun,"model$d1.exp,",
-        stringStartList,paste(stringPars,collapse=","),stringEnd ,sep="")))
-
-  #second derivative function
-  eval(parse(text=paste("model$d2.fun",stringStartFun,"model$d2.exp,",
-          stringStartList,paste(stringPars,collapse=","),stringEnd ,sep="")))
-
-  #rss function
-  model$rss.fun <- function(par,data,parLim=model$parLim,opt=TRUE){
+  # rss function
+  model$rss.fun <- function(par, data, parLim = model$parLim, opt = TRUE){
     #cat(".....",opt,"\n")
     #cat("bef trans : ",par,"\n")
     if (opt) par <- backLink(par,parLim)
@@ -62,7 +50,13 @@ compmod <- function(model){
   #cat("# model constructed ...\n")
   #------------> here end the "model constructor"
 
-
   invisible(model)
+}
 
+
+create_fun_mod <- function(expr, nam) {
+  function(A, par) {
+    for (i in seq_along(par)) assign(nam[i], par[i])
+    eval(expr)
+  }
 }
