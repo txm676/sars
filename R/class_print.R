@@ -1,4 +1,4 @@
-#' @importFrom stats quantile
+#' @importFrom stats quantile printCoefmat AIC
 #' @export
 
 
@@ -200,7 +200,7 @@ print.gdm <- function(x, ...){
       df <- data.frame("RSE" = vapply(obNL, function(x) summary(x)$sigma,
                                       numeric(1)),
                        "AIC" = vapply(obNL, AIC, numeric(1)))
-      df <- rbind(df, c(summary(object[[4]])$sigma, AIC(object[[4]])))
+      df <- rbind(df, c(summary(object[[4L]])$sigma, AIC(object[[4]])))
       df$Delta.AIC <-  df$AIC - min(df$AIC)
       rownames(df) <- c("GDM", "A + T", "A", "Intercept")
       df <- df[order(df$Delta.AIC),]

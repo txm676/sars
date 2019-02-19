@@ -2,7 +2,7 @@
 
 ######################################## optimization function
 
-#' @importFrom stats optim shapiro.test ks.test cor.test pt
+#' @importFrom stats formula optim shapiro.test ks.test cor.test pt
 #' @importFrom nortest lillie.test
 
 rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
@@ -33,7 +33,7 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   rssfun <- model$rss.fun
 
   #optimization (first result)
-  res1 <- tryCatch(optim(startMod, rssfun, hessian = TRUE, data = data, 
+  res1 <- tryCatch(optim(startMod, rssfun, hessian = TRUE, data = data,
                          method = algo, control = list(maxit = 50000) ),
                    error = function(e){e}
                    )
@@ -67,47 +67,47 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
 
   if(length(l)<5) {
 
-      warning("The Lilliefors test cannot be performed with less than 5", 
+      warning("The Lilliefors test cannot be performed with less than 5",
               " data points\n")
 
   }#eo if length
 
   if(length(l)<3) {
 
-      warning("The Shapiro test cannot be performed with less than 3", 
+      warning("The Shapiro test cannot be performed with less than 3",
               " data points\n")
 
   }#eo if length
-  
+
   normaTest <- match.arg(normaTest, c("none", "shapiro", "kolmo", "lillie"))
   homoTest <- match.arg(homoTest, c("none","cor.area","cor.fitted"))
-  
+
   #normality of residuals
   if (normaTest == "shapiro") {
-    normaTest <- list("test" = "shapiro", tryCatch(shapiro.test(residu), 
+    normaTest <- list("test" = "shapiro", tryCatch(shapiro.test(residu),
                                                    error = function(e)NA))
-    } else if (normaTest == "lillie"){ 
-      normaTest <- list("test" = "lillie", tryCatch(lillie.test(residu), 
+    } else if (normaTest == "lillie"){
+      normaTest <- list("test" = "lillie", tryCatch(lillie.test(residu),
                                                     error = function(e)NA))
-    } else if (normaTest == "kolmo"){ 
-      normaTest <- list("test" = "kolmo", tryCatch(ks.test(residu, "pnorm"), 
+    } else if (normaTest == "kolmo"){
+      normaTest <- list("test" = "kolmo", tryCatch(ks.test(residu, "pnorm"),
                                                    error = function(e)NA))
       } else{
         normaTest <- "none"
         }
-  
+
   #Homogeneity of variance
-  
+
   if (homoTest == "cor.area"){
-    homoTest  <- list("test" = "cor.area", tryCatch(cor.test(residu,data$A), 
+    homoTest  <- list("test" = "cor.area", tryCatch(cor.test(residu,data$A),
                             error = function(e)list(estimate=NA,p.value=NA)))
   } else if (homoTest == "cor.fitted"){
-    homoTest  <- list("test" = "cor.fitted", tryCatch(cor.test(residu,S.calc), 
+    homoTest  <- list("test" = "cor.fitted", tryCatch(cor.test(residu,S.calc),
                             error = function(e)list(estimate=NA,p.value=NA)))
   } else {
     homoTest <- "none"
   }
-  
+
   #R2, AIC, AICc, BIC
 
   #common vars
@@ -118,7 +118,7 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   R2 <-  1 - ( (res1$value) /  sum((data$S - mean(data$S))^2) )
 
   #R2a (He & Legendre 1996, p724)
-  R2a <-  1 - ( ((n-1)*(res1$value)) /  
+  R2a <-  1 - ( ((n-1)*(res1$value)) /
                   ((n-P)*sum((data$S - mean(data$S))^2)) )
 
   #AIC
@@ -149,9 +149,9 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
     environment(formul) <- env
   }
 
-  nMod <- tryCatch(stats_nlsModel(formul,data,res1$par), 
+  nMod <- tryCatch(stats_nlsModel(formul,data,res1$par),
                    error = function(e)NA)
-  
+
   if(class(nMod) != "nlsModel"){
     warning(model$name,": singular gradient at parameter estimates:
    no parameters significance and conf. intervals.", call. = FALSE)
@@ -159,42 +159,42 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   }else{
     #number of parameters
     p <- length(model$parLim)
-    
+
     #residuals degrees of freedom
     rdf <- n - p
-    
+
     #residuals variance
     resvar <- res1$value / rdf
-    
+
     #calculating the inverse of the upper triangular factor
     #of the gradient array at estimated parameter values
     XtXinv <- chol2inv(nMod$Rmat())
     dimnames(XtXinv) <- list(names(start), names(start))
-    
-    #formating the table of estimates, standard eroor, t value and 
+
+    #formating the table of estimates, standard eroor, t value and
     #significance of parameters
     se <- sqrt(diag(XtXinv) * resvar)
     tval <- res1$par/se
-    param <- cbind(res1$par, se, tval, 2 * pt(abs(tval), rdf, 
+    param <- cbind(res1$par, se, tval, 2 * pt(abs(tval), rdf,
                                               lower.tail = FALSE))
     dimnames(param) <- list(model$paramnames, c("Estimate", "Std. Error",
                                                 "t value", "Pr(>|t|)"))
-    
+
     #95% confidence interval
-    conf <- matrix(c(param[,"Estimate"] - 2 * param[,"Std. Error"], 
+    conf <- matrix(c(param[,"Estimate"] - 2 * param[,"Std. Error"],
                      param[,"Estimate"] + 2 * param[,"Std. Error"]),p,2)
     colnames(conf) <- c("2.5%","97.5%")
-    
+
     sigConf <- cbind(param,conf)
-    
+
     res$sigConf <- sigConf
-    
+
   }#eo if else is.na(nMod)
-  
-   
+
+
   res$normaTest <- normaTest
   res$homoTest <- homoTest
-  
+
   invisible(res)
 
 }#eo rssoptim
@@ -203,16 +203,16 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
 
 #' @importFrom stats runif
 
-grid_start_fit <- function(model, data, n, algo = "Nelder-Mead", 
+grid_start_fit <- function(model, data, n, algo = "Nelder-Mead",
                            normaTest = "lillie", homoTest = "cor.fitted",
                            verb = TRUE) {
-  
+
   if(length(model$parNames)<4){
     ns <- 100
   }else{
     ns <- 10
   }
-  
+
   start.list <- lapply(model$parLim,function(x){
     res <- switch(x,
                  R = sample(seq(-500,500),ns),
@@ -221,28 +221,28 @@ grid_start_fit <- function(model, data, n, algo = "Nelder-Mead",
     )
     return(res)
   })
-  
+
   names(start.list) <- model$parNames
-  
+
   grid.start <- expand.grid(start.list)
-  
+
   grid.start <- grid.start[sample.int(dim(grid.start)[1],n),]
-  
+
   if (verb) cat("- running grid optim: ")
-  
+
   fit.list <- apply(grid.start, 1, function(x){
     if (verb) cat(".")
-    tryCatch(rssoptim(model, data , start = x, algo = algo, 
+    tryCatch(rssoptim(model, data , start = x, algo = algo,
                       normaTest = normaTest, homoTest = homoTest)
              , error = function(e) list(value = NA))
   })
-  
+
   fit.list <- as.list(fit.list)
-  
+
   values <- unlist(lapply(fit.list,function(x){x$value}))
-  
+
   min <- which.min(values)
-  
+
   if(length(min) != 0) {
     fit.list[[min]]
   }else{
@@ -252,16 +252,16 @@ grid_start_fit <- function(model, data, n, algo = "Nelder-Mead",
 }#eo grid_start_fit
 
 ######################################## optimization wrapper
-get_fit <- function(model = model, data = data, start = NULL, 
-                    grid_start = NULL, algo = "Nelder-Mead", 
-                    normaTest = "lillie", homoTest = "cor.fitted", 
+get_fit <- function(model = model, data = data, start = NULL,
+                    grid_start = NULL, algo = "Nelder-Mead",
+                    normaTest = "lillie", homoTest = "cor.fitted",
                     verb = TRUE){
-  
+
   if(!is.null(start) & !is.null(grid_start)){
-    stop("You must choose between 'start' and 'grid_start',", 
+    stop("You must choose between 'start' and 'grid_start',",
          " but choose wisely\n")
   }
-  
+
   if(is.null(start)){
     fit <- tryCatch(rssoptim(model = model, data = data, algo = algo,
                              normaTest = normaTest, homoTest = homoTest)
@@ -278,22 +278,22 @@ get_fit <- function(model = model, data = data, start = NULL,
       }
     }
   }
-  
+
   if(!is.null(start)){
-    fit <- tryCatch(rssoptim(model = model, data = data, 
-                             start = start, algo = algo, 
-                             normaTest = normaTest, homoTest = homoTest), 
+    fit <- tryCatch(rssoptim(model = model, data = data,
+                             start = start, algo = algo,
+                             normaTest = normaTest, homoTest = homoTest),
                     error = function(e) list(value = NA))
-  } 
-  
+  }
+
   if(!is.null(grid_start)) {
     if (grid_start != FALSE){
-      fit <- grid_start_fit(model = model, data = data, n = grid_start, 
-                            algo = algo, normaTest = normaTest, 
+      fit <- grid_start_fit(model = model, data = data, n = grid_start,
+                            algo = algo, normaTest = normaTest,
                             homoTest = homoTest, verb = verb)
     }#eo if (grid_start != FALSE)
   }#eo if(!is.null(grid_start))
-  
+
   if(is.na(fit$value)){
     warning("The model could not be fitted :(\n")
     return(list(value = NA))
@@ -314,7 +314,7 @@ get_fit <- function(model = model, data = data, start = NULL,
 #' @importFrom stats start numericDeriv
 
 
-stats_nlsModel <- function (form, data, start, wts, upper = NULL) 
+stats_nlsModel <- function (form, data, start, wts, upper = NULL)
 {
   thisEnv <- environment()
   env <- new.env(hash = TRUE, parent = environment(form))
@@ -331,12 +331,12 @@ stats_nlsModel <- function (form, data, start, wts, upper = NULL)
   getPars.noVarying <- function() unlist(mget(names(ind), env))
   getPars <- getPars.noVarying
   internalPars <- getPars()
-  if (!is.null(upper)) 
+  if (!is.null(upper))
     upper <- rep_len(upper, parLength)
   useParams <- rep_len(TRUE, parLength)
   lhs <- eval(form[[2L]], envir = env)
   rhs <- eval(form[[3L]], envir = env)
-  .swts <- if (!missing(wts) && length(wts)) 
+  .swts <- if (!missing(wts) && length(wts))
     sqrt(wts)
   else rep_len(1, length(rhs))
   assign(".swts", .swts, envir = env)
@@ -344,9 +344,9 @@ stats_nlsModel <- function (form, data, start, wts, upper = NULL)
   dev <- sum(resid^2)
   if (is.null(attr(rhs, "gradient"))) {
     getRHS.noVarying <- function() {
-      if (is.null(upper)) 
+      if (is.null(upper))
         numericDeriv(form[[3L]], names(ind), env)
-      else numericDeriv(form[[3L]], names(ind), env, ifelse(internalPars < 
+      else numericDeriv(form[[3L]], names(ind), env, ifelse(internalPars <
                                                               upper, 1, -1))
     }
     getRHS <- getRHS.noVarying
@@ -360,7 +360,7 @@ stats_nlsModel <- function (form, data, start, wts, upper = NULL)
   marg <- length(dimGrad)
   if (marg > 0L) {
     gradSetArgs <- vector("list", marg + 1L)
-    for (i in 2L:marg) gradSetArgs[[i]] <- rep_len(TRUE, 
+    for (i in 2L:marg) gradSetArgs[[i]] <- rep_len(TRUE,
                                                    dimGrad[i - 1])
     useParams <- rep_len(TRUE, dimGrad[marg])
   }
@@ -374,7 +374,7 @@ stats_nlsModel <- function (form, data, start, wts, upper = NULL)
           call("[", gradSetArgs[[1L]], gradSetArgs[[2L]], drop = FALSE),
           call("[", gradSetArgs[[1L]],  gradSetArgs[[2L]], gradSetArgs[[2L]],
           drop = FALSE), call("[", gradSetArgs[[1L]], gradSetArgs[[2L]],
-          gradSetArgs[[2L]], gradSetArgs[[3L]], drop = FALSE), 
+          gradSetArgs[[2L]], gradSetArgs[[3L]], drop = FALSE),
           call("[", gradSetArgs[[1L]], gradSetArgs[[2L]], gradSetArgs[[2L]],
                gradSetArgs[[3L]], gradSetArgs[[4L]], drop = FALSE))
   getRHS.varying <- function() {
@@ -382,41 +382,41 @@ stats_nlsModel <- function (form, data, start, wts, upper = NULL)
     attr(ans, "gradient") <- eval(gradCall)
     ans
   }
-  if (length(gr <- attr(rhs, "gradient")) == 1L) 
+  if (length(gr <- attr(rhs, "gradient")) == 1L)
     attr(rhs, "gradient") <- gr <- as.vector(gr)
   QR <- qr(.swts * gr)
   qrDim <- min(dim(QR$qr))
-  if (QR$rank < qrDim) 
+  if (QR$rank < qrDim)
     stop("singular gradient matrix at initial parameter estimates")
   getPars.varying <- function() unlist(mget(names(ind), env))[useParams]
   setPars.noVarying <- function(newPars) {
     assign("internalPars", newPars, envir = thisEnv)
-    for (i in names(ind)) assign(i, unname(newPars[ind[[i]]]), 
+    for (i in names(ind)) assign(i, unname(newPars[ind[[i]]]),
                                  envir = env)
   }
   setPars.varying <- function(newPars) {
     internalPars[useParams] <- newPars
-    for (i in names(ind)) assign(i, unname(internalPars[ind[[i]]]), 
+    for (i in names(ind)) assign(i, unname(internalPars[ind[[i]]]),
                                  envir = env)
   }
   setPars <- setPars.noVarying
   on.exit(remove(i, data, parLength, start, temp, m))
-  m <- list(resid = function() resid, fitted = function() rhs, 
-            formula = function() form, deviance = function() dev, 
-            lhs = function() lhs, gradient = function() .swts * attr(rhs, 
+  m <- list(resid = function() resid, fitted = function() rhs,
+            formula = function() form, deviance = function() dev,
+            lhs = function() lhs, gradient = function() .swts * attr(rhs,
             "gradient"), conv = function() {
              if (npar == 0) return(0)
              rr <- qr.qty(QR, resid)
              sqrt(sum(rr[1L:npar]^2)/sum(rr[-(1L:npar)]^2))
-             }, incr = function() qr.coef(QR, resid), 
-            setVarying = function(vary = rep_len(TRUE, 
+             }, incr = function() qr.coef(QR, resid),
+            setVarying = function(vary = rep_len(TRUE,
             length(useParams))) {
              assign("useParams", if (is.character(vary)) {
              temp <- logical(length(useParams))
              temp[unlist(ind[vary])] <- TRUE
              temp
-            } else if (is.logical(vary) && length(vary) != length(useParams)) 
-              stop("setVarying : 'vary' length must match", 
+            } else if (is.logical(vary) && length(vary) != length(useParams))
+              stop("setVarying : 'vary' length must match",
                    " length of parameters") else {
               vary
               }, envir = thisEnv)
@@ -430,40 +430,25 @@ stats_nlsModel <- function (form, data, start, wts, upper = NULL)
              assign("setPars", setPars.varying, envir = thisEnv)
              assign("getPars", getPars.varying, envir = thisEnv)
              assign("getRHS", getRHS.varying, envir = thisEnv)
-              assign("npar", length(seq_along(useParams)[useParams]), 
+              assign("npar", length(seq_along(useParams)[useParams]),
               envir = thisEnv)
               }
               }, setPars = function(newPars) {
               setPars(newPars)
-              assign("resid", .swts * (lhs - assign("rhs", getRHS(), 
+              assign("resid", .swts * (lhs - assign("rhs", getRHS(),
               envir = thisEnv)), envir = thisEnv)
               assign("dev", sum(resid^2), envir = thisEnv)
               if (length(gr <- attr(rhs, "gradient")) == 1L) gr <- c(gr)
               assign("QR", qr(.swts * gr), envir = thisEnv)
               (QR$rank < min(dim(QR$qr)))
-              }, getPars = function() getPars(), 
-            getAllPars = function() getPars(), 
+              }, getPars = function() getPars(),
+            getAllPars = function() getPars(),
             getEnv = function() env, trace = function() {
               cat(format(dev), ": ", format(getPars()))
               cat("\n")
-            }, Rmat = function() qr.R(QR), 
+            }, Rmat = function() qr.R(QR),
             predict = function(newdata = list(), qr = FALSE) eval(form[[3L]],
                                                       as.list(newdata), env))
   class(m) <- "nlsModel"
   m
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
