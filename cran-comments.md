@@ -1,6 +1,6 @@
 
 ##This is a new submission
-*version 1.1.0 of sars package
+*version 1.1.1 of sars package
 
 
 ##Test environments
