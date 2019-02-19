@@ -24,6 +24,9 @@ Matthews, T.J., Triantis, K., Whittaker, R.J. and Guilhaumon, F. (2019) sars:
 an R package for fitting, evaluating and comparing species–area relationship
 models. Ecography, In press
 
+Version 1.1.1 of the package, presented in this vignette, has been archived 
+on the Zenodo research data repository (DOI: 10.5281/zenodo.2573067).
+
 ## BACKGROUND 
 The species–area relationship (SAR) describes the near universally observed
 pattern whereby the number of species increases with the area sampled, and it

@@ -21,6 +21,7 @@ knitr::opts_chunk$set(
 [![Downloads](https://cranlogs.r-pkg.org/badges/sars?color=brightgreen)](https://cran.r-project.org/package=sars)
 [![CRAN](https://www.r-pkg.org/badges/version/sars)](https://cran.r-project.org/package=sars)
 [![codecov.io](https://codecov.io/github/txm676/sars/coverage.svg?branch=master)](https://codecov.io/github/txm676/sars?branch=master)
+[![DOI](https://zenodo.org/badge/95295704.svg)](https://zenodo.org/badge/latestdoi/95295704)
 
 
 > *fit and compare **Species-Area Relationship (SAR)** models using multi-model inference*
@@ -36,6 +37,8 @@ issues to us via GitHub.
 The package has an associated vignette that provides examples of how to use the package.
 
 A website for the package can be found here: https://txm676.github.io/sars/
+
+Version 1.1.1 of the package has been archived on the Zenodo research data repository (DOI: 10.5281/zenodo.2573067).
 
 ## Table of Contents
 

@@ -4,6 +4,7 @@
  * added vignette
  * bug fixes
  * internal updates
+ * Version archived on Zenodo
 
 ## Version 1.1.0  
   * sar_multi() split into two functions: sar_multi() and sar_average()

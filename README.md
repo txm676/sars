@@ -3,7 +3,7 @@
 The **'sars'** R Package <img src="man/figures/sars_logo.png" align="right" width="10%"/>
 =========================================================================================
 
-[![Build Status](https://travis-ci.org/txm676/sars.svg?branch=master)](https://travis-ci.org/txm676/sars) [![Downloads](https://cranlogs.r-pkg.org/badges/sars?color=brightgreen)](https://cran.r-project.org/package=sars) [![CRAN](https://www.r-pkg.org/badges/version/sars)](https://cran.r-project.org/package=sars) [![codecov.io](https://codecov.io/github/txm676/sars/coverage.svg?branch=master)](https://codecov.io/github/txm676/sars?branch=master)
+[![Build Status](https://travis-ci.org/txm676/sars.svg?branch=master)](https://travis-ci.org/txm676/sars) [![Downloads](https://cranlogs.r-pkg.org/badges/sars?color=brightgreen)](https://cranlogs.r-pkg.org/badges/sars?color=brightgreen) [![CRAN](https://www.r-pkg.org/badges/version/sars)](https://cran.r-project.org/package=sars) [![codecov.io](https://codecov.io/github/txm676/sars/coverage.svg?branch=master)](https://codecov.io/github/txm676/sars?branch=master) [![DOI](https://zenodo.org/badge/95295704.svg)](https://zenodo.org/badge/latestdoi/95295704)
 
 > *fit and compare **Species-Area Relationship (SAR)** models using multi-model inference*
 
@@ -14,6 +14,8 @@ As this is version 1.1.0 of the package, it is possible that there are some bugs
 The package has an associated vignette that provides examples of how to use the package.
 
 A website for the package can be found here: <https://txm676.github.io/sars/>
+
+Version 1.1.1 of the package has been archived on the Zenodo research data repository (DOI: 10.5281/zenodo.2573067).
 
 Table of Contents
 -----------------
@@ -56,27 +58,29 @@ mm_galap <- sar_average(data = galap)
 #> 
 #>  Now attempting to fit the 20 SAR models: 
 #> 
-#> ──  multi_sars ────────────────────────────────────────────────────────────────────────────── multi-model SAR ──
-#> → power    : ✔
-#> → powerR   : ✔
-#> → epm1     : ✔
-#> → epm2     : ✔
-#> → p1       : ✔
-#> → p2       : ✔
-#> → loga     : ✔
-#> → koba     : ✔
-#> → mmf      : ✔
-#> → monod    : ✔
-#> → negexpo  : ✔
-#> → chapman  : Warning: could not compute parameters statistics
-#> → weibull3 : ✔
-#> → asymp    : ✔
-#> → ratio    : ✔
-#> → gompertz : ✔
-#> → weibull4 : ✔
-#> → betap    : ✔
-#> → heleg    : ✔
-#> → linear   : ✔
+#> --  multi_sars --------------------------------------------------- multi-model SAR --
+#> > power    : v
+#> > powerR   : v
+#> > epm1     : v
+#> observed shape algorithm failed: observed shape set to
+#>                 theoretical shape (sigmoid)
+#> > epm2     : v
+#> > p1       : v
+#> > p2       : v
+#> > loga     : v
+#> > koba     : v
+#> > mmf      : v
+#> > monod    : v
+#> > negexpo  : v
+#> > chapman  : Warning: could not compute parameters statistics
+#> > weibull3 : v
+#> > asymp    : v
+#> > ratio    : v
+#> > gompertz : v
+#> > weibull4 : v
+#> > betap    : v
+#> > heleg    : v
+#> > linear   : v
 #> 
 #> Model fitting completed - all models succesfully fitted.  Now undertaking model validation checks.
 #> Additional models  will be excluded if necessary:
@@ -85,7 +89,7 @@ mm_galap <- sar_average(data = galap)
 #> Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model
 #> 16 remaining models used to construct the multi  SAR:
 #>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-#> ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#> -------------------------------------------------------------------------------------
 ```
 
 Each of the 'fitted' objects have corresponding plot methods:
