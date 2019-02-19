@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fit and Compare Species-Area Relationship Models Using Multimodel Inference • sars</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Fit and Compare Species-Area Relationship Models Using Multimodel Inference">
@@ -23,7 +23,7 @@
 </head>
 <body>
     <div class="container template-article">
-      <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">sars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
       </span>
     </div>
 
@@ -49,11 +49,26 @@
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/sars-r-package.html">sars R Package</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/txm676/sars">
-    <span class="fa fa-github"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -83,6 +98,7 @@
 </blockquote>
 <p><strong>sars</strong> provides functionality to fit twenty SAR model using non-linear regression, and to calculate multi-model averaged curves using various information criteria. The software also provides easy to use functionality to plot multi-model SAR curves and to generate confidence intervals using bootstrapping. Additional SAR related functions include fitting the linear version of the power model and comparing parameters with the non-linear version, fitting the general dynamic model of island biogeography, and fitting the random placement model to a species abundance - site matrix.</p>
 <p>As this is version 1.1.0 of the package, it is possible that there are some bugs in places. Please report any issues to us via GitHub.</p>
+<p>The package has an associated vignette that provides examples of how to use the package.</p>
 <p>A website for the package can be found here: <a href="https://txm676.github.io/sars/" class="uri">https://txm676.github.io/sars/</a></p>
 <div id="table-of-contents" class="section level2">
 <h2 class="hasAnchor">
@@ -90,7 +106,6 @@
 <ul>
 <li><a href="#installation">Installation</a></li>
 <li><a href="#example-usage">Example</a></li>
-<li><a href="#troubleshoutting">Troubleshoutting</a></li>
 <li><a href="#references">References</a></li>
 </ul>
 </div>
@@ -101,7 +116,7 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"sars"</span>)</code></pre></div>
 <p>And the development version from <a href="https://github.com/">GitHub</a> with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
-devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"txm676/sars"</span>)</code></pre></div>
+devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"txm676/sars"</span>)</code></pre></div>
 </div>
 <div id="example-usage" class="section level2">
 <h2 class="hasAnchor">
@@ -114,7 +129,7 @@ devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumen
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  Now attempting to fit the 20 SAR models: </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ──  multi_sars ───────────────────────────────────────────────────────────────────────────── multi-model SAR ──</span>
+<span class="co">#&gt; ──  multi_sars ────────────────────────────────────────────────────────────────────────────── multi-model SAR ──</span>
 <span class="co">#&gt; → power    : ✔</span>
 <span class="co">#&gt; → powerR   : ✔</span>
 <span class="co">#&gt; → epm1     : ✔</span>
@@ -143,7 +158,7 @@ devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumen
 <span class="co">#&gt; Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model</span>
 <span class="co">#&gt; 16 remaining models used to construct the multi  SAR:</span>
 <span class="co">#&gt;  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) </span>
-<span class="co">#&gt; ───────────────────────────────────────────────────────────────────────────────────────────────────────────────</span></code></pre></div>
+<span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span></code></pre></div>
 <p>Each of the ‘fitted’ objects have corresponding plot methods:</p>
 <p>to fit the logarithmic SAR model <span class="citation">(Gleason 1922)</span> to the ‘galapagos’ data set and plot it</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit_loga &lt;-<span class="st"> </span><span class="kw"><a href="reference/sar_loga.html">sar_loga</a></span>(<span class="dt">data =</span> galap)
@@ -155,11 +170,6 @@ devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumen
 
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(mm_galap, <span class="dt">pLeg =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-5-1.png" width="100%"></p>
-</div>
-<div id="troubleshoutting" class="section level2">
-<h2 class="hasAnchor">
-<a href="#troubleshoutting" class="anchor"></a>Troubleshoutting</h2>
-<p>If, despite the :heart: brought during the programming of this R :package: and writing of this documentation, you have difficulties to install or run sars, if you have questions about the procedures or calculations, or if you want to report bugs :beetle:, do not hesitate to connect with us on <a href="https://github.com/txm676/sars">GitHub</a>.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">
@@ -206,7 +216,7 @@ devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumen
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Thomas J. Matthews <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Thomas J. Matthews <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-7624-244X" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID" height="16"></a> </li>
 <li>Francois Guilhaumon <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-4707-8932" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID" height="16"></a> </li>
 </ul>
 </div>

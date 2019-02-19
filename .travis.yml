@@ -22,4 +22,4 @@ notifications:
 
 ## Only run covr on release
 after_success:
-  - Rscript -e "if(length(grep('2\$', ${TRAVIS_JOB_NUMBER}))) covr::codecov()";
+  - Rscript -e 'covr::codecov()'

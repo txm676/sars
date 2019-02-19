@@ -41,7 +41,6 @@ A website for the package can be found here: https://txm676.github.io/sars/
 
 - [Installation](#installation)
 - [Example](#example-usage)
-- [Troubleshoutting](#troubleshoutting)
 - [References](#references)
 
 

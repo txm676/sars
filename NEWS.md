@@ -3,6 +3,7 @@
 ## Version 1.1.1
  * added vignette
  * bug fixes
+ * internal updates
 
 ## Version 1.1.0  
   * sar_multi() split into two functions: sar_multi() and sar_average()

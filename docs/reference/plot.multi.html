@@ -11,7 +11,7 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
@@ -56,7 +56,7 @@
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
       </span>
     </div>
 
@@ -82,12 +82,27 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/sars-r-package.html">sars R Package</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/txm676/sars">
-    <span class="fa fa-github"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -119,12 +134,12 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for multi</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"multi"</span>, <span class='kw'>allCurves</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pch</span> <span class='kw'>=</span> <span class='fl'>16</span>, <span class='kw'>cex</span> <span class='kw'>=</span> <span class='fl'>1.2</span>, <span class='kw'>pcol</span> <span class='kw'>=</span> <span class='st'>"dodgerblue2"</span>,
-  <span class='kw'>ModTitle</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TiAdj</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>TiLine</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>cex.main</span> <span class='kw'>=</span> <span class='fl'>1.5</span>,
-  <span class='kw'>cex.lab</span> <span class='kw'>=</span> <span class='fl'>1.3</span>, <span class='kw'>cex.axis</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>yRange</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>lcol</span> <span class='kw'>=</span> <span class='st'>"dodgerblue2"</span>, <span class='kw'>pLeg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>modNames</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cex.names</span> <span class='kw'>=</span> <span class='fl'>0.88</span>,
-  <span class='kw'>subset_weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>confInt</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"multi"</span>, <span class='kw'>allCurves</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pch</span> <span class='kw'>=</span> <span class='fl'>16</span>, <span class='kw'>cex</span> <span class='kw'>=</span> <span class='fl'>1.2</span>,
+  <span class='kw'>pcol</span> <span class='kw'>=</span> <span class='st'>"dodgerblue2"</span>, <span class='kw'>ModTitle</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>TiAdj</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>TiLine</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>cex.main</span> <span class='kw'>=</span> <span class='fl'>1.5</span>, <span class='kw'>cex.lab</span> <span class='kw'>=</span> <span class='fl'>1.3</span>, <span class='kw'>cex.axis</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>yRange</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>lcol</span> <span class='kw'>=</span> <span class='st'>"dodgerblue2"</span>, <span class='kw'>pLeg</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>modNames</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>cex.names</span> <span class='kw'>=</span> <span class='fl'>0.88</span>, <span class='kw'>subset_weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>confInt</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -303,11 +318,11 @@ function.</p></td>
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sar_average.html'>sar_average</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>galap</span>)</div><div class='output co'>#&gt; 
 #&gt;  Now attempting to fit the 20 SAR models: 
 #&gt; 
-#&gt; ── <span style='font-weight: bold;'> multi_sars</span><span> ───────────────────────────────────────────────────────────────────────────── multi-model SAR ──
+#&gt; ── <span style='font-weight: bold;'> multi_sars</span><span> ────────────────────────────────────────────────────────────────────────────── multi-model SAR ──
 #&gt; </span><span style='color: #00BBBB;'>→</span><span> power    : </span><span style='color: #00BB00;'>✔</span><span>
 #&gt; </span><span style='color: #00BBBB;'>→</span><span> powerR   : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> epm1     : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> epm2     : </span><span style='color: #00BB00;'>✔</span><span>
+#&gt; </span><span style='color: #00BBBB;'>→</span><span> epm1     : </span><span style='color: #00BB00;'>✔</span><span></div><div class='output co'>#&gt; <span class='message'>observed shape algorithm failed: observed shape set to</span>
+#&gt; <span class='message'>                theoretical shape (sigmoid)</span></div><div class='output co'>#&gt; </span><span style='color: #00BBBB;'>→</span><span> epm2     : </span><span style='color: #00BB00;'>✔</span><span>
 #&gt; </span><span style='color: #00BBBB;'>→</span><span> p1       : </span><span style='color: #00BB00;'>✔</span><span>
 #&gt; </span><span style='color: #00BBBB;'>→</span><span> p2       : </span><span style='color: #00BB00;'>✔</span><span>
 #&gt; </span><span style='color: #00BBBB;'>→</span><span> loga     : </span><span style='color: #00BB00;'>✔</span><span>
@@ -330,7 +345,7 @@ function.</p></td>
 #&gt; <span class='message'>4 models failed the residuals normality test and  have been excluded  from the multi SAR:</span>
 #&gt; <span class='message'>Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model</span></div><div class='output co'>#&gt; 16 remaining models used to construct the multi  SAR:
 #&gt;  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-#&gt; ───────────────────────────────────────────────────────────────────────────────────────────────────────────────</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>)</div><div class='img'><img src='plot.multi-1.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt; ────────────────────────────────────────────────────────────────────────────────────────────────────────────────</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>)</div><div class='img'><img src='plot.multi-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#remove the legend</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>pLeg</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='plot.multi-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#plot just the multimodel curve</span>

@@ -11,7 +11,7 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
@@ -57,7 +57,7 @@
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -68,7 +68,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
       </span>
     </div>
 
@@ -83,12 +83,27 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/sars-r-package.html">sars R Package</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/txm676/sars">
-    <span class="fa fa-github"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -105,7 +120,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>sars: Fit and compare species-area relationship models using multimodel inference</h1>
-    <small class="dont-index">Source: <a href='https://github.com/txm676/sars/blob/master/R/mmSAR2.R'><code>R/mmSAR2.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/txm676/sars/blob/master/R/sars.R'><code>R/sars.R</code></a></small>
     <div class="hidden name"><code>sars-package.Rd</code></div>
     </div>
 
@@ -200,11 +215,11 @@
 <span class='no'>fit_multi</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sar_average.html'>sar_average</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>galap</span>)</div><div class='output co'>#&gt; 
 #&gt;  Now attempting to fit the 20 SAR models: 
 #&gt; 
-#&gt; ── <span style='font-weight: bold;'> multi_sars</span><span> ───────────────────────────────────────────────────────────────────────────── multi-model SAR ──
+#&gt; ── <span style='font-weight: bold;'> multi_sars</span><span> ────────────────────────────────────────────────────────────────────────────── multi-model SAR ──
 #&gt; </span><span style='color: #00BBBB;'>→</span><span> power    : </span><span style='color: #00BB00;'>✔</span><span>
 #&gt; </span><span style='color: #00BBBB;'>→</span><span> powerR   : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> epm1     : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> epm2     : </span><span style='color: #00BB00;'>✔</span><span>
+#&gt; </span><span style='color: #00BBBB;'>→</span><span> epm1     : </span><span style='color: #00BB00;'>✔</span><span></div><div class='output co'>#&gt; <span class='message'>observed shape algorithm failed: observed shape set to</span>
+#&gt; <span class='message'>                theoretical shape (sigmoid)</span></div><div class='output co'>#&gt; </span><span style='color: #00BBBB;'>→</span><span> epm2     : </span><span style='color: #00BB00;'>✔</span><span>
 #&gt; </span><span style='color: #00BBBB;'>→</span><span> p1       : </span><span style='color: #00BB00;'>✔</span><span>
 #&gt; </span><span style='color: #00BBBB;'>→</span><span> p2       : </span><span style='color: #00BB00;'>✔</span><span>
 #&gt; </span><span style='color: #00BBBB;'>→</span><span> loga     : </span><span style='color: #00BB00;'>✔</span><span>
@@ -227,7 +242,7 @@
 #&gt; <span class='message'>4 models failed the residuals normality test and  have been excluded  from the multi SAR:</span>
 #&gt; <span class='message'>Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model</span></div><div class='output co'>#&gt; 16 remaining models used to construct the multi  SAR:
 #&gt;  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-#&gt; ───────────────────────────────────────────────────────────────────────────────────────────────────────────────</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit_multi</span>)</div><div class='output co'>#&gt; 
+#&gt; ────────────────────────────────────────────────────────────────────────────────────────────────────────────────</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit_multi</span>)</div><div class='output co'>#&gt; 
 #&gt; Sar_average object summary:
 #&gt; 
 #&gt; 16  models successfully fitted
@@ -244,13 +259,13 @@
 #&gt; 4     power  0.073 143.625 0.491 0.413 convex up     FALSE
 #&gt; 5      loga  0.067 143.785 0.486 0.407 convex up     FALSE
 #&gt; 6        p1  0.066 143.840 0.589 0.486 convex up     FALSE
-#&gt; 7  gompertz  0.061 143.987 0.585 0.482   sigmoid      TRUE
+#&gt; 7  gompertz  0.061 143.987 0.585 0.482 convex up      TRUE
 #&gt; 8  weibull3  0.038 144.918 0.561 0.451 convex up      TRUE
 #&gt; 9   chapman  0.036 145.062 0.557 0.446 convex up      TRUE
 #&gt; 10    ratio  0.035 145.088 0.556 0.445 convex up      TRUE
 #&gt; 11    heleg  0.029 145.476 0.545 0.431 convex up      TRUE
 #&gt; 12      mmf  0.029 145.476 0.545 0.431 convex up      TRUE
-#&gt; 13       p2  0.019 146.306 0.521 0.401   sigmoid     FALSE
+#&gt; 13       p2  0.019 146.306 0.521 0.401 convex up     FALSE
 #&gt; 14   powerR  0.014 146.877 0.503 0.379 convex up     FALSE
 #&gt; 15     epm2  0.014 146.923 0.502 0.377   sigmoid     FALSE
 #&gt; 16    betap  0.002 150.612 0.522 0.349 convex up     FALSE</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit_multi</span>)</div><div class='img'><img src='sars-package-2.png' alt='' width='700' height='433' /></div></span></pre>

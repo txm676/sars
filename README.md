@@ -11,6 +11,8 @@ The **'sars'** R Package <img src="man/figures/sars_logo.png" align="right" widt
 
 As this is version 1.1.0 of the package, it is possible that there are some bugs in places. Please report any issues to us via GitHub.
 
+The package has an associated vignette that provides examples of how to use the package.
+
 A website for the package can be found here: <https://txm676.github.io/sars/>
 
 Table of Contents
@@ -18,7 +20,6 @@ Table of Contents
 
 -   [Installation](#installation)
 -   [Example](#example-usage)
--   [Troubleshoutting](#troubleshoutting)
 -   [References](#references)
 
 Installation
@@ -42,40 +43,40 @@ Example usage
 
 Basic usage of **sars** will result in using two types of functions:
 
-To fit the power sar model (Arrhenius 1921) to the 'galapagos' (<span class="citeproc-not-found" data-reference-id="Preston1962">**???**</span>) data set:
+To fit the power sar model (Arrhenius 1921) to the 'galapagos' (Preston 1962) data set:
 
 ``` r
 fit_pow <- sar_power(data = galap)
 ```
 
-Attempting to fit all 20 sar models to the 'galapagos' (<span class="citeproc-not-found" data-reference-id="Preston1962">**???**</span>) data set and get a multi-model SAR:
+Attempting to fit all 20 sar models to the 'galapagos' (Preston 1962) data set and get a multi-model SAR:
 
 ``` r
 mm_galap <- sar_average(data = galap)
 #> 
 #>  Now attempting to fit the 20 SAR models: 
 #> 
-#> --  multi_sars ------------------------------------------------------------------- multi-model SAR --
-#> > power    : v
-#> > powerR   : v
-#> > epm1     : v
-#> > epm2     : v
-#> > p1       : v
-#> > p2       : v
-#> > loga     : v
-#> > koba     : v
-#> > mmf      : v
-#> > monod    : v
-#> > negexpo  : v
-#> > chapman  : Warning: could not compute parameters statistics
-#> > weibull3 : v
-#> > asymp    : v
-#> > ratio    : v
-#> > gompertz : v
-#> > weibull4 : v
-#> > betap    : v
-#> > heleg    : v
-#> > linear   : v
+#> ──  multi_sars ────────────────────────────────────────────────────────────────────────────── multi-model SAR ──
+#> → power    : ✔
+#> → powerR   : ✔
+#> → epm1     : ✔
+#> → epm2     : ✔
+#> → p1       : ✔
+#> → p2       : ✔
+#> → loga     : ✔
+#> → koba     : ✔
+#> → mmf      : ✔
+#> → monod    : ✔
+#> → negexpo  : ✔
+#> → chapman  : Warning: could not compute parameters statistics
+#> → weibull3 : ✔
+#> → asymp    : ✔
+#> → ratio    : ✔
+#> → gompertz : ✔
+#> → weibull4 : ✔
+#> → betap    : ✔
+#> → heleg    : ✔
+#> → linear   : ✔
 #> 
 #> Model fitting completed - all models succesfully fitted.  Now undertaking model validation checks.
 #> Additional models  will be excluded if necessary:
@@ -84,12 +85,12 @@ mm_galap <- sar_average(data = galap)
 #> Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model
 #> 16 remaining models used to construct the multi  SAR:
 #>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-#> -----------------------------------------------------------------------------------------------------
+#> ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ```
 
 Each of the 'fitted' objects have corresponding plot methods:
 
-to fit the logarithmic SAR model (<span class="citeproc-not-found" data-reference-id="Gleason1922">**???**</span>) to the 'galapagos' data set and plot it
+to fit the logarithmic SAR model (Gleason 1922) to the 'galapagos' data set and plot it
 
 ``` r
 fit_loga <- sar_loga(data = galap)
@@ -113,3 +114,7 @@ References
 ----------
 
 Arrhenius, Olof. 1921. “Species and Area.” *The Journal of Ecology* 9 (1). British Ecological Society: 95. doi:[10.2307/2255763](https://doi.org/10.2307/2255763).
+
+Gleason, Henry Allan. 1922. “On the Relation Between Species and Area.” *Ecology* 3 (2). Ecological Society of America: 158–62. doi:[10.2307/1929150](https://doi.org/10.2307/1929150).
+
+Preston, F. W. 1962. “The Canonical Distribution of Commonness and Rarity: Part I.” *Ecology* 43 (2). Ecological Society of America: 185. doi:[10.2307/1931976](https://doi.org/10.2307/1931976).

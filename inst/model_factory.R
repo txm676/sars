@@ -14,7 +14,7 @@
 # 2. create a "model file" containing the (list) description of the model and
 #    save it in the "inst/non_lin_models" directory
 # 3. source the "cat_roxygen" and "model_factory" functions
-# 4. run the "model_factory" fucntion (see comand lines at the end of this file)
+# 4. run the "model_factory" fucntion (see commands at the end of this file)
 # 5. build the sars package
 # 
 ################################################################################
@@ -232,10 +232,8 @@ model_factory <- function(f, overwrite = FALSE){
 ########################
 #using the model factory
 ########################
-#setwd("C:\\Users\\Tom\\Desktop\\sars")
-modFiles <- list.files(file.path(getwd(),"inst","non_lin_models"))
-
+modFiles <- list.files(file.path(here::here(),"inst","non_lin_models"))
 lapply(modFiles, model_factory, overwrite = TRUE)
-#setwd("C:\\Users\\Tom\\Desktop")
+
 
 
