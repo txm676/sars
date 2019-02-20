@@ -186,36 +186,36 @@ is undertaken).</p></td>
 <span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'>sar_multi</span>(<span class='no'>galap</span>, <span class='kw'>obj</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"power"</span>, <span class='st'>"loga"</span>, <span class='st'>"linear"</span>))</div><div class='output co'>#&gt; 
 #&gt;  Now attempting to fit the 3 SAR models: 
 #&gt; 
-#&gt; ── <span style='font-weight: bold;'> multi_sars</span><span> ────────────────────────────────────────────────────────────────────────────── multi-model SAR ──
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> power  : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> loga   : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> linear : </span><span style='color: #00BB00;'>✔</span><span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit2</span>)</div><div class='img'><img src='sar_multi-1.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt; ──  multi_sars ─────────────────────────────────────────────────────────────────────────────────── multi-model SAR ──
+#&gt; → power  : ✔
+#&gt; → loga   : ✔
+#&gt; → linear : ✔</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit2</span>)</div><div class='img'><img src='sar_multi-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># construct a fit_collection object of all 20 SAR model fits</span>
 <span class='no'>fit3</span> <span class='kw'>&lt;-</span> <span class='fu'>sar_multi</span>(<span class='no'>galap</span>)</div><div class='output co'>#&gt; 
 #&gt;  Now attempting to fit the 20 SAR models: 
 #&gt; 
-#&gt; ── </span><span style='font-weight: bold;'> multi_sars</span><span> ────────────────────────────────────────────────────────────────────────────── multi-model SAR ──
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> power    : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> powerR   : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> epm1     : </span><span style='color: #00BB00;'>✔</span><span></div><div class='output co'>#&gt; <span class='message'>observed shape algorithm failed: observed shape set to</span>
-#&gt; <span class='message'>                theoretical shape (sigmoid)</span></div><div class='output co'>#&gt; </span><span style='color: #00BBBB;'>→</span><span> epm2     : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> p1       : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> p2       : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> loga     : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> koba     : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> mmf      : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> monod    : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> negexpo  : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #BBBB00;'>→</span><span> chapman  : Warning: could not compute parameters statistics
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> weibull3 : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> asymp    : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> ratio    : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> gompertz : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> weibull4 : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> betap    : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> heleg    : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> linear   : </span><span style='color: #00BB00;'>✔</span><span></div><div class='input'>
-</div></span></pre>
+#&gt; ──  multi_sars ─────────────────────────────────────────────────────────────────────────────────── multi-model SAR ──
+#&gt; → power    : ✔
+#&gt; → powerR   : ✔
+#&gt; → epm1     : ✔</div><div class='output co'>#&gt; <span class='message'>observed shape algorithm failed: observed shape set to</span>
+#&gt; <span class='message'>                theoretical shape (sigmoid)</span></div><div class='output co'>#&gt; → epm2     : ✔
+#&gt; → p1       : ✔
+#&gt; → p2       : ✔
+#&gt; → loga     : ✔
+#&gt; → koba     : ✔
+#&gt; → mmf      : ✔
+#&gt; → monod    : ✔
+#&gt; → negexpo  : ✔
+#&gt; → chapman  : Warning: could not compute parameters statistics
+#&gt; → weibull3 : ✔
+#&gt; → asymp    : ✔
+#&gt; → ratio    : ✔
+#&gt; → gompertz : ✔
+#&gt; → weibull4 : ✔
+#&gt; → betap    : ✔
+#&gt; → heleg    : ✔
+#&gt; → linear   : ✔</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

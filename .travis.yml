@@ -20,6 +20,6 @@ notifications:
     on_success: change
     on_failure: change
 
-## Only run covr on release
+## Code coverage
 after_success:
   - Rscript -e 'covr::codecov()'

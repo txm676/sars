@@ -190,34 +190,34 @@
 <span class='no'>mf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sar_average.html'>sar_average</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>galap</span>)</div><div class='output co'>#&gt; 
 #&gt;  Now attempting to fit the 20 SAR models: 
 #&gt; 
-#&gt; ── <span style='font-weight: bold;'> multi_sars</span><span> ────────────────────────────────────────────────────────────────────────────── multi-model SAR ──
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> power    : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> powerR   : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> epm1     : </span><span style='color: #00BB00;'>✔</span><span></div><div class='output co'>#&gt; <span class='message'>observed shape algorithm failed: observed shape set to</span>
-#&gt; <span class='message'>                theoretical shape (sigmoid)</span></div><div class='output co'>#&gt; </span><span style='color: #00BBBB;'>→</span><span> epm2     : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> p1       : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> p2       : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> loga     : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> koba     : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> mmf      : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> monod    : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> negexpo  : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #BBBB00;'>→</span><span> chapman  : Warning: could not compute parameters statistics
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> weibull3 : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> asymp    : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> ratio    : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> gompertz : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> weibull4 : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> betap    : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> heleg    : </span><span style='color: #00BB00;'>✔</span><span>
-#&gt; </span><span style='color: #00BBBB;'>→</span><span> linear   : </span><span style='color: #00BB00;'>✔</span><span>
+#&gt; ──  multi_sars ─────────────────────────────────────────────────────────────────────────────────── multi-model SAR ──
+#&gt; → power    : ✔
+#&gt; → powerR   : ✔
+#&gt; → epm1     : ✔</div><div class='output co'>#&gt; <span class='message'>observed shape algorithm failed: observed shape set to</span>
+#&gt; <span class='message'>                theoretical shape (sigmoid)</span></div><div class='output co'>#&gt; → epm2     : ✔
+#&gt; → p1       : ✔
+#&gt; → p2       : ✔
+#&gt; → loga     : ✔
+#&gt; → koba     : ✔
+#&gt; → mmf      : ✔
+#&gt; → monod    : ✔
+#&gt; → negexpo  : ✔
+#&gt; → chapman  : Warning: could not compute parameters statistics
+#&gt; → weibull3 : ✔
+#&gt; → asymp    : ✔
+#&gt; → ratio    : ✔
+#&gt; → gompertz : ✔
+#&gt; → weibull4 : ✔
+#&gt; → betap    : ✔
+#&gt; → heleg    : ✔
+#&gt; → linear   : ✔
 #&gt; 
 #&gt; Model fitting completed - all models succesfully fitted.  Now undertaking model validation checks.
 #&gt; Additional models  will be excluded if necessary:</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>4 models failed the residuals normality test and  have been excluded  from the multi SAR:</span>
 #&gt; <span class='message'>Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model</span></div><div class='output co'>#&gt; 16 remaining models used to construct the multi  SAR:
 #&gt;  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-#&gt; ────────────────────────────────────────────────────────────────────────────────────────────────────────────────</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>mf</span>)</div><div class='output co'>#&gt; 
+#&gt; ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>mf</span>)</div><div class='output co'>#&gt; 
 #&gt; Sar_average object summary:
 #&gt; 
 #&gt; 16  models successfully fitted
@@ -283,7 +283,7 @@
 #&gt; 
 #&gt; Power (non-linear) parameters:
 #&gt;  c = 33.18 
-#&gt;  z = 0.28 </div></span></pre>
+#&gt;  z = 0.28 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
