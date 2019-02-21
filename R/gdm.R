@@ -83,9 +83,9 @@
 #' g <- gdm(galap, model = "loga", mod_sel = FALSE)
 #'
 #' #Compare the GDM (using the logarithmic model) with other nested candidate
-#' #models 
+#' #models
 #' g2 <- gdm(galap, model = "loga", mod_sel = TRUE)
-#' 
+#'
 #' #compare the GDM fitted using the linear, logarithmic and power SAR models
 #' g3 <- gdm(galap, model = "all", mod_sel = FALSE)
 #' @export
@@ -93,7 +93,7 @@
 
 gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3)){
   if (anyNA(data)) stop("NAs present in data")
-  if (!(is.matrix(data) | is.data.frame(data))) 
+  if (!(is.matrix(data) | is.data.frame(data)))
     stop("data must be a matrix or dataframe")
   if (is.matrix(data)) data <- as.data.frame(data)
   if (ncol(data) < 3) stop("Not enough columns/variables to fit GDM")
@@ -105,37 +105,37 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3)){
     stop("provided model name not available")
   }
   if (!is.logical(mod_sel)) stop("mod_sel argument should be TRUE or FALSE")
-  
+
   if (all(AST == c(1, 2, 3))){
     colnames(data) <-c("Area", "SR", "Time")
   } else{
     data <- data[, AST]
     colnames(data) <- c("Area", "SR", "Time")
   }
-  
+
   if (model == "all") allMods <- vector("list", length = 3)
 
   if (model == "loga" | model == "all"){
-      
+
     #cat("\n","Fitting the GDM using the logarithmic model", "\n")
 
-     fit <- nls(formula = 
-                  SR ~ Int + A * log(Area) + Ti * Time + Ti2 * Time ^ 2, 
-                         data = data, 
+     fit <- nls(formula =
+                  SR ~ Int + A * log(Area) + Ti * Time + Ti2 * Time ^ 2,
+                         data = data,
                 start = data.frame(Int = 0, A = 1, Ti = 1, Ti2 = 0))
-     if (mod_sel == TRUE){
+     if (mod_sel) {
        fitL <- vector("list", length = 4)
        fitL[[1]] <- fit
-       fitL[[2]] <- nls(formula = SR ~ Int + A * log(Area) + Ti * Time, 
-                        data = data, start = data.frame(Int = 0, A = 1, 
+       fitL[[2]] <- nls(formula = SR ~ Int + A * log(Area) + Ti * Time,
+                        data = data, start = data.frame(Int = 0, A = 1,
                                                         Ti = 1))
-       fitL[[3]] <- nls(formula = SR ~ Int + A * log(Area), 
+       fitL[[3]] <- nls(formula = SR ~ Int + A * log(Area),
                         data = data, start = data.frame(Int = 0, A = 1))
-       fitL[[4]] <- lm(SR ~ 1, data = data) #intercept only is mean of Y; 
+       fitL[[4]] <- lm(SR ~ 1, data = data) #intercept only is mean of Y;
        #so can use lm as no functional form implied
        fit <- fitL
      }
-     if (mod_sel){
+     if (mod_sel) {
        class(fit) <- c("gdm")
      } else {
        class(fit) <- c("gdm", "nls")
@@ -143,21 +143,21 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3)){
      attr(fit, "Type") <- "loga"
      attr(fit, "mod_sel") <- mod_sel
      if (model == "all") allMods[[1]] <- fit
-     
-  } 
+
+  }
   if (model == "linear" | model == "all"){
    # cat("\n","Fitting the GDM using the linear model", "\n")
-    fit <- nls(SR ~ Int + A * Area + Ti * Time + Ti2 * Time ^ 2, 
-               data = data, 
+    fit <- nls(SR ~ Int + A * Area + Ti * Time + Ti2 * Time ^ 2,
+               data = data,
                start = data.frame(Int = 0, A = 1, Ti = 1, Ti2 = 0))
-    
+
     if (mod_sel == TRUE){
       fitL <- vector("list", length = 4)
       fitL[[1]] <- fit
-      fitL[[2]] <- nls(formula = SR ~ Int + A * Area + Ti * Time, 
-                       data = data, 
+      fitL[[2]] <- nls(formula = SR ~ Int + A * Area + Ti * Time,
+                       data = data,
                        start = data.frame(Int = 0, A = 1, Ti = 1))
-      fitL[[3]] <- nls(formula = SR ~ Int + A * Area, 
+      fitL[[3]] <- nls(formula = SR ~ Int + A * Area,
                        data = data, start = data.frame(Int = 0, A = 1))
       fitL[[4]] <- lm(SR ~ 1, data = data)
       fit <- fitL
@@ -171,20 +171,20 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3)){
     attr(fit, "mod_sel") <- mod_sel
     if (model == "all") allMods[[2]] <- fit
   }
-  
+
   if (model == "power" | model == "all"){
-   
-    fit <- nls(SR ~ exp(Int + A * log(Area) + Ti * Time + Ti2 * Time ^ 2), 
-               data = data, 
+
+    fit <- nls(SR ~ exp(Int + A * log(Area) + Ti * Time + Ti2 * Time ^ 2),
+               data = data,
                start = data.frame(Int = 0, A = 1, Ti = 1, Ti2 = 0))
-    
+
     if (mod_sel == TRUE){
       fitL <- vector("list", length = 4)
       fitL[[1]] <- fit
-      fitL[[2]] <- nls(formula = SR ~ exp(Int + A * log(Area) + Ti * Time), 
-                       data = data, 
+      fitL[[2]] <- nls(formula = SR ~ exp(Int + A * log(Area) + Ti * Time),
+                       data = data,
                        start = data.frame(Int = 0, A = 1, Ti = 1))
-      fitL[[3]] <- nls(formula = SR ~ exp(Int + A * log(Area)), 
+      fitL[[3]] <- nls(formula = SR ~ exp(Int + A * log(Area)),
                        data = data, start = data.frame(Int = 0, A = 1))
       fitL[[4]] <- lm(log(SR) ~ 1, data = data)
       fit <- fitL
@@ -207,5 +207,3 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3)){
     return(fit)
   }
 }
-  
-

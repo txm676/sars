@@ -2,9 +2,9 @@
 
 #' @description Fit the PowerR model to SAR data.
 #' @usage sar_powerR(data, start = NULL, grid_start = NULL, normaTest =  'lillie',
-              
+
 #'   homoTest = 'cor.fitted')
-#' @param data A dataset in the form of a dataframe with two columns: 
+#' @param data A dataset in the form of a dataframe with two columns:
 #'   the first with island/site areas, and the second with the species richness
 #'   of each island/site.
 #' @param start NULL or custom parameter start values for the optimisation algorithm.
@@ -32,7 +32,7 @@
 #'   A selection of information criteria (e.g. AIC, BIC) are returned and can be used to compare models
 #'   (see also \code{\link{sar_average}})
 #' @importFrom stats lm quantile
-#' @return A list of class 'sars' with the following components: 
+#' @return A list of class 'sars' with the following components:
 #'   \itemize{
 #'     \item{par} { The model parameters}
 #'     \item{value} { Residual sum of squares}
@@ -68,47 +68,44 @@
 #' plot(fit)
 #' @export
 
-sar_powerR <- function(data, start = NULL, grid_start = NULL, 
+sar_powerR <- function(data, start = NULL, grid_start = NULL,
 normaTest =  "lillie", homoTest = "cor.fitted"){
-if (!(is.matrix(data) | is.data.frame(data)))  
-stop('data must be a matrix or dataframe')
-if (is.matrix(data)) data <- as.data.frame(data)
-if (anyNA(data)) stop('NAs present in data')
-data <- data[order(data[,1]),]
-colnames(data) <- c('A','S')
-# POWER MODEL BIS (ROSENSWEIG 1995)
-model <- list(
-  name = c("PowerR"),
-  formula = expression(S == f + c*A^z),
-  exp = expression(f + c*A^z),
-  shape = "convex",
-  asymp = function(pars)FALSE,
-  custStart = function(data)c(5,.25,0),
-  #limits for parameters
-  parLim = c("R","R","R"),
-  #initials values function
-  init = function(data) {
-    if (any(data$S == 0)) {
-      log.data <- data.frame(A = log(data$A), S = log(data$S + .5))
-    }else{
-      log.data <- log(data)
-    }
-    res <- stats::lm(S~A,log.data)$coefficients
-    res <- c(exp(res[1]), res[2])
-    res <- c(stats::lm(S~A,data)$coefficients[1], res)
-    names(res) <- c("f","c","z")
-    return(res)
+
+  data <- check_data(data)
+  colnames(data) <- c('A','S')
+  # POWER MODEL BIS (ROSENSWEIG 1995)
+  model <- list(
+    name = c("PowerR"),
+    formula = expression(S == f + c*A^z),
+    exp = expression(f + c*A^z),
+    shape = "convex",
+    asymp = function(pars)FALSE,
+    custStart = function(data)c(5,.25,0),
+    #limits for parameters
+    parLim = c("R","R","R"),
+    #initials values function
+    init = function(data) {
+      if (any(data$S == 0)) {
+        log.data <- data.frame(A = log(data$A), S = log(data$S + .5))
+      } else {
+        log.data <- log(data)
+      }
+      res <- stats::lm(S~A,log.data)$coefficients
+      res <- c(exp(res[1]), res[2])
+      res <- c(stats::lm(S~A,data)$coefficients[1], res)
+      names(res) <- c("f","c","z")
+      return(res)
     }
 )
 
 model <- compmod(model)
-fit <- get_fit(model = model, data = data, start = start,  
-grid_start = grid_start, algo = 'Nelder-Mead', 
-       
+fit <- get_fit(model = model, data = data, start = start,
+grid_start = grid_start, algo = 'Nelder-Mead',
+
 normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
 if(is.na(fit$value)){
   return(list(value = NA))
-}else{ 
+}else{
   obs <- obs_shape(fit)
   fit$observed_shape <- obs$fitShape
   fit$asymptote <- obs$asymp

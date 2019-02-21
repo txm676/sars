@@ -129,6 +129,5 @@ obs_shape <- function(x){
       }
       names(possFits) <- c("linear", "convex up", "convex down", "sigmoid")
 
-      res <- list(asymp = asymp, fitShape = names(possFits[possFits == 1]))
-      return(res)
+      list(asymp = asymp, fitShape = names(possFits[possFits == 1]))
 }

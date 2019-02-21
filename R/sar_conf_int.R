@@ -11,23 +11,23 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
                          alpha_homotest = 0.05, verb = TRUE){
 
   if (!"multi" %in% class(fit)) stop ("class of 'fit' should be 'multi'")
-  if (length(fit$details$mod_names) < 2) 
+  if (length(fit$details$mod_names) < 2)
     stop ("less than two models in the sar average object")
 
   #model names for matching
 
-#  x1 <- c("Power", "PowerR", "Extended_Power_model_1", 
+#  x1 <- c("Power", "PowerR", "Extended_Power_model_1",
           #"Extended_Power_model_2", "Persistence_function_1",
-         # "Persistence_function_2", "Logarithmic", "Kobayashi", "MMF", 
-         # "Monod", "Negative_exponential", "Chapman_Richards", 
-        #  "Cumulative_Weibull_3_par.", "Asymptotic_regression", 
-        #  "Rational_function","Gompertz", "Cumulative_Weibull_4_par.", 
+         # "Persistence_function_2", "Logarithmic", "Kobayashi", "MMF",
+         # "Monod", "Negative_exponential", "Chapman_Richards",
+        #  "Cumulative_Weibull_3_par.", "Asymptotic_regression",
+        #  "Rational_function","Gompertz", "Cumulative_Weibull_4_par.",
         #  "Beta-P_cumulative", "Heleg(Logistic)", "Linear_model")
 
   x2 <- c("sar_power(", "sar_powerR(", "sar_epm1(", "sar_epm2(", "sar_p1(",
           "sar_p2(", "sar_loga(", "sar_koba(", "sar_mmf(", "sar_monod(",
-          "sar_negexpo(", "sar_chapman(", "sar_weibull3(", "sar_asymp(", 
-          "sar_ratio(", "sar_gompertz(", "sar_weibull4(", "sar_betap(", 
+          "sar_negexpo(", "sar_chapman(", "sar_weibull3(", "sar_asymp(",
+          "sar_ratio(", "sar_gompertz(", "sar_weibull4(", "sar_betap(",
           "sar_heleg(", "sar_linear(")
 
   x3 <-   c("power", "powerR","epm1","epm2","p1","p2","loga","koba","mmf",
@@ -44,7 +44,7 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   nams <- as.vector(names(wei))
   ns1 <- which(x3 %in% nams)
   nams_short <- x3[ns1]#for use below
-  
+
   #loop over all models in sar_average fit and fill matrices of fitted values
   #and, resids & transformed residuals
   calculated <- residuals <- transResiduals <- matrix(nrow = length(nams),
@@ -82,7 +82,7 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   }
   }#eo if linear
 
-  ##occasionally the jacobian function returns NA for certain models: 
+  ##occasionally the jacobian function returns NA for certain models:
   #need to remove these,
   #so just fill all NAs for this model and it will be removed below
   if (anyNA(jacob)){
@@ -124,14 +124,14 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
  rownames(residuals) <- rownames(transResiduals)
  rownames(calculated) <- rownames(residuals)
 
-  #some models have NANs in the transResiduals calculation; so remove them 
+  #some models have NANs in the transResiduals calculation; so remove them
  #from all the matrices (and names vectors)
  if (anyNA(transResiduals)){
 
   wna <- which(apply(transResiduals, 1, anyNA))
-  warning(paste("The following model(s) has been removed from the", 
+  warning(paste("The following model(s) has been removed from the",
                  " confidence interval calculations as NAs/Infs are
-                present in the transformed residuals:", 
+                present in the transformed residuals:",
                 paste(names(wna), collapse = ", ")))
   calculated <- calculated[-wna, ]
   residuals <- residuals[-wna, ]
@@ -141,7 +141,7 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   nams_short <- nams_short[-wna]
   if (identical(!nrow(calculated), nrow(residuals),
                 nrow(transResiduals), length(wei),
-length(nams), length(nams_short))) 
+length(nams), length(nams_short)))
     stop ("Problem with removed models following transResiduals checks")
  }
 
@@ -204,7 +204,7 @@ for (l in seq_len(nrow(dat))) {
 
     df <- data.frame("A" = dat$A, "S" = bootMatrix[nGoodBoot, ])
     optimres <- tryCatch(suppressMessages(sar_average(obj = nams_short,
-                                                      data = df, 
+                                                      data = df,
                                       verb = FALSE)), error = function(e) NA)
 
     if (length(optimres) == 1) {
@@ -216,22 +216,22 @@ for (l in seq_len(nrow(dat))) {
         z <- z + 1
       }
       #matrix for the fitted values
-      bootCalculated[[nGoodBoot]] <- 
+      bootCalculated[[nGoodBoot]] <-
         matrix(nrow = length(optimres$details$fits), ncol = nrow(df))
-      rownames(bootCalculated[[nGoodBoot]]) <- 
+      rownames(bootCalculated[[nGoodBoot]]) <-
         as.vector(optimres$details$mod_names)
       #matrix for AIC etc
-      optimBootResult[[nGoodBoot]] <- 
+      optimBootResult[[nGoodBoot]] <-
         matrix(nrow = length(optimres$details$fits), ncol = 3)
-      rownames( optimBootResult[[nGoodBoot]]) <- 
+      rownames( optimBootResult[[nGoodBoot]]) <-
         as.vector(optimres$details$mod_names)
-      colnames(optimBootResult[[nGoodBoot]]) <- 
+      colnames(optimBootResult[[nGoodBoot]]) <-
         c(paste(IC), "Delta", "Weights")
 
       for (k in seq_along(optimres$details$mod_names)){
-      bootCalculated[[nGoodBoot]][k, ] <- 
+      bootCalculated[[nGoodBoot]][k, ] <-
         optimres$details$fits[[k]]$calculated
-      optimBootResult[[nGoodBoot]][k, 1] <- 
+      optimBootResult[[nGoodBoot]][k, 1] <-
         as.vector(unlist(optimres$details$fits[[k]][IC]))
       optimBootResult[[nGoodBoot]][k, 2:3] <- 0
       }#eo k
@@ -288,6 +288,6 @@ for (l in seq_len(nrow(dat))) {
   alp <- 0.025
   c1 <- ceiling(n  * alp) #maybe a better way
   c2 <- floor(n  * (1-alp))
-  CI <- data.frame("L" = bootSort[c1, ], "U" = bootSort[c2, ])
-  return(CI)
+  ## CI
+  data.frame("L" = bootSort[c1, ], "U" = bootSort[c2, ])
 }

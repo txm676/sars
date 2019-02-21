@@ -11,9 +11,7 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   #initial parameters
   if (is.null(start)) {
     start <- model$init(data)
-  }else{
-    start <- start
-  }
+  } else start <- start
 
   #if outside ranges : rescaling
   for (i in seq_along(start)) {
@@ -65,14 +63,14 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
 
   l <- data[[2]]
 
-  if(length(l)<5) {
+  if (length(l) < 5) {
 
       warning("The Lilliefors test cannot be performed with less than 5",
               " data points\n")
 
   }#eo if length
 
-  if(length(l)<3) {
+  if (length(l) < 3) {
 
       warning("The Shapiro test cannot be performed with less than 3",
               " data points\n")
@@ -104,9 +102,7 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   } else if (homoTest == "cor.fitted"){
     homoTest  <- list("test" = "cor.fitted", tryCatch(cor.test(residu,S.calc),
                             error = function(e)list(estimate=NA,p.value=NA)))
-  } else {
-    homoTest <- "none"
-  }
+  } else homoTest <- "none"
 
   #R2, AIC, AICc, BIC
 
@@ -207,19 +203,14 @@ grid_start_fit <- function(model, data, n, algo = "Nelder-Mead",
                            normaTest = "lillie", homoTest = "cor.fitted",
                            verb = TRUE) {
 
-  if(length(model$parNames)<4){
-    ns <- 100
-  }else{
-    ns <- 10
-  }
+  ns <- ifelse(length(model$parNames) < 4, 100, 10)
 
   start.list <- lapply(model$parLim,function(x){
-    res <- switch(x,
-                 R = sample(seq(-500,500),ns),
-                 Rplus = seq(.1,500,length.out = ns),
-                 unif = runif(ns)
+    switch(x,
+        R = sample(seq(-500,500),ns),
+        Rplus = seq(.1,500,length.out = ns),
+        unif = runif(ns)
     )
-    return(res)
   })
 
   names(start.list) <- model$parNames

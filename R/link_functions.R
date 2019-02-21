@@ -41,7 +41,7 @@ backLink <- function(x,boundType) {
     1/(1+exp(-x))
   }#end of invlogit
 
-  if (length(x) ==1) {
+  if (length(x) == 1) {
     res <- switch(boundType,
                  R = x,
                  Rplus = exp(x),

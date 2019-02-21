@@ -75,7 +75,7 @@ print.summary.sars <- function(x, ...){
     if (object$homoTest$test == "cor.area" |
         object$homoTest$test == "cor.fitted"){
       homoP <- object$homoTest[[2]]$p.value
-    } else{
+    } else {
       homoP <- "No homogeneity test undertaken"
     }
 
@@ -98,7 +98,7 @@ print.summary.sars <- function(x, ...){
     }
   }#eo if fit
 
-  if (attributes(object)$type == "multi"){
+  if (attributes(object)$type == "multi") {
     cat("\nSar_average object summary:\n", sep = "")
     cat("\n", paste(length(object$Models), " models successfully fitted"),
         "\n", sep = "")
@@ -126,9 +126,9 @@ print.summary.sars <- function(x, ...){
 #' @export
 #'
 
-print.sars <- function(x, ...){
+print.sars <- function(x, ...) {
   object <- x
-  if (attributes(object)$type == "lin_pow"){
+  if (attributes(object)$type == "lin_pow") {
     cat("Model = Log-log power\n")
     cat("\nCall:\nlogS = logc + z.logA\n", sep = "")
     cat("\nCoefficients:\n", sep = "")
@@ -140,7 +140,7 @@ print.sars <- function(x, ...){
     cat("\n")
   }
 
-  if (attributes(object)$type == "fit"){
+  if (attributes(object)$type == "fit") {
     cat("\nModel:\n", object$model$name, "\n", sep = "")
     cat("\nCall:\n", as.character(object$model$formula), "\n", sep = "")
     cat("\nCoefficients:\n", sep = "")
@@ -148,7 +148,7 @@ print.sars <- function(x, ...){
     cat("\n")
   }
 
-  if (attributes(object)$type == "fit_collection"){
+  if (attributes(object)$type == "fit_collection") {
     cat("\nThis is a fit collection\n", sep = "")
     cat("\n", length(object),
         " models contained in the fit collection\n", sep = "")
@@ -156,7 +156,7 @@ print.sars <- function(x, ...){
                      collapse = ", "), "\n\n")
   }
 
-  if (attributes(object)$type == "multi"){
+  if (attributes(object)$type == "multi") {
     cat("\nThis is a sar_average fit object:\n", sep = "")
     cat("\n", paste(length(object$details$mod_names),
                     "models successfully fitted"), "\n", sep = "")
@@ -164,7 +164,7 @@ print.sars <- function(x, ...){
       cat("\n", paste(length(object$details$no_fit),
       "models were unable to be fitted or were removed due to model checks"),
           "\n", sep = "")
-    } else if (object$details$no_fit != 0){
+    } else if (object$details$no_fit != 0) {
       cat("\n", paste(length(object$details$no_fit),
         "model was unable to be fitted or was removed due to model checks"),
           "\n", sep = "")
@@ -177,7 +177,7 @@ print.sars <- function(x, ...){
 
 #' @export
 
-print.gdm <- function(x, ...){
+print.gdm <- function(x, ...) {
   object <- x
   if (attributes(object)$Type %in% c("loga", "linear", "power")){
     mod <- match.arg(attributes(object)$Type, c("logarithmic",
@@ -193,7 +193,7 @@ print.gdm <- function(x, ...){
           "\n")
       cat("\nGDM model summary:\n\n")
 
-      object2 <- object[[1]]
+      object2 <- object[[1L]]
       print(object2)
       cat("\nAll model summaries:\n\n")
       obNL <- object[1:3]
@@ -208,7 +208,7 @@ print.gdm <- function(x, ...){
     }
   }
 
-    if (attributes(object)$Type == "allMods"){
+    if (attributes(object)$Type == "allMods") {
       cat("\nGDM model comparison:\n\n")
 
       if (!attributes(object)$mod_sel){

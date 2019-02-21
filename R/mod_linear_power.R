@@ -101,7 +101,7 @@ lin_pow <- function(data, con = 1, compare = FALSE, normaTest =  "lillie",
   } else if (homoTest == "cor.fitted"){
     homoTest  <- list("test" = "cor.fitted",
                   tryCatch(cor.test(resid,as.vector(res$calculated)),
-                  error = function(e)list(estimate=NA,p.value=NA)))
+                  error = function(e) list(estimate=NA,p.value=NA)))
   } else {
     homoTest <- "none"
   }
@@ -109,5 +109,5 @@ lin_pow <- function(data, con = 1, compare = FALSE, normaTest =  "lillie",
   res$homoTest <- homoTest
   class(res) <- "sars"
   attr(res, "type") <- "lin_pow"
-  return(res)
+  res
 }

@@ -61,7 +61,7 @@
 #' fit <- sar_power(galap)
 #' summary(fit)
 #' plot(fit)
-#' 
+#'
 #' #Construct a multimodel averaged SAR curve
 #' fit_multi <- sar_average(data = galap)
 #' summary(fit_multi)

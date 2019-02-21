@@ -48,15 +48,11 @@
 #' fit <- sar_linear(galap)
 #' summary(fit)
 #' plot(fit)
-#' @export 
+#' @export
 
 sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
-  if (!(is.matrix(data) | is.data.frame(data))) 
-    stop('data must be a matrix or dataframe') 
-  if (is.matrix(data)) data <- as.data.frame(data) 
-  if (anyNA(data)) stop('NAs present in data') 
-  data <- data[order(data[,1]),] 
-  colnames(data) <- c('A','S') 
+
+  data <- check_data(data)
   #standard linear regression
   mod <- lm(S ~ A, data = data)
   fit <- list()
@@ -74,12 +70,12 @@ sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
   #AIC, R2 etc
   n <- dim(data)[1]
   value <- sum(mod$residuals^2)
-  #A common mistake when calculating the number of parameters is failure to 
+  #A common mistake when calculating the number of parameters is failure to
   #include error.
-  #This is because it is not normally thought of as a parameter as, strictly 
-  #speaking, 
-  #you're not really predicting it. As a results the number of parameters 
-  #in a standard linear 
+  #This is because it is not normally thought of as a parameter as, strictly
+  #speaking,
+  #you're not really predicting it. As a results the number of parameters
+  #in a standard linear
   #equation (y=mx+c) is 3 (mx, c, and error) rather than 2.
   P <- 3
   fit$AIC <- n * log(value / n) + 2 * P
@@ -88,36 +84,36 @@ sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
   #R2 (Kvaleth, 1985, Am. Statistician)
   fit$R2 <-  1 - ( (value) /  sum((data$S - mean(data$S))^2) )
   #R2a (He & Legendre 1996, p724)
-  fit$R2a <-  1 - ( ((n-1)*(value)) /  
+  fit$R2a <-  1 - ( ((n-1)*(value)) /
                       ((n-P)*sum((data$S - mean(data$S))^2)))
   fit$sigConf <- cbind(summary(mod)$coefficients, confint(mod))
   #confidence intervals calculated using in built function
-  fit$observed_shape <- "linear" 
+  fit$observed_shape <- "linear"
   fit$asymptote <- FALSE
   #normality and homogeneity tests
   normaTest <- match.arg(normaTest, c("none", "shapiro", "kolmo", "lillie"))
   homoTest <- match.arg(homoTest, c("none","cor.area","cor.fitted"))
   #normality of residuals
   if (normaTest == "shapiro") {
-    normaTest <- list("test" = "shapiro", 
+    normaTest <- list("test" = "shapiro",
                       tryCatch(shapiro.test(res), error = function(e)NA))
-  } else if (normaTest == "lillie"){ 
-    normaTest <- list("test" = "lillie", 
+  } else if (normaTest == "lillie"){
+    normaTest <- list("test" = "lillie",
                       tryCatch(lillie.test(res), error = function(e)NA))
-  } else if (normaTest == "kolmo"){ 
-    normaTest <- list("test" = "kolmo", 
+  } else if (normaTest == "kolmo"){
+    normaTest <- list("test" = "kolmo",
                       tryCatch(ks.test(res, "pnorm"), error = function(e)NA))
   } else{
     normaTest <- "none"
   }
   #Homogeneity of variance
   if (homoTest == "cor.area"){
-    homoTest  <- list("test" = "cor.area", 
-                      tryCatch(cor.test(res,data$A), 
+    homoTest  <- list("test" = "cor.area",
+                      tryCatch(cor.test(res,data$A),
                           error = function(e)list(estimate=NA,p.value=NA)))
   } else if (homoTest == "cor.fitted"){
-    homoTest  <- list("test" = "cor.fitted", 
-                      tryCatch(cor.test(res,as.vector(mod$fitted.values)), 
+    homoTest  <- list("test" = "cor.fitted",
+                      tryCatch(cor.test(res,as.vector(mod$fitted.values)),
                           error = function(e)list(estimate=NA,p.value=NA)))
   } else {
     homoTest <- "none"
@@ -136,18 +132,7 @@ sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
     res <- sum((S - model$mod.fun(A,par, model = model))^2)
     res
   }
-  class(fit) <- 'sars' 
-  attr(fit, 'type') <- 'fit' 
-  return(fit) 
+  class(fit) <- 'sars'
+  attr(fit, 'type') <- 'fit'
+  return(fit)
 }#end of sar_linear
-
-
-
-
-
-
-
-
-
-
-

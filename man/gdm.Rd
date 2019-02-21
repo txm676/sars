@@ -86,7 +86,7 @@ galap$t <- rgamma(16, 5, scale = 2)
 g <- gdm(galap, model = "loga", mod_sel = FALSE)
 
 #Compare the GDM (using the logarithmic model) with other nested candidate
-#models 
+#models
 g2 <- gdm(galap, model = "loga", mod_sel = TRUE)
 
 #compare the GDM fitted using the linear, logarithmic and power SAR models

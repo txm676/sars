@@ -358,7 +358,7 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
                       subset_weights = NULL, confInt = FALSE, ...)
 {
 
-  if (confInt){
+  if (confInt) {
     if (length(x$details$confInt) == 1)
       stop("No confidence interval information in the fit object")
     CI <- x$details$confInt
@@ -427,7 +427,7 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
         yMax <- max(c(yy,unlist(mf2)))
         yMin <- min(c(yy,unlist(mf2)))
       }
-        }else{
+        } else{
         if (confInt){ #CIs larger so need to add to ymax and ymin
           yMax <- max(c(yy,wfv, CI$U))
           yMin <- min(c(yy,wfv, CI$L))
@@ -473,9 +473,9 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
                 cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,
                 xlim = c(min(xx), xMAX), ylim = yRange)
       }#eo confInt
-    } else{ #no legend
+    } else { #no legend
 
-      if (confInt){
+      if (confInt) {
         plot(x = xx, y = yy, xlab = xlab, ylab = ylab,
              cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
         polygon(c(xx,rev(xx)),c(CI$L,rev(CI$U)),col="grey87",border=NA)
@@ -510,7 +510,7 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   }
   }
 
-  if (type == "bar"){
+  if (type == "bar") {
   ##barplot of IC weight
 
   if (!is.null(subset_weights)) aw <- aw[aw > subset_weights]

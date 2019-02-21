@@ -24,7 +24,7 @@ sars_models <- function() {
 #' @export
 display_sars_models <- function() {
   # display table 1 of the manuscript
-  print(Table1)
+  print(sars::Table1)
 }
 
 #' Create a Collection of SAR Model Fits
@@ -136,17 +136,17 @@ sar_multi <- function(data,
                                                             "'"), ")")))
 
       if (verb) {
-        if(is.na(f$value)) {
+        if (is.na(f$value)) {
           cat_line( paste0(red(symbol$arrow_right)," ",
                            col_align(x,max(nchar(obj)))," : ",
                            red(symbol$cross)))
-        }else{
+        } else{
 
           if (!is.matrix(f$sigConf)){
             cat_line( paste0(yellow(symbol$arrow_right)," ",
                              col_align(x,max(nchar(obj))),
                         " : Warning: could not compute parameters statistics"))
-          }else{
+          } else{
             cat_line( paste0(cyan(symbol$arrow_right)," ",
                              col_align(x,max(nchar(obj)))," : ",
                              green(symbol$tick)))
@@ -372,13 +372,13 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   #NA CHECKS
   f_nas <- unlist(lapply(fits,function(b)b$value))
 
-  if(all(is.na(f_nas))){
+  if (all(is.na(f_nas))){
     stop("No model could be fitted, aborting multi_sars\n")
   }
 
   badMods <- vector(length = 0, mode = "character")
 
-  if(any(is.na(f_nas))){
+  if (any(is.na(f_nas))){
     badNames <- is.na(f_nas)
 
     message("\n", paste(sum(is.na(f_nas)),
