@@ -70,12 +70,8 @@
 
 sar_asymp <- function(data, start = NULL, grid_start = NULL,
 normaTest =  "lillie", homoTest = "cor.fitted"){
-if (!(is.matrix(data) | is.data.frame(data)))
-stop('data must be a matrix or dataframe')
-if (is.matrix(data)) data <- as.data.frame(data)
-if (anyNA(data)) stop('NAs present in data')
-data <- data[order(data[,1]),]
-colnames(data) <- c('A','S')
+  # check
+  data <- check_data(data)
 #Asymptotic Regression
 model <- list(
   name = c("Asymptotic regression"),

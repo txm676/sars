@@ -71,8 +71,8 @@
 sar_powerR <- function(data, start = NULL, grid_start = NULL,
 normaTest =  "lillie", homoTest = "cor.fitted"){
 
+  # check
   data <- check_data(data)
-  colnames(data) <- c('A','S')
   # POWER MODEL BIS (ROSENSWEIG 1995)
   model <- list(
     name = c("PowerR"),

@@ -70,7 +70,7 @@
 
 sar_ratio <- function(data, start = NULL, grid_start = NULL,
 normaTest =  "lillie", homoTest = "cor.fitted") {
-
+  # check
   data <- check_data(data)
   # RATIONAL FUNCITON ratkowski (1990)
   model <- list(

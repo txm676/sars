@@ -52,6 +52,7 @@
 
 sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
 
+  # check
   data <- check_data(data)
   #standard linear regression
   mod <- lm(S ~ A, data = data)

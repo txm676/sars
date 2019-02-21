@@ -140,13 +140,13 @@ sar_multi <- function(data,
           cat_line( paste0(red(symbol$arrow_right)," ",
                            col_align(x,max(nchar(obj)))," : ",
                            red(symbol$cross)))
-        } else{
+        } else {
 
           if (!is.matrix(f$sigConf)){
             cat_line( paste0(yellow(symbol$arrow_right)," ",
                              col_align(x,max(nchar(obj))),
                         " : Warning: could not compute parameters statistics"))
-          } else{
+          } else {
             cat_line( paste0(cyan(symbol$arrow_right)," ",
                              col_align(x,max(nchar(obj)))," : ",
                              green(symbol$tick)))
@@ -349,8 +349,8 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   #those provide here. Doesn't actually matter but can be brought to
   #attention of use
   if (!is.character(obj)){
-    wn <- obj[[1]]$normaTest[[1]]
-    wh <- obj[[1]]$homoTest[[1]]
+    wn <- obj[[1L]]$normaTest[[1L]]
+    wh <- obj[[1L]]$homoTest[[1L]]
     if (wn != normaTest) {warning("normaTest argument does not match the
                                  normaTest stored in the fit collection
                                  object. The multi SAR curve will proceed
@@ -412,7 +412,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   #and remove bad fits from fits
 
   if (normaTest != "none") {
-    np <- vapply(fits, function(x) x$normaTest[[2]]$p.value,
+    np <- vapply(fits, function(x) x$normaTest[[2L]]$p.value,
                  FUN.VALUE = numeric(1))
     #sometimes bad models produce calculated values with all same
     #richness values and no correlation can be done. Remove these
@@ -485,7 +485,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   if (length(badMods) == bml & verb) cat("\nAll models passed the model",
                                          " validation checks\n\n")
 
-  if (length(badMods) == 0) badMods <- 0
+  if (!length(badMods)) badMods <- 0
   if (length(fits) < 2) stop("Fewer than two models could be fitted and /",
                              " or passed the model checks")
 
@@ -498,7 +498,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   ####################################
 
   #setting variables
-  nPoints <- length(fits[[1]]$data$A)
+  nPoints <- length(fits[[1L]]$data$A)
   nMods <- length(fits)
 
   modNames <- vapply(fits, FUN = function(x){x$model$name},
@@ -516,7 +516,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   delta_ICs <- ICs - min(ICs)
 
   #get akaike weights
-  akaikesum <- sum(exp( -0.5*(delta_ICs)))
+  akaikesum <- sum(exp(-0.5*(delta_ICs)))
   weights_ICs <- exp(-0.5*delta_ICs) / akaikesum
 
   #ERROR: produce weight averaged diversity measures
@@ -556,7 +556,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   #if (verb) cat_line(rule(left = cyan(symbol$bullet)))
   if (verb) cat_line(rule())
 
-  if (confInt){
+  if (confInt) {
     cat("\nCalculating sar_multi confidence intervals - this may take",
         " some time:\n")
     cis <- sar_conf_int(fit = res, n = ciN, crit = crit, normaTest = normaTest,

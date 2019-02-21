@@ -69,7 +69,8 @@
 #' @export
 
 sar_weibull4 <- function(data, start = NULL, grid_start = NULL,
-normaTest =  "lillie", homoTest = "cor.fitted"){
+normaTest =  "lillie", homoTest = "cor.fitted") {
+# check   
 data <- check_data(data)
 #CUMULATIVE WEIBULL DISTRIBUTION with 4 parameters
 model <- list(

@@ -70,12 +70,8 @@
 
 sar_betap <- function(data, start = NULL, grid_start = NULL,
 normaTest =  "lillie", homoTest = "cor.fitted"){
-if (!(is.matrix(data) | is.data.frame(data)))
-stop('data must be a matrix or dataframe')
-if (is.matrix(data)) data <- as.data.frame(data)
-if (anyNA(data)) stop('NAs present in data')
-data <- data[order(data[,1]),]
-colnames(data) <- c('A','S')
+  # check
+  data <- check_data(data)
 #Beta-P function (cumulative)
 model = list(
   name = c("Beta-P cumulative"),
@@ -95,7 +91,7 @@ grid_start = grid_start, algo = 'Nelder-Mead',
 normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
 if (is.na(fit$value)){
   return(list(value = NA))
-} else{ 
+} else{
   obs <- obs_shape(fit)
   fit$observed_shape <- obs$fitShape
   fit$asymptote <- obs$asymp

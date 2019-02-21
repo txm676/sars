@@ -69,9 +69,10 @@
 #' @export
 
 sar_koba <- function(data, start = NULL, grid_start = NULL,
-normaTest =  "lillie", homoTest = "cor.fitted"){
+normaTest =  "lillie", homoTest = "cor.fitted") {
 
-data <- check_data(data)
+  # check
+  data <- check_data(data)
 # Kobayashi logarithmic (KOBAYASHI 1975), convex upward, no asymptote
 model <- list(
   name = c("Kobayashi"),
