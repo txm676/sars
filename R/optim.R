@@ -23,7 +23,7 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
     }
   }#eo for
 
-  #sarting values on the link function scale
+  # starting values on the link function scale
   startMod  <-  transLink(start,model$parLim)
   names(startMod) <- model$parNames
 
@@ -253,14 +253,14 @@ get_fit <- function(model = model, data = data, start = NULL,
          " but choose wisely\n")
   }
 
-  if(is.null(start)){
+  if (is.null(start)) {
     fit <- tryCatch(rssoptim(model = model, data = data, algo = algo,
                              normaTest = normaTest, homoTest = homoTest)
                     ,error=function(e) list(value = NA))
     if(is.na(fit$value)){
       if(!is.null(grid_start)){
         if(grid_start != FALSE){
-          n <- min(grid_start,1000)
+          n <- min(grid_start, 1000)
           fit <- grid_start_fit(model = model, data = data, n = n,
                                 algo = algo, normaTest = normaTest,
                                 homoTest = homoTest,verb = verb)
@@ -270,14 +270,14 @@ get_fit <- function(model = model, data = data, start = NULL,
     }
   }
 
-  if(!is.null(start)){
+  if (!is.null(start)) {
     fit <- tryCatch(rssoptim(model = model, data = data,
                              start = start, algo = algo,
                              normaTest = normaTest, homoTest = homoTest),
                     error = function(e) list(value = NA))
   }
 
-  if(!is.null(grid_start)) {
+  if (!is.null(grid_start)) {
     if (grid_start != FALSE){
       fit <- grid_start_fit(model = model, data = data, n = grid_start,
                             algo = algo, normaTest = normaTest,
@@ -285,10 +285,10 @@ get_fit <- function(model = model, data = data, start = NULL,
     }#eo if (grid_start != FALSE)
   }#eo if(!is.null(grid_start))
 
-  if(is.na(fit$value)){
+  if (is.na(fit$value)) {
     warning("The model could not be fitted :(\n")
     return(list(value = NA))
-  }else{
+  } else {
     return(fit)
   }
 }#eo get_fit

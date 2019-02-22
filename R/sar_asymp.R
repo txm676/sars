@@ -69,43 +69,7 @@
 #' @export
 
 sar_asymp <- function(data, start = NULL, grid_start = NULL,
-normaTest =  "lillie", homoTest = "cor.fitted"){
-  # check
-  data <- check_data(data)
-#Asymptotic Regression
-model <- list(
-  name = c("Asymptotic regression"),
-  formula = expression(S == d - c*z^A),
-  exp = expression(d - c*z^A),
-  shape = "convex",
-  asymp = function(pars)pars["d"],
-  parLim  =  c("Rplus","R","R"),
-  #initial values function
-  init = function(data){#Ratkowsky 1983 p178
-    #d determination (asymptote)
-    d = max(data$S)+max(data$S)/4
-    #Intermediate variable calculation
-    Z = log(d-data$S)
-    #we have also Z=log(c)+Xlog(z) -> linear regression
-    dat = data.frame("a"=data$A,"Z"=Z)
-    zf = stats::lm(Z~a,dat)$coefficients
-    c(d,exp(zf[1]),exp(zf[2]))
-  }
-)
-
-model <- compmod(model)
-fit <- get_fit(model = model, data = data, start = start,
-grid_start = grid_start, algo = 'Nelder-Mead',
-
-normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
-if (is.na(fit$value)) {
-  return(list(value = NA))
-} else{
-  obs <- obs_shape(fit)
-  fit$observed_shape <- obs$fitShape
-  fit$asymptote <- obs$asymp
-  class(fit) <- 'sars'
-  attr(fit, 'type') <- 'fit'
-  return(fit)
+  normaTest =  "lillie", homoTest = "cor.fitted") {
+  sars_builder(data, model_asym(data), start = start, grid_start = grid_start,
+  normaTest =  normaTest, homoTest = homoTest)
 }
-}#end of sar_asymp

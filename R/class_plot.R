@@ -210,7 +210,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
       }
       matlines(xx, mf2, lwd = lwd, lty = seq_along(mf2), col=seq_along(mf2))
       title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main)
-     if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax,
+     if (pLeg) legend(max(xx) + (max(xx) * 0.05), yMax,
                               legend = nams, horiz = FALSE,
                               lty = seq_along(mf2),col=seq_along(mf2))
     }#eo mfplot

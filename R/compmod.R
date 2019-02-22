@@ -1,11 +1,10 @@
-
 #### INTERNAL FUNCTION(S)
 
 
-###complete models
+### complete models
 ### add derivatives, residual sum of square function ...
 
-compmod <- function(model){
+compmod <- function(model) {
 
   #get the model expression
   mod.exp <- model$exp

@@ -319,10 +319,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
     stop("if obj is character then data should be provided")
 
   if (is.character(obj)) {
-    if (any(!(obj %in% c("linear","power","powerR","epm1","epm2","p1",
-                         "p2","loga","koba","mmf","monod","negexpo",
-                         "chapman","weibull3","asymp","ratio","gompertz",
-                         "weibull4","betap","heleg"))))
+    if (any(!(obj %in% sars_list())))
       stop("provided model names do not match with model functions")
   }
 
@@ -334,11 +331,9 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
     fits <- sar_multi(data = data, obj = obj,
                                             normaTest = normaTest,
                                             homoTest = homoTest, verb = verb)
-  } else{
-    fits <- obj
-  }
+  } else fits <- obj
 
-  #####BAD MODEL CHECKS#######################
+  ##### BAD MODEL CHECKS #######################
 
   normaTest <- match.arg(normaTest, c("none", "shapiro",
                                       "kolmo", "lillie"))
@@ -446,7 +441,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
 
     #sometimes bad models produce calculated values with all same richness
     #values and no correlation can be done. Remove these
-    if (anyNA(hp)){
+    if (anyNA(hp)) {
       whn <- is.na(hp)
       mn3 <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))
       message("\n", paste(sum(is.na(hp)),
@@ -469,7 +464,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
     }
   }
   #negative values
-  if (neg_check){
+  if (neg_check) {
     nc <- vapply(fits, function(x) any(x$calculated < 0),
                  FUN.VALUE = logical(1))
     if (any(nc)) {
@@ -565,9 +560,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
                         alpha_normtest = alpha_normtest,
                         alpha_homotest = alpha_homotest, verb = verb)
     res$details$confInt <- cis
-  } else {
-    res$details$confInt <- NA
-  }
+  } else res$details$confInt <- NA
 
   invisible(res)
 

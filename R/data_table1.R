@@ -1,4 +1,4 @@
-#' List of Species Areas Relationships included.
+#' Table of Species Areas Relationships (SARs) included.
 #'
 #' For each of the SARs included, the table includes the name of the SAR,
 #' the name of the corresponding function, the number of parameters, the

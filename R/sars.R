@@ -68,3 +68,11 @@
 #' plot(fit_multi)
 
 NULL
+
+
+
+sars_list <- function() {
+  c("linear", "power", "powerR", "epm1", "epm2", "p1", "p2", "loga", "koba",
+    "mmf", "monod", "negexpo", "chapman", "weibull3", "asymp", "ratio",
+    "gompertz", "weibull4", "betap", "heleg")
+}
