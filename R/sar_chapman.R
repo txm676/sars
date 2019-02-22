@@ -72,36 +72,6 @@ sar_chapman <- function(data, start = NULL, grid_start = NULL,
 normaTest =  "lillie", homoTest = "cor.fitted"){
   # check
   data <- check_data(data)
-#Chapman–Richards 3 S = a [1 − exp(−bA)]c Flather (1996)
-model <- list(
-  name = c("Chapman Richards"),
-  formula = expression(S == d * (1 - exp(-z*A)^c )),
-  exp = expression(d * (1 - exp(-z*A)^c )),
-  shape = "sigmoid",
-  asymp = function(pars)pars["d"],
-  #limits for parameters
-  parLim  =  c("Rplus","R","R"),
-  #initials values function
-  init = function(data){
-    d=max(data$S)
-    Z=(-log((-data$S/(max(data$S)+1))+1))/data$A
-    z = mean(Z)
-    c(d,z,1)}
-)
-
-model <- compmod(model)
-fit <- get_fit(model = model, data = data, start = start,
-grid_start = grid_start, algo = 'Nelder-Mead',
-
-normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
-if(is.na(fit$value)){
-  return(list(value = NA))
-}else{
-  obs <- obs_shape(fit)
-  fit$observed_shape <- obs$fitShape
-  fit$asymptote <- obs$asymp
-  class(fit) <- 'sars'
-  attr(fit, 'type') <- 'fit'
-  return(fit)
-}
-}#end of sar_chapman
+  sars_builder(data, model_chapman(data), start = start, grid_start = grid_start,
+  normaTest =  normaTest, homoTest = homoTest)
+} #end of sar_chapman

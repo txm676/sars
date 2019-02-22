@@ -72,31 +72,6 @@ sar_betap <- function(data, start = NULL, grid_start = NULL,
 normaTest =  "lillie", homoTest = "cor.fitted"){
   # check
   data <- check_data(data)
-#Beta-P function (cumulative)
-model = list(
-  name = c("Beta-P cumulative"),
-  formula = expression(S == d*(1-(1+(A/c)^z)^-f)),
-  exp = expression(d*(1-(1+(A/c)^z)^-f)),
-  shape = "sigmoid",
-  asymp = function(pars)pars["d"],
-  parLim  =  c("Rplus","R","R","R"),
-  #initial values function
-  init = function(data){c(max(data$S)+1,.5,.5,.5)}
-)
-
-model <- compmod(model)
-fit <- get_fit(model = model, data = data, start = start,
-grid_start = grid_start, algo = 'Nelder-Mead',
-
-normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
-if (is.na(fit$value)){
-  return(list(value = NA))
-} else{
-  obs <- obs_shape(fit)
-  fit$observed_shape <- obs$fitShape
-  fit$asymptote <- obs$asymp
-  class(fit) <- 'sars'
-  attr(fit, 'type') <- 'fit'
-  return(fit)
-}
+  sars_builder(data, model_betap(data), start = start, grid_start = grid_start,
+  normaTest =  normaTest, homoTest = homoTest)
 }#end of sar_betap

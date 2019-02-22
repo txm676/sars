@@ -135,17 +135,17 @@ sar_multi <- function(data,
       if (verb) {
         if (is.na(f$value)) {
           cat_line( paste0(red(symbol$arrow_right)," ",
-                           col_align(x,max(nchar(obj)))," : ",
+                           col_align(x, max(nchar(obj)))," : ",
                            red(symbol$cross)))
         } else {
 
           if (!is.matrix(f$sigConf)){
             cat_line( paste0(yellow(symbol$arrow_right)," ",
-                             col_align(x,max(nchar(obj))),
+                             col_align(x, max(nchar(obj))),
                         " : Warning: could not compute parameters statistics"))
           } else {
             cat_line( paste0(cyan(symbol$arrow_right)," ",
-                             col_align(x,max(nchar(obj)))," : ",
+                             col_align(x, max(nchar(obj)))," : ",
                              green(symbol$tick)))
           }
         }
@@ -157,7 +157,7 @@ sar_multi <- function(data,
     names(fits) <- obj
     class(fits) <- "sars"
     attr(fits, "type") <- "fit_collection"
-    return(fits)
+    fits
 }#end of multi_sars
 
 
@@ -560,5 +560,4 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   } else res$details$confInt <- NA
 
   invisible(res)
-
 }#end of sar_average
