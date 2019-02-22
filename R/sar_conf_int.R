@@ -23,14 +23,14 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
         #  "Cumulative_Weibull_3_par.", "Asymptotic_regression",
         #  "Rational_function","Gompertz", "Cumulative_Weibull_4_par.",
         #  "Beta-P_cumulative", "Heleg(Logistic)", "Linear_model")
-
+  ### ===> TOBECHANGED
   x2 <- c("sar_power(", "sar_powerR(", "sar_epm1(", "sar_epm2(", "sar_p1(",
           "sar_p2(", "sar_loga(", "sar_koba(", "sar_mmf(", "sar_monod(",
           "sar_negexpo(", "sar_chapman(", "sar_weibull3(", "sar_asymp(",
           "sar_ratio(", "sar_gompertz(", "sar_weibull4(", "sar_betap(",
           "sar_heleg(", "sar_linear(")
 
-  x3 <-   c("power", "powerR","epm1","epm2","p1","p2","loga","koba","mmf",
+  x3 <- c("power", "powerR","epm1","epm2","p1","p2","loga","koba","mmf",
             "monod","negexpo","chapman",
             "weibull3","asymp","ratio","gompertz","weibull4","betap","heleg",
             "linear")
@@ -50,14 +50,14 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   calculated <- residuals <- transResiduals <- matrix(nrow = length(nams),
                                                       ncol = nrow(dat))
 
-  for (i in seq_along(nams))
-  {
+  for (i in seq_along(nams)) {
 
   #select the expression of the selected model
   wn <- which(x3 %in% nams[i])
   w2 <- x2[wn]
 
-  #fit the best model to observed data; extract fitted values and residuals
+  # fit the best model to observed data; extract fitted values and residuals
+  ### ===> TOBECHANGED
   me <- suppressWarnings(eval(parse(text = paste(w2, "dat)", sep = ""))))
   meF <- me$calculated
   meR <- me$residuals
@@ -153,7 +153,7 @@ length(nams), length(nams_short)))
   }
   nBoot <- n
 
-  pointsNames <- paste("S",c(seq_len(nrow(dat))))
+  pointsNames <- paste("S", seq_len(nrow(dat)))
 
   #Matrix of boot Samples
   bootMatrix <- matrix(0, nBoot, nrow(dat))
@@ -164,8 +164,8 @@ length(nams), length(nams_short)))
   #choosing an IC criterion (AIC or AICc or BIC): same code as within
   #sar_average as needs to be identical
   IC <- switch(crit,
-               Info= if ( (nrow(dat) / 3) < 40 ) { "AICc" } else { "AIC" },
-               Bayes= "BIC")
+               Info = ifelse((nrow(dat) / 3) < 40,  "AICc", "AIC"),
+               Bayes = "BIC")
 
 
   #listof calculated values
@@ -253,7 +253,7 @@ for (l in seq_len(nrow(dat))) {
     akaikeweightvect <- vector()
     filtNlig <- dim(optimBootResult[[k]])[1]
 
-    if (filtNlig != 0) {
+    if (filtNlig) {
 
       for (i in 1:filtNlig){
 

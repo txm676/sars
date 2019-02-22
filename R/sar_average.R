@@ -93,10 +93,7 @@ sar_multi <- function(data,
     stop("if obj is character then data should be provided")
 
   if (is.character(obj)) {
-    if (any(!(obj %in% c("linear","power","powerR","epm1","epm2","p1",
-                         "p2","loga","koba","mmf","monod","negexpo",
-                         "chapman","weibull3","asymp","ratio","gompertz",
-                         "weibull4","betap","heleg"))))
+    if (any(!(obj %in% sars_models())))
       stop("provided model names do not match with model functions")
   }
 
@@ -319,7 +316,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
     stop("if obj is character then data should be provided")
 
   if (is.character(obj)) {
-    if (any(!(obj %in% sars_list())))
+    if (any(!(obj %in% sars_models())))
       stop("provided model names do not match with model functions")
   }
 
@@ -393,7 +390,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
         cat("\nModel fitting completed. Now undertaking model validation",
             " checks.\nAdditional models will be excluded if necessary:\n")
       } else {
-        cat("\nModel fitting completed - all models succesfully fitted.",
+        cat("\nModel fitting completed - all models successfully fitted.",
             " Now undertaking model validation checks.\nAdditional models",
             " will be excluded if necessary:\n")
       }

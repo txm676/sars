@@ -207,8 +207,8 @@ grid_start_fit <- function(model, data, n, algo = "Nelder-Mead",
 
   start.list <- lapply(model$parLim,function(x){
     switch(x,
-        R = sample(seq(-500,500),ns),
-        Rplus = seq(.1,500,length.out = ns),
+        R = sample(seq(-500, 500), ns),
+        Rplus = seq(.1, 500, length.out = ns),
         unif = runif(ns)
     )
   })
@@ -234,9 +234,9 @@ grid_start_fit <- function(model, data, n, algo = "Nelder-Mead",
 
   min <- which.min(values)
 
-  if(length(min) != 0) {
+  if (length(min)) {
     fit.list[[min]]
-  }else{
+  } else{
     list(value = NA)
   }
 
@@ -248,7 +248,7 @@ get_fit <- function(model = model, data = data, start = NULL,
                     normaTest = "lillie", homoTest = "cor.fitted",
                     verb = TRUE){
 
-  if(!is.null(start) & !is.null(grid_start)){
+  if (!is.null(start) & !is.null(grid_start)){
     stop("You must choose between 'start' and 'grid_start',",
          " but choose wisely\n")
   }
@@ -257,9 +257,9 @@ get_fit <- function(model = model, data = data, start = NULL,
     fit <- tryCatch(rssoptim(model = model, data = data, algo = algo,
                              normaTest = normaTest, homoTest = homoTest)
                     ,error=function(e) list(value = NA))
-    if(is.na(fit$value)){
-      if(!is.null(grid_start)){
-        if(grid_start != FALSE){
+    if (is.na(fit$value)) {
+      if (!is.null(grid_start)){
+        if (grid_start != FALSE){
           n <- min(grid_start, 1000)
           fit <- grid_start_fit(model = model, data = data, n = n,
                                 algo = algo, normaTest = normaTest,
