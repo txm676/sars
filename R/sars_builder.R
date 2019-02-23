@@ -1,14 +1,19 @@
 ## Try to get a function that build that creates sars.
 
-sars_builder <- function(data, name, start = NULL, grid_start = NULL, normaTest = "lillie",
-  homoTest = "cor.fitted", verb = TRUE) {
+sars_builder <- function(data, name, normaTest = "lillie",
+  homoTest = "cor.fitted", start = NULL, grid_start = NULL, verb = TRUE) {
+
+  if (name == "linear") return(sar_linear(data, normaTest, homoTest))
+
   data <- check_data(data)
   model <- switch(name,
     asymp = model_asymp(data),
     betap = model_betap(data),
     chapman = model_chapman(data),
     epm1 = model_epm1(data),
-    epm2 = model_epm2(data)
+    epm2 = model_epm2(data),
+    gompertz = model_gompertz(data),
+    message_sars()
   )
   model <- compmod(model)
   fit <- get_fit(model = model, data = data, start = start, grid_start = grid_start, algo = 'Nelder-Mead',
@@ -16,7 +21,6 @@ sars_builder <- function(data, name, start = NULL, grid_start = NULL, normaTest 
   #
   return_fit(fit)
 }
-
 
 
 check_data <- function(data) {
@@ -43,4 +47,12 @@ return_fit <- function(fit) {
     attr(fit, 'type') <- 'fit'
   }
   fit
+}
+
+message_sars <- function() {
+  stop(
+    paste0("Valid values for argument `name` are: ",
+    paste(sars_models(), collapse = ", ")
+    )
+  )
 }

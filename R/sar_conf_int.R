@@ -30,10 +30,7 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
           "sar_ratio(", "sar_gompertz(", "sar_weibull4(", "sar_betap(",
           "sar_heleg(", "sar_linear(")
 
-  x3 <- c("power", "powerR","epm1","epm2","p1","p2","loga","koba","mmf",
-            "monod","negexpo","chapman",
-            "weibull3","asymp","ratio","gompertz","weibull4","betap","heleg",
-            "linear")
+  x3 <- sars_models()
 
 
   #observed data

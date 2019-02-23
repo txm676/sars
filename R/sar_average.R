@@ -126,6 +126,7 @@ sar_multi <- function(data,
 
     fits <- suppressWarnings(lapply(obj, function(x){
 
+      ## TOBECHANGED fill the builder.... easy peasy
       f <- eval(parse(text = paste0(mods[x],
                                     "(data", ", normaTest = ",
                                     paste0("'", normaTest, "'"),

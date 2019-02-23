@@ -50,7 +50,7 @@
 #' plot(fit)
 #' @export
 
-sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
+sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted") {
 
   # check
   data <- check_data(data)
@@ -97,28 +97,24 @@ sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
   #normality of residuals
   if (normaTest == "shapiro") {
     normaTest <- list("test" = "shapiro",
-                      tryCatch(shapiro.test(res), error = function(e)NA))
+                      tryCatch(shapiro.test(res), error = function(e) NA))
   } else if (normaTest == "lillie"){
     normaTest <- list("test" = "lillie",
-                      tryCatch(lillie.test(res), error = function(e)NA))
+                      tryCatch(lillie.test(res), error = function(e) NA))
   } else if (normaTest == "kolmo"){
     normaTest <- list("test" = "kolmo",
-                      tryCatch(ks.test(res, "pnorm"), error = function(e)NA))
-  } else{
-    normaTest <- "none"
-  }
+                      tryCatch(ks.test(res, "pnorm"), error = function(e )NA))
+  } else normaTest <- "none"
   #Homogeneity of variance
   if (homoTest == "cor.area"){
-    homoTest  <- list("test" = "cor.area",
+    homoTest <- list("test" = "cor.area",
                       tryCatch(cor.test(res,data$A),
-                          error = function(e)list(estimate=NA,p.value=NA)))
+                          error = function(e) list(estimate = NA, p.value = NA)))
   } else if (homoTest == "cor.fitted"){
     homoTest  <- list("test" = "cor.fitted",
                       tryCatch(cor.test(res,as.vector(mod$fitted.values)),
-                          error = function(e)list(estimate=NA,p.value=NA)))
-  } else {
-    homoTest <- "none"
-  }
+                          error = function(e) list(estimate = NA, p.value =NA)))
+  } else homoTest <- "none"
 
   fit$normaTest <- normaTest
   fit$homoTest <- homoTest
@@ -135,5 +131,5 @@ sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
   }
   class(fit) <- 'sars'
   attr(fit, 'type') <- 'fit'
-  return(fit)
+  fit
 }#end of sar_linear
