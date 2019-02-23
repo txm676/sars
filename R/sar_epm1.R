@@ -69,42 +69,9 @@
 #' @export
 
 sar_epm1 <- function(data, start = NULL, grid_start = NULL,
-normaTest =  "lillie", homoTest = "cor.fitted") {
-  # check
-  data <- check_data(data)
-# EXTENDED POWER MODEL 1 (TJORVE 2009)
-model <- list(
-  name = c("Extended Power model 1"),
-  formula = expression(S==c*A^(z*A^-d)),
-  exp = expression(c*A^(z*A^-d)),
-  shape = "sigmoid",
-  asymp = function(pars)FALSE,
-  parLim  =  c("Rplus","R","R"),
-  custStart = function(data)c(5,.25,.15),
-  #initials values function
-  init = function(data){
-    if(any(data$S==0)){
-    log.data=data.frame(S=log(data$a),S=log(data$S+.5))
-    }else{log.data=log(data)}
-    res=stats::lm(S~A,log.data)$coefficients
-    res=c(exp(res[1]),res[2],.15)
-    names(res)=model$parNames
-    return(res)}
-)
+  normaTest =  "lillie", homoTest = "cor.fitted") {
 
-model <- compmod(model)
-fit <- get_fit(model = model, data = data, start = start,
-grid_start = grid_start, algo = 'Nelder-Mead',
+  sars_builder(data, "epm1", start = start, grid_start = grid_start,
+  normaTest =  normaTest, homoTest = homoTest)
 
-normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
-if (is.na(fit$value)){
-  return(list(value = NA))
-} else{
-  obs <- obs_shape(fit)
-  fit$observed_shape <- obs$fitShape
-  fit$asymptote <- obs$asymp
-  class(fit) <- 'sars'
-  attr(fit, 'type') <- 'fit'
-  return(fit)
 }
-}#end of sar_epm1

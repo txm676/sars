@@ -63,23 +63,22 @@ model_epm1 <- function(data) {
     exp = expression(c*A^(z*A^-d)),
     shape = "sigmoid",
     asymp = function(pars) FALSE,
-    parLim  =  c("Rplus","R","R"),
-    custStart = function(data) c(5,.25,.15),
+    parLim = c("Rplus","R","R"),
+    custStart = function(data) c(5, .25, .15),
     #initials values function
     init = function(data) {
       if (any(data$S==0)) {
-        log.data <- data.frame(S=log(data$a),S=log(data$S+.5))
+        log.data <- data.frame(A=log(data$a), S=log(data$S+.5))
       } else log.data <- log(data)
-        res <- stats::lm(S~A,log.data)$coefficients
-        res <- c(exp(res[1]),res[2],.15)
-        names(res) <- model$parNames
-        res
+      res <- stats::lm(S~A,log.data)$coefficients
+      res <- c(exp(res[1]),res[2],.15)
+      res
     }
   )
 }
 
 # EXTENDED POWER MODEL 2 (TJORVE 2009)
-model_emp2 <- function(data) {
+model_epm2 <- function(data) {
   list(
     name = c("Extended Power model 2"),
     formula = expression(S==c*A^(z-(d/A))),

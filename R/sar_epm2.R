@@ -69,36 +69,9 @@
 #' @export
 
 sar_epm2 <- function(data, start = NULL, grid_start = NULL,
-normaTest =  "lillie", homoTest = "cor.fitted") {
-  # check
-  data <- check_data(data)
-# EXTENDED POWER MODEL 2 (TJORVE 2009)
-model <- list(
-  name=c("Extended Power model 2"),
-  formula=expression(S==c*A^(z-(d/A))),
-  exp=expression(c*A^(z-(d/A))),
-  shape="sigmoid",
-  asymp=function(pars)FALSE,
-  custStart=function(data)c(5,.25,1),
-  #limits for parameters
-  parLim = c("Rplus","unif","R"),
-  #initials values function
-  init=function(data){return(c(0,0,0))}
-)
+  normaTest =  "lillie", homoTest = "cor.fitted") {
 
-model <- compmod(model)
-fit <- get_fit(model = model, data = data, start = start,
-grid_start = grid_start, algo = 'Nelder-Mead',
+  sars_builder(data, "epm2", start = start, grid_start = grid_start,
+  normaTest =  normaTest, homoTest = homoTest)
 
-normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
-if(is.na(fit$value)){
-  return(list(value = NA))
-}else{
-  obs <- obs_shape(fit)
-  fit$observed_shape <- obs$fitShape
-  fit$asymptote <- obs$asymp
-  class(fit) <- 'sars'
-  attr(fit, 'type') <- 'fit'
-  return(fit)
 }
-}#end of sar_epm2

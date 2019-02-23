@@ -72,4 +72,4 @@ sar_betap <- function(data, start = NULL, grid_start = NULL,
 normaTest =  "lillie", homoTest = "cor.fitted") {
   sars_builder(data, "betap", start = start, grid_start = grid_start,
   normaTest =  normaTest, homoTest = homoTest)
-}#end of sar_betap
+}

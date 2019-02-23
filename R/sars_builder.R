@@ -7,7 +7,8 @@ sars_builder <- function(data, name, start = NULL, grid_start = NULL, normaTest 
     asymp = model_asymp(data),
     betap = model_betap(data),
     chapman = model_chapman(data),
-    epm1 = model_epm1(data)
+    epm1 = model_epm1(data),
+    epm2 = model_epm2(data)
   )
   model <- compmod(model)
   fit <- get_fit(model = model, data = data, start = start, grid_start = grid_start, algo = 'Nelder-Mead',
