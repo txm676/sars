@@ -69,40 +69,9 @@
 #' @export
 
 sar_negexpo <- function(data, start = NULL, grid_start = NULL,
-normaTest =  "lillie", homoTest = "cor.fitted"){
-  # check
-  data <- check_data(data)
-#NEGATIVE EXPONENTIAL (Holdridge et al. 1971)
-model <- list(
-  name=c("Negative exponential"),
-  formula=expression(S == d*(1 - exp(-z*A) )),
-  exp=expression(d*(1-exp(-z*A))),
-  shape="convex",
-  asymp=function(pars)pars["d"],
-  #limits for parameters
-  parLim = c("Rplus","unif"),
-  custStart=function(data)c(max(data$S),.01),
-  #initials values function
-  init=function(data){
-    d=max(data$S)
-    Z=(-log( (-data$S/(max(data$S)+1))+1))/data$A
-    z = mean(Z)
-    c(d,z)}
-)
+normaTest =  "lillie", homoTest = "cor.fitted") {
 
-model <- compmod(model)
-fit <- get_fit(model = model, data = data, start = start,
-grid_start = grid_start, algo = 'Nelder-Mead',
+  sars_builder(data, "negexpo", start = start, grid_start = grid_start,
+  normaTest =  normaTest, homoTest = homoTest)
 
-normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
-if(is.na(fit$value)){
-  return(list(value = NA))
-}else{
-  obs <- obs_shape(fit)
-  fit$observed_shape <- obs$fitShape
-  fit$asymptote <- obs$asymp
-  class(fit) <- 'sars'
-  attr(fit, 'type') <- 'fit'
-  return(fit)
 }
-}#end of sar_negexpo

@@ -1,3 +1,5 @@
+#### INTERNAL FUNCTION(S)
+
 # Asymptotic Regression
 model_asymp <- function(data) {
   list(
@@ -186,17 +188,6 @@ model_koba <- function(data) {
 
 
 
-################## test init
-
-#from mKobayashi 1975
-# S = c if A = (e - 1) * z
-# with e = natural base log ~ 2.718
-# p269
-# c is the number of species occurring in it's characteristic area (e - 1) * z
-
-
-
-
 # Logarithmic MODEL (GLEASON 1922)
 model_loga <- function(data) {
   list(
@@ -268,7 +259,7 @@ model_monod <- function(data) {
 
 
 # NEGATIVE EXPONENTIAL (Holdridge et al. 1971)
-model_negexp <- function(data) {
+model_negexpo <- function(data) {
   list(
     name = c("Negative exponential"),
     formula = expression(S == d*(1 - exp(-z*A) )),
@@ -401,7 +392,7 @@ model_ratio <- function(data) {
 }
 
 #CUMULATIVE WEIBULL DISTRIBUTION with 3 parameters
-model_weilbull3 <- function(data) {
+model_weibull3 <- function(data) {
   list(
     name = "Cumulative Weibull 3 par.",
     formula = expression(S == d(1 - exp(-c*A^z)) ),
@@ -428,7 +419,7 @@ model_weilbull3 <- function(data) {
 }
 
 # CUMULATIVE WEIBULL DISTRIBUTION with 4 parameters
-model_weilbull4 <- function(data) {
+model_weibull4 <- function(data) {
   list(
     name = "Cumulative Weibull 4 par.",
     formula = expression(S == d * (1 - exp(-c*A^z))^f ),

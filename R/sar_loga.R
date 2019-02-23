@@ -70,41 +70,8 @@
 
 sar_loga <- function(data, start = NULL, grid_start = NULL,
 normaTest =  "lillie", homoTest = "cor.fitted") {
-  # check
-  data <- check_data(data)
-# Logarithmic MODEL (GLEASON 1922)
-model <- list(
-    name=c("Logarithmic"),
-    formula=expression(S==c+z*log(A)),
-    exp=expression(c+z*log(A)),
-    shape="convex",
-    asymp=function(pars)FALSE,
-    #limits for parameters
-    parLim = c("R","R"),
-    custStart=function(data)c(5,.25),
-    #initials values function
-    init=function(data){
-      semilog.data = data.frame(log(data$A),data$S)
-      names(semilog.data)=c("A","S")
-      par=stats::lm(S~A,semilog.data)$coefficients
-      names(par)=c("c","z")
-      par
-    }
-)
 
-model <- compmod(model)
-fit <- get_fit(model = model, data = data, start = start,
-grid_start = grid_start, algo = 'Nelder-Mead',
+  sars_builder(data, "loga", start = start, grid_start = grid_start,
+  normaTest =  normaTest, homoTest = homoTest)
 
-normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
-if(is.na(fit$value)){
-  return(list(value = NA))
-}else{
-  obs <- obs_shape(fit)
-  fit$observed_shape <- obs$fitShape
-  fit$asymptote <- obs$asymp
-  class(fit) <- 'sars'
-  attr(fit, 'type') <- 'fit'
-  return(fit)
 }
-}#end of sar_loga

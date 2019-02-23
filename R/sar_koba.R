@@ -71,53 +71,7 @@
 sar_koba <- function(data, start = NULL, grid_start = NULL,
 normaTest =  "lillie", homoTest = "cor.fitted") {
 
-  # check
-  data <- check_data(data)
-# Kobayashi logarithmic (KOBAYASHI 1975), convex upward, no asymptote
-model <- list(
-  name = c("Kobayashi"),
-  formula = expression(S == c*log(1+ A/z)),
-  exp = expression(c*log(1 + A/z)),
-  shape = "convex",
-  asymp = function(pars)FALSE,
-  #limits for parameters
-  parLim = c("R","Rplus"),
-  custStart = function(data) c(5,0.1),
-  #initials values function
-  init = function(data){
-    c(max(data$S), max(data$S))
-  }
-)
+  sars_builder(data, "koba", start = start, grid_start = grid_start,
+  normaTest =  normaTest, homoTest = homoTest)
 
-
-
-################## test init
-
-#from mKobayashi 1975
-
-# S = c if A = (e - 1) * z
-# with e = natural base log ~ 2.718
-
-# p269
-# c is the number of species occuring in it's caracteristic area (e - 1) * z
-
-
-
-
-
-model <- compmod(model)
-fit <- get_fit(model = model, data = data, start = start,
-grid_start = grid_start, algo = 'Nelder-Mead',
-
-normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
-if(is.na(fit$value)){
-  return(list(value = NA))
-}else{
-  obs <- obs_shape(fit)
-  fit$observed_shape <- obs$fitShape
-  fit$asymptote <- obs$asymp
-  class(fit) <- 'sars'
-  attr(fit, 'type') <- 'fit'
-  return(fit)
 }
-}#end of sar_koba

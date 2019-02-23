@@ -69,48 +69,9 @@
 #' @export
 
 sar_powerR <- function(data, start = NULL, grid_start = NULL,
-normaTest =  "lillie", homoTest = "cor.fitted"){
+normaTest =  "lillie", homoTest = "cor.fitted") {
 
-  # check
-  data <- check_data(data)
-  # POWER MODEL BIS (ROSENSWEIG 1995)
-  model <- list(
-    name = c("PowerR"),
-    formula = expression(S == f + c*A^z),
-    exp = expression(f + c*A^z),
-    shape = "convex",
-    asymp = function(pars)FALSE,
-    custStart = function(data)c(5,.25,0),
-    #limits for parameters
-    parLim = c("R","R","R"),
-    #initials values function
-    init = function(data) {
-      if (any(data$S == 0)) {
-        log.data <- data.frame(A = log(data$A), S = log(data$S + .5))
-      } else {
-        log.data <- log(data)
-      }
-      res <- stats::lm(S~A,log.data)$coefficients
-      res <- c(exp(res[1]), res[2])
-      res <- c(stats::lm(S~A,data)$coefficients[1], res)
-      names(res) <- c("f","c","z")
-      return(res)
-    }
-)
+  sars_builder(data, "powerR", start = start, grid_start = grid_start,
+  normaTest =  normaTest, homoTest = homoTest)
 
-model <- compmod(model)
-fit <- get_fit(model = model, data = data, start = start,
-grid_start = grid_start, algo = 'Nelder-Mead',
-
-normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
-if(is.na(fit$value)){
-  return(list(value = NA))
-}else{
-  obs <- obs_shape(fit)
-  fit$observed_shape <- obs$fitShape
-  fit$asymptote <- obs$asymp
-  class(fit) <- 'sars'
-  attr(fit, 'type') <- 'fit'
-  return(fit)
 }
-}#end of sar_powerR

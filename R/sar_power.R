@@ -70,43 +70,8 @@
 
 sar_power <- function(data, start = NULL, grid_start = NULL,
 normaTest =  "lillie", homoTest = "cor.fitted") {
-# check
-data <- check_data(data)
-# POWER MODEL (ARRHENIUS 1921)
-model <- list(
-    name = c("Power"),
-    formula = expression(S == c * A ^ z),
-    exp = expression(c * A ^ z),
-    shape="convex",
-    asymp=function(pars)FALSE,
-    parLim = c("R", "R"),
-    custStart=function(data)c(5,0.25),
-    init = function(data){
-      if (any(data$S == 0)){
-        log.data = data.frame(A = log(data$A), S = log(data$S + .5))
-      } else {
-        log.data = log(data)
-      }
-      res = stats::lm(S ~ A, log.data)$coefficients
-      res = c(exp(res[1]), res[2])
-      names(res) = c("c", "z")
-      return(res)
-    }
-)
 
-model <- compmod(model)
-fit <- get_fit(model = model, data = data, start = start,
-grid_start = grid_start, algo = 'Nelder-Mead',
+  sars_builder(data, "power", start = start, grid_start = grid_start,
+  normaTest =  normaTest, homoTest = homoTest)
 
-normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
-if(is.na(fit$value)){
-  return(list(value = NA))
-}else{
-  obs <- obs_shape(fit)
-  fit$observed_shape <- obs$fitShape
-  fit$asymptote <- obs$asymp
-  class(fit) <- 'sars'
-  attr(fit, 'type') <- 'fit'
-  return(fit)
 }
-}#end of sar_power

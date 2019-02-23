@@ -3,7 +3,7 @@
 \docType{data}
 \name{Table1}
 \alias{Table1}
-\title{List of Species Areas Relationships included.}
+\title{Table of Species Areas Relationships (SARs) included.}
 \format{A data frame,one row per SAR.}
 \usage{
 data(Table1)

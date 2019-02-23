@@ -69,41 +69,9 @@
 #' @export
 
 sar_monod <- function(data, start = NULL, grid_start = NULL,
-normaTest =  "lillie", homoTest = "cor.fitted"){
-  # check
-  data <- check_data(data)
-# MONOD CURVE (MONOD 1950, Willimas et al. 2009 formula)
-model <- list(
-  name=c("Monod"),
-  formula=expression(S==d/(1+c*A^(-1))),
-  exp=expression(d/(1+c*A^(-1))),
-  shape="convex",
-  asymp=function(pars)pars["d"],
-  #limits for parameters
-  parLim = c("Rplus","Rplus"),
-  custStart=function(data)c(stats::quantile(data$A,c(0.25)),max(data$S)),
-  #initials values function
-  init=function(data){
-    if(any(data$S==0)){data=data[data$S!=0,]}
-    d=as.double(max(data$A)+max(data$S)/4)
-    c=data[[1]]*(d/data$S - 1)
-    c(d,stats::quantile(c,c(0.25)))
-  }
-)
+normaTest =  "lillie", homoTest = "cor.fitted") {
 
-model <- compmod(model)
-fit <- get_fit(model = model, data = data, start = start,
-grid_start = grid_start, algo = 'Nelder-Mead',
+  sars_builder(data, "monod", start = start, grid_start = grid_start,
+  normaTest =  normaTest, homoTest = homoTest)
 
-normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
-if(is.na(fit$value)){
-  return(list(value = NA))
-}else{
-  obs <- obs_shape(fit)
-  fit$observed_shape <- obs$fitShape
-  fit$asymptote <- obs$asymp
-  class(fit) <- 'sars'
-  attr(fit, 'type') <- 'fit'
-  return(fit)
 }
-}#end of sar_monod

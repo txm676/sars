@@ -70,34 +70,8 @@
 
 sar_ratio <- function(data, start = NULL, grid_start = NULL,
 normaTest =  "lillie", homoTest = "cor.fitted") {
-  # check
-  data <- check_data(data)
-  # RATIONAL FUNCITON ratkowski (1990)
-  model <- list(
-    name = c("Rational function"),
-    formula = expression(S == (c + z*A)/(1+d*A)),
-    exp = expression((c + z*A)/(1+d*A)),
-    shape = "convex",
-    asymp = function(pars)pars["z"]/pars["d"],
-    parLim = c("R","Rplus","unif"),
-    custStart = function(data)c(1,1,0.000001),
-    # initial values function
-    init = function(data){c(0,0,.5)}
-  )
 
-  model <- compmod(model)
-  fit <- get_fit(model = model, data = data, start = start,
-    grid_start = grid_start, algo = 'Nelder-Mead',
+  sars_builder(data, "ratio", start = start, grid_start = grid_start,
+  normaTest =  normaTest, homoTest = homoTest)
 
-    normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
-    if (is.na(fit$value)) {
-      return(list(value = NA))
-    } else{
-      obs <- obs_shape(fit)
-      fit$observed_shape <- obs$fitShape
-      fit$asymptote <- obs$asymp
-      class(fit) <- 'sars'
-      attr(fit, 'type') <- 'fit'
-      return(fit)
-    }
-}#end of sar_ratio
+}
