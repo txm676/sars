@@ -72,6 +72,6 @@ sar_chapman <- function(data, start = NULL, grid_start = NULL,
 normaTest =  "lillie", homoTest = "cor.fitted"){
   # check
   data <- check_data(data)
-  sars_builder(data, model_chapman(data), start = start, grid_start = grid_start,
+  sars_builder(data, "chapman", start = start, grid_start = grid_start,
   normaTest =  normaTest, homoTest = homoTest)
 } #end of sar_chapman

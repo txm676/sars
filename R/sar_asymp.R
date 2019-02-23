@@ -70,6 +70,6 @@
 
 sar_asymp <- function(data, start = NULL, grid_start = NULL,
   normaTest =  "lillie", homoTest = "cor.fitted") {
-  sars_builder(data, model_asymp(data), start = start, grid_start = grid_start,
+  sars_builder(data, "asymp", start = start, grid_start = grid_start,
   normaTest =  normaTest, homoTest = homoTest)
 }

@@ -1,14 +1,22 @@
 ## Try to get a function that build that creates sars.
 
-sars_builder <- function(data, model, start = NULL, grid_start = NULL, normaTest = "lillie",
+sars_builder <- function(data, name, start = NULL, grid_start = NULL, normaTest = "lillie",
   homoTest = "cor.fitted", verb = TRUE) {
   data <- check_data(data)
+  model <- switch(name,
+    asymp = model_asymp(data),
+    betap = model_betap(data),
+    chapman = model_chapman(data),
+    epm1 = model_epm1(data)
+  )
   model <- compmod(model)
   fit <- get_fit(model = model, data = data, start = start, grid_start = grid_start, algo = 'Nelder-Mead',
     normaTest =  normaTest, homoTest = homoTest, verb = verb)
   #
   return_fit(fit)
 }
+
+
 
 check_data <- function(data) {
   #
