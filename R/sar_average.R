@@ -126,26 +126,21 @@ sar_multi <- function(data,
 
     fits <- suppressWarnings(lapply(obj, function(x){
 
-      ## TOBECHANGED fill the builder.... easy peasy
-      f <- eval(parse(text = paste0(mods[x],
-                                    "(data", ", normaTest = ",
-                                    paste0("'", normaTest, "'"),
-                                    ", homoTest = ", paste0("'", homoTest,
-                                                            "'"), ")")))
+      f <- sars_builder(data, x,  normaTest = normaTest, homoTest = homoTest)
 
       if (verb) {
         if (is.na(f$value)) {
-          cat_line( paste0(red(symbol$arrow_right)," ",
+          cat_line(paste0(red(symbol$arrow_right)," ",
                            col_align(x, max(nchar(obj)))," : ",
                            red(symbol$cross)))
         } else {
 
           if (!is.matrix(f$sigConf)){
-            cat_line( paste0(yellow(symbol$arrow_right)," ",
+            cat_line(paste0(yellow(symbol$arrow_right)," ",
                              col_align(x, max(nchar(obj))),
                         " : Warning: could not compute parameters statistics"))
           } else {
-            cat_line( paste0(cyan(symbol$arrow_right)," ",
+            cat_line(paste0(cyan(symbol$arrow_right)," ",
                              col_align(x, max(nchar(obj)))," : ",
                              green(symbol$tick)))
           }
@@ -153,7 +148,6 @@ sar_multi <- function(data,
       }
 
       f
-
     }))#eo suppressWarnings(lapply)
     names(fits) <- obj
     class(fits) <- "sars"
