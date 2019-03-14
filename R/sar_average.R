@@ -575,3 +575,135 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   invisible(res)
 
 }#end of sar_average
+
+
+
+#' Use SAR model fits to predict richness on islands of a given size
+#'
+#' @description Predict the richness on an island of a given size using either
+#'   individual SAR model fits, or a multi-model SAR curve.
+#' @usage sar_pred(fit, area)
+#' @param fit Either a model fit object, a fit_collection object (generated
+#'   using \code{\link{sar_multi}}), or a sar_multi object (generated using
+#'   \code{\link{sar_average}}).
+#' @param area A numeric vector of area values (length >= 1).
+#' @details The multimodel SAR curve is constructed using information criterion
+#'   weights (see Burnham & Anderson, 2002; Guilhaumon et al. 2010). If
+#'   \code{obj} is a vector of n model names the function fits the n models to
+#'   the dataset provided using the \code{sar_multi} function. A dataset must
+#'   have four or more datapoints to fit the multimodel curve. If any models
+#'   cannot be fitted they are removed from the multimodel SAR. If \code{obj} is
+#'   a fit_collection object (created using the \code{sar_multi} function), any
+#'   model fits in the collection which are NA are removed. In addition, if any
+#'   other model checks have been selected (i.e. residual normality and
+#'   heterogeneity tests, and checks for negative predicted richness values),
+#'   these are undertaken and any model that fails the selected test(s) is
+#'   removed from the multimodel SAR. The order of the additional checks inside
+#'   the function is: normality of residuals, homogeneity of residuals, and a
+#'   check for negative fitted values. Once a model fails one test it is removed
+#'   and thus is not available for further tests. Thus, a model may fail
+#'   multiple tests but the returned warning will only provide information on a
+#'   single test.
+#'
+#'   The resultant models are then used to construct the multimodel SAR curve.
+#'   For each model in turn, the model fitted values are multiplied by the
+#'   information criterion weight of that model, and the resultant values are
+#'   summed across all models (Burnham & Anderson, 2002). Confidence intervals
+#'   can be calculated (using \code{confInt}) around the multimodel averaged
+#'   curve using the bootstrap procedure outlined in Guilhaumon et al (2010).The
+#'   procedure transforms the residuals from the individual model fits and
+#'   occasionally NAs / Inf values can be produced - in these cases, the model
+#'   is removed from the confidence interval calculation (but not the multimodel
+#'   curve itself). When several SAR models are used and the number of
+#'   bootstraps (\code{ciN}) is large, generating the confidence intervals can
+#'   take a long time.
+#'
+#'   The \code{sar_models()} function can be used to bring up a list of the 20
+#'   model names. \code{display_sars_models()} generates a table of the 20
+#'   models with model information.
+#'
+#' @return If a fit object or sar_multi object is provided as \code{fit}, a
+#'   numeric vector is returned with predicted richness values for each area
+#'   value in \code{area}. If a fit_collection object is provided as \code{fit}
+#'   and the length of \code{area} is greater than 1, a matrix is returned where
+#'   rows are area values and columns are models in the fit_collection.
+#' @note This function is used in the ISAR extrapolation paper of Matthews &
+#' Aspin (2019).
+#' @references Matthews, T.J. & Aspin, T.W.H. (2019) ....
+#' @examples
+#' data(galap)
+#' #attempt to construct a multimodel SAR curve using all twenty sar models
+#' fit <- sar_average(data = galap)
+#' summary(fit)
+#' plot(fit)
+#'
+#' # construct a multimodel SAR curve using a fit_collection object
+#' ff <- sar_multi(galap, obj = c("power", "loga", "monod", "weibull3"))
+#' fit2 <- sar_average(obj = ff, data = NULL)
+#' summary(fit2)
+#'
+#' @export
+
+
+#test with known dataset from results that uses AICc
+#add testthat
+
+sar_pred <- function(fit, area){
+  
+  if (!any(class(fit) %in% c("multi", "sars")))
+    stop("fit must be of class multi or sars")
+  
+  if (!((is.numeric(area) | is.vector(area))))
+    stop("area should be a numeric vector")
+
+  if (attributes(fit)$type == "multi"){ #if a sar_multi object
+    wei <- fit$details$weights_ics#weights
+    #get predicted values for area from each of the model fits
+    #works whether area is single value or vector of values with length > 1
+      pred <- vapply(area, function(a){
+        predVec <- vector(length = length(fit$details$mod_names))
+        for (i in seq_along(fit$details$mod_names)){
+          fi <- fit$details$fits[[i]]
+          nam <- fit$details$mod_names[i]
+          pPars <- fi$par
+          if (nam == "Linear model"){
+            predVec[i] <- as.vector(pPars[1] + (pPars[2] * a))
+            } else {
+              predVec[i] <- as.vector(fi$model$mod.fun(a, pPars))
+              }#eo if linear model
+          }#eo for i
+        if (!identical(names(wei), names(fit$details$mod_names))) stop ("Model names do not match.")
+        pred <- sum(predVec * wei) #multiply each model's fitted values by its weight
+        pred
+        }, FUN.VALUE = numeric(length = 1))
+      names(pred) <- area
+      } else if (attributes(fit)$type == "fit"){ #if a standard fit object
+        if (fit$model$name == "Linear model"){
+          pPars <- fit$par
+          pred <- as.vector((pPars[1] + (pPars[2] * area)))
+          names(pred) <- area
+          } else {
+            pPars <- fit$par
+            pred <- as.vector(fit$model$mod.fun(area, pPars))
+            names(pred) <- area
+            }#eo if linear model
+        } else if (attributes(fit)$type == "fit_collection"){ #if a fit collection object
+          pred <- vapply(fit, function(f){
+            if (f$model$name == "Linear model"){
+              pPars <- f$par
+              pred2 <- as.vector((pPars[1] + (pPars[2] * area)))
+              names(pred2) <- area
+              } else {
+                pPars <- f$par
+                pred2 <- as.vector(f$model$mod.fun(area, pPars))
+                names(pred2) <- area
+                }#eo if linear model
+            pred2
+            }, FUN.VALUE = numeric(length = length(area)))
+        } else{
+    stop("Incorrect fit object provided")
+  }
+  return(pred)
+}
+
+
