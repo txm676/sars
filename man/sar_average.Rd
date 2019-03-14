@@ -25,8 +25,9 @@ be NULL.}
 
 \item{crit}{The criterion used to compare models and compute the model
 weights. The default \code{crit = "Info"} switches to AIC or AICc depending
-on the number of data points in the dataset. For BIC, use \code{crit =
-"Bayes"}.}
+on the number of data points in the dataset. AIC (\code{crit = "AIC"}) or
+AICc (\code{crit = "AICc"}) can be chosen regardless of the sample size. For
+BIC, use \code{crit ="Bayes"}.}
 
 \item{normaTest}{The test used to test the normality of the residuals of each
 model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the

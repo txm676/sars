@@ -185,8 +185,9 @@ sar_multi <- function(data,
 #'   be NULL.
 #' @param crit The criterion used to compare models and compute the model
 #'   weights. The default \code{crit = "Info"} switches to AIC or AICc depending
-#'   on the number of data points in the dataset. For BIC, use \code{crit =
-#'   "Bayes"}.
+#'   on the number of data points in the dataset. AIC (\code{crit = "AIC"}) or
+#'   AICc (\code{crit = "AICc"}) can be chosen regardless of the sample size. For
+#'   BIC, use \code{crit ="Bayes"}.
 #' @param normaTest The test used to test the normality of the residuals of each
 #'   model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
 #'   default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
@@ -507,7 +508,9 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   #choosing an IC criterion (AIC or AICc or BIC)
   IC <- switch(crit,
                Info= if ( (nPoints / 3) < 40 ) { "AICc" } else { "AIC" },
-               Bayes= "BIC")
+               AIC = "AIC",
+               AICc = "AICc",
+               Bayes = "BIC")
 
   #get ICs
   ICs <- vapply(X = fits, FUN = function(x){x[[IC]]}, FUN.VALUE = double(1))
