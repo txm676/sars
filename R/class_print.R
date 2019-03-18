@@ -172,6 +172,11 @@ print.sars <- function(x, ...){
      cat("\n", paste(object$details$ic, "used to rank models"),
          "\n", sep = "")
   }
+  
+  if (attributes(object)$type == "pred"){
+    if (is.matrix(object)) print(object)
+    cat("\n",object,"\n")
+  }
 }
 
 

@@ -63,7 +63,11 @@ summary.sars <- function(object, ...){
       res$power <- round(c("logc" = cp, "z" = zp), 2)
     }
   }
-
+  
+  if (attributes(object)$type == "pred"){
+    stop("No summary method for a 'sars' object of type 'pred'\n", sep = "")
+  }
+  
   if (attributes(object)$type == "fit"){
     name <- object$model$name
     resid <- object$residuals

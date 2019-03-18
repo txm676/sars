@@ -647,6 +647,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
 
 #test with known dataset from results that uses AICc
 #add testthat
+#]add functionality to remove models > DAIC2
 
 sar_pred <- function(fit, area){
   
@@ -702,8 +703,16 @@ sar_pred <- function(fit, area){
             }, FUN.VALUE = numeric(length = length(area)))
         } else{
     stop("Incorrect fit object provided")
-  }
+        }
+ # class(pred) <- "sars"
+#  attr(pred, "type") <- "pred"
   return(pred)
 }
 
-
+#library(sars)
+#data(galap)
+#fit <- sar_power(galap); area = 5000
+#s <- sar_pred(fit, 5000)
+#s3 = sar_multi(data = galap, obj = c("power", "loga"))
+#s4 <- sar_pred(s3, c(5000,1000))
+#fit4 = sar_average(data = galap)

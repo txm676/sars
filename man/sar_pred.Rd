@@ -2,26 +2,27 @@
 % Please edit documentation in R/sar_average.R
 \name{sar_pred}
 \alias{sar_pred}
-\title{Use SAR model fits to predict richness on islands of a given area}
+\title{Use SAR model fits to predict richness on islands of a given size}
 \usage{
 sar_pred(fit, area)
 }
 \arguments{
-\item{fit}{Either a model fit object, a fit_collection object, or a sar_multi
-object (generated using \code{\link{sar_average}}).}
+\item{fit}{Either a model fit object, a fit_collection object (generated
+using \code{\link{sar_multi}}), or a sar_multi object (generated using
+\code{\link{sar_average}}).}
 
 \item{area}{A numeric vector of area values (length >= 1).}
 }
 \value{
 If a fit object or sar_multi object is provided as \code{fit}, a
-  numeric vector is returned with predicted richness values for each area in
-  \code{area}. If a fit_collection object is provided as \code{fit} and the
-  length of \code{area} is greater than 1, a matrix is return where rows are
-  area values and columns are models in the fit_collection.
+  numeric vector is returned with predicted richness values for each area
+  value in \code{area}. If a fit_collection object is provided as \code{fit}
+  and the length of \code{area} is greater than 1, a matrix is returned where
+  rows are area values and columns are models in the fit_collection.
 }
 \description{
-Predict the richness on an island of a given area using either
-  individual SAR model fits, or multi-model SAR curve.
+Predict the richness on an island of a given size using either
+  individual SAR model fits, or a multi-model SAR curve.
 }
 \details{
 The multimodel SAR curve is constructed using information criterion
