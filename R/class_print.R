@@ -173,10 +173,10 @@ print.sars <- function(x, ...){
          "\n", sep = "")
   }
   
-  if (attributes(object)$type == "pred"){
-    if (is.matrix(object)) print(object)
-    cat("\n",object,"\n")
-  }
+ # if (attributes(object)$type == "pred"){
+  #  if (is.matrix(object)) print(object)
+ #  cat("\n",object,"\n")
+ # }
 }
 
 

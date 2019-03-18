@@ -238,10 +238,6 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
           cex.main = cex.main, ...)
     lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
   }
-  
-  if (attributes(object)$type == "pred"){
-    cat("\nNo summary method for a 'sars' object of type 'pred'\n", sep = "")
-  }
  }
 
 

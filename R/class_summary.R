@@ -64,9 +64,9 @@ summary.sars <- function(object, ...){
     }
   }
   
-  if (attributes(object)$type == "pred"){
-    stop("No summary method for a 'sars' object of type 'pred'\n", sep = "")
-  }
+#  if (attributes(object)$type == "pred"){
+ #   stop("No summary method for a 'sars' object of type 'pred'\n", sep = "")
+ # }
   
   if (attributes(object)$type == "fit"){
     name <- object$model$name

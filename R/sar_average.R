@@ -648,6 +648,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
 #test with known dataset from results that uses AICc
 #add testthat
 #]add functionality to remove models > DAIC2
+#function docs: details section
 
 sar_pred <- function(fit, area){
   
