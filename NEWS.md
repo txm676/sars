@@ -1,4 +1,7 @@
-
+## Version 1.1.2
+  * bug fixes
+  * additional tests added
+  * sar_pred() function added for SAR extrapolation
   
 ## Version 1.1.1
  * added vignette
