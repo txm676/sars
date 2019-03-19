@@ -137,7 +137,7 @@ sar_multi <- function(data,
 
       if (verb) {
         if(is.na(f$value)) {
-          cat_line( paste0(red(symbol$arrow_right)," ",
+          cat_line(paste0(red(symbol$arrow_right)," ",
                            col_align(x,max(nchar(obj)))," : ",
                            red(symbol$cross)))
         }else{
@@ -705,8 +705,8 @@ sar_pred <- function(fit, area){
         } else{
     stop("Incorrect fit object provided")
         }
- # class(pred) <- "sars"
-#  attr(pred, "type") <- "pred"
+  class(pred) <- "sars"
+  attr(pred, "type") <- "pred"
   return(pred)
 }
 

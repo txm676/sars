@@ -38,7 +38,8 @@
 #'   of the model fit} \item{asymptote} { A logical value indicating whether
 #'   the observed fit is asymptotic} \item{normaTest} { The results of the
 #'   residuals normality test} \item{homoTest} { The results of the residuals
-#'   homogeneity test}}
+#'   homogeneity test} \item{neg_check} { A logical value indicating whether
+#'   negative fitted values have been returned}}
 
 #'   The \code{\link{summary.sars}} function returns a more useful summary of
 #'   the model fit results, and the \code{\link{plot.sars}} plots the model
@@ -136,6 +137,7 @@ sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
     res <- sum((S - model$mod.fun(A,par, model = model))^2)
     res
   }
+  fit$neg_check <- any(fit$calculated < 0)
   class(fit) <- 'sars' 
   attr(fit, 'type') <- 'fit' 
   return(fit) 

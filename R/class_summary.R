@@ -82,7 +82,6 @@ summary.sars <- function(object, ...){
     shape <- object$observed_shape
     asymp <- object$asymptote
     conv <- object$verge
-    negCheck <- ifelse(any(object$calculated < 0), 1, 0)
     res <- list("Model" = name, "residuals" = round(resid, 1),
                 "Parameters" = pars_tab,
                 "parNames" = parN, "formula" = formula, "AIC" = round(ic, 2),
@@ -91,7 +90,7 @@ summary.sars <- function(object, ...){
                 "observed_shape" = shape, "asymptote" = asymp,
                 "convergence" = conv, "normaTest" = object$normaTest,
                 "homoTest" = object$homoTest,
-                "Negative_values" = negCheck)
+                "Negative_values" = object$neg_check)
   }
 
 

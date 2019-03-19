@@ -37,7 +37,8 @@ A list of class 'sars' with the following components: \itemize{
   of the model fit} \item{asymptote} { A logical value indicating whether
   the observed fit is asymptotic} \item{normaTest} { The results of the
   residuals normality test} \item{homoTest} { The results of the residuals
-  homogeneity test}}
+  homogeneity test} \item{neg_check} { A logical value indicating whether
+  negative fitted values have been returned}}
   The \code{\link{summary.sars}} function returns a more useful summary of
   the model fit results, and the \code{\link{plot.sars}} plots the model
   fit.

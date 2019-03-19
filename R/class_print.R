@@ -92,7 +92,7 @@ print.summary.sars <- function(x, ...){
                       tr, "(i.e. P < 0.05)"), "\n", sep = "")
     }
     #negative values check
-    if (object$Negative_values == 1){
+    if (object$Negative_values){
       cat("\nWarning: The fitted values of the model contain negative",
           " values (i.e. negative species richness values)\n", sep = "")
     }
@@ -175,7 +175,7 @@ print.sars <- function(x, ...){
   
  # if (attributes(object)$type == "pred"){
   #  if (is.matrix(object)) print(object)
- #  cat("\n",object,"\n")
+  #  print(object)
  # }
 }
 

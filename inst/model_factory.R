@@ -126,7 +126,9 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#'     \\item{observed_shape} { The observed shape of the", 
               " model fit}\n"))
   cat1(paste0("#'     \\item{asymptote} { A logical value indicating whether", 
-              " the observed fit is asymptotic}}\n\n"))
+              " the observed fit is asymptotic}\n"))
+  cat1(paste0("#'     \\item{neg_check} { A logical value indicating whether",
+              " negative fitted values have been returned}}\n\n"))
   cat1(paste0("#'   The \\code{\\link{summary.sars}} function returns a more", 
               " useful summary of\n"))
   cat1(paste0("#'   the model fit results, and the \\code{\\link{plot.sars}}", 
@@ -218,6 +220,7 @@ model_factory <- function(f, overwrite = FALSE){
   cat1("  obs <- obs_shape(fit)\n")
   cat1("  fit$observed_shape <- obs$fitShape\n")
   cat1("  fit$asymptote <- obs$asymp\n")
+  cat1("  fit$neg_check <- any(fit$calculated < 0)\n")
   cat1("  class(fit) <- 'sars'\n")
   cat1("  attr(fit, 'type') <- 'fit'\n")
   cat1("  return(fit)\n")
