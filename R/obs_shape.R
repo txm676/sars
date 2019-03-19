@@ -122,13 +122,18 @@ obs_shape <- function(x){
 
       #if the model is sigmoid but the shape study failed then
       #we will said the fit to be sigmoid
+      fm <- NULL
       if (model$shape == "sigmoid" & sum(possFits) == 0) {
-          message("observed shape algorithm failed: observed shape set to
-                theoretical shape (sigmoid)")
-          possFits <- c(0, 0, 0, 1)
+        fm <- 1
+        possFits <- c(0, 0, 0, 1)
       }
       names(possFits) <- c("linear", "convex up", "convex down", "sigmoid")
-
-      res <- list(asymp = asymp, fitShape = names(possFits[possFits == 1]))
+      if (is.null(fm)){
+        fitShape <- names(possFits[possFits == 1])
+      } else {
+        fitShape <- paste("sigmoid - observed shape algorithm failed: observed",
+                     "shape set to theoretical shape (sigmoid)")
+      }
+      res <- list(asymp = asymp, fitShape = fitShape)
       return(res)
 }
