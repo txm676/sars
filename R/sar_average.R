@@ -705,8 +705,8 @@ sar_pred <- function(fit, area){
         } else{
     stop("Incorrect fit object provided")
         }
-  class(pred) <- "sars"
-  attr(pred, "type") <- "pred"
+#  class(pred) <- "sars"
+ # attr(pred, "type") <- "pred"
   return(pred)
 }
 
