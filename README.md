@@ -22,8 +22,8 @@ functionality to plot multi-model SAR curves and to generate confidence
 intervals using bootstrapping. Additional SAR related functions include
 fitting the linear version of the power model and comparing parameters
 with the non-linear version, fitting the general dynamic model of island
-biogeography, fitting the random placement model to a species abundance
-- site matrix, and extrapolating fitted SAR models to predict richness
+biogeography, fitting the random placement model to a species abundance-site matrix, 
+and extrapolating fitted SAR models to predict richness
 on larger islands / sample areas.
 
 As this is version 1.1.2 of the package, it is possible that there are
