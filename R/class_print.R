@@ -173,10 +173,10 @@ print.sars <- function(x, ...){
          "\n", sep = "")
   }
   
- # if (attributes(object)$type == "pred"){
-  #  if (is.matrix(object)) print(object)
-  #  print(object)
- # }
+  if (attributes(object)$type == "pred"){
+    cat("\nThis is a sar_pred object:\n\n", sep = "")
+    print.data.frame(object)
+  }
 }
 
 

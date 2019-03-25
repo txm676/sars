@@ -78,3 +78,6 @@ data(galap)
 galap$t <- rgamma(16, 5, scale = 2)#add a random time variable 
 gdm(data = galap, model = "loga", mod_sel = TRUE)
 
+## ------------------------------------------------------------------------
+
+

@@ -75,6 +75,9 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
                       pLeg = FALSE, ...)
 {
 
+  if (attributes(x)$type == "pred"){
+    return(cat("\nNo plot method for 'pred' object of class 'sars'\n", sep = ""))
+  }
 
   if (mfplot & attributes(x)$type != "fit_collection")
     stop("mfplot argument only for use with Type 'fit_collection'")

@@ -98,7 +98,7 @@ no longer complies with recognised programming good practice , is not on CRAN
 requires the user to load individual models prior to fitting). There was
 therefore a need to design a new package from scratch.
 
-##METHODS AND FEATURES 
+## METHODS AND FEATURES 
 The ‘sars’ (species–area relationships) package has been programmed using
 standard S3 methods and is available on CRAN (version 1.1.0) and the
 development version on GitHub (txm676/sars), meaning researchers can easily
@@ -271,7 +271,7 @@ plot(fit, allCurves = FALSE, ModTitle =
 plot(fit, type = "bar", ModTitle = "b) Model weights", cex.lab = 1.3)
 ```
 
-##Additional functions 
+## Additional functions 
 In addition to the main functions used to fit and compare the 20 SAR models,
 the sars package provides additional functions for specific SAR-based
 analyses. First, a function is provided to fit the log–log version of the
@@ -321,7 +321,38 @@ galap$t <- rgamma(16, 5, scale = 2)#add a random time variable
 gdm(data = galap, model = "loga", mod_sel = TRUE)
 ```
 
-##CONCLUSIONS 
+## SAR extrapolation
+Extrapolation (e.g. predicting the richness of areas too large to be sampled) is
+one of the primary uses of the SAR. Using an individual SAR model fit,
+extrapolation simply involves using the model function in combination with the
+parameter values estimated using the observed area / richness data to predict
+the richness on a larger area. An alternative extrapolation approach to simply
+using an individual model l is to use multi-model inference and model averaging,
+whereby a larger number of n models is fitted to a set of islands, the models
+ranked according to some criterion (e.g. Akaike’s information criterion, AIC)
+and the criterion values converted into model weights (i.e. the conditional
+probabilities for each of the n models). The n models are then each used to
+predict the richness of a larger area and these predictions are multiplied by
+the respective model weights and summed to provide a multi-model averaged
+prediction. Both of these options are available inside the package.
+
+```{r}
+#fit the power model and predict richness on an island of area = 5000
+data(galap)
+p <- sar_power(data = galap)
+sar_pred(p, area = 5000)
+
+#fit three SAR models and predict richness on islands of area = 5000 & 10000
+p2 <- sar_multi(galap, obj = c("power", "loga", "koba"))
+sar_pred(p2, area = c(5000, 10000))
+
+#calculate a multi-model curve and predict richness on islands of area = 5000 & 10000
+p3 <- sar_average(data = galap)
+sar_pred(p3, area = c(5000, 10000))
+```
+
+
+## CONCLUSIONS 
 The SAR has been a cornerstone of ecological and biogeographical science for
 almost a century and its form and fit are still of great significance in both
 theoretical and applied contexts. The development of the ‘sars’ R package

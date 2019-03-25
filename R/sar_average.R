@@ -577,85 +577,64 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
 }#end of sar_average
 
 
-
 #' Use SAR model fits to predict richness on islands of a given size
 #'
 #' @description Predict the richness on an island of a given size using either
-#'   individual SAR model fits, or a multi-model SAR curve.
+#'   individual SAR model fits, a fit_collection of model fits, or a multi-model
+#'   SAR curve.
 #' @usage sar_pred(fit, area)
 #' @param fit Either a model fit object, a fit_collection object (generated
 #'   using \code{\link{sar_multi}}), or a sar_multi object (generated using
 #'   \code{\link{sar_average}}).
 #' @param area A numeric vector of area values (length >= 1).
-#' @details The multimodel SAR curve is constructed using information criterion
-#'   weights (see Burnham & Anderson, 2002; Guilhaumon et al. 2010). If
-#'   \code{obj} is a vector of n model names the function fits the n models to
-#'   the dataset provided using the \code{sar_multi} function. A dataset must
-#'   have four or more datapoints to fit the multimodel curve. If any models
-#'   cannot be fitted they are removed from the multimodel SAR. If \code{obj} is
-#'   a fit_collection object (created using the \code{sar_multi} function), any
-#'   model fits in the collection which are NA are removed. In addition, if any
-#'   other model checks have been selected (i.e. residual normality and
-#'   heterogeneity tests, and checks for negative predicted richness values),
-#'   these are undertaken and any model that fails the selected test(s) is
-#'   removed from the multimodel SAR. The order of the additional checks inside
-#'   the function is: normality of residuals, homogeneity of residuals, and a
-#'   check for negative fitted values. Once a model fails one test it is removed
-#'   and thus is not available for further tests. Thus, a model may fail
-#'   multiple tests but the returned warning will only provide information on a
-#'   single test.
+#' @details Extrapolation (e.g. predicting the richness of areas too large to be
+#'   sampled) is one of the primary uses of the SAR. The \code{sar_pred}
+#'   function provides an easy method for undertaking such an exercise. The
+#'   function works by taking an already fitted SAR model, extacting the parameter
+#'   values and then using these values and the model function to predict the
+#'   richness for any value of area provided.
 #'
-#'   The resultant models are then used to construct the multimodel SAR curve.
-#'   For each model in turn, the model fitted values are multiplied by the
-#'   information criterion weight of that model, and the resultant values are
-#'   summed across all models (Burnham & Anderson, 2002). Confidence intervals
-#'   can be calculated (using \code{confInt}) around the multimodel averaged
-#'   curve using the bootstrap procedure outlined in Guilhaumon et al (2010).The
-#'   procedure transforms the residuals from the individual model fits and
-#'   occasionally NAs / Inf values can be produced - in these cases, the model
-#'   is removed from the confidence interval calculation (but not the multimodel
-#'   curve itself). When several SAR models are used and the number of
-#'   bootstraps (\code{ciN}) is large, generating the confidence intervals can
-#'   take a long time.
+#'   If a multi-model SAR curve is used for prediction (i.e. using
+#'   \code{\link{sar_average}}), the model information criterion weight (i.e.
+#'   the conditional probabilities for each of the n models) for each of the
+#'   individual model fits that were used to generate the curve are stored. The
+#'   n models are then each used to predict the richness of a larger area and
+#'   these predictions are multiplied by the respective model weights and summed
+#'   to provide a multi-model averaged prediction.
 #'
-#'   The \code{sar_models()} function can be used to bring up a list of the 20
-#'   model names. \code{display_sars_models()} generates a table of the 20
-#'   models with model information.
-#'
-#' @return If a fit object or sar_multi object is provided as \code{fit}, a
-#'   numeric vector is returned with predicted richness values for each area
-#'   value in \code{area}. If a fit_collection object is provided as \code{fit}
-#'   and the length of \code{area} is greater than 1, a matrix is returned where
-#'   rows are area values and columns are models in the fit_collection.
+#' @return A data.frame of class 'sars' with three columns: 1) the name of the
+#'   model, 2) the area value for which a prediction has been generated, and 3)
+#'   the prediction from the model extrapolation.
 #' @note This function is used in the ISAR extrapolation paper of Matthews &
-#' Aspin (2019).
+#'   Aspin (2019).
+#'
+#'   Code to calculate confidence intervals around the predictions using
+#'   bootstrapping will be added in a later version of the package.
 #' @references Matthews, T.J. & Aspin, T.W.H. (2019) ....
 #' @examples
 #' data(galap)
-#' #attempt to construct a multimodel SAR curve using all twenty sar models
-#' fit <- sar_average(data = galap)
-#' summary(fit)
-#' plot(fit)
-#'
-#' # construct a multimodel SAR curve using a fit_collection object
-#' ff <- sar_multi(galap, obj = c("power", "loga", "monod", "weibull3"))
-#' fit2 <- sar_average(obj = ff, data = NULL)
-#' summary(fit2)
-#'
+#' #fit the power model and predict richness on an island of area = 5000
+#' fit <- sar_power(data = galap)
+#' p <- sar_pred(fit, area = 5000)
+#' 
+#' #fit three SAR models and predict richness on islands of area = 5000 & 10000
+#' fit2 <- sar_multi(galap, obj = c("power", "loga", "koba"))
+#' p2 <- sar_pred(fit2, area = c(5000, 10000))
+#' 
+#' #calculate a multi-model curve and predict richness on islands of area = 5000 & 10000
+#' fit3 <- sar_average(data = galap)
+#' p3 <- sar_pred(fit3, area = c(5000, 10000))
 #' @export
 
 
 #test with known dataset from results that uses AICc
-#add testthat
-#]add functionality to remove models > DAIC2
-#function docs: details section
 
 sar_pred <- function(fit, area){
   
   if (!any(class(fit) %in% c("multi", "sars")))
     stop("fit must be of class multi or sars")
   
-  if (!((is.numeric(area) | is.vector(area))))
+  if (!(is.numeric(area) & is.vector(area)))
     stop("area should be a numeric vector")
 
   if (attributes(fit)$type == "multi"){ #if a sar_multi object
@@ -674,7 +653,9 @@ sar_pred <- function(fit, area){
               predVec[i] <- as.vector(fi$model$mod.fun(a, pPars))
               }#eo if linear model
           }#eo for i
-        if (!identical(names(wei), names(fit$details$mod_names))) stop ("Model names do not match.")
+        if (!identical(names(wei), names(fit$details$mod_names))){ 
+          stop ("Model names do not match.")
+        }
         pred <- sum(predVec * wei) #multiply each model's fitted values by its weight
         pred
         }, FUN.VALUE = numeric(length = 1))
@@ -683,13 +664,15 @@ sar_pred <- function(fit, area){
         if (fit$model$name == "Linear model"){
           pPars <- fit$par
           pred0 <- as.vector((pPars[1] + (pPars[2] * area)))
-          pred <- data.frame("Model" = "Linear", "Area" = area, "Prediction" = pred0)
+          pred <- data.frame("Model" = "Linear", "Area" = area, 
+                             "Prediction" = pred0)
           } else {
             pPars <- fit$par
             pred0 <- as.vector(fit$model$mod.fun(area, pPars))
-            pred <- data.frame("Model" = fit$model$name,"Area" = area, "Prediction" = pred0)
+            pred <- data.frame("Model" = fit$model$name,"Area" = area, 
+                               "Prediction" = pred0)
             }#eo if linear model
-        } else if (attributes(fit)$type == "fit_collection"){ #if a fit collection object
+        } else if (attributes(fit)$type == "fit_collection"){ #if a fit collection 
           pred0 <- vapply(fit, function(f){
             if (f$model$name == "Linear model"){
               pPars <- f$par
@@ -700,13 +683,16 @@ sar_pred <- function(fit, area){
                 }#eo if linear model
             pred2
             }, FUN.VALUE = numeric(length = length(area)))
-           mns <-  vapply(fit, function(x) x$model$name, FUN.VALUE = character(1))#get model names in fit_collection
+           #get model names in fit_collection
+           mns <-  vapply(fit, function(x) x$model$name, FUN.VALUE = character(1))
            #build data.frame depening on whether one area value provided or multiple
            if (length(area) == 1){
-            pred <- data.frame("Model" = mns, "Area" = rep(area, length(pred0)), "Prediction" = pred0)
+            pred <- data.frame("Model" = mns, "Area" = rep(area, length(pred0)),
+                               "Prediction" = pred0)
            } else{
              #have to unpack the results properly to build data.frame in correct order
-             mns2 <- as.vector(vapply(mns, function(x) rep(x, nrow(pred0)), FUN.VALUE = character(nrow(pred0))))
+             mns2 <- as.vector(vapply(mns, function(x) rep(x, nrow(pred0)), 
+                                      FUN.VALUE = character(nrow(pred0))))
              p2 <- as.vector(unlist(pred0))
              pred <- data.frame("Model" = mns2, "Area" = area, "Prediction" = p2)
            }
@@ -714,34 +700,7 @@ sar_pred <- function(fit, area){
         } else{
     stop("Incorrect fit object provided")
         }
-#  class(pred) <- "sars"
- # attr(pred, "type") <- "pred"
+  class(pred) <- c("sars", "data.frame")
+  attr(pred, "type") <- "pred"
   return(pred)
 }
-
-#library(sars)
-#data(galap)
-fit <- sar_power(galap); area = 5000
-s <- sar_pred(fit, area)
-s
-area <- c(5000, 45000, 50000)
-s2 <- sar_pred(fit, area)
-s2
-
-
-fit3 = sar_multi(data = galap, obj = c("power", "loga", "koba"))
-#s4 <- sar_pred(s3, c(5000,1000))
-
-fit4 = sar_average(data = galap); area = 5000
-a <- sar_pred(fit4, area)
-a
-area <- c(5000, 45000, 50000)
-a2 <- sar_pred(fit4, area)
-a2
-
-
-
-
-
-
-

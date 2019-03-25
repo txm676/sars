@@ -22,10 +22,11 @@ functionality to plot multi-model SAR curves and to generate confidence
 intervals using bootstrapping. Additional SAR related functions include
 fitting the linear version of the power model and comparing parameters
 with the non-linear version, fitting the general dynamic model of island
-biogeography, and fitting the random placement model to a species
-abundance - site matrix.
+biogeography, fitting the random placement model to a species abundance
+- site matrix, and extrapolating fitted SAR models to predict richness
+on larger islands / sample areas.
 
-As this is version 1.1.1 of the package, it is possible that there are
+As this is version 1.1.2 of the package, it is possible that there are
 some bugs in places. Please report any issues to us via GitHub.
 
 The package has an associated vignette that provides examples of how to
@@ -82,8 +83,6 @@ mm_galap <- sar_average(data = galap)
 #> > power    : v
 #> > powerR   : v
 #> > epm1     : v
-#> observed shape algorithm failed: observed shape set to
-#>                 theoretical shape (sigmoid)
 #> > epm2     : v
 #> > p1       : v
 #> > p2       : v
