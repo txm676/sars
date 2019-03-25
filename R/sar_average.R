@@ -662,7 +662,7 @@ sar_pred <- function(fit, area){
     wei <- fit$details$weights_ics#weights
     #get predicted values for area from each of the model fits
     #works whether area is single value or vector of values with length > 1
-      pred <- vapply(area, function(a){
+      pred0 <- vapply(area, function(a){
         predVec <- vector(length = length(fit$details$mod_names))
         for (i in seq_along(fit$details$mod_names)){
           fi <- fit$details$fits[[i]]
@@ -678,30 +678,39 @@ sar_pred <- function(fit, area){
         pred <- sum(predVec * wei) #multiply each model's fitted values by its weight
         pred
         }, FUN.VALUE = numeric(length = 1))
-      names(pred) <- area
+      pred <- data.frame("Model" = "Multi", "Area" = area, "Prediction" = pred0)
       } else if (attributes(fit)$type == "fit"){ #if a standard fit object
         if (fit$model$name == "Linear model"){
           pPars <- fit$par
-          pred <- as.vector((pPars[1] + (pPars[2] * area)))
-          names(pred) <- area
+          pred0 <- as.vector((pPars[1] + (pPars[2] * area)))
+          pred <- data.frame("Model" = "Linear", "Area" = area, "Prediction" = pred0)
           } else {
             pPars <- fit$par
-            pred <- as.vector(fit$model$mod.fun(area, pPars))
-            names(pred) <- area
+            pred0 <- as.vector(fit$model$mod.fun(area, pPars))
+            pred <- data.frame("Model" = fit$model$name,"Area" = area, "Prediction" = pred0)
             }#eo if linear model
         } else if (attributes(fit)$type == "fit_collection"){ #if a fit collection object
-          pred <- vapply(fit, function(f){
+          pred0 <- vapply(fit, function(f){
             if (f$model$name == "Linear model"){
               pPars <- f$par
               pred2 <- as.vector((pPars[1] + (pPars[2] * area)))
-              names(pred2) <- area
               } else {
                 pPars <- f$par
                 pred2 <- as.vector(f$model$mod.fun(area, pPars))
-                names(pred2) <- area
                 }#eo if linear model
             pred2
             }, FUN.VALUE = numeric(length = length(area)))
+           mns <-  vapply(fit, function(x) x$model$name, FUN.VALUE = character(1))#get model names in fit_collection
+           #build data.frame depening on whether one area value provided or multiple
+           if (length(area) == 1){
+            pred <- data.frame("Model" = mns, "Area" = rep(area, length(pred0)), "Prediction" = pred0)
+           } else{
+             #have to unpack the results properly to build data.frame in correct order
+             mns2 <- as.vector(vapply(mns, function(x) rep(x, nrow(pred0)), FUN.VALUE = character(nrow(pred0))))
+             p2 <- as.vector(unlist(pred0))
+             pred <- data.frame("Model" = mns2, "Area" = area, "Prediction" = p2)
+           }
+            rownames(pred) <- NULL
         } else{
     stop("Incorrect fit object provided")
         }
@@ -712,8 +721,27 @@ sar_pred <- function(fit, area){
 
 #library(sars)
 #data(galap)
-#fit <- sar_power(galap); area = 5000
-#s <- sar_pred(fit, 5000)
-#s3 = sar_multi(data = galap, obj = c("power", "loga"))
+fit <- sar_power(galap); area = 5000
+s <- sar_pred(fit, area)
+s
+area <- c(5000, 45000, 50000)
+s2 <- sar_pred(fit, area)
+s2
+
+
+fit3 = sar_multi(data = galap, obj = c("power", "loga", "koba"))
 #s4 <- sar_pred(s3, c(5000,1000))
-#fit4 = sar_average(data = galap)
+
+fit4 = sar_average(data = galap); area = 5000
+a <- sar_pred(fit4, area)
+a
+area <- c(5000, 45000, 50000)
+a2 <- sar_pred(fit4, area)
+a2
+
+
+
+
+
+
+
