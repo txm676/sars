@@ -63,10 +63,11 @@ lin_pow <- function(data, con = 1, compare = FALSE, normaTest =  "lillie",
 
   if (any(data$S == 0)){
       log.data <- data.frame(A = log(data$A), S = log(data$S + con))
-  } else {
+      linearPower.fit <- lm(log(S + con) ~ log(A), data = data)
+      } else {
        log.data <- data.frame(A = log(data$A), S = log(data$S))
+       linearPower.fit <- lm(log(S) ~ log(A), data = data)
   }
-  linearPower.fit <- lm(S ~ A, data = log.data)
 
   fv <- linearPower.fit$fitted.values
   linearPower.fit <- summary.lm(linearPower.fit)
