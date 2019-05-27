@@ -29,12 +29,12 @@ summary(fit) #a warning is provided  indicating the normality test failed
 fit$normaTest
 
 ## ---- fig.width=7, fig.height=19-----------------------------------------
-#load an example dataset (Niering, 1963), run the ‘sar_average’ function
+#load an example dataset (Niering, 1963), run the â€˜sar_averageâ€™ function
 #using a vector of model names and with no model validation tests, and
 #produce the plots in Figure 2 of the paper 
 data(niering) 
 
-#run the ‘sar_average’ function using a vector of model names 
+#run the â€˜sar_averageâ€™ function using a vector of model names 
 fit <- sar_average(data= niering, obj =c("power","loga","koba","mmf","monod",
                                          "negexpo","chapman","weibull3","asymp"),
 normaTest = "none", homoTest = "none", neg_check = FALSE, confInt = TRUE, ciN
@@ -54,9 +54,9 @@ plot(fit, type = "bar", ModTitle = "b) Model weights", cex.lab = 1.3)
 
 ## ---- fig.width=6, fig.height=6------------------------------------------
 #load an example dataset, fit the log-log power model, return a model fit
-#summary and plot the model fit. When ‘compare’ == TRUE, the non-linear
+#summary and plot the model fit. When â€˜compareâ€™ == TRUE, the non-linear
 #power model is also fitted and the resultant parameter values compared. 
-#If any islands have zero species, a constant (‘con’) is added to all 
+#If any islands have zero species, a constant (â€˜conâ€™) is added to all 
 #species richness values. 
 data(galap) 
 fit <- lin_pow(dat = galap, compare = TRUE, con = 1) 
@@ -64,7 +64,7 @@ summary(fit)
 plot(fit)
 
 #load an example dataset, fit the random placement model and plot the 
-#model fit and standard deviation. The ‘data’ argument requires a species-
+#model fit and standard deviation. The â€˜dataâ€™ argument requires a species-
 #site abundance matrix: rows are species and columns are sites. The area 
 #argument requires a vector of site (island) area values. 
 data(cole_sim) 
@@ -79,5 +79,16 @@ galap$t <- rgamma(16, 5, scale = 2)#add a random time variable
 gdm(data = galap, model = "loga", mod_sel = TRUE)
 
 ## ------------------------------------------------------------------------
+#fit the power model and predict richness on an island of area = 5000
+data(galap)
+p <- sar_power(data = galap)
+sar_pred(p, area = 5000)
 
+#fit three SAR models and predict richness on islands of area = 5000 & 10000
+p2 <- sar_multi(galap, obj = c("power", "loga", "koba"))
+sar_pred(p2, area = c(5000, 10000))
+
+#calculate a multi-model curve and predict richness on islands of area = 5000 & 10000
+p3 <- sar_average(data = galap)
+sar_pred(p3, area = c(5000, 10000))
 

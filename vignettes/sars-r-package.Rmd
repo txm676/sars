@@ -100,7 +100,7 @@ therefore a need to design a new package from scratch.
 
 ## METHODS AND FEATURES 
 The ‘sars’ (species–area relationships) package has been programmed using
-standard S3 methods and is available on CRAN (version 1.1.0) and the
+standard S3 methods and is available on CRAN (version 1.1.2) and the
 development version on GitHub (txm676/sars), meaning researchers can easily
 add in their own models and functions and integrate these into the
 multi-model inference framework. Thus, the package represents a resource for
