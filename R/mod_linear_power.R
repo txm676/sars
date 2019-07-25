@@ -34,6 +34,7 @@
 #'   non-linear power model. Note that the log-log function returns log(c).
 #' @importFrom stats lm summary.lm shapiro.test ks.test cor.test
 #' @importFrom nortest lillie.test
+#' @importFrom utils capture.output
 #' @return A list of class "sars" with up to seven elements. The first element
 #'   is an object of class 'summary.lm'. This is the summary of the linear model
 #'   fit using the \link[stats]{lm} function and the user's data. The second
