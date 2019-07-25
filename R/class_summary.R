@@ -32,13 +32,13 @@
 #'   of the fit); the models are ranked in decreasing order of information
 #'   criterion weight.
 #'
-#'   For a 'sars' object of Type 'lin_pow', a list with 5 elements is
-#'   returned: (i) the model fit output from the \code{\link{lm}} function,
-#'   (ii) the fitted values of the model, (iii) the observed data, and (iv
-#'   and v) the results of the residuals normality and heterogeneity tests.
-#'   If the argument \code{compare = TRUE} is used in \code{\link{lin_pow}},
-#'   a sixth element is returned that contains the parameter values from the
-#'   non-linear power model.
+#'   For a 'sars' object of Type 'lin_pow', a list with up to 7 elements is
+#'   returned: (i) the model fit output from the \code{\link{lm}} function, (ii)
+#'   the fitted values of the model, (iii) the observed data, (iv and v) the
+#'   results of the residuals normality and heterogeneity tests, and (vi) the
+#'   log-transformation function used. If the argument \code{compare = TRUE} is
+#'   used in \code{\link{lin_pow}}, a 7th element is returned that contains the
+#'   parameter values from the non-linear power model.
 #' @examples
 #' data(galap)
 #' #fit a multimodel SAR and get the model table
@@ -56,7 +56,8 @@ summary.sars <- function(object, ...){
     fit_df <- round(data.frame(Area = object$data$A,
                                Fitted = object$calculated), 2)
     res <- list("Model" = object$Model, df = fit_df,
-                "normaTest" = object$normaTest, "homoTest" = object$homoTest)
+                "normaTest" = object$normaTest, "homoTest" = object$homoTest, 
+                logT = object$logT)
     if ("power" %in% names(object)){
       cp <- object$power$par[1]
       zp <- object$power$par[2]

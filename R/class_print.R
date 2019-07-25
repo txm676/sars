@@ -6,6 +6,7 @@ print.summary.sars <- function(x, ...){
   object <- x
   if (attributes(object)$type == "lin_pow"){
     cat("Model = Log-log power\n")
+    cat("\nLog-transformation function used: ", object$logT,"\n", sep = "")
     # rownames(object$Model$coefficients) <- c("LogC", "z")
     print(object$Model)
     if (object$normaTest$test == "shapiro"| object$normaTest$test == "lillie" |
@@ -131,6 +132,7 @@ print.sars <- function(x, ...){
   if (attributes(object)$type == "lin_pow"){
     cat("Model = Log-log power\n")
     cat("\nCall:\nlogS = logc + z.logA\n", sep = "")
+    cat("\nLog-transformation function used: ", object$logT,"\n", sep = "")
     cat("\nCoefficients:\n", sep = "")
     logc <- object$Model$coefficients[1, 1]
     names(logc) <- "logc"

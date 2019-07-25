@@ -548,7 +548,8 @@ x2 <- c("Pow", "PowR", "E1", "E2", "P1", "P2", "Loga", "Kob", "MMF",
         "CR", "CW3", "AR", "RF", "Gom", "CW4", "BP", "Hel", "Lin")
 
 df <- data.frame("Full_name" = x1, "Abbreviated_name" = x2)
-df2 <- df[(which(df$Full_name %in% nams)),]
+dfb <- vapply(nams, function(x) which(df$Full_name == x), FUN.VALUE = numeric(1))
+df2 <- df[dfb,]
 if (nrow(df2) != length(nams)) stop("Not enough matched model names")
 as.vector(df2$Abbreviated_name)
 }

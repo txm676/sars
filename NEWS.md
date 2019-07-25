@@ -1,3 +1,7 @@
+## Version 1.2.0
+  * bug fixes (bar plot of weight x-axis labels order was incorrect in some cases)
+  * logT argument added to lin_pow function (can choose log-transformation function)
+
 ## Version 1.1.2
   * bug fixes
   * additional tests added

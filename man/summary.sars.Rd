@@ -35,13 +35,13 @@ The \code{summary.sars} function returns an object of class
   of the fit); the models are ranked in decreasing order of information
   criterion weight.
 
-  For a 'sars' object of Type 'lin_pow', a list with 5 elements is
-  returned: (i) the model fit output from the \code{\link{lm}} function,
-  (ii) the fitted values of the model, (iii) the observed data, and (iv
-  and v) the results of the residuals normality and heterogeneity tests.
-  If the argument \code{compare = TRUE} is used in \code{\link{lin_pow}},
-  a sixth element is returned that contains the parameter values from the
-  non-linear power model.
+  For a 'sars' object of Type 'lin_pow', a list with up to 7 elements is
+  returned: (i) the model fit output from the \code{\link{lm}} function, (ii)
+  the fitted values of the model, (iii) the observed data, (iv and v) the
+  results of the residuals normality and heterogeneity tests, and (vi) the
+  log-transformation function used. If the argument \code{compare = TRUE} is
+  used in \code{\link{lin_pow}}, a 7th element is returned that contains the
+  parameter values from the non-linear power model.
 }
 \description{
 S3 method for class 'sars'. \code{summary.sars} creates

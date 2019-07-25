@@ -22,11 +22,11 @@ functionality to plot multi-model SAR curves and to generate confidence
 intervals using bootstrapping. Additional SAR related functions include
 fitting the linear version of the power model and comparing parameters
 with the non-linear version, fitting the general dynamic model of island
-biogeography, fitting the random placement model to a species abundance-site matrix, 
-and extrapolating fitted SAR models to predict richness
+biogeography, fitting the random placement model to a species abundance
+- site matrix, and extrapolating fitted SAR models to predict richness
 on larger islands / sample areas.
 
-As this is version 1.1.2 of the package, it is possible that there are
+As this is version 1.2.0 of the package, it is possible that there are
 some bugs in places. Please report any issues to us via GitHub.
 
 The package has an associated vignette that provides examples of how to
@@ -79,7 +79,7 @@ mm_galap <- sar_average(data = galap)
 #> 
 #>  Now attempting to fit the 20 SAR models: 
 #> 
-#> --  multi_sars ----------------------------------------------------------------- multi-model SAR --
+#> --  multi_sars ------------------------------------------------------------- multi-model SAR --
 #> > power    : v
 #> > powerR   : v
 #> > epm1     : v
@@ -108,7 +108,7 @@ mm_galap <- sar_average(data = galap)
 #> Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model
 #> 16 remaining models used to construct the multi  SAR:
 #>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-#> ---------------------------------------------------------------------------------------------------
+#> -----------------------------------------------------------------------------------------------
 ```
 
 Each of the ‘fitted’ objects have corresponding plot methods:
@@ -141,22 +141,21 @@ plot(mm_galap, pLeg = FALSE)
 <div id="ref-Arrhenius1921">
 
 Arrhenius, Olof. 1921. “Species and Area.” *The Journal of Ecology* 9
-(1). British Ecological Society:95. <https://doi.org/10.2307/2255763>.
+(1): 95. <https://doi.org/10.2307/2255763>.
 
 </div>
 
 <div id="ref-Gleason1922">
 
 Gleason, Henry Allan. 1922. “On the Relation Between Species and Area.”
-*Ecology* 3 (2). Ecological Society of America:158–62.
-<https://doi.org/10.2307/1929150>.
+*Ecology* 3 (2): 158–62. <https://doi.org/10.2307/1929150>.
 
 </div>
 
 <div id="ref-Preston1962">
 
 Preston, F. W. 1962. “The Canonical Distribution of Commonness and
-Rarity: Part I.” *Ecology* 43 (2). Ecological Society of America:185.
+Rarity: Part I.” *Ecology* 43 (2): 185.
 <https://doi.org/10.2307/1931976>.
 
 </div>
