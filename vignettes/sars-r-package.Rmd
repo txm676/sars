@@ -8,7 +8,7 @@ vignette: >
   \usepackage[utf8]{inputenc}
   %\VignetteEngine{knitr::rmarkdown}
 ---
-  
+
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   out.width = "100%"
@@ -17,17 +17,17 @@ knitr::opts_chunk$set(
 
 
 
-This vignette is heavily based on the paper that accompanies the package.To 
+This vignette is heavily based on the paper that accompanies the package.To
 cite this vignette, please cite the corresponding paper:
 
 Matthews, T.J., Triantis, K., Whittaker, R.J. and Guilhaumon, F. (2019) sars:
 an R package for fitting, evaluating and comparing species–area relationship
 models. Ecography, In press
 
-Version 1.1.1 of the package, presented in this vignette, has been archived 
+Version 1.1.1 of the package, presented in this vignette, has been archived
 on the Zenodo research data repository (DOI: 10.5281/zenodo.2573067).
 
-## BACKGROUND 
+## BACKGROUND
 The species–area relationship (SAR) describes the near universally observed
 pattern whereby the number of species increases with the area sampled, and it
 has been described as one of ecology’s few laws (@Rosenzweig1995). The SAR is
@@ -76,7 +76,7 @@ than eight SAR models. Considering currently available software, the BAT R
 package provides functions to fit three SAR models (linear, power and
 logarithmic); however, this package is focused on general biodiversity
 assessment and thus does not provide any additional SAR functionality. The
-mmSAR R package (@Guilhaumon2010) is focussed on SARs and while it allows
+mmSAR R package (@Guilhaumon2010) is focused on SARs and while it allows
 users to fit eight SAR models using an information theoretic framework, it
 does not include several models that have been found to provide the best fits
 to several empirical datasets. To provide a set of tools to fill these gaps,
@@ -98,7 +98,7 @@ no longer complies with recognised programming good practice , is not on CRAN
 requires the user to load individual models prior to fitting). There was
 therefore a need to design a new package from scratch.
 
-##METHODS AND FEATURES 
+##METHODS AND FEATURES
 The ‘sars’ (species–area relationships) package has been programmed using
 standard S3 methods and is available on CRAN (version 1.1.0) and the
 development version on GitHub (txm676/sars), meaning researchers can easily
@@ -143,15 +143,15 @@ library(sars)
 
 ```{r, fig.width=6, fig.height=6}
 #load an example dataset (Preston, 1962), fit the logarithmic SAR model,
-#return a model fit summary and plot the model fit. data(galap) 
-fit <- sar_loga(data = galap) 
-summary(fit) 
+#return a model fit summary and plot the model fit. data(galap)
+fit <- sar_loga(data = galap)
+summary(fit)
 plot(fit)
 ```
 
 ```{r, fig.width=16, fig.height=12}
-#Create a fit_collection object containing multiple SAR model fits, and 
-#plot all fits. 
+#Create a fit_collection object containing multiple SAR model fits, and
+#plot all fits.
 fitC <- sar_multi(data = galap, obj = c("power", "loga", "monod"))
 plot(fitC) #see Fig.1
 ```
@@ -176,10 +176,10 @@ warning is provided in the model summary if negative values are predicted.
 ```{r}
 #load an example dataset, fit the linear SAR model whilst running residual
 #normality and homogeneity tests, and return the results of the residual
-#normality test 
-data(galap) 
-fit <- sar_linear(data = galap, normaTest ="lillie", homoTest = "cor.fitted") 
-summary(fit) #a warning is provided  indicating the normality test failed 
+#normality test
+data(galap)
+fit <- sar_linear(data = galap, normaTest ="lillie", homoTest = "cor.fitted")
+summary(fit) #a warning is provided  indicating the normality test failed
 fit$normaTest
 ```
 
@@ -249,29 +249,29 @@ produced (‘type’ = “bar”).
 ```{r, fig.width=7, fig.height=19}
 #load an example dataset (Niering, 1963), run the ‘sar_average’ function
 #using a vector of model names and with no model validation tests, and
-#produce the plots in Figure 2 of the paper 
-data(niering) 
+#produce the plots in Figure 2 of the paper
+data(niering)
 
-#run the ‘sar_average’ function using a vector of model names 
+#run the ‘sar_average’ function using a vector of model names
 fit <- sar_average(data= niering, obj =c("power","loga","koba","mmf","monod",
                                          "negexpo","chapman","weibull3","asymp"),
 normaTest = "none", homoTest = "none", neg_check = FALSE, confInt = TRUE, ciN
-= 50) #a message is provided indicating that one model (asymp) could not be
+= 50, verb = FALSE) #a message is provided indicating that one model (asymp) could not be
 #fitted
 
 par(mfrow = c(3,1)) #plot all model fits with the multimodel SAR curve
 plot(fit, ModTitle = "a) Multimodel SAR")
 
 #plot the multimodel SAR curve (with confidence intervals; see explanation
-#in the main text, above) on its own 
+#in the main text, above) on its own
 plot(fit, allCurves = FALSE, ModTitle =
       "c) Multimodel SAR with confidence intervals", confInt = TRUE)
 
-#Barplot of the information criterion weights of each model 
+#Barplot of the information criterion weights of each model
 plot(fit, type = "bar", ModTitle = "b) Model weights", cex.lab = 1.3)
 ```
 
-##Additional functions 
+##Additional functions
 In addition to the main functions used to fit and compare the 20 SAR models,
 the sars package provides additional functions for specific SAR-based
 analyses. First, a function is provided to fit the log–log version of the
@@ -297,31 +297,31 @@ models (linear, logarithmic and power).
 ```{r, fig.width=6, fig.height=6}
 #load an example dataset, fit the log-log power model, return a model fit
 #summary and plot the model fit. When ‘compare’ == TRUE, the non-linear
-#power model is also fitted and the resultant parameter values compared. 
-#If any islands have zero species, a constant (‘con’) is added to all 
-#species richness values. 
-data(galap) 
-fit <- lin_pow(dat = galap, compare = TRUE, con = 1) 
-summary(fit) 
+#power model is also fitted and the resultant parameter values compared.
+#If any islands have zero species, a constant (‘con’) is added to all
+#species richness values.
+data(galap)
+fit <- lin_pow(dat = galap, compare = TRUE, con = 1)
+summary(fit)
 plot(fit)
 
-#load an example dataset, fit the random placement model and plot the 
+#load an example dataset, fit the random placement model and plot the
 #model fit and standard deviation. The ‘data’ argument requires a species-
-#site abundance matrix: rows are species and columns are sites. The area 
-#argument requires a vector of site (island) area values. 
-data(cole_sim) 
-fit <- coleman(data = cole_sim[[1]], area = cole_sim[[2]]) 
+#site abundance matrix: rows are species and columns are sites. The area
+#argument requires a vector of site (island) area values.
+data(cole_sim)
+fit <- coleman(data = cole_sim[[1]], area = cole_sim[[2]])
 plot(fit, ModTitle = "Hetfield")
 
 #load an example dataset, fit the GDM using the logarithmic SAR model, and
-#compare the GDM with three alternative (nested) models: area and time 
-#(age of each island), area only, and intercept only. 
-data(galap) 
-galap$t <- rgamma(16, 5, scale = 2)#add a random time variable 
+#compare the GDM with three alternative (nested) models: area and time
+#(age of each island), area only, and intercept only.
+data(galap)
+galap$t <- rgamma(16, 5, scale = 2)#add a random time variable
 gdm(data = galap, model = "loga", mod_sel = TRUE)
 ```
 
-##CONCLUSIONS 
+##CONCLUSIONS
 The SAR has been a cornerstone of ecological and biogeographical science for
 almost a century and its form and fit are still of great significance in both
 theoretical and applied contexts. The development of the ‘sars’ R package

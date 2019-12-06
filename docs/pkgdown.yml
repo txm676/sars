@@ -1,0 +1,9 @@
+pandoc: 2.7.3
+pkgdown: 1.4.1
+pkgdown_sha: ~
+articles:
+  sars-r-package: sars-r-package.html
+urls:
+  reference: https://txm676.github.io/sars//reference
+  article: https://txm676.github.io/sars//articles
+
