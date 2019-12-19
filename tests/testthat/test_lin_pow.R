@@ -19,3 +19,14 @@ test_that("lin_pow log-transformation works",{
                round(fit2$Model$coefficients[2], 2), 
                round(fit3$Model$coefficients[2], 2))
 })
+
+
+test_that("lin_pow returns warning for all identical species", {
+  d <- data.frame("A" = 1:4, "S" = 0)
+  expect_warning(lin_pow(d, compare = TRUE), "All richness values are zero: ",
+                 "parameter estimates of non-linear models should be ",
+                 "interpreted with caution")
+  expect_warning(lin_pow(d, compare = FALSE), "All richness values identical")
+  d$S <- 1
+  expect_warning(lin_pow(d), "All richness values identical")
+})

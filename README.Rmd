@@ -31,7 +31,7 @@ include fitting the linear version of the power model and comparing parameters w
 the general dynamic model of island biogeography, fitting the random placement model to a species abundance -
 site matrix, and extrapolating fitted SAR models to predict richness on larger islands / sample areas.
 
-As this is version 1.2.0 of the package, it is possible that there are some bugs in places. Please report any
+As this is version 1.2.1 of the package, it is possible that there are some bugs in places. Please report any
 issues to us via GitHub.
 
 The package has an associated vignette that provides examples of how to use the package.

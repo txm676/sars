@@ -200,6 +200,16 @@ model_factory <- function(f, overwrite = FALSE){
   cat1("data <- data[order(data[,1]),]\n")
   cat1("colnames(data) <- c('A','S')\n")
   
+  cat1("#check for all equal richness values (particuarly zeros)\n")
+  cat1("xr <- range(data$S)/mean(data$S)\n")
+  cat1("if (isTRUE(all.equal(xr[1], xr[2]))) {\n")
+  cat1("  if (data$S[1] == 0){\n")
+  cat1("   warning('All richness values are zero: parameter estimates of',\n")
+  cat1("           ' non-linear models should be interpreted with caution')\n")
+  cat1("     } else{\n")
+  cat1("       warning('All richness values identical')\n")
+  cat1("     }}\n")
+
   #model definition (Appending it)
   #dump("model", file = filePath, append = TRUE) #THE DUMP IS NOT 
   #PASTING THE MODEL LIST
@@ -235,7 +245,8 @@ model_factory <- function(f, overwrite = FALSE){
 ########################
 #using the model factory
 ########################
-modFiles <- list.files(file.path(here::here(),"inst","non_lin_models"))
+#setwd("E:/Working directory/sars")
+modFiles <- list.files(file.path("E:/Working directory/sars","inst","non_lin_models"))
 lapply(modFiles, model_factory, overwrite = TRUE)
 
 

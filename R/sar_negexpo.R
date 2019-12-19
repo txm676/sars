@@ -77,6 +77,15 @@ if (is.matrix(data)) data <- as.data.frame(data)
 if (anyNA(data)) stop('NAs present in data')
 data <- data[order(data[,1]),]
 colnames(data) <- c('A','S')
+#check for all equal richness values (particuarly zeros)
+xr <- range(data$S)/mean(data$S)
+if (isTRUE(all.equal(xr[1], xr[2]))) {
+  if (data$S[1] == 0){
+   warning('All richness values are zero: parameter estimates of',
+           ' non-linear models should be interpreted with caution')
+     } else{
+       warning('All richness values identical')
+     }}
 #NEGATIVE EXPONENTIAL (Holdridge et al. 1971)
 model <- list(
   name=c("Negative exponential"),

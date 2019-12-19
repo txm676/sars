@@ -1,3 +1,7 @@
+## Version 1.2.1
+  * added a warning for when all richness values are identical
+  * adding functionality to plot.multi for plotting the multimodel curve on top of the other model fits
+
 ## Version 1.2.0
   * bug fixes (bar plot of weight x-axis labels order was incorrect in some cases)
   * logT argument added to lin_pow function (can choose log-transformation function)

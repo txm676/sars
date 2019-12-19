@@ -19,3 +19,12 @@ test_that("sar_power summary returns correct results", {
   expect_is(fs, "summary.sars")
   expect_equal(round(fs$normaTest[[2]]$p.value, 3), 0.056)
 })
+
+test_that("sar_power returns warning for all identical species", {
+  d <- data.frame("A" = 1:4, "S" = 0)
+  expect_warning(sar_power(d), "All richness values are zero: ",
+                 "parameter estimates of non-linear models should be ",
+                  "interpreted with caution")
+  d$S <- 1
+  expect_warning(sar_power(d), "All richness values identical")
+})

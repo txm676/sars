@@ -68,7 +68,21 @@ lin_pow <- function(data, con = 1, logT = log,
 
   data <- data[order(data[,1]),]
   colnames(data) <- c("A", "S")
-
+  
+  xr <- range(data$S)/ mean(data$S)
+  if (isTRUE(all.equal(xr[1], xr[2]))) {
+    if (data$S[1] == 0){
+      if (compare){
+        warning("All richness values are zero: parameter estimates of",
+               " non-linear models should be interpreted with caution")
+      } else{
+        warning("All richness values identical")
+      }
+    } else{
+      warning("All richness values identical")
+    }
+  }
+  
   if (any(data$S == 0)){
       log.data <- data.frame(A = logT(data$A), S = logT(data$S + con))
       linearPower.fit <- lm(logT(S + con) ~ logT(A), data = data)
