@@ -278,22 +278,27 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
 #' @param cex.lab The amount by which the axis titles should be scaled
 #'   relative to the default.
 #' @param cex.axis The amount by which the axis labels should be scaled
-#'   relative to the default.
-#' @param yRange The range of the y-axis. Only for use with \code{type =
-#'   multi}.
+#' relative to the default.
+#' @param yRange The range of the y-axis. Only for use with \code{type = multi}.
 #' @param lwd Line width. Only for use with \code{type = multi}.
 #' @param lcol Line colour. Only for use with \code{type = multi}.
-#' @param pLeg Logical argument specifying whether or not the legend should
-#'   be plotted  (when \code{type = multi} and \code{allCurves = TRUE}).
+#' @param mmSep Logical argument of whether the multimodel curve should be
+#'   plotted as a separate line (default = FALSE) on top of the others, giving
+#'   the user more control over line width and colour. Only for use with
+#'   \code{type = multi} and \code{allCurves = TRUE}.
+#' @param lwd.Sep If \code{mmSep = TRUE}, the line width of the multimodel
+#'   curve.
+#' @param col.Sep If \code{mmSep = TRUE}, the colour of the multimodel curve.
+#' @param pLeg Logical argument specifying whether or not the legend should be
+#'   plotted  (when \code{type = multi} and \code{allCurves = TRUE}).
 #' @param modNames A vector of model names for the barplot of weights (when
-#'   \code{type = bar}). The default (\code{modNames = NULL}) uses
-#'   abbreviated versions (see below) of the names from the \code{sar_average}
-#'   function.
-#' @param cex.names The amount by which the axis labels (model names) should
-#'   be scaled relative to the default. Only for use with \code{type = bar}.
-#' @param subset_weights Only create a barplot of the model weights for
-#'   models with a weight value above a given threshold
-#'   (\code{subset_weights}). Only for use with \code{type = bar}.
+#'   \code{type = bar}). The default (\code{modNames = NULL}) uses abbreviated
+#'   versions (see below) of the names from the \code{sar_average} function.
+#' @param cex.names The amount by which the axis labels (model names) should be
+#'   scaled relative to the default. Only for use with \code{type = bar}.
+#' @param subset_weights Only create a barplot of the model weights for models
+#'   with a weight value above a given threshold (\code{subset_weights}). Only
+#'   for use with \code{type = bar}.
 #' @param confInt A logical argument specifying whether confidence intervals
 #'   should be plotted around the multimodel curve. Can only be used if
 #'   confidence intervals have been generated in the \code{sar_average}
@@ -302,11 +307,11 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
 #'   \code{\link[graphics]{par}},
 #'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
-#' @note When plotting all model fits on the same plot with a legend it is
-#'   necessary to manually extend your plotting window (height and width;
-#'   e.g. the 'Plots' window of R studio) before plotting to ensure the
-#'   legend fits in the plot. Extending the plotting window after plotting
-#'   simply stretches the legend.
+#' @note In some versions of R and R studio, when plotting all model fits on the
+#'   same plot with a legend it is necessary to manually extend your plotting
+#'   window (height and width; e.g. the 'Plots' window of R studio) before
+#'   plotting to ensure the legend fits in the plot. Extending the plotting
+#'   window after plotting sometimes just stretches the legend.
 #'
 #'   Occasionally a model fit will converge and pass the model fitting checks
 #'   (e.g. residual normality) but the resulting fit is nonsensical (e.g. a
@@ -342,6 +347,9 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
 #'
 #' #plot just the multimodel curve
 #' plot(fit, allCurves = FALSE, ModTitle = "", lcol = "black")
+#' 
+#' #plot all model fits and the multimodel curve on top as a thicker line
+#' plot(fit, allCurves = TRUE, mmSep = TRUE, lwd.Sep = 6, col.Sep = "orange")
 #'
 #' #Plot a barplot of the model weights
 #' plot(fit, type = "bar")
@@ -356,7 +364,8 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
                       pcol = 'dodgerblue2', ModTitle = NULL,
                       TiAdj = 0, TiLine = 0.5, cex.main = 1.5,
                       cex.lab = 1.3, cex.axis = 1, yRange = NULL,
-                      lwd = 2, lcol = 'dodgerblue2', pLeg = TRUE,
+                      lwd = 2, lcol = 'dodgerblue2', mmSep = FALSE,
+                      lwd.Sep = 6, col.Sep = "black", pLeg = TRUE,
                       modNames = NULL, cex.names=.88,
                       subset_weights = NULL, confInt = FALSE, ...)
 {
@@ -408,9 +417,11 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   if (!all(round(wfv) == round(x$mmi)))
     stop("Multimodel fitted values do not match between functions")
 
-  if (allCurves){
+  if (allCurves & (!mmSep)){
     mf2$MultiModel <- wfv
     nams2 <- c(nams, "Multimodel SAR")
+  } else{
+    nams2 <- nams
   }
 
   if (type == "multi"){
@@ -466,7 +477,8 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
       if (confInt){
         matplot(x = xx, y = yy, xlab = xlab, ylab = ylab,
                 cex.lab = cex.lab, cex.axis = cex.axis,
-                xlim = c(min(xx), xMAX), ylim = yRange)
+                xlim = c(min(xx), xMAX), ylim = yRange, pch = pch,
+                col = "white")
         polygon(c(xx,rev(xx)),c(CI$L,rev(CI$U)),col="grey87",border=NA)
         points(x = xx, y = yy, pch = pch, col = pcol,
                cex = cex)
@@ -490,10 +502,20 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
       }#eo confInt
     }#eo no legend
       matlines(xx, mf2, lwd = lwd, lty = seq_along(mf2), col=seq_along(mf2))
-      if (pLeg) legend(max(xx) + (max(xx) * 0.05), yMax,
-                               legend = nams2, horiz = FALSE,
-                               lty = seq_along(mf2), col=seq_along(mf2))
       title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main)
+      if (pLeg){
+        if (!mmSep) {
+          legend(max(xx) + (max(xx) * 0.05), yMax,
+                 legend = nams2, horiz = FALSE,
+                 lty = seq_along(mf2), col= seq_along(mf2))
+        } else {
+          legend(max(xx) + (max(xx) * 0.05), yMax,
+                 legend = c(nams2, "Multimodel SAR"), horiz = FALSE,
+                 lty = c(seq_along(mf2), 1), col=c(seq_along(mf2), col.Sep),
+                 lwd = c(rep(lwd, length(nams2)), lwd.Sep))
+        }
+      }#eo if PLeg
+      if (mmSep) lines(xx, wfv, lwd = lwd.Sep, col = col.Sep)
   } else if (!allCurves){
     #just multimodel SAR curve
     if (confInt){
