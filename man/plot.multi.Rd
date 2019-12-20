@@ -8,7 +8,8 @@
   xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
   pcol = "dodgerblue2", ModTitle = NULL, TiAdj = 0, TiLine = 0.5,
   cex.main = 1.5, cex.lab = 1.3, cex.axis = 1, yRange = NULL,
-  lwd = 2, lcol = "dodgerblue2", pLeg = TRUE, modNames = NULL,
+  lwd = 2, lcol = "dodgerblue2", mmSep = FALSE, lwd.Sep = 6,
+  col.Sep = "black", pLeg = TRUE, modNames = NULL,
   cex.names = 0.88, subset_weights = NULL, confInt = FALSE, ...)
 }
 \arguments{
@@ -53,27 +54,35 @@ relative to the default.}
 \item{cex.axis}{The amount by which the axis labels should be scaled
 relative to the default.}
 
-\item{yRange}{The range of the y-axis. Only for use with \code{type =
-multi}.}
+\item{yRange}{The range of the y-axis. Only for use with \code{type = multi}.}
 
 \item{lwd}{Line width. Only for use with \code{type = multi}.}
 
 \item{lcol}{Line colour. Only for use with \code{type = multi}.}
 
-\item{pLeg}{Logical argument specifying whether or not the legend should
-be plotted  (when \code{type = multi} and \code{allCurves = TRUE}).}
+\item{mmSep}{Logical argument of whether the multimodel curve should be
+plotted as a separate line (default = FALSE) on top of the others, giving
+the user more control over line width and colour. Only for use with
+\code{type = multi} and \code{allCurves = TRUE}.}
+
+\item{lwd.Sep}{If \code{mmSep = TRUE}, the line width of the multimodel
+curve.}
+
+\item{col.Sep}{If \code{mmSep = TRUE}, the colour of the multimodel curve.}
+
+\item{pLeg}{Logical argument specifying whether or not the legend should be
+plotted  (when \code{type = multi} and \code{allCurves = TRUE}).}
 
 \item{modNames}{A vector of model names for the barplot of weights (when
-\code{type = bar}). The default (\code{modNames = NULL}) uses
-abbreviated versions (see below) of the names from the \code{sar_average}
-function.}
+\code{type = bar}). The default (\code{modNames = NULL}) uses abbreviated
+versions (see below) of the names from the \code{sar_average} function.}
 
-\item{cex.names}{The amount by which the axis labels (model names) should
-be scaled relative to the default. Only for use with \code{type = bar}.}
+\item{cex.names}{The amount by which the axis labels (model names) should be
+scaled relative to the default. Only for use with \code{type = bar}.}
 
-\item{subset_weights}{Only create a barplot of the model weights for
-models with a weight value above a given threshold
-(\code{subset_weights}). Only for use with \code{type = bar}.}
+\item{subset_weights}{Only create a barplot of the model weights for models
+with a weight value above a given threshold (\code{subset_weights}). Only
+for use with \code{type = bar}.}
 
 \item{confInt}{A logical argument specifying whether confidence intervals
 should be plotted around the multimodel curve. Can only be used if
@@ -93,11 +102,11 @@ S3 method for class 'multi'. \code{plot.multi} creates plots
   models can be constructed.
 }
 \note{
-When plotting all model fits on the same plot with a legend it is
-  necessary to manually extend your plotting window (height and width;
-  e.g. the 'Plots' window of R studio) before plotting to ensure the
-  legend fits in the plot. Extending the plotting window after plotting
-  simply stretches the legend.
+In some versions of R and R studio, when plotting all model fits on the
+  same plot with a legend it is necessary to manually extend your plotting
+  window (height and width; e.g. the 'Plots' window of R studio) before
+  plotting to ensure the legend fits in the plot. Extending the plotting
+  window after plotting sometimes just stretches the legend.
 
   Occasionally a model fit will converge and pass the model fitting checks
   (e.g. residual normality) but the resulting fit is nonsensical (e.g. a
@@ -134,6 +143,9 @@ plot(fit, pLeg = FALSE)
 
 #plot just the multimodel curve
 plot(fit, allCurves = FALSE, ModTitle = "", lcol = "black")
+
+#plot all model fits and the multimodel curve on top as a thicker line
+plot(fit, allCurves = TRUE, mmSep = TRUE, lwd.Sep = 6, col.Sep = "orange")
 
 #Plot a barplot of the model weights
 plot(fit, type = "bar")
