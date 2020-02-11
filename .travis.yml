@@ -1,11 +1,6 @@
 language: r
 cache: packages
 
-install_r:
-  - devtools
-  - rmarkdown
-  - knitr
-
 r:
   - oldrel
   - release
