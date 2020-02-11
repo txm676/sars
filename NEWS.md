@@ -1,3 +1,8 @@
+
+
+## Version 1.2.2
+  * bug fix - no AICc option in confidence interval function
+
 ## Version 1.2.1
   * added a warning for when all richness values are identical
   * adding functionality to plot.multi for plotting the multimodel curve on top of the other model fits

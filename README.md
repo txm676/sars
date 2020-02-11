@@ -9,7 +9,7 @@ The **'sars'** R Package <img src="man/figures/sars_logo.png" align="right" widt
 
 **sars** provides functionality to fit twenty SAR model using non-linear regression, and to calculate multi-model averaged curves using various information criteria. The software also provides easy to use functionality to plot multi-model SAR curves and to generate confidence intervals using bootstrapping. Additional SAR related functions include fitting the linear version of the power model and comparing parameters with the non-linear version, fitting the general dynamic model of island biogeography, fitting the random placement model to a species abundance - site matrix, and extrapolating fitted SAR models to predict richness on larger islands / sample areas.
 
-As this is version 1.2.1 of the package, it is possible that there are some bugs in places. Please report any issues to us via GitHub.
+As this is version 1.2.2 of the package, it is possible that there are some bugs in places. Please report any issues to us via GitHub.
 
 The package has an associated vignette that provides examples of how to use the package.
 
@@ -58,27 +58,27 @@ mm_galap <- sar_average(data = galap)
 #> 
 #>  Now attempting to fit the 20 SAR models: 
 #> 
-#> --  multi_sars ---------------------------------------------- multi-model SAR --
-#> > power    : v
-#> > powerR   : v
-#> > epm1     : v
-#> > epm2     : v
-#> > p1       : v
-#> > p2       : v
-#> > loga     : v
-#> > koba     : v
-#> > mmf      : v
-#> > monod    : v
-#> > negexpo  : v
-#> > chapman  : Warning: could not compute parameters statistics
-#> > weibull3 : v
-#> > asymp    : v
-#> > ratio    : v
-#> > gompertz : v
-#> > weibull4 : v
-#> > betap    : v
-#> > heleg    : v
-#> > linear   : v
+#> --  multi_sars --------------------------------------------------------------------- multi-model SAR --
+#> <U+2192> power    : <U+2713>
+#> <U+2192> powerR   : <U+2713>
+#> <U+2192> epm1     : <U+2713>
+#> <U+2192> epm2     : <U+2713>
+#> <U+2192> p1       : <U+2713>
+#> <U+2192> p2       : <U+2713>
+#> <U+2192> loga     : <U+2713>
+#> <U+2192> koba     : <U+2713>
+#> <U+2192> mmf      : <U+2713>
+#> <U+2192> monod    : <U+2713>
+#> <U+2192> negexpo  : <U+2713>
+#> <U+2192> chapman  : Warning: could not compute parameters statistics
+#> <U+2192> weibull3 : <U+2713>
+#> <U+2192> asymp    : <U+2713>
+#> <U+2192> ratio    : <U+2713>
+#> <U+2192> gompertz : <U+2713>
+#> <U+2192> weibull4 : <U+2713>
+#> <U+2192> betap    : <U+2713>
+#> <U+2192> heleg    : <U+2713>
+#> <U+2192> linear   : <U+2713>
 #> 
 #> Model fitting completed - all models succesfully fitted.  Now undertaking model validation checks.
 #> Additional models  will be excluded if necessary:
@@ -87,7 +87,7 @@ mm_galap <- sar_average(data = galap)
 #> Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model
 #> 16 remaining models used to construct the multi  SAR:
 #>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-#> --------------------------------------------------------------------------------
+#> -------------------------------------------------------------------------------------------------------
 ```
 
 Each of the 'fitted' objects have corresponding plot methods:
