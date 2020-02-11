@@ -32,8 +32,20 @@ test_that("sar_average using fit_collection object works", {
 
 test_that("confidence intervals are correct", {
   skip_on_cran()
-  fit3 <- sar_average(data = galap, normaTest = "none", homoTest = "none",
-                    neg_check = FALSE, confInt = TRUE, ciN = 20)
+  fit3 <- expect_warning(sar_average(data = galap, normaTest = "none", homoTest = "none",
+                    neg_check = FALSE, confInt = TRUE, ciN = 20))
+  ci <- fit3$details$confInt
+  expect_equal(nrow(ci), nrow(galap))
+  expect_output(str(ci), "data.frame")
+  expect_true(all(ci[ ,1] < ci[ ,2]))
+})
+
+
+
+test_that("confidence intervals works with AICc", {
+  skip_on_cran()
+  fit3 <- expect_warning(sar_average(data = galap, normaTest = "none", homoTest = "none",
+                      neg_check = FALSE, confInt = TRUE, crit = "AICc", ciN = 20))
   ci <- fit3$details$confInt
   expect_equal(nrow(ci), nrow(galap))
   expect_output(str(ci), "data.frame")

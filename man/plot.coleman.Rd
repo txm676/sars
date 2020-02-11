@@ -4,11 +4,24 @@
 \alias{plot.coleman}
 \title{Plot Model Fits for a 'coleman' Object}
 \usage{
-\method{plot}{coleman}(x, xlab = "Relative area (log transformed)",
-  ylab = "Species richness", pch = 16, cex = 1.2, pcol = "black",
-  cex.lab = 1.3, cex.axis = 1, lwd = 2, lcol1 = "black",
-  lcol2 = "darkgrey", ModTitle = NULL, TiAdj = 0, TiLine = 0.5,
-  cex.main = 1.5, ...)
+\method{plot}{coleman}(
+  x,
+  xlab = "Relative area (log transformed)",
+  ylab = "Species richness",
+  pch = 16,
+  cex = 1.2,
+  pcol = "black",
+  cex.lab = 1.3,
+  cex.axis = 1,
+  lwd = 2,
+  lcol1 = "black",
+  lcol2 = "darkgrey",
+  ModTitle = NULL,
+  TiAdj = 0,
+  TiLine = 0.5,
+  cex.main = 1.5,
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class 'coleman'.}

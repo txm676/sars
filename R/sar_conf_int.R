@@ -164,7 +164,7 @@ length(nams), length(nams_short)))
   #choosing an IC criterion (AIC or AICc or BIC): same code as within
   #sar_average as needs to be identical
   IC <- switch(crit,
-               Info= if ( (nPoints / 3) < 40 ) { "AICc" } else { "AIC" },
+               Info= if ( (nrow(dat) / 3) < 40 ) { "AICc" } else { "AIC" },
                AIC = "AIC",
                AICc = "AICc",
                Bayes = "BIC")

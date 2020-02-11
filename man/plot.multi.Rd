@@ -4,13 +4,34 @@
 \alias{plot.multi}
 \title{Plot Model Fits for a 'multi' Object}
 \usage{
-\method{plot}{multi}(x, type = "multi", allCurves = TRUE,
-  xlab = NULL, ylab = NULL, pch = 16, cex = 1.2,
-  pcol = "dodgerblue2", ModTitle = NULL, TiAdj = 0, TiLine = 0.5,
-  cex.main = 1.5, cex.lab = 1.3, cex.axis = 1, yRange = NULL,
-  lwd = 2, lcol = "dodgerblue2", mmSep = FALSE, lwd.Sep = 6,
-  col.Sep = "black", pLeg = TRUE, modNames = NULL,
-  cex.names = 0.88, subset_weights = NULL, confInt = FALSE, ...)
+\method{plot}{multi}(
+  x,
+  type = "multi",
+  allCurves = TRUE,
+  xlab = NULL,
+  ylab = NULL,
+  pch = 16,
+  cex = 1.2,
+  pcol = "dodgerblue2",
+  ModTitle = NULL,
+  TiAdj = 0,
+  TiLine = 0.5,
+  cex.main = 1.5,
+  cex.lab = 1.3,
+  cex.axis = 1,
+  yRange = NULL,
+  lwd = 2,
+  lcol = "dodgerblue2",
+  mmSep = FALSE,
+  lwd.Sep = 6,
+  col.Sep = "black",
+  pLeg = TRUE,
+  modNames = NULL,
+  cex.names = 0.88,
+  subset_weights = NULL,
+  confInt = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class 'multi'.}
