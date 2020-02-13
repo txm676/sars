@@ -13,6 +13,7 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+options(cli.unicode = FALSE)
 ```
 
 # The **'sars'** R Package <img src="man/figures/sars_logo.png" align="right" width="10%"/>
@@ -72,6 +73,7 @@ library(sars)
 To fit the power sar model [@Arrhenius1921] to the 'galapagos' [@Preston1962] data set:
 ```{r}
 fit_pow <- sar_power(data = galap)
+fit_pow
 ```
 
 Attempting to fit all 20 sar models to the 'galapagos' [@Preston1962] data set and get a multi-model SAR:
@@ -81,18 +83,20 @@ mm_galap <- sar_average(data = galap)
 
 Each of the 'fitted' objects have corresponding plot methods:
 
-to fit the logarithmic SAR model [@Gleason1922] to the 'galapagos' data set and plot it
+To fit the logarithmic SAR model [@Gleason1922] to the 'galapagos' data set and plot it
 ```{r}
 fit_loga <- sar_loga(data = galap)
 
 plot(fit_loga)
 ```
 
-to fit a multimodel SAR curve to the 'galapagos' data set and plot it
+To fit a multimodel SAR curve to the 'galapagos' data set and plot it (alongside the individual model fits)
 ```{r}
 mm_galap <- suppressMessages(sar_average(data = galap, verb = FALSE))
+mm_galap 
 
-plot(mm_galap, pLeg = FALSE)
+
+plot(mm_galap, pLeg = FALSE, mmSep = TRUE)
 ```
 
 ## References

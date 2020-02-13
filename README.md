@@ -49,6 +49,17 @@ To fit the power sar model (Arrhenius 1921) to the 'galapagos' (Preston 1962) da
 
 ``` r
 fit_pow <- sar_power(data = galap)
+fit_pow
+#> 
+#> Model:
+#> Power
+#> 
+#> Call:
+#> S == c * A^z
+#> 
+#> Coefficients:
+#>          c          z 
+#> 33.1791553  0.2831868
 ```
 
 Attempting to fit all 20 sar models to the 'galapagos' (Preston 1962) data set and get a multi-model SAR:
@@ -58,27 +69,27 @@ mm_galap <- sar_average(data = galap)
 #> 
 #>  Now attempting to fit the 20 SAR models: 
 #> 
-#> --  multi_sars --------------------------------------------------------------------- multi-model SAR --
-#> <U+2192> power    : <U+2713>
-#> <U+2192> powerR   : <U+2713>
-#> <U+2192> epm1     : <U+2713>
-#> <U+2192> epm2     : <U+2713>
-#> <U+2192> p1       : <U+2713>
-#> <U+2192> p2       : <U+2713>
-#> <U+2192> loga     : <U+2713>
-#> <U+2192> koba     : <U+2713>
-#> <U+2192> mmf      : <U+2713>
-#> <U+2192> monod    : <U+2713>
-#> <U+2192> negexpo  : <U+2713>
-#> <U+2192> chapman  : Warning: could not compute parameters statistics
-#> <U+2192> weibull3 : <U+2713>
-#> <U+2192> asymp    : <U+2713>
-#> <U+2192> ratio    : <U+2713>
-#> <U+2192> gompertz : <U+2713>
-#> <U+2192> weibull4 : <U+2713>
-#> <U+2192> betap    : <U+2713>
-#> <U+2192> heleg    : <U+2713>
-#> <U+2192> linear   : <U+2713>
+#> --  multi_sars --------------------------------------------------------- multi-model SAR --
+#> > power    : v
+#> > powerR   : v
+#> > epm1     : v
+#> > epm2     : v
+#> > p1       : v
+#> > p2       : v
+#> > loga     : v
+#> > koba     : v
+#> > mmf      : v
+#> > monod    : v
+#> > negexpo  : v
+#> > chapman  : Warning: could not compute parameters statistics
+#> > weibull3 : v
+#> > asymp    : v
+#> > ratio    : v
+#> > gompertz : v
+#> > weibull4 : v
+#> > betap    : v
+#> > heleg    : v
+#> > linear   : v
 #> 
 #> Model fitting completed - all models succesfully fitted.  Now undertaking model validation checks.
 #> Additional models  will be excluded if necessary:
@@ -87,12 +98,12 @@ mm_galap <- sar_average(data = galap)
 #> Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model
 #> 16 remaining models used to construct the multi  SAR:
 #>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-#> -------------------------------------------------------------------------------------------------------
+#> -------------------------------------------------------------------------------------------
 ```
 
 Each of the 'fitted' objects have corresponding plot methods:
 
-to fit the logarithmic SAR model (Gleason 1922) to the 'galapagos' data set and plot it
+To fit the logarithmic SAR model (Gleason 1922) to the 'galapagos' data set and plot it
 
 ``` r
 fit_loga <- sar_loga(data = galap)
@@ -102,12 +113,22 @@ plot(fit_loga)
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
-to fit a multimodel SAR curve to the 'galapagos' data set and plot it
+To fit a multimodel SAR curve to the 'galapagos' data set and plot it (alongside the individual model fits)
 
 ``` r
 mm_galap <- suppressMessages(sar_average(data = galap, verb = FALSE))
+mm_galap 
+#> 
+#> This is a sar_average fit object:
+#> 
+#> 16 models successfully fitted
+#> 
+#> 4 models were unable to be fitted or were removed due to model checks
+#> 
+#> AICc used to rank models
 
-plot(mm_galap, pLeg = FALSE)
+
+plot(mm_galap, pLeg = FALSE, mmSep = TRUE)
 ```
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
