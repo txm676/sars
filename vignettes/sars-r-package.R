@@ -1,25 +1,26 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   out.width = "100%"
 )
+options(cli.unicode = FALSE)
 
-## ----include = FALSE-----------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 library(sars)
 
-## ---- fig.width=6, fig.height=6------------------------------------------
+## ---- fig.width=6, fig.height=6-----------------------------------------------
 #load an example dataset (Preston, 1962), fit the logarithmic SAR model,
 #return a model fit summary and plot the model fit. data(galap) 
 fit <- sar_loga(data = galap) 
 summary(fit) 
 plot(fit)
 
-## ---- fig.width=16, fig.height=12----------------------------------------
+## ---- fig.width=16, fig.height=12---------------------------------------------
 #Create a fit_collection object containing multiple SAR model fits, and 
 #plot all fits. 
 fitC <- sar_multi(data = galap, obj = c("power", "loga", "monod"))
 plot(fitC) #see Fig.1
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 #load an example dataset, fit the linear SAR model whilst running residual
 #normality and homogeneity tests, and return the results of the residual
 #normality test 
@@ -28,7 +29,7 @@ fit <- sar_linear(data = galap, normaTest ="lillie", homoTest = "cor.fitted")
 summary(fit) #a warning is provided  indicating the normality test failed 
 fit$normaTest
 
-## ---- fig.width=7, fig.height=19-----------------------------------------
+## ---- fig.width=7, fig.height=19----------------------------------------------
 #load an example dataset (Niering, 1963), run the ‘sar_average’ function
 #using a vector of model names and with no model validation tests, and
 #produce the plots in Figure 2 of the paper 
@@ -41,8 +42,8 @@ normaTest = "none", homoTest = "none", neg_check = FALSE, confInt = TRUE, ciN
 = 50) #a message is provided indicating that one model (asymp) could not be
 #fitted
 
-par(mfrow = c(3,1)) #plot all model fits with the multimodel SAR curve
-plot(fit, ModTitle = "a) Multimodel SAR")
+par(mfrow = c(3,1)) #plot all model fits and the multimodel SAR curve as a separate curve on top
+plot(fit, ModTitle = "a) Multimodel SAR", mmSep = TRUE)
 
 #plot the multimodel SAR curve (with confidence intervals; see explanation
 #in the main text, above) on its own 
@@ -52,7 +53,7 @@ plot(fit, allCurves = FALSE, ModTitle =
 #Barplot of the information criterion weights of each model 
 plot(fit, type = "bar", ModTitle = "b) Model weights", cex.lab = 1.3)
 
-## ---- fig.width=6, fig.height=6------------------------------------------
+## ---- fig.width=6, fig.height=6-----------------------------------------------
 #load an example dataset, fit the log-log power model, return a model fit
 #summary and plot the model fit. When ‘compare’ == TRUE, the non-linear
 #power model is also fitted and the resultant parameter values compared. 
@@ -78,7 +79,7 @@ data(galap)
 galap$t <- rgamma(16, 5, scale = 2)#add a random time variable 
 gdm(data = galap, model = "loga", mod_sel = TRUE)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 #fit the power model and predict richness on an island of area = 5000
 data(galap)
 p <- sar_power(data = galap)
