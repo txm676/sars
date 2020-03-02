@@ -2,7 +2,7 @@ context("sar_linear")
 
 test_that("sar_linear returns correct results", {
   fit <- sar_linear(galap)
-  expect_equal(round(fit$AICc, 2), 148.36)
+  expect_equal(round(fit$AICc, 2), 193.77)
   expect_equal(as.vector(round(fit$par[2], 2)), 0.19)
   expect_is(fit, "sars")
   expect_match(fit$normaTest[[1]], "lillie")

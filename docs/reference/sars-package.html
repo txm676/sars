@@ -68,7 +68,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.2</span>
       </span>
     </div>
 
@@ -208,41 +208,41 @@
 #&gt; z  0.283187   0.099363  2.850028  0.012849  0.084461  0.4819
 #&gt; 
 #&gt; R-squared: 0.49, Adjusted R-squared: 0.41
-#&gt; AIC: 141.62, AICc: 143.62, BIC: 143.94
+#&gt; AIC: 187.03, AICc: 189.03, BIC: 189.35
 #&gt; Observed shape: convex up, Asymptote: FALSE
 #&gt; </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>)</div><div class='img'><img src='sars-package-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#Construct a multimodel averaged SAR curve</span>
 <span class='no'>fit_multi</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sar_average.html'>sar_average</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>galap</span>)</div><div class='output co'>#&gt; 
 #&gt;  Now attempting to fit the 20 SAR models: 
 #&gt; 
-#&gt; ──  multi_sars ─────────────────────────────────────────────────────────────────────────────────── multi-model SAR ──
-#&gt; → power    : ✔
-#&gt; → powerR   : ✔
-#&gt; → epm1     : ✔</div><div class='output co'>#&gt; <span class='message'>observed shape algorithm failed: observed shape set to</span>
-#&gt; <span class='message'>                theoretical shape (sigmoid)</span></div><div class='output co'>#&gt; → epm2     : ✔
-#&gt; → p1       : ✔
-#&gt; → p2       : ✔
-#&gt; → loga     : ✔
-#&gt; → koba     : ✔
-#&gt; → mmf      : ✔
-#&gt; → monod    : ✔
-#&gt; → negexpo  : ✔
-#&gt; → chapman  : Warning: could not compute parameters statistics
-#&gt; → weibull3 : ✔
-#&gt; → asymp    : ✔
-#&gt; → ratio    : ✔
-#&gt; → gompertz : ✔
-#&gt; → weibull4 : ✔
-#&gt; → betap    : ✔
-#&gt; → heleg    : ✔
-#&gt; → linear   : ✔
+#&gt; --  multi_sars --------------------------- multi-model SAR --
+#&gt; &gt; power    : v
+#&gt; &gt; powerR   : v
+#&gt; &gt; epm1     : v
+#&gt; &gt; epm2     : v
+#&gt; &gt; p1       : v
+#&gt; &gt; p2       : v
+#&gt; &gt; loga     : v
+#&gt; &gt; koba     : v
+#&gt; &gt; mmf      : v
+#&gt; &gt; monod    : v
+#&gt; &gt; negexpo  : v
+#&gt; &gt; chapman  : Warning: could not compute parameters statistics
+#&gt; &gt; weibull3 : v
+#&gt; &gt; asymp    : v
+#&gt; &gt; ratio    : v
+#&gt; &gt; gompertz : v
+#&gt; &gt; weibull4 : v
+#&gt; &gt; betap    : v
+#&gt; &gt; heleg    : v
+#&gt; &gt; linear   : v
 #&gt; 
 #&gt; Model fitting completed - all models succesfully fitted.  Now undertaking model validation checks.
 #&gt; Additional models  will be excluded if necessary:</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>4 models failed the residuals normality test and  have been excluded  from the multi SAR:</span>
 #&gt; <span class='message'>Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model</span></div><div class='output co'>#&gt; 16 remaining models used to construct the multi  SAR:
 #&gt;  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-#&gt; ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit_multi</span>)</div><div class='output co'>#&gt; 
+#&gt; -------------------------------------------------------------</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit_multi</span>)</div><div class='output co'>#&gt; 
 #&gt; Sar_average object summary:
 #&gt; 
 #&gt; 16  models successfully fitted
@@ -253,22 +253,22 @@
 #&gt; Ranked models based on AICc  weights:
 #&gt; 
 #&gt;       Model Weight    AICc    R2   R2a     Shape Asymptote
-#&gt; 1   negexpo  0.219 141.426 0.557 0.488 convex up      TRUE
-#&gt; 2     monod  0.178 141.840 0.545 0.475 convex up      TRUE
-#&gt; 3      koba  0.118 142.667 0.521 0.447 convex up     FALSE
-#&gt; 4     power  0.073 143.625 0.491 0.413 convex up     FALSE
-#&gt; 5      loga  0.067 143.785 0.486 0.407 convex up     FALSE
-#&gt; 6        p1  0.066 143.840 0.589 0.486 convex up     FALSE
-#&gt; 7  gompertz  0.061 143.987 0.585 0.482 convex up      TRUE
-#&gt; 8  weibull3  0.038 144.918 0.561 0.451 convex up      TRUE
-#&gt; 9   chapman  0.036 145.062 0.557 0.446 convex up      TRUE
-#&gt; 10    ratio  0.035 145.088 0.556 0.445 convex up      TRUE
-#&gt; 11    heleg  0.029 145.476 0.545 0.431 convex up      TRUE
-#&gt; 12      mmf  0.029 145.476 0.545 0.431 convex up      TRUE
-#&gt; 13       p2  0.019 146.306 0.521 0.401 convex up     FALSE
-#&gt; 14   powerR  0.014 146.877 0.503 0.379 convex up     FALSE
-#&gt; 15     epm2  0.014 146.923 0.502 0.377   sigmoid     FALSE
-#&gt; 16    betap  0.002 150.612 0.522 0.349 convex up     FALSE</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit_multi</span>)</div><div class='img'><img src='sars-package-2.png' alt='' width='700' height='433' /></div></pre>
+#&gt; 1   negexpo  0.219 186.832 0.557 0.488 convex up      TRUE
+#&gt; 2     monod  0.178 187.246 0.545 0.475 convex up      TRUE
+#&gt; 3      koba  0.118 188.073 0.521 0.447 convex up     FALSE
+#&gt; 4     power  0.073 189.031 0.491 0.413 convex up     FALSE
+#&gt; 5      loga  0.067 189.191 0.486 0.407 convex up     FALSE
+#&gt; 6        p1  0.066 189.246 0.589 0.486 convex up     FALSE
+#&gt; 7  gompertz  0.061 189.393 0.585 0.482 convex up      TRUE
+#&gt; 8  weibull3  0.038 190.324 0.561 0.451 convex up      TRUE
+#&gt; 9   chapman  0.036 190.468 0.557 0.446 convex up      TRUE
+#&gt; 10    ratio  0.035 190.494 0.556 0.445 convex up      TRUE
+#&gt; 11    heleg  0.029 190.882 0.545 0.431 convex up      TRUE
+#&gt; 12      mmf  0.029 190.882 0.545 0.431 convex up      TRUE
+#&gt; 13       p2  0.019 191.712 0.521 0.401 convex up     FALSE
+#&gt; 14   powerR  0.014 192.283 0.503 0.379 convex up     FALSE
+#&gt; 15     epm2  0.014 192.329 0.502 0.377   sigmoid     FALSE
+#&gt; 16    betap  0.002 196.018 0.522 0.349 convex up     FALSE</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit_multi</span>)</div><div class='img'><img src='sars-package-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

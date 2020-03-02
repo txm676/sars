@@ -276,7 +276,20 @@ sar_multi <- function(data,
 #'   The generation of confidence intervals around the multimodel curve (using
 #'   \code{confInt == TRUE}), may throw up errors that we have yet to come
 #'   across. Please report any issues to the package maintainer.
-#'
+#'   
+#'   There are different formulas for calculating the various information
+#'   criteria (IC) used for model comparison (e.g. AIC, BIC). For example, some
+#'   formulas use the residual sum of squares (rss) and others the
+#'   log-likelihood (ll). Both are valid approaches and will give the same
+#'   parameter estimates, but it is important to only compare IC values that
+#'   have been calculated using the same approach. For example, the 'sars'
+#'   package used to use formulas based on the rss, while the \link[stats]{nls}
+#'   function function in the stats package uses formulas based on the ll. To
+#'   increase the compatability between nls and sars, we have changed our
+#'   formulas such that now our IC formulas are the same as those used in the
+#'   \link[stats]{nls} function. See the "On the calculation of information
+#'   criteria" section in the package vignette for more information.
+#'   
 #' @references Burnham, K. P., & Anderson, D. R. (2002). Model selection and
 #'   multi-model inference: a practical information-theoretic approach (2nd
 #'   ed.). New-York: Springer.

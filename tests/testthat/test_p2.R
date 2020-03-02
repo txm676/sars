@@ -2,7 +2,7 @@ context("sar_p2")
 
 test_that("sar_p2 returns correct results", {
   fit <- sar_p2(galap)
-  expect_equal(round(fit$AICc, 2), 146.31)
+  expect_equal(round(fit$AICc, 2), 191.71)
   expect_equal(as.vector(round(fit$par[2], 2)), 0.01)
   expect_is(fit, "sars")
   expect_match(fit$normaTest[[1]], "lillie")

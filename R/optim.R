@@ -121,15 +121,18 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   R2a <-  1 - ( ((n-1)*(res1$value)) /
                   ((n-P)*sum((data$S - mean(data$S))^2)) )
 
-  #AIC
-  AIC <- n * log(res1$value / n) + 2 * P
-
-  #AICc
-  AICc <- n * log(res1$value / n) + 2*P*(n / (n - P - 1))
-
-  #BIC
-  BIC <- n *log(res1$value / n) + log(n) * P
-
+  #old formulas based on rss
+  #AIC <- n * log(res1$value / n) + 2 * P
+  #AICc <- n * log(res1$value / n) + 2*P*(n / (n - P - 1))
+  #BIC <- n *log(res1$value / n) + log(n) * P
+  
+  #using log likelihood (and AIC etc) based on nls approach
+  #log likelihood code from nls
+  val <-  -n * (log(2 * pi) + 1 - log(n) + log(sum(residu^2)))/2
+  AIC <- (2 * P) - (2 * val)
+  AICc <- -2 * val + 2 * P * (n / (n - P - 1))
+  BIC <- (-2 * val) + (P * log(n))
+  
   res3 <- list(AIC=AIC, AICc=AICc, BIC=BIC, R2=R2, R2a=R2a)
 
   #convergence verif -> 71 is R2<=0

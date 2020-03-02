@@ -1,26 +1,26 @@
-## ----setup, include = FALSE---------------------------------------------------
+## ----setup, include = FALSE----------------------------------------------
 knitr::opts_chunk$set(
   out.width = "100%"
 )
 options(cli.unicode = FALSE)
 
-## ----include = FALSE----------------------------------------------------------
+## ----include = FALSE-----------------------------------------------------
 library(sars)
 
-## ---- fig.width=6, fig.height=6-----------------------------------------------
+## ---- fig.width=6, fig.height=6------------------------------------------
 #load an example dataset (Preston, 1962), fit the logarithmic SAR model,
 #return a model fit summary and plot the model fit. data(galap) 
 fit <- sar_loga(data = galap) 
 summary(fit) 
 plot(fit)
 
-## ---- fig.width=16, fig.height=12---------------------------------------------
+## ---- fig.width=16, fig.height=12----------------------------------------
 #Create a fit_collection object containing multiple SAR model fits, and 
 #plot all fits. 
 fitC <- sar_multi(data = galap, obj = c("power", "loga", "monod"))
 plot(fitC) #see Fig.1
 
-## -----------------------------------------------------------------------------
+## ------------------------------------------------------------------------
 #load an example dataset, fit the linear SAR model whilst running residual
 #normality and homogeneity tests, and return the results of the residual
 #normality test 
@@ -29,13 +29,13 @@ fit <- sar_linear(data = galap, normaTest ="lillie", homoTest = "cor.fitted")
 summary(fit) #a warning is provided  indicating the normality test failed 
 fit$normaTest
 
-## ---- fig.width=7, fig.height=19----------------------------------------------
-#load an example dataset (Niering, 1963), run the â€˜sar_averageâ€™ function
+## ---- fig.width=7, fig.height=19-----------------------------------------
+#load an example dataset (Niering, 1963), run the ‘sar_average’ function
 #using a vector of model names and with no model validation tests, and
 #produce the plots in Figure 2 of the paper 
 data(niering) 
 
-#run the â€˜sar_averageâ€™ function using a vector of model names 
+#run the ‘sar_average’ function using a vector of model names 
 fit <- sar_average(data= niering, obj =c("power","loga","koba","mmf","monod",
                                          "negexpo","chapman","weibull3","asymp"),
 normaTest = "none", homoTest = "none", neg_check = FALSE, confInt = TRUE, ciN
@@ -53,11 +53,11 @@ plot(fit, allCurves = FALSE, ModTitle =
 #Barplot of the information criterion weights of each model 
 plot(fit, type = "bar", ModTitle = "b) Model weights", cex.lab = 1.3)
 
-## ---- fig.width=6, fig.height=6-----------------------------------------------
+## ---- fig.width=6, fig.height=6------------------------------------------
 #load an example dataset, fit the log-log power model, return a model fit
-#summary and plot the model fit. When â€˜compareâ€™ == TRUE, the non-linear
+#summary and plot the model fit. When ‘compare’ == TRUE, the non-linear
 #power model is also fitted and the resultant parameter values compared. 
-#If any islands have zero species, a constant (â€˜conâ€™) is added to all 
+#If any islands have zero species, a constant (‘con’) is added to all 
 #species richness values. 
 data(galap) 
 fit <- lin_pow(dat = galap, compare = TRUE, con = 1) 
@@ -65,7 +65,7 @@ summary(fit)
 plot(fit)
 
 #load an example dataset, fit the random placement model and plot the 
-#model fit and standard deviation. The â€˜dataâ€™ argument requires a species-
+#model fit and standard deviation. The ‘data’ argument requires a species-
 #site abundance matrix: rows are species and columns are sites. The area 
 #argument requires a vector of site (island) area values. 
 data(cole_sim) 
@@ -79,7 +79,7 @@ data(galap)
 galap$t <- rgamma(16, 5, scale = 2)#add a random time variable 
 gdm(data = galap, model = "loga", mod_sel = TRUE)
 
-## -----------------------------------------------------------------------------
+## ------------------------------------------------------------------------
 #fit the power model and predict richness on an island of area = 5000
 data(galap)
 p <- sar_power(data = galap)

@@ -1,7 +1,8 @@
 
-
 ## Version 1.2.2
   * bug fix - no AICc option in confidence interval function
+  * changed AIC, BIC and AICc equations to be calculated using
+    the same approach as the nls and lm functions.
 
 ## Version 1.2.1
   * added a warning for when all richness values are identical

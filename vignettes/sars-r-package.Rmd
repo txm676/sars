@@ -353,6 +353,40 @@ sar_pred(p3, area = c(5000, 10000))
 ```
 
 
+## On the calculation of information criteria
+There are different ways to calculate the various information criteria (IC) used
+for model comparison (e.g. AIC, BIC).  One difference relates to whether the
+residual sum of squares (rss) or the log-likelihood (ll) is used. Under standard
+assumptions (e.g. independence of data points, homoscedasticity and normality of
+the residuals), the two approaches produce identical parameter estimates for
+regression models. However, the formulas are different and thus can produce
+different IC values for the same model. For example, historically in the ‘sars’
+package we have calculated IC values using formulas based on the rss (Burnham &
+Anderson, 2002; Guilhaumon et al. 2008). This meant that the IC values generated
+in ‘sars’ were not comparable with values generated in packages using different
+formulas. For example, in the nls (the main function for non-linear regression
+in R) and lm functions in the stats R package, a ll approach is used, meaning IC
+values from models fitted using nls could not be compared with IC values from
+sars models. To re-iterate, the parameter estimates are comparable, it is simply
+that the IC values will differ. In the most
+recent version of ‘sars’ (version 1.2.2) we have changed our IC formulas to
+match those in nls and lm. Thus, if users have built their own models using nls (or lm) and wish to compare
+IC values with models fitted in ‘sars’, this is now straightforward. To
+re-create IC values from previous studies (i.e. those using a version of sars
+pre 1.2.2), it will be necessary to download sars Version 1.2.1 or earlier
+(either from CRAN or GitHub; version 1.1.1 was published as a release on
+GitHub). It is important to note that these are not the only two ways of
+calculating ICs for regression models, and other formulas exits. Thus, if
+building models using other functions and packages (i.e. other than nls or lm),
+users should make sure to check how these packages calculate IC values before
+comparing with models fitted in sars. In sars, as in nls, we include an
+additional parameter for estimation of the variance. For example, the power
+model is considered to have three parameters when calculating IC values.
+Finally, if users are comparing models fitted in sars with their own models
+fitted using other packages, it is essential that IC values are all calculated
+using the same dependent variable (i.e. non-transformed richness values and not
+logged richness, as sars only uses the former currently).
+
 ## CONCLUSIONS 
 The SAR has been a cornerstone of ecological and biogeographical science for
 almost a century and its form and fit are still of great significance in both
