@@ -3,7 +3,7 @@ library(sars)
 
 test_that("sar_power returns correct results", {
   fit <- sar_power(galap)
-  expect_equal(round(fit$AICc, 2), 143.62)
+  expect_equal(round(fit$AICc, 2), 189.03)
   expect_equal(as.vector(round(fit$par[2], 2)), 0.28)
   expect_is(fit, "sars")
   expect_match(fit$normaTest[[1]], "lillie")

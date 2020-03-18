@@ -64,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.2</span>
       </span>
     </div>
 
@@ -127,22 +127,27 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>lin_pow</span>(<span class='no'>data</span>, <span class='kw'>con</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>compare</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>normaTest</span> <span class='kw'>=</span>  <span class='st'>"lillie"</span>,
-  <span class='kw'>homoTest</span> <span class='kw'>=</span> <span class='st'>"cor.fitted"</span>)</pre>
+    <pre class="usage"><span class='fu'>lin_pow</span>(<span class='no'>data</span>, <span class='kw'>con</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>logT</span> <span class='kw'>=</span> <span class='no'>log</span>, <span class='kw'>compare</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>normaTest</span> <span class='kw'>=</span>
+  <span class='st'>"lillie"</span>, <span class='kw'>homoTest</span> <span class='kw'>=</span> <span class='st'>"cor.fitted"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>A dataset in the form of a dataframe with two columns: the
-first with island/site areas, and the second with the species richness
-of each island/site.</p></td>
+      <td><p>A dataset in the form of a dataframe with two columns: the first
+with island/site areas, and the second with the species richness of each
+island/site.</p></td>
     </tr>
     <tr>
       <th>con</th>
-      <td><p>The constant to add to the species richness values in cases
-where one of the islands has zero species.</p></td>
+      <td><p>The constant to add to the species richness values in cases where
+one of the islands has zero species.</p></td>
+    </tr>
+    <tr>
+      <th>logT</th>
+      <td><p>The log-transformation to apply to the area and richness values.
+Can be any of <code>log</code>(default), <code>log2</code> or <code>log10</code>.</p></td>
     </tr>
     <tr>
       <th>compare</th>
@@ -151,32 +156,33 @@ z-value for comparison (default: <code>compare = FALSE</code>).</p></td>
     </tr>
     <tr>
       <th>normaTest</th>
-      <td><p>The test used to test the normality of the residuals of
-the model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test;
-the default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
+      <td><p>The test used to test the normality of the residuals of the
+model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
+default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
 (Kolmogorov-Smirnov test), or "none" (no residuals normality test is
 undertaken).</p></td>
     </tr>
     <tr>
       <th>homoTest</th>
       <td><p>The test used to check for homogeneity of the residuals of
-the model. Can be any of "cor.fitted" (a correlation of the residuals
-with the model fitted values; the default), "cor.area" (a correlation of
-the residuals with the area values), or "none" (no residuals homogeneity
-test is undertaken).</p></td>
+the model. Can be any of "cor.fitted" (a correlation of the residuals with
+the model fitted values; the default), "cor.area" (a correlation of the
+residuals with the area values), or "none" (no residuals homogeneity test
+is undertaken).</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of class "sars" with up to six elements. The first element
-  is an object of class 'summary.lm'. This is the summary of the linear
-  model fit using the <a href='https://www.rdocumentation.org/packages/stats/topics/lm'>lm</a> function and the user's data. The
-  second element is a numeric vector of the model's fitted values, and the
-  third contains the log-transformed observed data. The remaining elements
-  depend on the function arguments selected and can include the results of
-  the non-linear power model fit, and of the residuals normality and
-  heterogeneity tests.</p>
+    <p>A list of class "sars" with up to seven elements. The first element
+  is an object of class 'summary.lm'. This is the summary of the linear model
+  fit using the <a href='https://www.rdocumentation.org/packages/stats/topics/lm'>lm</a> function and the user's data. The second
+  element is a numeric vector of the model's fitted values, and the third
+  contains the log-transformed observed data. The remaining elements depend
+  on the function arguments selected and can include the results of the
+  non-linear power model fit, the log-transformation function used (i.e.
+  <code>logT</code>) and the results of the residuals normality and heterogeneity
+  tests.</p>
 <p>The <code><a href='summary.sars.html'>summary.sars</a></code> function returns a more useful summary of
   the model fit results, and the <code><a href='plot.sars.html'>plot.sars</a></code> plots the model.</p>
     
@@ -185,7 +191,8 @@ test is undertaken).</p></td>
     <p>A check is made for any islands with zero species. If any zero
   species islands are found, a constant (default: <code>con = 1</code>) is added
   to each species richness value to enable log transformation. Natural
-  logarithms are used.</p>
+  logarithms are used as default, but log2 and log10 can be used instead
+  using the <code>logT</code> argument.</p>
 <p>The <code>compare</code> argument can be used to compare the c and z values
   calculated using the log-log power model with that calculated using the
   non-linear power model. Note that the log-log function returns log(c).</p>
@@ -196,8 +203,10 @@ test is undertaken).</p></td>
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>lin_pow</span>(<span class='no'>galap</span>, <span class='kw'>con</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; Model = Log-log power
 #&gt; 
+#&gt; Log-transformation function used: log()
+#&gt; 
 #&gt; Call:
-#&gt; lm(formula = S ~ A, data = log.data)
+#&gt; lm(formula = logT(S) ~ logT(A), data = data)
 #&gt; 
 #&gt; Residuals:
 #&gt;     Min      1Q  Median      3Q     Max 
@@ -208,7 +217,7 @@ test is undertaken).</p></td>
 #&gt; LogC  3.01865    0.35442   8.517 6.56e-07 ***
 #&gt; z     0.33854    0.08523   3.972  0.00139 ** 
 #&gt; ---
-#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #&gt; 
 #&gt; Residual standard error: 0.7626 on 14 degrees of freedom
 #&gt; Multiple R-squared:  0.5298,	Adjusted R-squared:  0.4962 

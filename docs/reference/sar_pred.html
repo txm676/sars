@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a Collection of SAR Model Fits — sar_multi • sars</title>
+<title>Use SAR model fits to predict richness on islands of a given size — sar_pred • sars</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,11 @@
 
 
 
-<meta property="og:title" content="Create a Collection of SAR Model Fits — sar_multi" />
+<meta property="og:title" content="Use SAR model fits to predict richness on islands of a given size — sar_pred" />
 
-<meta property="og:description" content="Creates a fit collection of SAR model fits, which can then be
-  plotted using plot.sars." />
+<meta property="og:description" content="Predict the richness on an island of a given size using either
+  individual SAR model fits, a fit_collection of model fits, or a multi-model
+  SAR curve." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -115,83 +116,87 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a Collection of SAR Model Fits</h1>
+    <h1>Use SAR model fits to predict richness on islands of a given size</h1>
     <small class="dont-index">Source: <a href='https://github.com/txm676/sars/blob/master/R/sar_average.R'><code>R/sar_average.R</code></a></small>
-    <div class="hidden name"><code>sar_multi.Rd</code></div>
+    <div class="hidden name"><code>sar_pred.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Creates a fit collection of SAR model fits, which can then be
-  plotted using <code><a href='plot.sars.html'>plot.sars</a></code>.</p>
+    <p>Predict the richness on an island of a given size using either
+  individual SAR model fits, a fit_collection of model fits, or a multi-model
+  SAR curve.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>sar_multi</span>(<span class='no'>data</span>, <span class='kw'>obj</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"power"</span>,
-  <span class='st'>"powerR"</span>,<span class='st'>"epm1"</span>,<span class='st'>"epm2"</span>,<span class='st'>"p1"</span>,<span class='st'>"p2"</span>,<span class='st'>"loga"</span>,<span class='st'>"koba"</span>,
-  <span class='st'>"mmf"</span>,<span class='st'>"monod"</span>,<span class='st'>"negexpo"</span>,<span class='st'>"chapman"</span>,<span class='st'>"weibull3"</span>,<span class='st'>"asymp"</span>,
-  <span class='st'>"ratio"</span>,<span class='st'>"gompertz"</span>,<span class='st'>"weibull4"</span>,<span class='st'>"betap"</span>,<span class='st'>"heleg"</span>,<span class='st'>"linear"</span>), <span class='kw'>normaTest</span> <span class='kw'>=</span>
-  <span class='st'>"lillie"</span>, <span class='kw'>homoTest</span> <span class='kw'>=</span> <span class='st'>"cor.fitted"</span>,<span class='kw'>verb</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>sar_pred</span>(<span class='no'>fit</span>, <span class='no'>area</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>A dataset in the form of a dataframe with two columns: the first
-with island/site areas, and the second with the species richness of each
-island/site.</p></td>
+      <th>fit</th>
+      <td><p>Either a model fit object, a fit_collection object (generated
+using <code><a href='sar_multi.html'>sar_multi</a></code>), or a sar_multi object (generated using
+<code><a href='sar_average.html'>sar_average</a></code>).</p></td>
     </tr>
     <tr>
-      <th>obj</th>
-      <td><p>A vector of model names.</p></td>
-    </tr>
-    <tr>
-      <th>normaTest</th>
-      <td><p>The test used to test the normality of the residuals of each
-model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
-default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
-(Kolmogorov-Smirnov test), or "none" (no residuals normality test is
-undertaken).</p></td>
-    </tr>
-    <tr>
-      <th>homoTest</th>
-      <td><p>The test used to check for homogeneity of the residuals of
-each model. Can be any of "cor.fitted" (a correlation of the residuals with
-the model fitted values; the default), "cor.area" (a correlation of the
-residuals with the area values), or "none" (no residuals homogeneity test
-is undertaken).</p></td>
-    </tr>
-    <tr>
-      <th>verb</th>
-      <td><p>verbose (default: <code>verb == TRUE</code>).</p></td>
+      <th>area</th>
+      <td><p>A numeric vector of area values (length &gt;= 1).</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of class 'sars' with n elements, corresponding to the n
-  individual SAR model fits.</p>
+    <p>A data.frame of class 'sars' with three columns: 1) the name of the
+  model, 2) the area value for which a prediction has been generated, and 3)
+  the prediction from the model extrapolation.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The <code>sar_models()</code> function can be used to bring up a list of
-  the 20 model names. <code><a href='display_sars_models.html'>display_sars_models()</a></code> generates a table of the
-  20 models with model information.</p>
+    <p>Extrapolation (e.g. predicting the richness of areas too large to be
+  sampled) is one of the primary uses of the SAR. The <code>sar_pred</code>
+  function provides an easy method for undertaking such an exercise. The
+  function works by taking an already fitted SAR model, extacting the parameter
+  values and then using these values and the model function to predict the
+  richness for any value of area provided.</p>
+<p>If a multi-model SAR curve is used for prediction (i.e. using
+  <code><a href='sar_average.html'>sar_average</a></code>), the model information criterion weight (i.e.
+  the conditional probabilities for each of the n models) for each of the
+  individual model fits that were used to generate the curve are stored. The
+  n models are then each used to predict the richness of a larger area and
+  these predictions are multiplied by the respective model weights and summed
+  to provide a multi-model averaged prediction.</p>
+    
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+
+    <p>This function is used in the ISAR extrapolation paper of Matthews &amp;
+  Aspin (2019).</p>
+<p>Code to calculate confidence intervals around the predictions using
+  bootstrapping will be added in a later version of the package.</p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Matthews, T.J. &amp; Aspin, T.W.H. (2019) ....</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>galap</span>)
-<span class='co'># construct a fit_collection object of 3 SAR model fits</span>
-<span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'>sar_multi</span>(<span class='no'>galap</span>, <span class='kw'>obj</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"power"</span>, <span class='st'>"loga"</span>, <span class='st'>"linear"</span>))</div><div class='output co'>#&gt; 
+<span class='co'>#fit the power model and predict richness on an island of area = 5000</span>
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sar_power.html'>sar_power</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>galap</span>)
+<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'>sar_pred</span>(<span class='no'>fit</span>, <span class='kw'>area</span> <span class='kw'>=</span> <span class='fl'>5000</span>)
+
+<span class='co'>#fit three SAR models and predict richness on islands of area = 5000 &amp; 10000</span>
+<span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sar_multi.html'>sar_multi</a></span>(<span class='no'>galap</span>, <span class='kw'>obj</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"power"</span>, <span class='st'>"loga"</span>, <span class='st'>"koba"</span>))</div><div class='output co'>#&gt; 
 #&gt;  Now attempting to fit the 3 SAR models: 
 #&gt; 
 #&gt; --  multi_sars --------------------------- multi-model SAR --
-#&gt; &gt; power  : v
-#&gt; &gt; loga   : v
-#&gt; &gt; linear : v</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit2</span>)</div><div class='img'><img src='sar_multi-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'># construct a fit_collection object of all 20 SAR model fits</span>
-<span class='no'>fit3</span> <span class='kw'>&lt;-</span> <span class='fu'>sar_multi</span>(<span class='no'>galap</span>)</div><div class='output co'>#&gt; 
+#&gt; &gt; power : v
+#&gt; &gt; loga  : v
+#&gt; &gt; koba  : v</div><div class='input'><span class='no'>p2</span> <span class='kw'>&lt;-</span> <span class='fu'>sar_pred</span>(<span class='no'>fit2</span>, <span class='kw'>area</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>5000</span>, <span class='fl'>10000</span>))
+
+<span class='co'>#calculate a multi-model curve and predict richness on islands of area = 5000 &amp; 10000</span>
+<span class='no'>fit3</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sar_average.html'>sar_average</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>galap</span>)</div><div class='output co'>#&gt; 
 #&gt;  Now attempting to fit the 20 SAR models: 
 #&gt; 
 #&gt; --  multi_sars --------------------------- multi-model SAR --
@@ -214,8 +219,14 @@ is undertaken).</p></td>
 #&gt; &gt; weibull4 : v
 #&gt; &gt; betap    : v
 #&gt; &gt; heleg    : v
-#&gt; &gt; linear   : v</div><div class='input'>
-</div></pre>
+#&gt; &gt; linear   : v
+#&gt; 
+#&gt; Model fitting completed - all models succesfully fitted.  Now undertaking model validation checks.
+#&gt; Additional models  will be excluded if necessary:</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>4 models failed the residuals normality test and  have been excluded  from the multi SAR:</span>
+#&gt; <span class='message'>Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model</span></div><div class='output co'>#&gt; 16 remaining models used to construct the multi  SAR:
+#&gt;  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
+#&gt; -------------------------------------------------------------</div><div class='input'><span class='no'>p3</span> <span class='kw'>&lt;-</span> <span class='fu'>sar_pred</span>(<span class='no'>fit3</span>, <span class='kw'>area</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>5000</span>, <span class='fl'>10000</span>))</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -225,6 +236,10 @@ is undertaken).</p></td>
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
+
+      <li><a href="#note">Note</a></li>
+
+      <li><a href="#references">References</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

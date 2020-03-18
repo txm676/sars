@@ -4,7 +4,7 @@ test_that("sar_monod returns correct results", {
   data(niering)
   fit <- sar_monod(niering)
   expect_equal(nrow(niering), 32)
-  expect_equal(round(fit$AICc, 2), 113.37)
+  expect_equal(round(fit$AICc, 2), 204.18)
   expect_equal(as.vector(round(fit$par[2], 2)), 0.04)
   expect_is(fit, "sars")
   expect_match(fit$normaTest[[1]], "lillie")

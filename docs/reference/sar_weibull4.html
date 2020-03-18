@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.2</span>
       </span>
     </div>
 
@@ -188,6 +188,7 @@ residuals with the area values), or 'none' (no residuals homogeneity test is und
 <li><p>homoTest  The results of the residuals homogeneity test</p></li>
 <li><p>observed_shape  The observed shape of the model fit</p></li>
 <li><p>asymptote  A logical value indicating whether the observed fit is asymptotic</p></li>
+<li><p>neg_check  A logical value indicating whether negative fitted values have been returned</p></li>
 </ul><p>The <code><a href='summary.sars.html'>summary.sars</a></code> function returns a more useful summary of
   the model fit results, and the <code><a href='plot.sars.html'>plot.sars</a></code> plots the model fit.</p>
     
@@ -223,18 +224,18 @@ residuals with the area values), or 'none' (no residuals homogeneity test is und
 #&gt; Did the model converge: TRUE
 #&gt; 
 #&gt; Residuals:
-#&gt;     0%    25%    50%    75%   100% 
-#&gt; -122.5  -34.9   -1.9   17.1  129.5 
+#&gt;       0%      25%      50%      75%     100% 
+#&gt; -123.000  -35.075   -2.400   16.250  128.500 
 #&gt; 
 #&gt; Parameters:
 #&gt;      Estimate  Std. Error     t value    Pr(&gt;|t|)        2.5%    97.5%
-#&gt; d  2.0952e+02  3.5475e+01  5.9062e+00  7.1839e-05  1.3857e+02 280.4675
-#&gt; c  3.7009e-15  1.6434e-14  2.2520e-01  8.2562e-01 -2.9167e-14   0.0000
-#&gt; z  6.4224e+00  8.7466e-07  7.3427e+06  2.7425e-77  6.4224e+00   6.4224
-#&gt; f  8.8960e-02  4.2956e-02  2.0710e+00  6.0586e-02  3.0479e-03   0.1749
+#&gt; d  2.0853e+02  3.5770e+01  5.8298e+00  8.0882e-05  1.3699e+02 280.0693
+#&gt; c  3.7174e-15  1.0974e-13  3.3873e-02  9.7354e-01 -2.1577e-13   0.0000
+#&gt; z  6.4284e+00  6.0993e+00  1.0540e+00  3.1266e-01 -5.7701e+00  18.6270
+#&gt; f  8.9097e-02  6.2627e-02  1.4227e+00  1.8031e-01 -3.6158e-02   0.2144
 #&gt; 
 #&gt; R-squared: 0.59, Adjusted R-squared: 0.44
-#&gt; AIC: 142.17, AICc: 148.17, BIC: 146.03
+#&gt; AIC: 187.57, AICc: 193.57, BIC: 191.44
 #&gt; Observed shape: convex up, Asymptote: TRUE
 #&gt; 
 #&gt; 

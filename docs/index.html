@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">sars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.2</span>
       </span>
     </div>
 
@@ -96,8 +96,8 @@
 <blockquote>
 <p><em>fit and compare <strong>Species-Area Relationship (SAR)</strong> models using multi-model inference</em></p>
 </blockquote>
-<p><strong>sars</strong> provides functionality to fit twenty SAR model using non-linear regression, and to calculate multi-model averaged curves using various information criteria. The software also provides easy to use functionality to plot multi-model SAR curves and to generate confidence intervals using bootstrapping. Additional SAR related functions include fitting the linear version of the power model and comparing parameters with the non-linear version, fitting the general dynamic model of island biogeography, and fitting the random placement model to a species abundance - site matrix.</p>
-<p>As this is version 1.1.0 of the package, it is possible that there are some bugs in places. Please report any issues to us via GitHub.</p>
+<p><strong>sars</strong> provides functionality to fit twenty SAR model using non-linear regression, and to calculate multi-model averaged curves using various information criteria. The software also provides easy to use functionality to plot multi-model SAR curves and to generate confidence intervals using bootstrapping. Additional SAR related functions include fitting the linear version of the power model and comparing parameters with the non-linear version, fitting the general dynamic model of island biogeography, fitting the random placement model to a species abundance - site matrix, and extrapolating fitted SAR models to predict richness on larger islands / sample areas.</p>
+<p>As this is version 1.2.2 of the package, it is possible that there are some bugs in places. Please report any issues to us via GitHub.</p>
 <p>The package has an associated vignette that provides examples of how to use the package.</p>
 <p>A website for the package can be found here: <a href="https://txm676.github.io/sars/" class="uri">https://txm676.github.io/sars/</a></p>
 <p>Version 1.1.1 of the package has been archived on the Zenodo research data repository (DOI: 10.5281/zenodo.2573067).</p>
@@ -114,64 +114,83 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install the released version of sars from <a href="https://CRAN.R-project.org">CRAN</a> with:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"sars"</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"sars"</span>)</a></code></pre></div>
 <p>And the development version from <a href="https://github.com/">GitHub</a> with:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
-devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"txm676/sars"</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># install.packages("devtools")</span></a>
+<a class="sourceLine" id="cb2-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"txm676/sars"</span>)</a></code></pre></div>
 </div>
 <div id="example-usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-usage" class="anchor"></a>Example usage</h2>
 <p>Basic usage of <strong>sars</strong> will result in using two types of functions:</p>
 <p>To fit the power sar model <span class="citation">(Arrhenius 1921)</span> to the ‘galapagos’ <span class="citation">(Preston 1962)</span> data set:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit_pow &lt;-<span class="st"> </span><span class="kw"><a href="reference/sar_power.html">sar_power</a></span>(<span class="dt">data =</span> galap)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">fit_pow &lt;-<span class="st"> </span><span class="kw"><a href="reference/sar_power.html">sar_power</a></span>(<span class="dt">data =</span> galap)</a>
+<a class="sourceLine" id="cb3-2" title="2">fit_pow</a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="co">#&gt; Model:</span></a>
+<a class="sourceLine" id="cb3-5" title="5"><span class="co">#&gt; Power</span></a>
+<a class="sourceLine" id="cb3-6" title="6"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb3-7" title="7"><span class="co">#&gt; Call:</span></a>
+<a class="sourceLine" id="cb3-8" title="8"><span class="co">#&gt; S == c * A^z</span></a>
+<a class="sourceLine" id="cb3-9" title="9"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb3-10" title="10"><span class="co">#&gt; Coefficients:</span></a>
+<a class="sourceLine" id="cb3-11" title="11"><span class="co">#&gt;          c          z </span></a>
+<a class="sourceLine" id="cb3-12" title="12"><span class="co">#&gt; 33.1791553  0.2831868</span></a></code></pre></div>
 <p>Attempting to fit all 20 sar models to the ‘galapagos’ <span class="citation">(Preston 1962)</span> data set and get a multi-model SAR:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mm_galap &lt;-<span class="st"> </span><span class="kw"><a href="reference/sar_average.html">sar_average</a></span>(<span class="dt">data =</span> galap)
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  Now attempting to fit the 20 SAR models: </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; ──  multi_sars ─────────────────────────────────────────────────────────────────────────────────── multi-model SAR ──</span>
-<span class="co">#&gt; → power    : ✔</span>
-<span class="co">#&gt; → powerR   : ✔</span>
-<span class="co">#&gt; → epm1     : ✔</span>
-<span class="co">#&gt; observed shape algorithm failed: observed shape set to</span>
-<span class="co">#&gt;                 theoretical shape (sigmoid)</span>
-<span class="co">#&gt; → epm2     : ✔</span>
-<span class="co">#&gt; → p1       : ✔</span>
-<span class="co">#&gt; → p2       : ✔</span>
-<span class="co">#&gt; → loga     : ✔</span>
-<span class="co">#&gt; → koba     : ✔</span>
-<span class="co">#&gt; → mmf      : ✔</span>
-<span class="co">#&gt; → monod    : ✔</span>
-<span class="co">#&gt; → negexpo  : ✔</span>
-<span class="co">#&gt; → chapman  : Warning: could not compute parameters statistics</span>
-<span class="co">#&gt; → weibull3 : ✔</span>
-<span class="co">#&gt; → asymp    : ✔</span>
-<span class="co">#&gt; → ratio    : ✔</span>
-<span class="co">#&gt; → gompertz : ✔</span>
-<span class="co">#&gt; → weibull4 : ✔</span>
-<span class="co">#&gt; → betap    : ✔</span>
-<span class="co">#&gt; → heleg    : ✔</span>
-<span class="co">#&gt; → linear   : ✔</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Model fitting completed - all models succesfully fitted.  Now undertaking model validation checks.</span>
-<span class="co">#&gt; Additional models  will be excluded if necessary:</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; 4 models failed the residuals normality test and  have been excluded  from the multi SAR:</span>
-<span class="co">#&gt; Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model</span>
-<span class="co">#&gt; 16 remaining models used to construct the multi  SAR:</span>
-<span class="co">#&gt;  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) </span>
-<span class="co">#&gt; ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">mm_galap &lt;-<span class="st"> </span><span class="kw"><a href="reference/sar_average.html">sar_average</a></span>(<span class="dt">data =</span> galap)</a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="co">#&gt;  Now attempting to fit the 20 SAR models: </span></a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="co">#&gt; --  multi_sars --------------------------- multi-model SAR --</span></a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="co">#&gt; &gt; power    : v</span></a>
+<a class="sourceLine" id="cb4-7" title="7"><span class="co">#&gt; &gt; powerR   : v</span></a>
+<a class="sourceLine" id="cb4-8" title="8"><span class="co">#&gt; &gt; epm1     : v</span></a>
+<a class="sourceLine" id="cb4-9" title="9"><span class="co">#&gt; &gt; epm2     : v</span></a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="co">#&gt; &gt; p1       : v</span></a>
+<a class="sourceLine" id="cb4-11" title="11"><span class="co">#&gt; &gt; p2       : v</span></a>
+<a class="sourceLine" id="cb4-12" title="12"><span class="co">#&gt; &gt; loga     : v</span></a>
+<a class="sourceLine" id="cb4-13" title="13"><span class="co">#&gt; &gt; koba     : v</span></a>
+<a class="sourceLine" id="cb4-14" title="14"><span class="co">#&gt; &gt; mmf      : v</span></a>
+<a class="sourceLine" id="cb4-15" title="15"><span class="co">#&gt; &gt; monod    : v</span></a>
+<a class="sourceLine" id="cb4-16" title="16"><span class="co">#&gt; &gt; negexpo  : v</span></a>
+<a class="sourceLine" id="cb4-17" title="17"><span class="co">#&gt; &gt; chapman  : Warning: could not compute parameters statistics</span></a>
+<a class="sourceLine" id="cb4-18" title="18"><span class="co">#&gt; &gt; weibull3 : v</span></a>
+<a class="sourceLine" id="cb4-19" title="19"><span class="co">#&gt; &gt; asymp    : v</span></a>
+<a class="sourceLine" id="cb4-20" title="20"><span class="co">#&gt; &gt; ratio    : v</span></a>
+<a class="sourceLine" id="cb4-21" title="21"><span class="co">#&gt; &gt; gompertz : v</span></a>
+<a class="sourceLine" id="cb4-22" title="22"><span class="co">#&gt; &gt; weibull4 : v</span></a>
+<a class="sourceLine" id="cb4-23" title="23"><span class="co">#&gt; &gt; betap    : v</span></a>
+<a class="sourceLine" id="cb4-24" title="24"><span class="co">#&gt; &gt; heleg    : v</span></a>
+<a class="sourceLine" id="cb4-25" title="25"><span class="co">#&gt; &gt; linear   : v</span></a>
+<a class="sourceLine" id="cb4-26" title="26"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb4-27" title="27"><span class="co">#&gt; Model fitting completed - all models succesfully fitted.  Now undertaking model validation checks.</span></a>
+<a class="sourceLine" id="cb4-28" title="28"><span class="co">#&gt; Additional models  will be excluded if necessary:</span></a>
+<a class="sourceLine" id="cb4-29" title="29"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb4-30" title="30"><span class="co">#&gt; 4 models failed the residuals normality test and  have been excluded  from the multi SAR:</span></a>
+<a class="sourceLine" id="cb4-31" title="31"><span class="co">#&gt; Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model</span></a>
+<a class="sourceLine" id="cb4-32" title="32"><span class="co">#&gt; 16 remaining models used to construct the multi  SAR:</span></a>
+<a class="sourceLine" id="cb4-33" title="33"><span class="co">#&gt;  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) </span></a>
+<a class="sourceLine" id="cb4-34" title="34"><span class="co">#&gt; -------------------------------------------------------------</span></a></code></pre></div>
 <p>Each of the ‘fitted’ objects have corresponding plot methods:</p>
-<p>to fit the logarithmic SAR model <span class="citation">(Gleason 1922)</span> to the ‘galapagos’ data set and plot it</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit_loga &lt;-<span class="st"> </span><span class="kw"><a href="reference/sar_loga.html">sar_loga</a></span>(<span class="dt">data =</span> galap)
-
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fit_loga)</code></pre></div>
+<p>To fit the logarithmic SAR model <span class="citation">(Gleason 1922)</span> to the ‘galapagos’ data set and plot it</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">fit_loga &lt;-<span class="st"> </span><span class="kw"><a href="reference/sar_loga.html">sar_loga</a></span>(<span class="dt">data =</span> galap)</a>
+<a class="sourceLine" id="cb5-2" title="2"></a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fit_loga)</a></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="100%"></p>
-<p>to fit a multimodel SAR curve to the ‘galapagos’ data set and plot it</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mm_galap &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/message">suppressMessages</a></span>(<span class="kw"><a href="reference/sar_average.html">sar_average</a></span>(<span class="dt">data =</span> galap, <span class="dt">verb =</span> <span class="ot">FALSE</span>))
-
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(mm_galap, <span class="dt">pLeg =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p>To fit a multimodel SAR curve to the ‘galapagos’ data set and plot it (alongside the individual model fits)</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">mm_galap &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/message">suppressMessages</a></span>(<span class="kw"><a href="reference/sar_average.html">sar_average</a></span>(<span class="dt">data =</span> galap, <span class="dt">verb =</span> <span class="ot">FALSE</span>))</a>
+<a class="sourceLine" id="cb6-2" title="2">mm_galap </a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="co">#&gt; This is a sar_average fit object:</span></a>
+<a class="sourceLine" id="cb6-5" title="5"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="co">#&gt; 16 models successfully fitted</span></a>
+<a class="sourceLine" id="cb6-7" title="7"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-8" title="8"><span class="co">#&gt; 4 models were unable to be fitted or were removed due to model checks</span></a>
+<a class="sourceLine" id="cb6-9" title="9"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-10" title="10"><span class="co">#&gt; AICc used to rank models</span></a>
+<a class="sourceLine" id="cb6-11" title="11"></a>
+<a class="sourceLine" id="cb6-12" title="12"></a>
+<a class="sourceLine" id="cb6-13" title="13"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(mm_galap, <span class="dt">pLeg =</span> <span class="ot">FALSE</span>, <span class="dt">mmSep =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-5-1.png" width="100%"></p>
 </div>
 <div id="references" class="section level2 unnumbered">
@@ -179,13 +198,13 @@ devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumen
 <a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
 <div id="ref-Arrhenius1921">
-<p>Arrhenius, Olof. 1921. “Species and Area.” <em>The Journal of Ecology</em> 9 (1). British Ecological Society: 95. doi:<a href="https://doi.org/10.2307/2255763">10.2307/2255763</a>.</p>
+<p>Arrhenius, Olof. 1921. “Species and Area.” <em>The Journal of Ecology</em> 9 (1): 95. <a href="https://doi.org/10.2307/2255763">https://doi.org/10.2307/2255763</a>.</p>
 </div>
 <div id="ref-Gleason1922">
-<p>Gleason, Henry Allan. 1922. “On the Relation Between Species and Area.” <em>Ecology</em> 3 (2). Ecological Society of America: 158–62. doi:<a href="https://doi.org/10.2307/1929150">10.2307/1929150</a>.</p>
+<p>Gleason, Henry Allan. 1922. “On the Relation Between Species and Area.” <em>Ecology</em> 3 (2): 158–62. <a href="https://doi.org/10.2307/1929150">https://doi.org/10.2307/1929150</a>.</p>
 </div>
 <div id="ref-Preston1962">
-<p>Preston, F. W. 1962. “The Canonical Distribution of Commonness and Rarity: Part I.” <em>Ecology</em> 43 (2). Ecological Society of America: 185. doi:<a href="https://doi.org/10.2307/1931976">10.2307/1931976</a>.</p>
+<p>Preston, F. W. 1962. “The Canonical Distribution of Commonness and Rarity: Part I.” <em>Ecology</em> 43 (2): 185. <a href="https://doi.org/10.2307/1931976">https://doi.org/10.2307/1931976</a>.</p>
 </div>
 </div>
 </div>
@@ -207,7 +226,9 @@ devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumen
 <div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
+<li>
+<a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a> | file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
 <div class="citation">
@@ -233,6 +254,7 @@ devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumen
 <li><a href="https://cran.r-project.org/package=sars"><img src="https://www.r-pkg.org/badges/version/sars" alt="CRAN"></a></li>
 <li><a href="https://codecov.io/github/txm676/sars?branch=master"><img src="https://codecov.io/github/txm676/sars/coverage.svg?branch=master" alt="codecov.io"></a></li>
 <li><a href="https://zenodo.org/badge/latestdoi/95295704"><img src="https://zenodo.org/badge/95295704.svg" alt="DOI"></a></li>
+<li><a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-yellow.svg" alt="License: GPL v3"></a></li>
 </ul>
 </div>
 </div>

@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.2</span>
       </span>
     </div>
 
@@ -93,25 +93,25 @@
     
 <p>This vignette is heavily based on the paper that accompanies the package.To cite this vignette, please cite the corresponding paper:</p>
 <p>Matthews, T.J., Triantis, K., Whittaker, R.J. and Guilhaumon, F. (2019) sars: an R package for fitting, evaluating and comparing species–area relationship models. Ecography, In press</p>
-<p>Version 1.1.1 of the package, presented in this vignette, has been archived on the Zenodo research data repository (DOI: 10.5281/zenodo.2573067).</p>
+<p>Version 1.1.1 of the package has been archived on the Zenodo research data repository (DOI: 10.5281/zenodo.2573067).</p>
 <div id="background" class="section level2">
 <h2 class="hasAnchor">
 <a href="#background" class="anchor"></a>BACKGROUND</h2>
 <p>The species–area relationship (SAR) describes the near universally observed pattern whereby the number of species increases with the area sampled, and it has been described as one of ecology’s few laws (<span class="citation">Rosenzweig (1995)</span>). The SAR is a fundamental component of numerous ecological and biogeographical theories, such as the equilibrium theory of island biogeography (<span class="citation">MacArthur and Wilson (1967)</span>). In addition, SAR models have been widely used in applied ecology and conservation biogeography: for example, to predict the number of extinctions due to habitat loss. Numerous types of SAR have been described, and one primary dichotomy employed is the split of SARs into island SARs (ISARs), whereby each data point is an individual island or isolated sample, and species accumulation curves (SACs) that represent cumulative counts of increased species number with sampling area (<span class="citation">Gray, Ugland, and Lambshead (2004)</span>). Whilst the remainder of the paper and the described R package are focused on ISARs, the models and the model fitting procedure can equally be applied to SACs (see <span class="citation">Matthews, Triantis, et al. (2016)</span>), although it should be noted that in SACs the data points are not independent of one another.</p>
-<p>Over 20 SAR models have been described in the literature (<span class="citation">Dengler (2009)</span>, <span class="citation">Tjørve (2003)</span>, <span class="citation">Tjørve (2009)</span>, <span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>). However, despite this wide range of models, the majority of SAR studies are still based exclusively on the power model (<span class="citation">Arrhenius (1921)</span>), which if fitted in its non-linear (untransformed) form generally takes a convex form. Often, the log–log representation of the power model is used as it can be fitted using standard linear regression, and its parameters are more easily interpretable (<span class="citation">Rosenzweig (1995)</span>). However, whilst the power model has been found to provide a reasonable fit to a wide range of datasets (<span class="citation">Dengler (2009)</span>, <span class="citation">Matthews, Guilhaumon, et al. (2016)</span>), it is not universally the best model, and a number of studies have reported other models to provide better fits to empirical data (e.g. <span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>, <span class="citation">Matthews, Guilhaumon, et al. (2016)</span>). The possibility of scale dependency of the form of the SAR has long been of interest, with, for example, a theoretical case being made for SARs at intermediate spatial scales being approximated by a power model, whilst at larger spatial scales the form of the SAR has been theorised to be sigmoidal. Additionally, it is only recently that the SAR for archipelagos as units of analysis and not just islands has started to be studied, and thus we know little about the form of archipelago SARs.</p>
-<p>Due to the increased recognition of model uncertainty in SAR research, a number of recent studies have employed a multi-model inference approach (<span class="citation">Burnham and Anderson (2002)</span>) in the analysis of SARs, whereby either (1) multiple SAR models are compared using various criteria (e.g. AIC) and a best model is chosen (e.g. <span class="citation">Dengler (2009)</span>), or (2) multiple SAR models are fitted and a multi-model averaged curve is calculated using, for example, AIC weights (e.g. <span class="citation">Guilhaumon et al. (2008)</span>). We are not aware of any published software package that enables users to fit, and create multi-model averaged curves using more than eight SAR models. Considering currently available software, the BAT R package provides functions to fit three SAR models (linear, power and logarithmic); however, this package is focused on general biodiversity assessment and thus does not provide any additional SAR functionality. The mmSAR R package (<span class="citation">Guilhaumon, Mouillot, and Gimenez (2010)</span>) is focussed on SARs and while it allows users to fit eight SAR models using an information theoretic framework, it does not include several models that have been found to provide the best fits to several empirical datasets. To provide a set of tools to fill these gaps, we have developed the R package ‘sars’. The package provides functions to fit 20 SAR models using non-linear and linear regression, calculate multi-model averaged curves using various information criteria, and generate confidence intervals using bootstrapping. Novel features compared with mmSAR include (i) user-friendly functions for plotting (the user can now plot weighted multimodel SAR curves along with the individual SAR model curves) and (ii) determining the observed shape of the model fit (i.e. linear, convex up, convex down or sigmoidal) and (iii) presence or not of an asymptote, and (iv) functions to fit, plot and evaluate</p>
+<p>Over 20 SAR models have been described in the literature (<span class="citation">Dengler (2009)</span>, <span class="citation">Tjørve (2003)</span>, <span class="citation">Tjørve (2009)</span>, <span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>). However, despite this wide range of models, the majority of SAR studies are still based exclusively on the power model (<span class="citation">Arrhenius (1921)</span>), which if fitted in its non-linear (untransformed) form generally takes a convex form. Often, the log–log representation of the power model is used as it can be fitted using standard linear regression, and its parameters are more easily interpretable (<span class="citation">Rosenzweig (1995)</span>). However, whilst the power model has been found to provide a reasonable fit to a wide range of datasets (<span class="citation">Dengler (2009)</span>, <span class="citation">Matthews, Guilhaumon, et al. (2016)</span>), it is not universally the best model, and a number of studies have reported other models to provide better fits to empirical data (e.g. <span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>, <span class="citation">Matthews, Guilhaumon, et al. (2016)</span>). The possibility of scale dependency of the form of the SAR has long been of interest, with, for example, a theoretical case being made for SARs at intermediate spatial scales being approximated by a power model, whilst at larger spatial scales the form of the SAR has been theorised to be sigmoidal. Additionally, it is only recently that the SAR for archipelagos as units of analysis and not just islands has started to be studied, and thus we know little about the form of archipelago SARs.</p>
+<p>Due to the increased recognition of model uncertainty in SAR research, a number of recent studies have employed a multi-model inference approach (<span class="citation">Burnham and Anderson (2002)</span>) in the analysis of SARs, whereby either (1) multiple SAR models are compared using various criteria (e.g. AIC) and a best model is chosen (e.g. <span class="citation">Dengler (2009)</span>), or (2) multiple SAR models are fitted and a multi-model averaged curve is calculated using, for example, AIC weights (e.g. <span class="citation">Guilhaumon et al. (2008)</span>). We are not aware of any published software package that enables users to fit, and create multi-model averaged curves using more than eight SAR models. Considering currently available software, the BAT R package provides functions to fit three SAR models (linear, power and logarithmic); however, this package is focused on general biodiversity assessment and thus does not provide any additional SAR functionality. The mmSAR R package (<span class="citation">Guilhaumon, Mouillot, and Gimenez (2010)</span>) is focussed on SARs and while it allows users to fit eight SAR models using an information theoretic framework, it does not include several models that have been found to provide the best fits to several empirical datasets. To provide a set of tools to fill these gaps, we have developed the R package ‘sars’. The package provides functions to fit 20 SAR models using non-linear and linear regression, calculate multi-model averaged curves using various information criteria, and generate confidence intervals using bootstrapping. Novel features compared with mmSAR include (i) user-friendly functions for plotting (the user can now plot weighted multimodel SAR curves along with the individual SAR model curves) and (ii) determining the observed shape of the model fit (i.e. linear, convex up, convex down or sigmoidal) and (iii) presence or not of an asymptote, and (iv) functions to fit, plot and evaluate</p>
 <p><span class="citation">Coleman (1981)</span>’s random placement model using a species-site abundance matrix, and (v) to fit the general dynamic model (GDM) of island biogeography (<span class="citation">Whittaker, Triantis, and Ladle (2008)</span>). In addition, the mmSAR package (which has been deprecated) no longer complies with recognised programming good practice , is not on CRAN (the main repository of R packages), and is not user friendly (e.g. it requires the user to load individual models prior to fitting). There was therefore a need to design a new package from scratch.</p>
 </div>
 <div id="methods-and-features" class="section level2">
 <h2 class="hasAnchor">
 <a href="#methods-and-features" class="anchor"></a>METHODS AND FEATURES</h2>
-<p>The ‘sars’ (species–area relationships) package has been programmed using standard S3 methods and is available on CRAN (version 1.1.0) and the development version on GitHub (txm676/sars), meaning researchers can easily add in their own models and functions and integrate these into the multi-model inference framework. Thus, the package represents a resource for future SAR work that can be built on and expanded by workers in the field.</p>
+<p>The ‘sars’ (species–area relationships) package has been programmed using standard S3 methods and is available on CRAN (version 1.2.1) and the development version on GitHub (txm676/sars), meaning researchers can easily add in their own models and functions and integrate these into the multi-model inference framework. Thus, the package represents a resource for future SAR work that can be built on and expanded by workers in the field.</p>
 <p>Fitting individual SAR models and a set of SAR models The package provides functions to fit each of the 20 SAR models (see also <span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>). The ‘sar_models’ function can be used to bring up a list of the 20 model names and a Table can be generated in the package using the ‘display_sars_models’ function. With the exception of the linear model (which is fitted using standard linear regression), all models are fitted using non-linear regression and the model parameters are estimated by minimizing the residual sum of squares with an unconstrained Nelder-Mead optimization algorithm and the ‘optim’ R function. The starting values for the parameter estimates are carefully chosen to avoid numerical problems and to speed up the convergence process. However, custom starting values can be provided for any of the 20 models using the ‘start’ argument in the model fit functions.</p>
 <p>Each individual model fit returns an object of class ‘sars’, which is a list of 22 elements containing relevant model fit information, such as the model parameter estimates, the fitted values, the residuals, model fit statistics (e.g. AIC, R2), the observed model shape (linear, convex or sigmoidal), whether or not the fit is asymptotic, and convergence information. The returned object can easily be plotted using the ‘plot.sars’ generic function; as this function is based on the base R plotting framework, the plot aesthetics can be edited using standard plotting arguments (see the ‘plot.sars’ documentation in the package). Summary and print generic functions are also provided for class ‘sars’; these functions follow the output of the standard ‘lm’ function in the ‘stats’ R package. Multiple SAR models can be fitted to the same dataset using the ‘sar_multi’ function and the resultant n model fit objects stored together as a ‘fit_collection’ object. This object is a list of class ‘sars’, where each of the n elements contains an individual SAR model fit. Using the ‘plot.sars’ generic function on a ‘fit_collection’ object generates a grid of the n individual model fit plots (Fig. 1).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#load an example dataset (Preston, 1962), fit the logarithmic SAR model,</span>
-<span class="co">#return a model fit summary and plot the model fit. data(galap) </span>
-fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sar_loga.html">sar_loga</a></span>(<span class="dt">data =</span> galap) 
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit) </code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co">#load an example dataset (Preston, 1962), fit the logarithmic SAR model,</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="co">#return a model fit summary and plot the model fit. data(galap) </span></a>
+<a class="sourceLine" id="cb1-3" title="3">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sar_loga.html">sar_loga</a></span>(<span class="dt">data =</span> galap) </a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit) </a></code></pre></div>
 <pre><code>## 
 ## Model:
 ## Logarithmic
@@ -131,32 +131,32 @@ fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sar_log
 ## z  30.2802630   8.3203931   3.6392827   0.0026812  13.6394768 46.921
 ## 
 ## R-squared: 0.49, Adjusted R-squared: 0.41
-## AIC: 141.78, AICc: 143.78, BIC: 144.1
+## AIC: 187.19, AICc: 189.19, BIC: 189.51
 ## Observed shape: convex up, Asymptote: FALSE
 ## 
 ## 
 ## Warning: The fitted values of the model contain negative values (i.e. negative species richness values)</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fit)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fit)</a></code></pre></div>
 <p><img src="sars-r-package_files/figure-html/unnamed-chunk-2-1.png" width="100%"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Create a fit_collection object containing multiple SAR model fits, and </span>
-<span class="co">#plot all fits. </span>
-fitC &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sar_multi.html">sar_multi</a></span>(<span class="dt">data =</span> galap, <span class="dt">obj =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"power"</span>, <span class="st">"loga"</span>, <span class="st">"monod"</span>))</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="co">#Create a fit_collection object containing multiple SAR model fits, and </span></a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="co">#plot all fits. </span></a>
+<a class="sourceLine" id="cb4-3" title="3">fitC &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sar_multi.html">sar_multi</a></span>(<span class="dt">data =</span> galap, <span class="dt">obj =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"power"</span>, <span class="st">"loga"</span>, <span class="st">"monod"</span>))</a></code></pre></div>
 <pre><code>## 
 ##  Now attempting to fit the 3 SAR models: 
 ## 
-## ──  multi_sars ─────────────────────────────────────────────────────────────────────────────────── multi-model SAR ──
-## → power : ✔
-## → loga  : ✔
-## → monod : ✔</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fitC) <span class="co">#see Fig.1</span></code></pre></div>
+## --  multi_sars --------------------------- multi-model SAR --
+## &gt; power : v
+## &gt; loga  : v
+## &gt; monod : v</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fitC) <span class="co">#see Fig.1</span></a></code></pre></div>
 <p><img src="sars-r-package_files/figure-html/unnamed-chunk-3-1.png" width="100%"></p>
 <p>Model fit validation Model fits can be evaluated through tests of the normality and homoscedasticity of the residuals. Any of three tests can be selected to test the normality of the residuals: 1) the Lilliefors extension of the Kolmogorov normality test (the default; normaTest = “lillie”), 2) the Shapiro-Wilk test of normality (to be preferred when sample size is small; “shapiro”), and 3) the Kolmogorov-Smirnov test (“kolmo”). Alternatively, an option to omit a residuals normality test is provided (“none”). Three options are provided to check for the homogeneity of the residuals: 1) a correlation of the residuals with the model fitted values (the default; “cor.fitted”), 2) a correlation of the residuals with the area values (“cor.area”), or 3) no homogeneity test (“none”). If a test is selected and is significant at the 5% level a warning is provided in the model summary; alternatively, the full results of the three tests can be accessed in the model fit output. A third model validation check for negative predicted richness values (i.e. when at least one of the fitted values is negative) is automatically undertaken and a warning is provided in the model summary if negative values are predicted.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#load an example dataset, fit the linear SAR model whilst running residual</span>
-<span class="co">#normality and homogeneity tests, and return the results of the residual</span>
-<span class="co">#normality test </span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(galap) 
-fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sar_linear.html">sar_linear</a></span>(<span class="dt">data =</span> galap, <span class="dt">normaTest =</span><span class="st">"lillie"</span>, <span class="dt">homoTest =</span> <span class="st">"cor.fitted"</span>) 
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit) <span class="co">#a warning is provided  indicating the normality test failed </span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co">#load an example dataset, fit the linear SAR model whilst running residual</span></a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="co">#normality and homogeneity tests, and return the results of the residual</span></a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="co">#normality test </span></a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(galap) </a>
+<a class="sourceLine" id="cb7-5" title="5">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sar_linear.html">sar_linear</a></span>(<span class="dt">data =</span> galap, <span class="dt">normaTest =</span><span class="st">"lillie"</span>, <span class="dt">homoTest =</span> <span class="st">"cor.fitted"</span>) </a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit) <span class="co">#a warning is provided  indicating the normality test failed </span></a></code></pre></div>
 <pre><code>## 
 ## Model:
 ## Linear model
@@ -181,7 +181,7 @@ fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sar_lin
 ## 
 ## 
 ## Warning: The normality test selected indicated the model residuals are not normally distributed (i.e. P &lt; 0.05)</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit<span class="op">$</span>normaTest</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">fit<span class="op">$</span>normaTest</a></code></pre></div>
 <pre><code>## $test
 ## [1] "lillie"
 ## 
@@ -194,29 +194,29 @@ fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sar_lin
 <p>Observed model shape and identifying an asymptote Whilst each of the 20 models has a general shape (<span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>), the actual observed shape of the model fit can be different, for some models, depending on the parameter estimates. This is important as the shape of the curve has significant implications for conservation applications and the testing of macroecological theory (<span class="citation">Rosenzweig (1995)</span>). In ‘sars’, the observed shape of a model fit is determined using the sequential algorithm outlined in <span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>. The shape is calculated using the model fit within the observed range of area values. Briefly, the algorithm works by first determining whether the fit is a straight line. Then, if the fit is classified as not being linear, the observed shape is classified as either convex or sigmoidal by analysis of the second derivative (with respect to area) of the model fit (the full algorithm is detailed in <span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>, p. 220). There has also been considerable debate in the SAR literature as to whether or not the SAR is asymptotic. In the ‘sars’ package, to determine whether a fit is asymptotic, for the relevant models the fitted model parameters are analysed to check whether the estimated asymptote is within the range of the sample data (<span class="citation">Triantis, Guilhaumon, and Whittaker (2012)</span>).</p>
 <p>Multimodel SAR curve As well as fitting individual models, the package provides a function (‘sar_average’) to fit up to 20 models, compare the resultant fits using information criteria, and construct a multimodel-averaged SAR curve based on information criteria weight (see <span class="citation">Guilhaumon, Mouillot, and Gimenez (2010)</span>). The multimodel average curve is constructed as a linear combination of individual model fits by multiplying the predicted richness values of each of the successfully fitted models by the model’s information criterion weight, and then summing the resultant values across all models (<span class="citation">Burnham and Anderson (2002)</span>). Three information criteria are available in the package: AIC, AICc and BIC. Confidence intervals around the multimodel averaged curve can be calculated using a non-parametric bootstrap algorithm described in <span class="citation">Guilhaumon, Mouillot, and Gimenez (2010)</span>. Briefly, each of the SAR models used in the ‘sar_average’ function is fitted to the data, and the fitted values and residuals stored. The residuals are then transformed using the approach in <span class="citation">Davison and Hinkley (1997)</span> (p.259). For each bootstrap sample, an individual model fit is selected with the probability of selection being equal to that model’s information criterion weight. The transformed residuals from this fit are then sampled with replacement and added to the model’s fitted richness values. The ‘sar_average’ function is then used to fit all candidate SAR models to this bootstrapped set of response values, and the multimodel averaged fitted values stored. Percentile confidence intervals are then calculated using all bootstrapped fitted values.</p>
 <p>The ‘sar_average’ function can be used without specifying any models, in which case the package attempts to fit each of the 20 models in Table 1; alternatively, a vector of model names or a ‘fit_collection’ object (generated using the ‘sar_multi’ function) can be provided using the ‘obj’ argument. The three model validation tests listed above (normality and homogeneity of residuals, and negative predicted values) can be selected; if any model fails one or more of the tests during the fitting process it is removed from the resultant multimodel SAR curve. The output of the ‘sar_average’ function is a list of class ‘multi’ and class ‘sars’, with two elements. The first element (‘mmi’) contains the multi model inference (fitted values of the multimodel SAR curve), and the second element (‘details’) contains a range of information regarding the fitting process, including the successfully fitted models, the models removed due to failing any of the validation tests, and the information criterion values, delta values and weights for the successfully fitted models. The returned object can easily be plotted using the ‘plot.multi’ generic function, and multiple plot options are available (using the ‘type’ argument; see Fig. 2). The fits of all the successfully fitted models and the multimodel SAR curve (with or without confidence intervals) can be plotted together (‘type’ = “multi”), and a barplot of the information criterion weights of each model can also be produced (‘type’ = “bar”).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#load an example dataset (Niering, 1963), run the ‘sar_average’ function</span>
-<span class="co">#using a vector of model names and with no model validation tests, and</span>
-<span class="co">#produce the plots in Figure 2 of the paper </span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(niering) 
-
-<span class="co">#run the ‘sar_average’ function using a vector of model names </span>
-fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sar_average.html">sar_average</a></span>(<span class="dt">data=</span> niering, <span class="dt">obj =</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"power"</span>,<span class="st">"loga"</span>,<span class="st">"koba"</span>,<span class="st">"mmf"</span>,<span class="st">"monod"</span>,
-                                         <span class="st">"negexpo"</span>,<span class="st">"chapman"</span>,<span class="st">"weibull3"</span>,<span class="st">"asymp"</span>),
-<span class="dt">normaTest =</span> <span class="st">"none"</span>, <span class="dt">homoTest =</span> <span class="st">"none"</span>, <span class="dt">neg_check =</span> <span class="ot">FALSE</span>, <span class="dt">confInt =</span> <span class="ot">TRUE</span>, ciN
-=<span class="st"> </span><span class="dv">50</span>) <span class="co">#a message is provided indicating that one model (asymp) could not be</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="co">#load an example dataset (Niering, 1963), run the ‘sar_average’ function</span></a>
+<a class="sourceLine" id="cb11-2" title="2"><span class="co">#using a vector of model names and with no model validation tests, and</span></a>
+<a class="sourceLine" id="cb11-3" title="3"><span class="co">#produce the plots in Figure 2 of the paper </span></a>
+<a class="sourceLine" id="cb11-4" title="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(niering) </a>
+<a class="sourceLine" id="cb11-5" title="5"></a>
+<a class="sourceLine" id="cb11-6" title="6"><span class="co">#run the ‘sar_average’ function using a vector of model names </span></a>
+<a class="sourceLine" id="cb11-7" title="7">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sar_average.html">sar_average</a></span>(<span class="dt">data=</span> niering, <span class="dt">obj =</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"power"</span>,<span class="st">"loga"</span>,<span class="st">"koba"</span>,<span class="st">"mmf"</span>,<span class="st">"monod"</span>,</a>
+<a class="sourceLine" id="cb11-8" title="8">                                         <span class="st">"negexpo"</span>,<span class="st">"chapman"</span>,<span class="st">"weibull3"</span>,<span class="st">"asymp"</span>),</a>
+<a class="sourceLine" id="cb11-9" title="9"><span class="dt">normaTest =</span> <span class="st">"none"</span>, <span class="dt">homoTest =</span> <span class="st">"none"</span>, <span class="dt">neg_check =</span> <span class="ot">FALSE</span>, <span class="dt">confInt =</span> <span class="ot">TRUE</span>, ciN</a>
+<a class="sourceLine" id="cb11-10" title="10">=<span class="st"> </span><span class="dv">50</span>) <span class="co">#a message is provided indicating that one model (asymp) could not be</span></a></code></pre></div>
 <pre><code>## 
 ##  Now attempting to fit the 9 SAR models: 
 ## 
-## ──  multi_sars ─────────────────────────────────────────────────────────────────────────────────── multi-model SAR ──
-## → power    : ✔
-## → loga     : ✔
-## → koba     : ✔
-## → mmf      : ✔
-## → monod    : ✔
-## → negexpo  : ✔
-## → chapman  : Warning: could not compute parameters statistics
-## → weibull3 : ✔
-## → asymp    : ✖</code></pre>
+## --  multi_sars --------------------------- multi-model SAR --
+## &gt; power    : v
+## &gt; loga     : v
+## &gt; koba     : v
+## &gt; mmf      : v
+## &gt; monod    : v
+## &gt; negexpo  : v
+## &gt; chapman  : Warning: could not compute parameters statistics
+## &gt; weibull3 : v
+## &gt; asymp    : x</code></pre>
 <pre><code>## 
 ## 1 models could not be fitted and have been excluded  from the multi SAR</code></pre>
 <pre><code>## 
@@ -224,7 +224,7 @@ fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sar_ave
 ## 
 ## 8 remaining models used to construct the multi  SAR:
 ##  Power, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par. 
-## ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## -------------------------------------------------------------
 ## 
 ## Calculating sar_multi confidence intervals - this may take  some time:
 ## 
@@ -330,36 +330,38 @@ fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sar_ave
   |================================================================ |  98%
   |                                                                       
   |=================================================================| 100%</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#fitted</span>
-
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/par">par</a></span>(<span class="dt">mfrow =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">3</span>,<span class="dv">1</span>)) <span class="co">#plot all model fits with the multimodel SAR curve</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fit, <span class="dt">ModTitle =</span> <span class="st">"a) Multimodel SAR"</span>)
-
-<span class="co">#plot the multimodel SAR curve (with confidence intervals; see explanation</span>
-<span class="co">#in the main text, above) on its own </span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fit, <span class="dt">allCurves =</span> <span class="ot">FALSE</span>, <span class="dt">ModTitle =</span>
-      <span class="st">"c) Multimodel SAR with confidence intervals"</span>, <span class="dt">confInt =</span> <span class="ot">TRUE</span>)
-
-<span class="co">#Barplot of the information criterion weights of each model </span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fit, <span class="dt">type =</span> <span class="st">"bar"</span>, <span class="dt">ModTitle =</span> <span class="st">"b) Model weights"</span>, <span class="dt">cex.lab =</span> <span class="fl">1.3</span>)</code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co">#fitted</span></a>
+<a class="sourceLine" id="cb15-2" title="2"></a>
+<a class="sourceLine" id="cb15-3" title="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/par">par</a></span>(<span class="dt">mfrow =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">3</span>,<span class="dv">1</span>)) <span class="co">#plot all model fits and the multimodel SAR curve as a separate curve on top</span></a>
+<a class="sourceLine" id="cb15-4" title="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fit, <span class="dt">ModTitle =</span> <span class="st">"a) Multimodel SAR"</span>, <span class="dt">mmSep =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb15-5" title="5"></a>
+<a class="sourceLine" id="cb15-6" title="6"><span class="co">#plot the multimodel SAR curve (with confidence intervals; see explanation</span></a>
+<a class="sourceLine" id="cb15-7" title="7"><span class="co">#in the main text, above) on its own </span></a>
+<a class="sourceLine" id="cb15-8" title="8"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fit, <span class="dt">allCurves =</span> <span class="ot">FALSE</span>, <span class="dt">ModTitle =</span></a>
+<a class="sourceLine" id="cb15-9" title="9">      <span class="st">"c) Multimodel SAR with confidence intervals"</span>, <span class="dt">confInt =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb15-10" title="10"></a>
+<a class="sourceLine" id="cb15-11" title="11"><span class="co">#Barplot of the information criterion weights of each model </span></a>
+<a class="sourceLine" id="cb15-12" title="12"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fit, <span class="dt">type =</span> <span class="st">"bar"</span>, <span class="dt">ModTitle =</span> <span class="st">"b) Model weights"</span>, <span class="dt">cex.lab =</span> <span class="fl">1.3</span>)</a></code></pre></div>
 <p><img src="sars-r-package_files/figure-html/unnamed-chunk-5-1.png" width="100%"></p>
 </div>
 <div id="additional-functions" class="section level2">
 <h2 class="hasAnchor">
 <a href="#additional-functions" class="anchor"></a>Additional functions</h2>
 <p>In addition to the main functions used to fit and compare the 20 SAR models, the sars package provides additional functions for specific SAR-based analyses. First, a function is provided to fit the log–log version of the power model (a function that is often fitted in SAR studies; Rosenzweig 1995) and compare parameter values with those generated using the non-linear power model. The log–log version of the power model is not equivalent to its non-linear counterpart because of non-equivalence in the study of the variation in a variable and in its transformation, and bias of back-transformed results obtained on a logarithmic scale. Second, a function has been added that enables the fitting of <span class="citation">Coleman (1981)</span>’s random placement model to a species/sites abundance matrix. According to this model, the number of species occurring on an island depends on the relative area of the island and the regional relative species abundances. The fit of the random placement model can be determined through use of a diagnostic plot (which can be generated from the function output) of island area (log transformed) against species richness, alongside the model’s predicted values (see <span class="citation">Wang et al. (2010)</span>). Following <span class="citation">Wang et al. (2010)</span>, the model is rejected if more than a third of the observed data points fall beyond one standard deviation from the expected curve. Finally, a function is provided to fit the general dynamic model of island biogeography (<span class="citation">Whittaker, Triantis, and Ladle (2008)</span>) using three different SAR models (linear, logarithmic and power).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#load an example dataset, fit the log-log power model, return a model fit</span>
-<span class="co">#summary and plot the model fit. When ‘compare’ == TRUE, the non-linear</span>
-<span class="co">#power model is also fitted and the resultant parameter values compared. </span>
-<span class="co">#If any islands have zero species, a constant (‘con’) is added to all </span>
-<span class="co">#species richness values. </span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(galap) 
-fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/lin_pow.html">lin_pow</a></span>(<span class="dt">dat =</span> galap, <span class="dt">compare =</span> <span class="ot">TRUE</span>, <span class="dt">con =</span> <span class="dv">1</span>) 
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit) </code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="co">#load an example dataset, fit the log-log power model, return a model fit</span></a>
+<a class="sourceLine" id="cb16-2" title="2"><span class="co">#summary and plot the model fit. When ‘compare’ == TRUE, the non-linear</span></a>
+<a class="sourceLine" id="cb16-3" title="3"><span class="co">#power model is also fitted and the resultant parameter values compared. </span></a>
+<a class="sourceLine" id="cb16-4" title="4"><span class="co">#If any islands have zero species, a constant (‘con’) is added to all </span></a>
+<a class="sourceLine" id="cb16-5" title="5"><span class="co">#species richness values. </span></a>
+<a class="sourceLine" id="cb16-6" title="6"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(galap) </a>
+<a class="sourceLine" id="cb16-7" title="7">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/lin_pow.html">lin_pow</a></span>(<span class="dt">dat =</span> galap, <span class="dt">compare =</span> <span class="ot">TRUE</span>, <span class="dt">con =</span> <span class="dv">1</span>) </a>
+<a class="sourceLine" id="cb16-8" title="8"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit) </a></code></pre></div>
 <pre><code>## Model = Log-log power
 ## 
+## Log-transformation function used: log()
+## 
 ## Call:
-## lm(formula = S ~ A, data = log.data)
+## lm(formula = logT(S) ~ logT(A), data = data)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
@@ -379,22 +381,22 @@ fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/lin_pow
 ## Power (non-linear) parameters:
 ##  c = 33.18 
 ##  z = 0.28</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fit)</code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fit)</a></code></pre></div>
 <p><img src="sars-r-package_files/figure-html/unnamed-chunk-6-1.png" width="100%"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#load an example dataset, fit the random placement model and plot the </span>
-<span class="co">#model fit and standard deviation. The ‘data’ argument requires a species-</span>
-<span class="co">#site abundance matrix: rows are species and columns are sites. The area </span>
-<span class="co">#argument requires a vector of site (island) area values. </span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(cole_sim) 
-fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/coleman.html">coleman</a></span>(<span class="dt">data =</span> cole_sim[[<span class="dv">1</span>]], <span class="dt">area =</span> cole_sim[[<span class="dv">2</span>]]) 
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fit, <span class="dt">ModTitle =</span> <span class="st">"Hetfield"</span>)</code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="co">#load an example dataset, fit the random placement model and plot the </span></a>
+<a class="sourceLine" id="cb19-2" title="2"><span class="co">#model fit and standard deviation. The ‘data’ argument requires a species-</span></a>
+<a class="sourceLine" id="cb19-3" title="3"><span class="co">#site abundance matrix: rows are species and columns are sites. The area </span></a>
+<a class="sourceLine" id="cb19-4" title="4"><span class="co">#argument requires a vector of site (island) area values. </span></a>
+<a class="sourceLine" id="cb19-5" title="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(cole_sim) </a>
+<a class="sourceLine" id="cb19-6" title="6">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/coleman.html">coleman</a></span>(<span class="dt">data =</span> cole_sim[[<span class="dv">1</span>]], <span class="dt">area =</span> cole_sim[[<span class="dv">2</span>]]) </a>
+<a class="sourceLine" id="cb19-7" title="7"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fit, <span class="dt">ModTitle =</span> <span class="st">"Hetfield"</span>)</a></code></pre></div>
 <p><img src="sars-r-package_files/figure-html/unnamed-chunk-6-2.png" width="100%"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#load an example dataset, fit the GDM using the logarithmic SAR model, and</span>
-<span class="co">#compare the GDM with three alternative (nested) models: area and time </span>
-<span class="co">#(age of each island), area only, and intercept only. </span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(galap) 
-galap<span class="op">$</span>t &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/GammaDist">rgamma</a></span>(<span class="dv">16</span>, <span class="dv">5</span>, <span class="dt">scale =</span> <span class="dv">2</span>)<span class="co">#add a random time variable </span>
-<span class="kw"><a href="../reference/gdm.html">gdm</a></span>(<span class="dt">data =</span> galap, <span class="dt">model =</span> <span class="st">"loga"</span>, <span class="dt">mod_sel =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co">#load an example dataset, fit the GDM using the logarithmic SAR model, and</span></a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="co">#compare the GDM with three alternative (nested) models: area and time </span></a>
+<a class="sourceLine" id="cb20-3" title="3"><span class="co">#(age of each island), area only, and intercept only. </span></a>
+<a class="sourceLine" id="cb20-4" title="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(galap) </a>
+<a class="sourceLine" id="cb20-5" title="5">galap<span class="op">$</span>t &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/GammaDist">rgamma</a></span>(<span class="dv">16</span>, <span class="dv">5</span>, <span class="dt">scale =</span> <span class="dv">2</span>)<span class="co">#add a random time variable </span></a>
+<a class="sourceLine" id="cb20-6" title="6"><span class="kw"><a href="../reference/gdm.html">gdm</a></span>(<span class="dt">data =</span> galap, <span class="dt">model =</span> <span class="st">"loga"</span>, <span class="dt">mod_sel =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## 
 ##  GDM fit using the logarithmic SAR model 
 ## 
@@ -404,76 +406,157 @@ galap<span class="op">$</span>t &lt;-<span class="st"> </span><span class="kw"><
 ##   model: SR ~ Int + A * log(Area) + Ti * Time + Ti2 * Time^2
 ##    data: data
 ##      Int        A       Ti      Ti2 
-## -177.962   39.252   32.766   -1.455 
-##  residual sum-of-squares: 68265
+## -167.990   29.028   43.848   -2.285 
+##  residual sum-of-squares: 64705
 ## 
 ## Number of iterations to convergence: 1 
-## Achieved convergence tolerance: 5.435e-08
+## Achieved convergence tolerance: 3.557e-08
 ## 
 ## All model summaries:
 ## 
 ##                 RSE      AIC Delta.AIC
 ## A          74.44350 187.1908  0.000000
-## GDM        75.42370 189.1430  1.952183
-## A + T      77.21655 189.1754  1.984619
+## GDM        73.43084 188.2861  1.095301
+## A + T      77.18542 189.1625  1.971716
 ## Intercept 100.32744 195.8435  8.652648</code></pre>
+</div>
+<div id="sar-extrapolation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#sar-extrapolation" class="anchor"></a>SAR extrapolation</h2>
+<p>Extrapolation (e.g. predicting the richness of areas too large to be sampled) is one of the primary uses of the SAR. Using an individual SAR model fit, extrapolation simply involves using the model function in combination with the parameter values estimated using the observed area / richness data to predict the richness on a larger area. An alternative extrapolation approach to simply using an individual model l is to use multi-model inference and model averaging, whereby a larger number of n models is fitted to a set of islands, the models ranked according to some criterion (e.g. Akaike’s information criterion, AIC) and the criterion values converted into model weights (i.e. the conditional probabilities for each of the n models). The n models are then each used to predict the richness of a larger area and these predictions are multiplied by the respective model weights and summed to provide a multi-model averaged prediction. Both of these options are available inside the package.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="co">#fit the power model and predict richness on an island of area = 5000</span></a>
+<a class="sourceLine" id="cb22-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(galap)</a>
+<a class="sourceLine" id="cb22-3" title="3">p &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sar_power.html">sar_power</a></span>(<span class="dt">data =</span> galap)</a>
+<a class="sourceLine" id="cb22-4" title="4"><span class="kw"><a href="../reference/sar_pred.html">sar_pred</a></span>(p, <span class="dt">area =</span> <span class="dv">5000</span>)</a></code></pre></div>
+<pre><code>## 
+## This is a sar_pred object:
+## 
+##   Model Area Prediction
+## 1 Power 5000   370.1389</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="co">#fit three SAR models and predict richness on islands of area = 5000 &amp; 10000</span></a>
+<a class="sourceLine" id="cb24-2" title="2">p2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sar_multi.html">sar_multi</a></span>(galap, <span class="dt">obj =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"power"</span>, <span class="st">"loga"</span>, <span class="st">"koba"</span>))</a></code></pre></div>
+<pre><code>## 
+##  Now attempting to fit the 3 SAR models: 
+## 
+## --  multi_sars --------------------------- multi-model SAR --
+## &gt; power : v
+## &gt; loga  : v
+## &gt; koba  : v</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="kw"><a href="../reference/sar_pred.html">sar_pred</a></span>(p2, <span class="dt">area =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">5000</span>, <span class="dv">10000</span>))</a></code></pre></div>
+<pre><code>## 
+## This is a sar_pred object:
+## 
+##         Model  Area Prediction
+## 1       Power  5000   370.1389
+## 2       Power 10000   450.4146
+## 3 Logarithmic  5000   258.1944
+## 4 Logarithmic 10000   279.1831
+## 5   Kobayashi  5000   290.6838
+## 6   Kobayashi 10000   318.4181</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="co">#calculate a multi-model curve and predict richness on islands of area = 5000 &amp; 10000</span></a>
+<a class="sourceLine" id="cb28-2" title="2">p3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sar_average.html">sar_average</a></span>(<span class="dt">data =</span> galap)</a></code></pre></div>
+<pre><code>## 
+##  Now attempting to fit the 20 SAR models: 
+## 
+## --  multi_sars --------------------------- multi-model SAR --
+## &gt; power    : v
+## &gt; powerR   : v
+## &gt; epm1     : v
+## &gt; epm2     : v
+## &gt; p1       : v
+## &gt; p2       : v
+## &gt; loga     : v
+## &gt; koba     : v
+## &gt; mmf      : v
+## &gt; monod    : v
+## &gt; negexpo  : v
+## &gt; chapman  : Warning: could not compute parameters statistics
+## &gt; weibull3 : v
+## &gt; asymp    : v
+## &gt; ratio    : v
+## &gt; gompertz : v
+## &gt; weibull4 : v
+## &gt; betap    : v
+## &gt; heleg    : v
+## &gt; linear   : v
+## 
+## Model fitting completed - all models succesfully fitted.  Now undertaking model validation checks.
+## Additional models  will be excluded if necessary:</code></pre>
+<pre><code>## 
+## 4 models failed the residuals normality test and  have been excluded  from the multi SAR:
+## Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model</code></pre>
+<pre><code>## 16 remaining models used to construct the multi  SAR:
+##  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
+## -------------------------------------------------------------</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1"><span class="kw"><a href="../reference/sar_pred.html">sar_pred</a></span>(p3, <span class="dt">area =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">5000</span>, <span class="dv">10000</span>))</a></code></pre></div>
+<pre><code>## 
+## This is a sar_pred object:
+## 
+##   Model  Area Prediction
+## 1 Multi  5000   227.1291
+## 2 Multi 10000   239.7867</code></pre>
+</div>
+<div id="on-the-calculation-of-information-criteria" class="section level2">
+<h2 class="hasAnchor">
+<a href="#on-the-calculation-of-information-criteria" class="anchor"></a>On the calculation of information criteria</h2>
+<p>There are different ways to calculate the various information criteria (IC) used for model comparison (e.g. AIC, BIC). One difference relates to whether the residual sum of squares (rss) or the log-likelihood (ll) is used. Under standard assumptions (e.g. independence of data points, homoscedasticity and normality of the residuals), the two approaches produce identical parameter estimates for regression models. However, the formulas are different and thus can produce different IC values for the same model. For example, historically in the ‘sars’ package we have calculated IC values using formulas based on the rss (Burnham &amp; Anderson, 2002; Guilhaumon et al. 2008). This meant that the IC values generated in ‘sars’ were not comparable with values generated in packages using different formulas. For example, in the nls (the main function for non-linear regression in R) and lm functions in the stats R package, a ll approach is used, meaning IC values from models fitted using nls could not be compared with IC values from sars models. To re-iterate, the parameter estimates are comparable, it is simply that the IC values will differ. In the most recent version of ‘sars’ (version 1.2.2) we have changed our IC formulas to match those in nls and lm. Thus, if users have built their own models using nls (or lm) and wish to compare IC values with models fitted in ‘sars’, this is now straightforward. To re-create IC values from previous studies (i.e. those using a version of sars pre 1.2.2), it will be necessary to download sars Version 1.2.1 or earlier (either from CRAN or GitHub; version 1.1.1 was published as a release on GitHub). It is important to note that these are not the only two ways of calculating ICs for regression models, and other formulas exits. Thus, if building models using other functions and packages (i.e. other than nls or lm), users should make sure to check how these packages calculate IC values before comparing with models fitted in sars. In sars, as in nls, we include an additional parameter for estimation of the variance. For example, the power model is considered to have three parameters when calculating IC values. Finally, if users are comparing models fitted in sars with their own models fitted using other packages, it is essential that IC values are all calculated using the same dependent variable (i.e. non-transformed richness values and not logged richness, as sars only uses the former currently).</p>
 </div>
 <div id="conclusions" class="section level2">
 <h2 class="hasAnchor">
 <a href="#conclusions" class="anchor"></a>CONCLUSIONS</h2>
-<p>The SAR has been a cornerstone of ecological and biogeographical science for almost a century and its form and fit are still of great significance in both theoretical and applied contexts. The development of the ‘sars’ R package should aid future SAR research by providing a comprehensive set of tools that enable in-depth exploration of SARs and SAR-related patterns. In addition, the package has been designed in such a way as to allow other SAR researchers to add (e.g. via GitHub) new functions and models in the future to ensure the package is of lasting value. For example, future additions to the package could include the suite of countryside biogeography SAR models that have recently been published, standard SAR functions not so far incorporated, or functions specifically intended for analysis of species accumulation curves or endemics–area relationships. Finally, whilst the focus of this paper has been on classic SARs, there is no reason that the functionality in the ‘sars’ package cannot be used to analyse other diversity–area relationships (e.g. functional or phylogenetic diversity–area relationships). Application of the full set of 20 models, in addition to the multimodel SAR framework, included in the ‘sars’ package to a wider range and type of data (e.g. trait and phylogenetic data) will likely be revealing and will help in improving our understanding of SARs, and diversity–area relationships more generally.</p>
+<p>The SAR has been a cornerstone of ecological and biogeographical science for almost a century and its form and fit are still of great significance in both theoretical and applied contexts. The development of the ‘sars’ R package should aid future SAR research by providing a comprehensive set of tools that enable in-depth exploration of SARs and SAR-related patterns. In addition, the package has been designed in such a way as to allow other SAR researchers to add (e.g. via GitHub) new functions and models in the future to ensure the package is of lasting value. For example, future additions to the package could include the suite of countryside biogeography SAR models that have recently been published, standard SAR functions not so far incorporated, or functions specifically intended for analysis of species accumulation curves or endemics–area relationships. Finally, whilst the focus of this paper has been on classic SARs, there is no reason that the functionality in the ‘sars’ package cannot be used to analyse other diversity–area relationships (e.g. functional or phylogenetic diversity–area relationships). Application of the full set of 20 models, in addition to the multimodel SAR framework, included in the ‘sars’ package to a wider range and type of data (e.g. trait and phylogenetic data) will likely be revealing and will help in improving our understanding of SARs, and diversity–area relationships more generally.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
 <div id="ref-Arrhenius1921">
-<p>Arrhenius, Olof. 1921. “Species and Area.” <em>The Journal of Ecology</em> 9 (1). British Ecological Society: 95. doi:<a href="https://doi.org/10.2307/2255763">10.2307/2255763</a>.</p>
+<p>Arrhenius, Olof. 1921. “Species and Area.” <em>The Journal of Ecology</em> 9 (1): 95. <a href="https://doi.org/10.2307/2255763">https://doi.org/10.2307/2255763</a>.</p>
 </div>
 <div id="ref-BurnhamAnderson2002">
 <p>Burnham, K. P., and D.R Anderson. 2002. <em>Model Selection and Multi-Model Inference: A Practical Information-Theoretic Approach</em>. Book. 2nd ed. New-York: Springer.</p>
 </div>
 <div id="ref-Coleman1981">
-<p>Coleman, Bernard D. 1981. “On Random Placement and Species-Area Relations.” Journal Article. <em>Mathematical Biosciences</em> 54 (3–4): 191–215. doi:<a href="https://doi.org/http://dx.doi.org/10.1016/0025-5564(81)90086-9">http://dx.doi.org/10.1016/0025-5564(81)90086-9</a>.</p>
+<p>Coleman, Bernard D. 1981. “On Random Placement and Species-Area Relations.” Journal Article. <em>Mathematical Biosciences</em> 54 (3–4): 191–215. <a href="https://doi.org/10.1016/0025-5564(81)90086-9">https://doi.org/10.1016/0025-5564(81)90086-9</a>.</p>
 </div>
 <div id="ref-DavisonHinkley1997">
 <p>Davison, A. C., and D. V. Hinkley. 1997. <em>Bootstrap Methods and Their Application</em>. Book. Cambridge: Cambridge University Press.</p>
 </div>
 <div id="ref-Dengler2009">
-<p>Dengler, Jürgen. 2009. “Which Function Describes the Species–area Relationship Best? A Review and Empirical Evaluation.” Journal Article. <em>Journal of Biogeography</em> 36 (4): 728–44. doi:<a href="https://doi.org/10.1111/j.1365-2699.2008.02038.x">10.1111/j.1365-2699.2008.02038.x</a>.</p>
+<p>Dengler, Jürgen. 2009. “Which Function Describes the Species–Area Relationship Best? A Review and Empirical Evaluation.” Journal Article. <em>Journal of Biogeography</em> 36 (4): 728–44. <a href="https://doi.org/10.1111/j.1365-2699.2008.02038.x">https://doi.org/10.1111/j.1365-2699.2008.02038.x</a>.</p>
 </div>
 <div id="ref-Gray2004">
-<p>Gray, John S., Karl I. Ugland, and John Lambshead. 2004. “On Species Accumulation and Species–area Curves.” Journal Article. <em>Global Ecology and Biogeography</em> 13 (6): 567–68. doi:<a href="https://doi.org/10.1111/j.1466-822X.2004.00138.x">10.1111/j.1466-822X.2004.00138.x</a>.</p>
+<p>Gray, John S., Karl I. Ugland, and John Lambshead. 2004. “On Species Accumulation and Species–Area Curves.” Journal Article. <em>Global Ecology and Biogeography</em> 13 (6): 567–68. <a href="https://doi.org/10.1111/j.1466-822X.2004.00138.x">https://doi.org/10.1111/j.1466-822X.2004.00138.x</a>.</p>
 </div>
 <div id="ref-Guilhaumon2008">
-<p>Guilhaumon, François, Olivier Gimenez, Kevin J. Gaston, and David Mouillot. 2008. “Taxonomic and Regional Uncertainty in Species-Area Relationships and the Identification of Richness Hotspots.” Journal Article. <em>Proceedings of the National Academy of Sciences USA</em> 105 (40): 15458–63. doi:<a href="https://doi.org/10.1073/pnas.0803610105">10.1073/pnas.0803610105</a>.</p>
+<p>Guilhaumon, François, Olivier Gimenez, Kevin J. Gaston, and David Mouillot. 2008. “Taxonomic and Regional Uncertainty in Species-Area Relationships and the Identification of Richness Hotspots.” Journal Article. <em>Proceedings of the National Academy of Sciences USA</em> 105 (40): 15458–63. <a href="https://doi.org/10.1073/pnas.0803610105">https://doi.org/10.1073/pnas.0803610105</a>.</p>
 </div>
 <div id="ref-Guilhaumon2010">
-<p>Guilhaumon, François, David Mouillot, and Olivier Gimenez. 2010. “MmSAR: An R-Package for Multimodel Species–area Relationship Inference.” Journal Article. <em>Ecography</em> 33 (2): 420–24. doi:<a href="https://doi.org/10.1111/j.1600-0587.2010.06304.x">10.1111/j.1600-0587.2010.06304.x</a>.</p>
+<p>Guilhaumon, François, David Mouillot, and Olivier Gimenez. 2010. “MmSAR: An R-Package for Multimodel Species–Area Relationship Inference.” Journal Article. <em>Ecography</em> 33 (2): 420–24. <a href="https://doi.org/10.1111/j.1600-0587.2010.06304.x">https://doi.org/10.1111/j.1600-0587.2010.06304.x</a>.</p>
 </div>
 <div id="ref-MacArthurWilson1967">
 <p>MacArthur, R.H, and E.O Wilson. 1967. <em>The Theory of Island Biogeography</em>. Book. Princeton: Princeton University Press.</p>
 </div>
 <div id="ref-Matthews2016b">
-<p>Matthews, Thomas J., François Guilhaumon, Kostas A. Triantis, Michael K. Borregaard, and Robert J. Whittaker. 2016. “On the Form of Species–area Relationships in Habitat Islands and True Islands.” Journal Article. <em>Global Ecology and Biogeography</em> 25: 847–58. doi:<a href="https://doi.org/10.1111/geb.12269">10.1111/geb.12269</a>.</p>
+<p>Matthews, Thomas J., François Guilhaumon, Kostas A. Triantis, Michael K. Borregaard, and Robert J. Whittaker. 2016. “On the Form of Species–Area Relationships in Habitat Islands and True Islands.” Journal Article. <em>Global Ecology and Biogeography</em> 25: 847–58. <a href="https://doi.org/10.1111/geb.12269">https://doi.org/10.1111/geb.12269</a>.</p>
 </div>
 <div id="ref-Matthews2016a">
-<p>Matthews, Thomas J., Kostas A. Triantis, François Rigal, Michael K. Borregaard, François Guilhaumon, and Robert J. Whittaker. 2016. “Island Species–area Relationships and Species Accumulation Curves Are Not Equivalent: An Analysis of Habitat Island Datasets.” Journal Article. <em>Global Ecology and Biogeography</em> 25 (5): 607–18. doi:<a href="https://doi.org/10.1111/geb.12439">10.1111/geb.12439</a>.</p>
+<p>Matthews, Thomas J., Kostas A. Triantis, François Rigal, Michael K. Borregaard, François Guilhaumon, and Robert J. Whittaker. 2016. “Island Species–Area Relationships and Species Accumulation Curves Are Not Equivalent: An Analysis of Habitat Island Datasets.” Journal Article. <em>Global Ecology and Biogeography</em> 25 (5): 607–18. <a href="https://doi.org/10.1111/geb.12439">https://doi.org/10.1111/geb.12439</a>.</p>
 </div>
 <div id="ref-Rosenzweig1995">
 <p>Rosenzweig, M.L. 1995. <em>Species Diversity in Space and Time</em>. Book. Cambridge: Cambridge University Press.</p>
 </div>
 <div id="ref-Tjorve2003">
-<p>Tjørve, Even. 2003. “Shapes and functions of species-area curves: a review of possible models.” <em>Journal of Biogeography</em> 30 (6). Blackwell Science Ltd: 827–35. <a href="http://doi.wiley.com/10.1046/j.1365-2699.2003.00877.x" class="uri">http://doi.wiley.com/10.1046/j.1365-2699.2003.00877.x</a>.</p>
+<p>Tjørve, Even. 2003. “Shapes and functions of species-area curves: a review of possible models.” <em>Journal of Biogeography</em> 30 (6): 827–35. <a href="http://doi.wiley.com/10.1046/j.1365-2699.2003.00877.x">http://doi.wiley.com/10.1046/j.1365-2699.2003.00877.x</a>.</p>
 </div>
 <div id="ref-Tjorve2009">
-<p>———. 2009. “Shapes and functions of species-area curves (II): a review of new models and parameterizations.” <em>Journal of Biogeography</em> 36 (8). Wiley Online Library: 1435–45. doi:<a href="https://doi.org/10.1111/j.1365-2699.2009.02101.x">10.1111/j.1365-2699.2009.02101.x</a>.</p>
+<p>———. 2009. “Shapes and functions of species-area curves (II): a review of new models and parameterizations.” <em>Journal of Biogeography</em> 36 (8): 1435–45. <a href="https://doi.org/10.1111/j.1365-2699.2009.02101.x">https://doi.org/10.1111/j.1365-2699.2009.02101.x</a>.</p>
 </div>
 <div id="ref-Triantis2012">
-<p>Triantis, Kostas A., François Guilhaumon, and Robert J. Whittaker. 2012. “The Island Species–area Relationship: Biology and Statistics.” Journal Article. <em>Journal of Biogeography</em> 39 (2): 215–31. doi:<a href="https://doi.org/10.1111/j.1365-2699.2011.02652.x">10.1111/j.1365-2699.2011.02652.x</a>.</p>
+<p>Triantis, Kostas A., François Guilhaumon, and Robert J. Whittaker. 2012. “The Island Species–Area Relationship: Biology and Statistics.” Journal Article. <em>Journal of Biogeography</em> 39 (2): 215–31. <a href="https://doi.org/10.1111/j.1365-2699.2011.02652.x">https://doi.org/10.1111/j.1365-2699.2011.02652.x</a>.</p>
 </div>
 <div id="ref-Wang2010">
-<p>Wang, Yanping, Yixin Bao, Mingjian Yu, Gaofu Xu, and Ping Ding. 2010. “Nestedness for Different Reasons: The Distributions of Birds, Lizards and Small Mammals on Islands of an Inundated Lake.” Journal Article. <em>Diversity and Distributions</em> 16 (5): 862–73. doi:<a href="https://doi.org/10.1111/j.1472-4642.2010.00682.x">10.1111/j.1472-4642.2010.00682.x</a>.</p>
+<p>Wang, Yanping, Yixin Bao, Mingjian Yu, Gaofu Xu, and Ping Ding. 2010. “Nestedness for Different Reasons: The Distributions of Birds, Lizards and Small Mammals on Islands of an Inundated Lake.” Journal Article. <em>Diversity and Distributions</em> 16 (5): 862–73. <a href="https://doi.org/10.1111/j.1472-4642.2010.00682.x">https://doi.org/10.1111/j.1472-4642.2010.00682.x</a>.</p>
 </div>
 <div id="ref-Whittaker2008">
 <p>Whittaker, R.J, K.A Triantis, and R.J Ladle. 2008. “A General Dynamic Theory of Oceanic Island Biogeography.” Journal Article. <em>Journal of Biogeography</em> 35 (6): 977–94.</p>
@@ -490,6 +573,8 @@ galap<span class="op">$</span>t &lt;-<span class="st"> </span><span class="kw"><
 <li><a href="#background">BACKGROUND</a></li>
       <li><a href="#methods-and-features">METHODS AND FEATURES</a></li>
       <li><a href="#additional-functions">Additional functions</a></li>
+      <li><a href="#sar-extrapolation">SAR extrapolation</a></li>
+      <li><a href="#on-the-calculation-of-information-criteria">On the calculation of information criteria</a></li>
       <li><a href="#conclusions">CONCLUSIONS</a></li>
       <li><a href="#references">References</a></li>
       </ul>

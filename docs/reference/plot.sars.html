@@ -73,7 +73,7 @@ For plotting a 'sar_average' object, see plot.multi." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.2</span>
       </span>
     </div>
 
@@ -146,11 +146,27 @@ For plotting a 'sar_average' object, see plot.multi." />
     </div>
 
     <pre class="usage"><span class='co'># S3 method for sars</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>mfplot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>pch</span> <span class='kw'>=</span> <span class='fl'>16</span>, <span class='kw'>cex</span> <span class='kw'>=</span> <span class='fl'>1.2</span>, <span class='kw'>pcol</span> <span class='kw'>=</span> <span class='st'>"dodgerblue2"</span>, <span class='kw'>ModTitle</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>TiAdj</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>TiLine</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>cex.main</span> <span class='kw'>=</span> <span class='fl'>1.5</span>, <span class='kw'>cex.lab</span> <span class='kw'>=</span> <span class='fl'>1.3</span>,
-  <span class='kw'>cex.axis</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>yRange</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>lcol</span> <span class='kw'>=</span> <span class='st'>"dodgerblue2"</span>,
-  <span class='kw'>di</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pLeg</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(
+  <span class='no'>x</span>,
+  <span class='kw'>mfplot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>pch</span> <span class='kw'>=</span> <span class='fl'>16</span>,
+  <span class='kw'>cex</span> <span class='kw'>=</span> <span class='fl'>1.2</span>,
+  <span class='kw'>pcol</span> <span class='kw'>=</span> <span class='st'>"dodgerblue2"</span>,
+  <span class='kw'>ModTitle</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>TiAdj</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>TiLine</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>cex.main</span> <span class='kw'>=</span> <span class='fl'>1.5</span>,
+  <span class='kw'>cex.lab</span> <span class='kw'>=</span> <span class='fl'>1.3</span>,
+  <span class='kw'>cex.axis</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>yRange</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='kw'>lcol</span> <span class='kw'>=</span> <span class='st'>"dodgerblue2"</span>,
+  <span class='kw'>di</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>pLeg</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>
+)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -263,10 +279,10 @@ and thus the default is <code>pLeg = FALSE</code>.</p></td>
 <span class='no'>fc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sar_multi.html'>sar_multi</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>galap</span>, <span class='kw'>obj</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"power"</span>, <span class='st'>"loga"</span>, <span class='st'>"epm1"</span>))</div><div class='output co'>#&gt; 
 #&gt;  Now attempting to fit the 3 SAR models: 
 #&gt; 
-#&gt; ──  multi_sars ─────────────────────────────────────────────────────────────────────────────────── multi-model SAR ──
-#&gt; → power : ✔
-#&gt; → loga  : ✔
-#&gt; → epm1  : ✔</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fc</span>, <span class='kw'>ModTitle</span> <span class='kw'>=</span> <span class='no'>letters</span>[<span class='fl'>1</span>:<span class='fl'>3</span>], <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='st'>"Size of island"</span>)</div><div class='img'><img src='plot.sars-2.png' alt='' width='700' height='433' /></div></pre>
+#&gt; --  multi_sars --------------------------- multi-model SAR --
+#&gt; &gt; power : v
+#&gt; &gt; loga  : v
+#&gt; &gt; epm1  : v</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fc</span>, <span class='kw'>ModTitle</span> <span class='kw'>=</span> <span class='no'>letters</span>[<span class='fl'>1</span>:<span class='fl'>3</span>], <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='st'>"Size of island"</span>)</div><div class='img'><img src='plot.sars-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

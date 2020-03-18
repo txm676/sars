@@ -83,9 +83,10 @@ sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
   #in a standard linear 
   #equation (y=mx+c) is 3 (mx, c, and error) rather than 2.
   P <- 3
-  fit$AIC <- n * log(value / n) + 2 * P
-  fit$AICc <- (n * log(value / n)) + (2*P*(n / (n - P - 1)))
-  fit$BIC <- (n *log(value / n)) + (log(n) * P)
+  val <-  -n * (log(2 * pi) + 1 - log(n) + log(value))/2
+  fit$AIC <- (2 * P) - (2 * val)
+  fit$AICc <- -2 * val + 2 * P * (n / (n - P - 1))
+  fit$BIC <- (-2 * val) + (P * log(n))
   #R2 (Kvaleth, 1985, Am. Statistician)
   fit$R2 <-  1 - ( (value) /  sum((data$S - mean(data$S))^2) )
   #R2a (He & Legendre 1996, p724)

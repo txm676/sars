@@ -3,7 +3,7 @@ library(sars)
 
 test_that("sar_loga returns correct results", {
   fit <- sar_loga(galap)
-  expect_equal(round(fit$AICc, 2), 143.78)
+  expect_equal(round(fit$AICc, 2), 189.19)
   expect_equal(as.vector(round(fit$par[2], 2)), 30.28)
   expect_is(fit, "sars")
   expect_match(fit$normaTest[[1]], "lillie")

@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.2</span>
       </span>
     </div>
 
@@ -188,6 +188,7 @@ residuals with the area values), or 'none' (no residuals homogeneity test is und
 <li><p>homoTest  The results of the residuals homogeneity test</p></li>
 <li><p>observed_shape  The observed shape of the model fit</p></li>
 <li><p>asymptote  A logical value indicating whether the observed fit is asymptotic</p></li>
+<li><p>neg_check  A logical value indicating whether negative fitted values have been returned</p></li>
 </ul><p>The <code><a href='summary.sars.html'>summary.sars</a></code> function returns a more useful summary of
   the model fit results, and the <code><a href='plot.sars.html'>plot.sars</a></code> plots the model fit.</p>
     
@@ -212,8 +213,8 @@ residuals with the area values), or 'none' (no residuals homogeneity test is und
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>galap</span>)
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>sar_epm2</span>(<span class='no'>galap</span>)</div><div class='output co'>#&gt; <span class='message'>observed shape algorithm failed: observed shape set to</span>
-#&gt; <span class='message'>                theoretical shape (sigmoid)</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; 
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>sar_epm2</span>(<span class='no'>galap</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; 
 #&gt; Model:
 #&gt; Extended Power model 2
 #&gt; 
@@ -233,8 +234,8 @@ residuals with the area values), or 'none' (no residuals homogeneity test is und
 #&gt; d  0.547208   0.909007  0.601984  0.557538 -1.270806  2.3652
 #&gt; 
 #&gt; R-squared: 0.5, Adjusted R-squared: 0.38
-#&gt; AIC: 143.29, AICc: 146.92, BIC: 146.38
-#&gt; Observed shape: sigmoid, Asymptote: FALSE
+#&gt; AIC: 188.69, AICc: 192.33, BIC: 191.78
+#&gt; Observed shape: sigmoid - observed shape algorithm failed: observed shape set to theoretical shape (sigmoid), Asymptote: FALSE
 #&gt; </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>)</div><div class='img'><img src='sar_epm2-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
