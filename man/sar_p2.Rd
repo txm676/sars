@@ -4,7 +4,7 @@
 \alias{sar_p2}
 \title{Fit the Persistence function 2 model}
 \usage{
-sar_p2(data, start = NULL, grid_start = NULL, normaTest =  'lillie',
+sar_p2(data, start = NULL, grid_start = FALSE, grid_n = NULL, normaTest = 'lillie',
   homoTest = 'cor.fitted')
 }
 \arguments{
@@ -14,9 +14,9 @@ of each island/site.}
 
 \item{start}{NULL or custom parameter start values for the optimisation algorithm.}
 
-\item{grid_start}{NULL or the number of points sampled in the model parameter space
-or FALSE to prevent any grid start after a fail in initial optimization
-to run a grid search.}
+\item{grid_start}{Logical argument specifying whether a grid search procedure should be implemented to test multiple starting parameter values (default: \code{grid_start = FALSE}).}
+
+\item{grid_n}{If \code{grid_start = TRUE}, the number of points sampled in the model parameter space.}
 
 \item{normaTest}{The test used to test the normality of the residuals of the
 model. Can be any of 'lillie' (Lilliefors Kolmogorov-Smirnov test; the
@@ -64,8 +64,10 @@ Fit the Persistence function 2 model to SAR data.
 The model is fitted using non-linear regression. The model parameters are estimated
   by minimizing the residual sum of squares with an unconstrained Nelder-Mead optimization algorithm
   and the \code{\link{optim}} function. To avoid numerical problems and speed up the convergence process,
-  the starting values used to run the optimization algorithm are carefully chosen, or custom values can be provided
-  using the argument \code{start}. The fitting process also determines the observed shape of the model fit,
+  the starting values used to run the optimization algorithm are carefully chosen. However, if this does
+not work, custom values can be provided (using the \code{start} argument), or a more comprehensive search
+  can be undertaken using the \code{grid_start} argument. See the vignette for more information.
+  The fitting process also determines the observed shape of the model fit,
   and whether or not the observed fit is asymptotic (see Triantis et al. 2012 for further details).
   Model validation is undertaken by assessing the normality (\code{normaTest}) and homogeneity (\code{homoTest})
   of the residuals and a warning is provided in \code{\link{summary.sars}} if either test is failed.

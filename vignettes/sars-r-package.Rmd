@@ -115,10 +115,25 @@ the 20 model names and a Table can be generated in the package using the
 is fitted using standard linear regression), all models are fitted using
 non-linear regression and the model parameters are estimated by minimizing
 the residual sum of squares with an unconstrained Nelder-Mead optimization
-algorithm and the ‘optim’ R function. The starting values for the parameter
-estimates are carefully chosen to avoid numerical problems and to speed up
-the convergence process. However, custom starting values can be provided for
-any of the 20 models using the ‘start’ argument in the model fit functions.
+algorithm and the ‘optim’ R function.
+
+Choosing starting parameter values for non-linear regression optimisation
+algorithms is not always straight forward, depending on the data at hand.  The
+starting values for the parameter estimates used as defaults in the package are
+carefully chosen to avoid numerical problems and to speed up the convergence
+process. However, custom starting values can be provided for any of the 20
+models using the ‘start’ argument in the model fit functions. In addition, if
+any of the resultant model fits do not converge, return a singular gradient at
+parameter estimates, or the plot of the model fit does not look optimum, try
+using the ‘grid_start’ argument to undertake a more extensive selection of
+starting values. ‘grid_start’ creates 100 starting values for each parameter
+within sensible bounds and then creates a large matrix storing all possible
+combinations of starting values across the n parameters in the model. For
+example, for a three parameter model this matrix contains one million rows. The
+‘grid_n’ argument can then be used to randomly select a number of the rows in
+this matrix to be used as the starting parameter values in the model fitting
+process. A large ‘grid_n’ will ensure a more extensive search of starting
+parameter value space, but will increase the time taken to fit the model.
 
 Each individual model fit returns an object of class ‘sars’, which is a list
 of 22 elements containing relevant model fit information, such as the model
@@ -143,9 +158,11 @@ library(sars)
 ```
 
 ```{r, fig.width=6, fig.height=6}
-#load an example dataset (Preston, 1962), fit the logarithmic SAR model,
-#return a model fit summary and plot the model fit. data(galap) 
-fit <- sar_loga(data = galap) 
+#load an example dataset (Preston, 1962), fit the logarithmic SAR model using
+#the grid_start method of selecting starting parameter values, return a model 
+#fit summary and plot the model fit. 
+data(galap) 
+fit <- sar_loga(data = galap, grid_start = TRUE, grid_n = 100) 
 summary(fit) 
 plot(fit)
 ```

@@ -34,8 +34,8 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#' @description ","Fit the ", model$name,
               " model to SAR data.", "\n"))
   cat1(paste0("#' @usage ", funName,
-              "(data, start = NULL, grid_start = NULL, normaTest =  'lillie',
-              ", "\n"))
+              "(data, start = NULL, grid_start = FALSE, grid_n = NULL,", 
+              " normaTest = 'lillie',", "\n"))
   cat1(paste0("#'   homoTest = 'cor.fitted')\n"))
   cat1(paste0("#' @param ", "data ", "A dataset in the form of a dataframe ",
                 "with two columns: \n"))
@@ -44,11 +44,12 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#'   of each island/site.\n"))
   cat1(paste0("#' @param ", "start ", "NULL or custom parameter start", 
               " values for the optimisation algorithm.\n"))
-  cat1(paste0("#' @param ", "grid_start ", "NULL or the number of points", 
-              " sampled in the model parameter space\n"))
-  cat1(paste0("#'   or FALSE to prevent any grid start after a fail in", 
-                " initial optimization\n"))
-  cat1(paste0("#'   to run a grid search.\n"))
+  cat1(paste0("#' @param ", "grid_start ", "Logical argument specifying whether", 
+              " a grid search procedure should be implemented to test multiple",
+              " starting parameter values",
+              " (default: \\code{grid_start = FALSE}).\n"))
+  cat1(paste0("#' @param ", "grid_n ", "If \\code{grid_start = TRUE}, the",
+              " number of points sampled in the model parameter space.\n"))
   cat1(paste0("#' @param ", "normaTest ", "The test used to test the", 
               " normality of the residuals of the\n"))
   cat1(paste0("#'   model. Can be any of 'lillie' (Lilliefors ", 
@@ -73,9 +74,12 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#'   and the \\code{\\link{optim}} function. To avoid", 
               " numerical problems and speed up the convergence process,\n")) 
   cat1(paste0("#'   the starting values used to run the optimization", 
-              " algorithm are carefully chosen, or custom values can be", 
-              " provided\n")) 
-  cat1(paste0("#'   using the argument \\code{start}. The fitting process", 
+              " algorithm are carefully chosen. However, if this does\n")) 
+  cat1(paste0("#' not work, custom values can be provided (using the", 
+              " \\code{start} argument), or a more comprehensive search\n"))
+  cat1(paste0("#'   can be undertaken using the \\code{grid_start} argument.",
+              " See the vignette for more information.\n")) 
+  cat1(paste0("#'   The fitting process", 
               " also determines the observed shape of the model fit,\n")) 
   cat1(paste0("#'   and whether or not the observed fit is asymptotic (see", 
               " Triantis et al. 2012 for further details).\n\n"))
@@ -133,7 +137,6 @@ cat_roxygen <- function(model, funName, fileName){
               " useful summary of\n"))
   cat1(paste0("#'   the model fit results, and the \\code{\\link{plot.sars}}", 
               " plots the model fit.\n"))
-  
   cat1(paste0("#' @references Triantis, K.A., Guilhaumon, F. & Whittaker,", 
               " R.J. (2012) The island species-area", "\n")) 
   cat1(paste0("#'   relationship: biology and statistics. Journal of", 
@@ -184,9 +187,9 @@ model_factory <- function(f, overwrite = FALSE){
   cat1("\n")
   
   #function definition
-  cat1(paste0(funName,' <- function(data, start = NULL, grid_start = NULL,', 
-                        ' \nnormaTest =  "lillie", homoTest = "cor.fitted"){',
-                          "\n"))
+  cat1(paste0(funName,' <- function(data, start = NULL, grid_start = FALSE,', 
+                        ' \ngrid_n = NULL, normaTest =  "lillie", homoTest =',
+                        ' "cor.fitted"){',"\n"))
   
   #checks
   cat1("if (!(is.matrix(data) | is.data.frame(data)))", 
@@ -195,6 +198,11 @@ model_factory <- function(f, overwrite = FALSE){
   cat1("if (anyNA(data)) stop('NAs present in data')\n")
   #cat1("normtest <- match.arg(normtest, c('none', 'shapiro', 
   #'kolmo', 'lillie'))","\n")
+  cat1("if (!is.logical(grid_start)) stop('grid_start should be logical')\n")
+  cat1("if (grid_start){\n")
+  cat1("  if (!is.numeric(grid_n))\n")
+  cat1("  stop('grid_n should be numeric if grid_start == TRUE')\n")
+  cat1("  }\n")
   
   #data ordering and column naming (assuming Area then Species Richness)
   cat1("data <- data[order(data[,1]),]\n")
@@ -222,8 +230,8 @@ model_factory <- function(f, overwrite = FALSE){
   cat1("model <- compmod(model)\n")
   
   cat1("fit <- get_fit(model = model, data = data, start = start,", 
-      " \ngrid_start = grid_start, algo = 'Nelder-Mead', 
-       \nnormaTest =  normaTest, homoTest = homoTest, verb = TRUE)\n")
+      " \ngrid_start = grid_start, grid_n = grid_n, algo = 'Nelder-Mead', 
+       normaTest =  normaTest, homoTest = homoTest, verb = TRUE)\n")
   cat1("if(is.na(fit$value)){\n")
   cat1("  return(list(value = NA))\n")
   cat1("}else{","\n")
@@ -246,7 +254,8 @@ model_factory <- function(f, overwrite = FALSE){
 #using the model factory
 ########################
 #setwd("E:/Working directory/sars")
-modFiles <- list.files(file.path("E:/Working directory/sars","inst","non_lin_models"))
+#setwd("C:/Users/Tom/Desktop/sars")
+modFiles <- list.files(file.path("C:/Users/Tom/Desktop/sars","inst","non_lin_models"))
 lapply(modFiles, model_factory, overwrite = TRUE)
 
 

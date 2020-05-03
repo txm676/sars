@@ -209,94 +209,104 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
 grid_start_fit <- function(model, data, n, algo = "Nelder-Mead",
                            normaTest = "lillie", homoTest = "cor.fitted",
                            verb = TRUE) {
-
-  if(length(model$parNames)<4){
-    ns <- 100
-  }else{
-    ns <- 10
-  }
-
+  
+  #  if(length(model$parNames)<4){
+  ns <- 100
+  # }else{
+  #   ns <- 10
+  # }
+  
   start.list <- lapply(model$parLim,function(x){
     res <- switch(x,
-                 R = sample(seq(-500,500),ns),
-                 Rplus = seq(.1,500,length.out = ns),
-                 unif = runif(ns)
+                  R = sample(seq(-500,500),ns),
+                  Rplus = seq(.1,500,length.out = ns),
+                  unif = runif(ns)
     )
     return(res)
   })
-
+  
   names(start.list) <- model$parNames
-
+  
   grid.start <- expand.grid(start.list)
-
+  
   grid.start <- grid.start[sample.int(dim(grid.start)[1],n),]
-
-  if (verb) cat("- running grid optim: ")
-
-  fit.list <- apply(grid.start, 1, function(x){
-    if (verb) cat(".")
+  
+  #add our default in as possible 
+  def.start <- model$init(data)
+  names(def.start) <- colnames(grid.start)
+  grid.start <- rbind(grid.start, def.start)
+  
+  #ensure very small values are included as useful for some models
+  sm_val <- lapply(model$parNames, function(x){
+    c(0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1)
+  })
+  
+  sm_grid <- expand.grid(sm_val)
+  
+  colnames(sm_grid) <- colnames(grid.start)
+  
+  grid.start <- rbind(grid.start, sm_grid)
+  
+  #some more specific values for Chapman model
+  if(model$name == "Chapman Richards"){
+    zseq <- c(0.00001, 0.00005, 0.0001, 0.0005, 0.001, 0.005, 
+              0.01, 0.05, 0.1, 0.5)
+    gs2 <- data.frame(rep(def.start[1], 10), zseq, rep(def.start[3], 10))
+    colnames(gs2) <- colnames(grid.start)
+    grid.start <- rbind(grid.start, gs2)
+  }
+  
+  #####################################################
+  
+  if (verb) cat("- running grid optim: \n")
+  
+  fit.list <- suppressWarnings(apply(grid.start, 1, function(x){
+    #  if (verb) cat(".")
     tryCatch(rssoptim(model, data , start = x, algo = algo,
                       normaTest = normaTest, homoTest = homoTest)
              , error = function(e) list(value = NA))
-  })
-
+  }))
+  
   fit.list <- as.list(fit.list)
-
+  
   values <- unlist(lapply(fit.list,function(x){x$value}))
-
+  
   min <- which.min(values)
-
+  
   if(length(min) != 0) {
     fit.list[[min]]
   }else{
     list(value = NA)
   }
-
+  
 }#eo grid_start_fit
 
 ######################################## optimization wrapper
 get_fit <- function(model = model, data = data, start = NULL,
-                    grid_start = NULL, algo = "Nelder-Mead",
+                    grid_start = FALSE, grid_n = NULL, algo = "Nelder-Mead",
                     normaTest = "lillie", homoTest = "cor.fitted",
                     verb = TRUE){
-
-  if(!is.null(start) & !is.null(grid_start)){
+  
+  if (isFALSE(is.null(start)) & (grid_start)){
     stop("You must choose between 'start' and 'grid_start',",
          " but choose wisely\n")
   }
-
-  if(is.null(start)){
-    fit <- tryCatch(rssoptim(model = model, data = data, algo = algo,
-                             normaTest = normaTest, homoTest = homoTest)
-                    ,error=function(e) list(value = NA))
-    if(is.na(fit$value)){
-      if(!is.null(grid_start)){
-        if(grid_start != FALSE){
-          n <- min(grid_start,1000)
-          fit <- grid_start_fit(model = model, data = data, n = n,
-                                algo = algo, normaTest = normaTest,
-                                homoTest = homoTest,verb = verb)
-          grid_start <- NULL
-        }
-      }
-    }
-  }
-
-  if(!is.null(start)){
+  
+  if(grid_start) { #use grid_search
+    fit <- grid_start_fit(model = model, data = data, n = grid_n,
+                          algo = algo, normaTest = normaTest,
+                          homoTest = homoTest, verb = verb)
+  } else if (!is.null(start)){#or provided start values
     fit <- tryCatch(rssoptim(model = model, data = data,
                              start = start, algo = algo,
                              normaTest = normaTest, homoTest = homoTest),
                     error = function(e) list(value = NA))
+  } else { #or if neither selected, use default start values from within sars
+    fit <- tryCatch(rssoptim(model = model, data = data, algo = algo,
+                             normaTest = normaTest, homoTest = homoTest)
+                    ,error=function(e) list(value = NA))
   }
-
-  if(!is.null(grid_start)) {
-    if (grid_start != FALSE){
-      fit <- grid_start_fit(model = model, data = data, n = grid_start,
-                            algo = algo, normaTest = normaTest,
-                            homoTest = homoTest, verb = verb)
-    }#eo if (grid_start != FALSE)
-  }#eo if(!is.null(grid_start))
-
+  
   if(is.na(fit$value)){
     warning("The model could not be fitted :(\n")
     return(list(value = NA))

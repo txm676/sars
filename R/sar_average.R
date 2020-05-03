@@ -35,7 +35,8 @@ display_sars_models <- function() {
 #'   "powerR","epm1","epm2","p1","p2","loga","koba",
 #'   "mmf","monod","negexpo","chapman","weibull3","asymp",
 #'   "ratio","gompertz","weibull4","betap","heleg","linear"), normaTest =
-#'   "lillie", homoTest = "cor.fitted",verb = TRUE)
+#'   "lillie", homoTest = "cor.fitted", grid_start = NULL, grid_n = NULL,
+#'    verb = TRUE)
 #' @param data A dataset in the form of a dataframe with two columns: the first
 #'   with island/site areas, and the second with the species richness of each
 #'   island/site.
@@ -50,6 +51,11 @@ display_sars_models <- function() {
 #'   the model fitted values; the default), "cor.area" (a correlation of the
 #'   residuals with the area values), or "none" (no residuals homogeneity test
 #'   is undertaken).
+#' @param grid_start Logical argument specifying whether a grid search procedure
+#'   should be implemented to test multiple starting parameter values (default:
+#'   \code{grid_start = FALSE}).
+#' @param grid_n If \code{grid_start = TRUE}, the number of points sampled in
+#'   the model parameter space.
 #' @param verb verbose (default: \code{verb == TRUE}).
 #' @details The \code{sar_models()} function can be used to bring up a list of
 #'   the 20 model names. \code{display_sars_models()} generates a table of the
@@ -78,20 +84,22 @@ sar_multi <- function(data,
                               "linear"),
                       normaTest = "lillie",
                       homoTest = "cor.fitted",
+                      grid_start = FALSE,
+                      grid_n = NULL,
                       verb = TRUE){
-
+  
   if (!((is.character(obj))  | (class(obj) == "sars")) )
     stop("obj must be of class character or sars")
-
+  
   if (nrow(data) < 4)
     stop("Multi SAR needs at least four data points")
   if (nrow(data) == 4 & normaTest == "lillie")
     stop("The Lilliefors test cannot be performed with less than 5 data",
          " points")
-
+  
   if (is.character(obj) & is.null(data))
     stop("if obj is character then data should be provided")
-
+  
   if (is.character(obj)) {
     if (any(!(obj %in% c("linear","power","powerR","epm1","epm2","p1",
                          "p2","loga","koba","mmf","monod","negexpo",
@@ -99,15 +107,22 @@ sar_multi <- function(data,
                          "weibull4","betap","heleg"))))
       stop("provided model names do not match with model functions")
   }
-
+  
+  if (!is.logical(grid_start)) stop("grid_start should be logical")
+  
+  if (grid_start){
+    if (!is.numeric(grid_n)) 
+      stop("grid_n should be numeric if grid_start == TRUE")
+  }
+  
   if (length(obj) < 2)
     stop("more than 1 fit is required to use sar_multi")
-
+  
   normaTest <- match.arg(normaTest, c("none", "shapiro",
                                       "kolmo", "lillie"))
   homoTest <- match.arg(homoTest, c("none","cor.area",
                                     "cor.fitted"))
-
+  
   #if (verb) cat_line(rule(left = paste0(cyan(symbol$bullet),
   #bold(" multi_sars")),right="multi-model SAR"))
   if (verb & is.character(obj)) {
@@ -119,48 +134,61 @@ sar_multi <- function(data,
   #if (verb) cat_line(magenta(symbol$arrow_right)," Data set is: ")
   #if (verb) cat_line(rule(left = paste0(magenta(symbol$bullet))))
   #if (verb) bullet("O | S : model", bullet = blue_arrow())
-
+  
   #if not yet fitted, fit the models to the datasquare_small_filled
   if (!is.character(obj))
     stop("obj should be a character vector of model names")
-
-    mods <- paste0("sar_",obj)
-    names(mods) <- obj
-
-    fits <- suppressWarnings(lapply(obj, function(x){
-
+  
+  mods <- paste0("sar_",obj)
+  names(mods) <- obj
+  
+  fits <- suppressWarnings(lapply(obj, function(x){
+    
+    #have to do separately because linear does not have grid_start;
+    #or if grid_start is set to FALSE
+    if (x == "linear" || !(grid_start)){
       f <- eval(parse(text = paste0(mods[x],
                                     "(data", ", normaTest = ",
                                     paste0("'", normaTest, "'"),
                                     ", homoTest = ", paste0("'", homoTest,
                                                             "'"), ")")))
-
-      if (verb) {
-        if(is.na(f$value)) {
-          cat_line(paste0(red(symbol$arrow_right)," ",
-                           col_align(x,max(nchar(obj)))," : ",
-                           red(symbol$cross)))
+    } else{ #if grid_start provided, implement it (for non-linear models)
+      f <- eval(parse(text = paste0(mods[x],
+                                    "(data", ", normaTest = ",
+                                    paste0("'", normaTest, "'"),
+                                    ", homoTest = ", paste0("'", homoTest,
+                                                            "'"), 
+                                    ", grid_start = ", 
+                                    paste0(grid_start), ", grid_n = ",
+                                    paste0(grid_n),")")))
+    }
+    
+    if (verb) {
+      if(is.na(f$value)) {
+        cat_line(paste0(red(symbol$arrow_right)," ",
+                        col_align(x,max(nchar(obj)))," : ",
+                        red(symbol$cross)))
+      }else{
+        
+        if (!is.matrix(f$sigConf)){
+          cat_line( paste0(yellow(symbol$arrow_right)," ",
+                           col_align(x,max(nchar(obj))),
+                           " : Warning: could not compute parameters statistics"))
         }else{
-
-          if (!is.matrix(f$sigConf)){
-            cat_line( paste0(yellow(symbol$arrow_right)," ",
-                             col_align(x,max(nchar(obj))),
-                        " : Warning: could not compute parameters statistics"))
-          }else{
-            cat_line( paste0(cyan(symbol$arrow_right)," ",
-                             col_align(x,max(nchar(obj)))," : ",
-                             green(symbol$tick)))
-          }
+          cat_line( paste0(cyan(symbol$arrow_right)," ",
+                           col_align(x,max(nchar(obj)))," : ",
+                           green(symbol$tick)))
         }
       }
-
-      f
-
-    }))#eo suppressWarnings(lapply)
-    names(fits) <- obj
-    class(fits) <- "sars"
-    attr(fits, "type") <- "fit_collection"
-    return(fits)
+    }
+    
+    f
+    
+  }))#eo suppressWarnings(lapply)
+  names(fits) <- obj
+  class(fits) <- "sars"
+  attr(fits, "type") <- "fit_collection"
+  return(fits)
 }#end of multi_sars
 
 
@@ -173,8 +201,8 @@ sar_multi <- function(data,
 #'   "mmf","monod","negexpo","chapman","weibull3","asymp",
 #'   "ratio","gompertz","weibull4","betap","heleg", "linear"), data = NULL, crit
 #'   = "Info", normaTest = "lillie", homoTest = "cor.fitted", neg_check = FALSE,
-#'   alpha_normtest = 0.05, alpha_homotest = 0.05, confInt = FALSE, ciN = 100,
-#'   verb = TRUE)
+#'   alpha_normtest = 0.05, alpha_homotest = 0.05, grid_start = FALSE,
+#'   grid_n = NULL, confInt = FALSE, ciN = 100, verb = TRUE)
 #' @param obj Either a vector of model names or a fit_collection object created
 #'   using \code{\link{sar_multi}}. If a vector of names is provided,
 #'   \code{sar_average} first calls \code{sar_multi} before generating the
@@ -206,6 +234,11 @@ sar_multi <- function(data,
 #' @param alpha_homotest The alpha value used in the residual homogeneity test
 #'   (default = 0.05, i.e. any test with a P value < 0.05 is flagged as failing
 #'   the test).
+#' @param grid_start Logical argument specifying whether a grid search procedure
+#'   should be implemented to test multiple starting parameter values (default:
+#'   \code{grid_start = FALSE}).
+#' @param grid_n If \code{grid_start = TRUE}, the number of points sampled in
+#'   the model parameter space.
 #' @param confInt A logical argument specifying whether confidence intervals
 #'   should be calculated for the multimodel curve using bootstrapping.
 #' @param ciN The number of bootstrap samples to be drawn to calculate the
@@ -290,6 +323,16 @@ sar_multi <- function(data,
 #'   \link[stats]{nls} function. See the "On the calculation of information
 #'   criteria" section in the package vignette for more information.
 #'   
+#'   Choosing starting parameter values for non-linear regression optimisation
+#'   algorithms is not always straight forward, depending on the data at hand.
+#'   In the package, we use various approaches to choose default starting
+#'   parameters. However, if any of the resultant model fits does not
+#'   converge, returns a singular gradient at parameter estimates, or the plot
+#'   of the model fit does not look optimum, try using the \code{grid_start}
+#'   argument to undertake a more extensive selection of starting values, or
+#'   provide your own starting values (\code{start}). See the vignette for more
+#'   information.
+#'   
 #' @references Burnham, K. P., & Anderson, D. R. (2002). Model selection and
 #'   multi-model inference: a practical information-theoretic approach (2nd
 #'   ed.). New-York: Springer.
@@ -316,22 +359,24 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
                                 "chapman","weibull3","asymp","ratio",
                                 "gompertz", "weibull4","betap","heleg",
                                 "linear"), data = NULL,
-                      crit = "Info",
-                      normaTest = "lillie",
-                      homoTest = "cor.fitted",
-                      neg_check = FALSE,
-                      alpha_normtest = 0.05,
-                      alpha_homotest = 0.05,
-                      confInt = FALSE,
-                      ciN = 100,
-                      verb = TRUE){
-
+                        crit = "Info",
+                        normaTest = "lillie",
+                        homoTest = "cor.fitted",
+                        neg_check = FALSE,
+                        alpha_normtest = 0.05,
+                        alpha_homotest = 0.05,
+                        grid_start = FALSE,
+                        grid_n = NULL,
+                        confInt = FALSE,
+                        ciN = 100,
+                        verb = TRUE){
+  
   if (!((is.character(obj))  | (class(obj) == "sars")) )
     stop("obj must be of class character or sars")
-
+  
   if (is.character(obj) & is.null(data))
     stop("if obj is character then data should be provided")
-
+  
   if (is.character(obj)) {
     if (any(!(obj %in% c("linear","power","powerR","epm1","epm2","p1",
                          "p2","loga","koba","mmf","monod","negexpo",
@@ -339,15 +384,25 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
                          "weibull4","betap","heleg"))))
       stop("provided model names do not match with model functions")
   }
-
+  
+  if (!is.logical(grid_start)) stop("grid_start should be logical")
+  
+  if (grid_start){
+    if (!is.numeric(grid_n)) 
+      stop("grid_n should be numeric if grid_start == TRUE")
+  }
+  
   if (length(obj) < 2)
     stop("more than 1 fit is required to construct a sar_multi")
-
+  
   #if a vector of names is provided, then call sar_multi first
   if (is.character(obj)){
     fits <- sar_multi(data = data, obj = obj,
-                                            normaTest = normaTest,
-                                            homoTest = homoTest, verb = verb)
+                      normaTest = normaTest,
+                      homoTest = homoTest, 
+                      grid_start = grid_start,
+                      grid_n = grid_n,
+                      verb = verb)
   } else{
     fits <- obj
   }

@@ -9,8 +9,8 @@ sar_average(obj = c("power",
   "mmf","monod","negexpo","chapman","weibull3","asymp",
   "ratio","gompertz","weibull4","betap","heleg", "linear"), data = NULL, crit
   = "Info", normaTest = "lillie", homoTest = "cor.fitted", neg_check = FALSE,
-  alpha_normtest = 0.05, alpha_homotest = 0.05, confInt = FALSE, ciN = 100,
-  verb = TRUE)
+  alpha_normtest = 0.05, alpha_homotest = 0.05, grid_start = FALSE,
+  grid_n = NULL, confInt = FALSE, ciN = 100, verb = TRUE)
 }
 \arguments{
 \item{obj}{Either a vector of model names or a fit_collection object created
@@ -51,6 +51,13 @@ the test).}
 \item{alpha_homotest}{The alpha value used in the residual homogeneity test
 (default = 0.05, i.e. any test with a P value < 0.05 is flagged as failing
 the test).}
+
+\item{grid_start}{Logical argument specifying whether a grid search procedure
+should be implemented to test multiple starting parameter values (default:
+\code{grid_start = FALSE}).}
+
+\item{grid_n}{If \code{grid_start = TRUE}, the number of points sampled in
+the model parameter space.}
 
 \item{confInt}{A logical argument specifying whether confidence intervals
 should be calculated for the multimodel curve using bootstrapping.}
@@ -146,6 +153,16 @@ Occasionally a model fit will converge and pass the model fitting
   formulas such that now our IC formulas are the same as those used in the
   \link[stats]{nls} function. See the "On the calculation of information
   criteria" section in the package vignette for more information.
+  
+  Choosing starting parameter values for non-linear regression optimisation
+  algorithms is not always straight forward, depending on the data at hand.
+  In the package, we use various approaches to choose default starting
+  parameters. However, if any of the resultant model fits does not
+  converge, returns a singular gradient at parameter estimates, or the plot
+  of the model fit does not look optimum, try using the \code{grid_start}
+  argument to undertake a more extensive selection of starting values, or
+  provide your own starting values (\code{start}). See the vignette for more
+  information.
 }
 \examples{
 data(galap)

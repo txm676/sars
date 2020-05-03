@@ -1,6 +1,6 @@
 #' A simulated species-site abundance matrix with site areas
 #'
-#' A dataset in the correct mmSAR2 format:
+#' A dataset in the correct sars format:
 #'
 #' @usage data(cole_sim)
 #' @format A list with two elements. The first element contains a species-site

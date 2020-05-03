@@ -8,7 +8,8 @@ sar_multi(data, obj = c("power",
   "powerR","epm1","epm2","p1","p2","loga","koba",
   "mmf","monod","negexpo","chapman","weibull3","asymp",
   "ratio","gompertz","weibull4","betap","heleg","linear"), normaTest =
-  "lillie", homoTest = "cor.fitted",verb = TRUE)
+  "lillie", homoTest = "cor.fitted", grid_start = NULL, grid_n = NULL,
+   verb = TRUE)
 }
 \arguments{
 \item{data}{A dataset in the form of a dataframe with two columns: the first
@@ -28,6 +29,13 @@ each model. Can be any of "cor.fitted" (a correlation of the residuals with
 the model fitted values; the default), "cor.area" (a correlation of the
 residuals with the area values), or "none" (no residuals homogeneity test
 is undertaken).}
+
+\item{grid_start}{Logical argument specifying whether a grid search procedure
+should be implemented to test multiple starting parameter values (default:
+\code{grid_start = FALSE}).}
+
+\item{grid_n}{If \code{grid_start = TRUE}, the number of points sampled in
+the model parameter space.}
 
 \item{verb}{verbose (default: \code{verb == TRUE}).}
 }

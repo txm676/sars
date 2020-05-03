@@ -80,17 +80,27 @@ print.summary.sars <- function(x, ...){
       homoP <- "No homogeneity test undertaken"
     }
 
-    if (is.numeric(normP) & normP < 0.05 ){
-      cat("\nWarning: The normality test selected indicated the model",
-          " residuals are not normally distributed (i.e. P < 0.05)\n",
+    if (is.na(normP)){
+      cat("\nWarning: The normality test returned NA, check results \n",
           sep = "")
+    } else {
+      if (is.numeric(normP) & normP < 0.05 ){
+        cat("\nWarning: The normality test selected indicated the model",
+            " residuals are not normally distributed (i.e. P < 0.05)\n",
+            sep = "")
+      }
     }
-    if (is.numeric(homoP) & homoP < 0.05){
-      tr <- ifelse(object$homoTest$test == "cor.area", "area values",
-                   "fitted values")
-      cat("\n", paste("Warning: The homogeneity test selected indicated a",
-                      " signifiant correlation between the residuals and the",
-                      tr, "(i.e. P < 0.05)"), "\n", sep = "")
+    if (is.na(homoP)){
+      cat("\nWarning: The homogeneity test returned NA, check results \n",
+          sep = "")
+    } else {
+      if (is.numeric(homoP) & homoP < 0.05){
+        tr <- ifelse(object$homoTest$test == "cor.area", "area values",
+                     "fitted values")
+        cat("\n", paste("Warning: The homogeneity test selected indicated a",
+                        " signifiant correlation between the residuals and the",
+                        tr, "(i.e. P < 0.05)"), "\n", sep = "")
+      }
     }
     #negative values check
     if (object$Negative_values){

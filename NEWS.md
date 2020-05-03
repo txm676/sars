@@ -1,3 +1,8 @@
+##version 1.2.3
+  * return shape algorithm fail info to model summary table
+  * added grid_start argument option to sar_average and sar_multi
+  * edited grid_start to ensure very small starting par values are always included
+  * edited how grid_start works and have added a grid_n argument
 
 ## Version 1.2.2
   * bug fix - no AICc option in confidence interval function
