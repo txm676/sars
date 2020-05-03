@@ -8,7 +8,7 @@ sar_multi(data, obj = c("power",
   "powerR","epm1","epm2","p1","p2","loga","koba",
   "mmf","monod","negexpo","chapman","weibull3","asymp",
   "ratio","gompertz","weibull4","betap","heleg","linear"), normaTest =
-  "lillie", homoTest = "cor.fitted", grid_start = NULL, grid_n = NULL,
+  "lillie", homoTest = "cor.fitted", grid_start = FALSE, grid_n = NULL,
    verb = TRUE)
 }
 \arguments{

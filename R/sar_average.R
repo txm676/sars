@@ -35,7 +35,7 @@ display_sars_models <- function() {
 #'   "powerR","epm1","epm2","p1","p2","loga","koba",
 #'   "mmf","monod","negexpo","chapman","weibull3","asymp",
 #'   "ratio","gompertz","weibull4","betap","heleg","linear"), normaTest =
-#'   "lillie", homoTest = "cor.fitted", grid_start = NULL, grid_n = NULL,
+#'   "lillie", homoTest = "cor.fitted", grid_start = FALSE, grid_n = NULL,
 #'    verb = TRUE)
 #' @param data A dataset in the form of a dataframe with two columns: the first
 #'   with island/site areas, and the second with the species richness of each

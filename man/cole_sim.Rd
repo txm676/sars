@@ -15,7 +15,7 @@ Matthews et al. 2015.
 data(cole_sim)
 }
 \description{
-A dataset in the correct mmSAR2 format:
+A dataset in the correct sars format:
 }
 \examples{
 data(cole_sim)
