@@ -84,6 +84,18 @@ obs_shape <- function(x){
         (ts[x] * model$mod.fun(min.area, pars) +
            (1 - ts[x]) * model$mod.fun(max.area, pars))
       }, FUN.VALUE = double(1))
+      
+      if (anyNA(dif)){
+          fitShape <- paste0(model$shape, " - observed shape algorithm failed:", 
+                           " observed shape set to theoretical shape", " (", model$shape, ")")
+          asymptote <- model$asymp(pars)
+          if (asymptote){
+            if (asymptote > range(data$S)[1] & asymptote < range(data$S)[2])
+              asymp <- TRUE
+          }#eo if
+          res <- list(asymp = asymp, fitShape = fitShape)
+          return(res)
+      } 
 
       #is linear?
       if (sum(abs(dif) < 0.001) == length(ts)) possFits <- c(1, 0, 0, 0)
@@ -133,6 +145,10 @@ obs_shape <- function(x){
       } else {
         fitShape <- paste("sigmoid - observed shape algorithm failed: observed",
                      "shape set to theoretical shape (sigmoid)")
+      }
+      if (all(possFits == 0)){
+        fitShape <- paste0(model$shape, " - observed shape algorithm failed:", 
+                           " observed shape set to theoretical shape", " (", model$shape, ")")
       }
       res <- list(asymp = asymp, fitShape = fitShape)
       return(res)

@@ -256,6 +256,7 @@ grid_start_fit <- function(model, data, n, algo = "Nelder-Mead",
     grid.start <- rbind(grid.start, gs2)
   }
   
+  
   #####################################################
   
   if (verb) cat("- running grid optim: \n")
