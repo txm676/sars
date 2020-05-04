@@ -76,7 +76,16 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
 {
 
   if (attributes(x)$type == "pred"){
-    return(cat("\nNo plot method for 'pred' object of class 'sars'\n", sep = ""))
+    return(cat("\nNo plot method for 'pred' object of class 'sars'\n", 
+               sep = ""))
+  }
+  if (attributes(x)$type == "threshold_ci"){
+    return(cat("\nNo plot method for 'threshold_ci' object of class 'sars'\n", 
+               sep = ""))
+  }
+  if (attributes(x)$type == "threshold_coef"){
+    return(cat("\nNo plot method for 'threshold_coef' object of class 'sars'\n", 
+               sep = ""))
   }
 
   if (mfplot & attributes(x)$type != "fit_collection")
@@ -554,6 +563,297 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   }
 
 }
+
+#########################################################################
+#############Threshold plots###############################################
+####################################################################
+
+##############internal plotting functions
+
+#' Discontinuous one thr plot
+#'@importFrom graphics par plot lines title
+#'@noRd
+
+discOnePlot <- function (xx, yy, xypred.disc, data, th, xlab = xlab, 
+                         ylab = ylab, pch = pch, 
+                         pcol = pcol, cex = cex, cex.lab = cex.lab, 
+                         cex.axis = cex.axis, 
+                         yRange = yRange, ModTitle = ModTitle, TiAdj = TiAdj,
+                         TiLine = TiLine, 
+                         cex.main = cex.main, lwd = lwd, lcol = lcol, ...) 
+{
+  disc1 <- xypred.disc[xypred.disc$x <= th["DiscOne"][1], ]
+  disc2 <- xypred.disc[xypred.disc$x > th["DiscOne"][1], ]
+  plot(xx, yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+       cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange, 
+       ...)
+  title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, 
+        ...)
+  lines(disc1$x, disc1$DiscOne, lwd = lwd, col = lcol, ...)
+  lines(disc2$x, disc2$DiscOne, lwd = lwd, col = lcol, ...)
+}
+
+
+#' Discontinuous two thr plot
+#'@importFrom graphics par plot lines title
+#'@noRd
+
+discTwoPlot <- function (xx, yy, xypred.disc, data, th, xlab = xlab, 
+                         ylab = ylab, pch = pch, 
+                         pcol = pcol, cex = cex, cex.lab = cex.lab, 
+                         cex.axis = cex.axis, 
+                         yRange = yRange, ModTitle = ModTitle, TiAdj = TiAdj, 
+                         TiLine = TiLine, 
+                         cex.main = cex.main, lwd = lwd, lcol = lcol, ...) 
+{
+  disc1 <- xypred.disc[xypred.disc$x <= th["DiscTwo"][[1]][1], ]
+  disc2 <- xypred.disc[xypred.disc$x > th["DiscTwo"][[1]][1] & 
+                         xypred.disc$x <= th["DiscTwo"][[1]][2], ]
+  disc3 <- xypred.disc[xypred.disc$x > th["DiscTwo"][[1]][2], ]
+  plot(xx, yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+       cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange, 
+       ...)
+  title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, 
+        ...)
+  lines(disc1$x, disc1$DiscTwo, lwd = lwd, col = lcol, ...)
+  lines(disc2$x, disc2$DiscTwo, lwd = lwd, col = lcol, ...)
+  lines(disc3$x, disc3$DiscTwo, lwd = lwd, col = lcol, ...)
+}
+
+
+#' continuous models plot
+#'@importFrom graphics par plot lines title
+#'@noRd
+
+contsPlot <- function (xx, yy, xypred.cont, data, column, xlab = xlab, 
+                       ylab = ylab, pch = pch, 
+                       pcol = pcol, cex = cex, cex.lab = cex.lab,
+                       cex.axis = cex.axis, 
+                       yRange = yRange, ModTitle = ModTitle, TiAdj = TiAdj, 
+                       TiLine = TiLine, 
+                       cex.main = cex.main, lwd = lwd, lcol = lcol, ...) 
+{
+  plot(xx, yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+       cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange, 
+       ...)
+  title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, 
+        ...)
+  lines(xypred.cont$x, xypred.cont[column][, 1], lwd = lwd, col = lcol, ...)
+}
+
+
+#'Plot Model Fits for a 'threshold' Object
+#'
+#'@description S3 method for class 'threshold'. \code{plot.threshold} creates
+#'  plots for objects of class threshold, using the R base plotting framework.
+#'  Plots of single or multiple threshold models can be constructed.
+#'@param x An object of class 'threshold'.
+#'@param xlab Title for the x-axis. Defaults will depend on any axes
+#'  log-transformations.
+#'@param ylab Title for the y-axis.Defaults will depend on any axes
+#'  log-transformations.
+#'@param pch Plotting character (for points).
+#'@param cex A numerical vector giving the amount by which plotting symbols
+#'  (points) should be scaled relative to the default.
+#'@param pcol Colour of the points.
+#'@param ModTitle Plot title (default is \code{ModTitle = NULL}), which reverts
+#'  to the model names. For no title, use \code{ModTitle = ""}.
+#'@param TiAdj Which way the plot title is justified.
+#'@param TiLine Places the plot title this many lines outwards from the plot
+#'  edge.
+#'@param cex.main The amount by which the plot title should be scaled relative
+#'  to the default.
+#'@param cex.lab The amount by which the axis titles should be scaled relative
+#'  to the default.
+#'@param cex.axis The amount by which the axis labels should be scaled relative
+#'  to the default.
+#'@param yRange The range of the y-axis. Default taken as the largest value
+#'  bacross the observed and fitted values.
+#'@param lwd Line width.
+#'@param lcol Line colour.
+#'@param di Dimensions to be passed to \code{par(mfrow=())} to specify the size
+#'  of the plotting window, when plotting multiple plots. For example, \code{di
+#'  = c(1, 3)} creates a plotting window with 1 row and 3 columns. The default
+#'  (\code{NULL}) creates a plotting window large enough to fit all plots in.
+#'@param \dots Further graphical parameters (see \code{\link[graphics]{par}},
+#'  \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
+#'  \code{\link[graphics]{lines}}) may be supplied as arguments.
+#'@note The raw \code{\link{lm}} model fit objects are returned with the
+#'  \code{\link{sar_threshold}} function if the user wishes to construct their
+#'  own plots.
+#'  
+#'  Use \code{par(mai = c())} prior to calling plot, to set the graph margins,
+#'  which can be useful when plotting multiple models in a single plot to ensure
+#'  space within the plot taken up by the individual model fit plots is
+#'  maximised.
+#' @examples
+#' data(aegean)
+#'
+#'#fit two threshold models (in logA-S space) and the linear and 
+#'#intercept only models
+#'fct <- sar_threshold(aegean, mod = c("ContOne", "DiscOne"),
+#'                     non_th_models = TRUE,  interval = 5,
+#'                     parallel = FALSE, logAxes = "area")
+#'
+#'#plot using default settings
+#'plot(fct)
+#'
+#'#change various plotting settings, and set the graph margins prior to
+#'#plotting
+#'par(mai = c(0.7,0.7, 0.4, 0.3))
+#'plot(fct, pcol = "blue", pch = 18, lcol = "green",
+#'     ModTitle = c("A", "B", "C", "D"), TiAdj = 0.5, xlab = "Yorke")
+#'@rdname plot.threshold
+#'@importFrom stats predict
+#'@importFrom graphics par
+#'@export
+
+
+plot.threshold <- function(x, xlab = NULL, ylab = NULL,
+                           pch = 16, cex = 1.2,
+                           pcol = 'black', ModTitle = NULL, TiAdj = 0,
+                           TiLine = 0.5, cex.main = 1.5,
+                           cex.lab = 1.3, cex.axis = 1, yRange = NULL,
+                           lwd = 2, lcol = 'red', di = NULL, ...) {
+  
+  data <- x[[4]]#nb. this will already be log-transformed if user has selected
+  colnames(data) <- c("A", "S")
+  data <- data[order(data$A),]
+  mods <- x[[1]]
+  names <- x[[2]]
+  th <- x[[3]]
+  names(mods) <- names
+  names(th) <- names
+  yy <- data$S
+  xx <- data$A
+  
+  cont <- c("ContOne","ZslopeOne","ContTwo","ZslopeTwo","Linear","Intercept")
+  xypred.cont <- data.frame("x" = seq(min(data$A), max(data$A), 
+                                      (max(data$A) - min(data$A))/1000))
+  for (i in which(names %in% cont)) {
+    xypred.cont[, names[i]] <- stats::predict(mods[[i]], xypred.cont)
+  }
+  
+  disc <- c("DiscOne","DiscTwo")
+  xypred.disc <- data.frame("x" = xx)
+  for (i in which(names %in% disc)) {
+    xypred.disc[, names[i]] <- stats::predict(mods[[i]])
+  }
+  
+  ##get max y-value across model fits and observed to 
+  #set y-axis range (unless provided)
+  if (is.null(yRange)){
+    nc <- ncol(data)
+    ff <- range(data[ ,2:nc])
+    yRange <- c(ff[1], ff[2])
+  }
+  if (is.null(xlab)) {
+    xlab <- switch(x[[5]][[1]], 
+                   none = "Area", 
+                   area = "Log(Area)", 
+                   both = "Log(Area)")
+  }
+  if (is.null(ylab)) {
+    ylab <- switch(x[[5]][[1]], 
+                   none = "Species richness", 
+                   area = "Species richness", 
+                   both = "Log(Species richnes)")
+  }
+  if (is.null(ModTitle)) {
+    ModTitle <- sapply(names, function(x) {
+      switch(x, ContOne = "Continuous one-threshold", 
+             ZslopeOne = "Left-horizontal one-threshold", 
+             DiscOne = "Discontinuous one-threshold", 
+             ContTwo = "Continuous two-threshold", 
+             ZslopeTwo = "Left-horizontal two-threshold", 
+             DiscTwo = "Discontinuous two-threshold", 
+             Linear = "Linear", 
+             Intercept = "Intercept only")
+    })
+  }
+  
+  ###############################################
+  ##if only one model in object##################
+  #################################################
+  if (length(x[[1]]) == 1) {
+    if (any(c("DiscOne", "DiscTwo") %in% names)) {
+      if (names == "DiscOne") {
+        discOnePlot(xx, yy, xypred.disc, data, th, xlab = xlab, ylab = ylab, 
+                    pch = pch, pcol = pcol, cex = cex, cex.lab = cex.lab, 
+                    cex.axis = cex.axis, yRange = yRange, ModTitle = ModTitle, 
+                    TiAdj = TiAdj, TiLine = TiLine, cex.main = cex.main, 
+                    lwd = lwd, lcol = lcol, ...)
+      }
+      else {
+        discTwoPlot(xx, yy, xypred.disc, data, th, xlab = xlab, ylab = ylab, 
+                    pch = pch, pcol = pcol, cex = cex, cex.lab = cex.lab, 
+                    cex.axis = cex.axis, yRange = yRange, ModTitle = ModTitle, 
+                    TiAdj = TiAdj, TiLine = TiLine, cex.main = cex.main, 
+                    lwd = lwd, lcol = lcol, ...)
+      }
+    }
+    else {
+      contsPlot(xx, yy, xypred.cont, data, column = names, xlab = xlab, 
+                ylab = ylab, pch = pch, pcol = pcol, cex = cex, 
+                cex.lab = cex.lab, cex.axis = cex.axis, yRange = yRange, 
+                ModTitle = ModTitle, TiAdj = TiAdj, TiLine = TiLine, 
+                cex.main = cex.main, lwd = lwd, lcol = lcol, 
+                ...)
+    }
+  } else {
+    ##############################################################
+    ##if more than one model###################################
+    #######################################################
+    if (is.null(di)) {
+      if (length(mods) == 2) {
+        par(mfrow = c(1, 2))
+      }
+      else {
+        lmn <- as.character(length(mods))
+        di <- switch(lmn, 
+                     `3` = c(1, 3), 
+                     `4` = c(2, 2), 
+                     `5` = c(2, 3), 
+                     `6` = c(2, 3), 
+                     `7` = c(3, 3), 
+                     `8` = c(3, 3))
+        par(mfrow = c(di[1], di[2]))
+      }
+    }
+    else {
+      par(mfrow = di)
+    }
+    for (i in 1:length(mods)) {
+      if (any(c("DiscOne", "DiscTwo") %in% names[[i]])) {
+        if (names[[i]] == "DiscOne") {
+          discOnePlot(xx, yy, xypred.disc, data, th[i], xlab = xlab, 
+                      ylab = ylab, pch = pch, pcol = pcol, cex = cex, 
+                      cex.lab = cex.lab, cex.axis = cex.axis, yRange = yRange, 
+                      ModTitle = ModTitle[i], TiAdj = TiAdj, TiLine = TiLine, 
+                      cex.main = cex.main, lwd = lwd, lcol = lcol, 
+                      ...)
+        }
+        else {
+          discTwoPlot(xx, yy, xypred.disc, data, th[i], xlab = xlab, 
+                      ylab = ylab, pch = pch, pcol = pcol, cex = cex, 
+                      cex.lab = cex.lab, cex.axis = cex.axis, yRange = yRange, 
+                      ModTitle = ModTitle[i], TiAdj = TiAdj, TiLine = TiLine, 
+                      cex.main = cex.main, lwd = lwd, lcol = lcol, 
+                      ...)
+        }
+      }
+      else {
+        contsPlot(xx, yy, xypred.cont, data, column = names[[i]], 
+                  xlab = xlab, ylab = ylab, pch = pch, pcol = pcol, 
+                  cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, 
+                  yRange = yRange, ModTitle = ModTitle[i], TiAdj = TiAdj, 
+                  TiLine = TiLine, cex.main = cex.main, lwd = lwd, 
+                  lcol = lcol)
+      }
+    }
+    par(mfrow = c(1, 1))#change par back to default
+  }
+}#eo function
 
 
 #function to convert vector of model
