@@ -247,11 +247,21 @@ grid_start_fit <- function(model, data, n, algo = "Nelder-Mead",
   
   grid.start <- rbind(grid.start, sm_grid)
   
-  #some more specific values for Chapman model
+  #some more specific values for Chapman and Gompertz models
   if(model$name == "Chapman Richards"){
     zseq <- c(0.00001, 0.00005, 0.0001, 0.0005, 0.001, 0.005, 
               0.01, 0.05, 0.1, 0.5)
     gs2 <- data.frame(rep(def.start[1], 10), zseq, rep(def.start[3], 10))
+    colnames(gs2) <- colnames(grid.start)
+    grid.start <- rbind(grid.start, gs2)
+  }
+  if (model$name == "Gompertz"){
+    zz <- def.start[2]
+    zz2 <- seq(zz*0.5, zz*1.5, length.out= 50)
+    cc <- def.start[3]
+    cc2 <- c(cc + 5, cc + 10, cc + 50, cc + 100, cc + 200, cc + 500, cc + 800,
+             cc - 5, cc - 10, cc - 50, cc - 100, cc - 200, cc - 500, cc - 800)
+    gs2 <- expand.grid(def.start[1], zz2, cc2)
     colnames(gs2) <- colnames(grid.start)
     grid.start <- rbind(grid.start, gs2)
   }
