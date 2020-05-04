@@ -495,6 +495,7 @@ sar_threshold <- function(data, mod = "All", interval = NULL,
 #' #calculate confidence intervals (using very low Nboot just as an example)
 #' CI <- threshold_ci(fitT, interval = NULL, Nboot = 3)
 #' CI
+#' @importFrom stats fitted resid
 #' @export
 
 threshold_ci <- function(object, interval = NULL, Nboot = 100, verb = TRUE){
@@ -595,6 +596,7 @@ threshold_ci <- function(object, interval = NULL, Nboot = 100, verb = TRUE){
 #' #get the slopes and intercepts for these three models
 #' coefs <- get_coef(fitT)
 #' coefs
+#' @importFrom stats coef
 #' @export
 
 get_coef <- function(fit){
