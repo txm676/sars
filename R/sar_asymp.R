@@ -7,7 +7,7 @@
 #'   the first with island/site areas, and the second with the species richness
 #'   of each island/site.
 #' @param start NULL or custom parameter start values for the optimisation algorithm.
-#' @param grid_start Logical argument specifying whether a grid search procedure should be implemented to test multiple starting parameter values (default: \code{grid_start = FALSE}).
+#' @param grid_start Logical argument specifying whether a grid search procedure should be implemented to test multiple starting parameter values. The default is set to FALSE, but for certain models (e.g. Gompertz, Chapman Richards), we advice using it to ensure an optimal fit.
 #' @param grid_n If \code{grid_start = TRUE}, the number of points sampled in the model parameter space.
 #' @param normaTest The test used to test the normality of the residuals of the
 #'   model. Can be any of 'lillie' (Lilliefors Kolmogorov-Smirnov test; the
@@ -98,7 +98,7 @@ model <- list(
   exp = expression(d - c*z^A),
   shape = "convex",
   asymp = function(pars)pars["d"],
-  parLim  =  c("Rplus","R","R"),
+  parLim  =  c("Rplus","R","Rplus"),
   #initial values function
   init = function(data){#Ratkowsky 1983 p178
     #d determination (asymptote)

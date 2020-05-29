@@ -5,7 +5,7 @@ model <- list(
   exp = expression(d - c*z^A),
   shape = "convex",
   asymp = function(pars)pars["d"],
-  parLim  =  c("Rplus","R","R"),
+  parLim  =  c("Rplus","R","Rplus"),
   #initial values function
   init = function(data){#Ratkowsky 1983 p178
     #d determination (asymptote)

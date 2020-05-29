@@ -14,7 +14,7 @@ of each island/site.}
 
 \item{start}{NULL or custom parameter start values for the optimisation algorithm.}
 
-\item{grid_start}{Logical argument specifying whether a grid search procedure should be implemented to test multiple starting parameter values (default: \code{grid_start = FALSE}).}
+\item{grid_start}{Logical argument specifying whether a grid search procedure should be implemented to test multiple starting parameter values. The default is set to FALSE, but for certain models (e.g. Gompertz, Chapman Richards), we advice using it to ensure an optimal fit.}
 
 \item{grid_n}{If \code{grid_start = TRUE}, the number of points sampled in the model parameter space.}
 

@@ -46,8 +46,9 @@ cat_roxygen <- function(model, funName, fileName){
               " values for the optimisation algorithm.\n"))
   cat1(paste0("#' @param ", "grid_start ", "Logical argument specifying whether", 
               " a grid search procedure should be implemented to test multiple",
-              " starting parameter values",
-              " (default: \\code{grid_start = FALSE}).\n"))
+              " starting parameter values. The default is set to FALSE, but",
+              " for certain models (e.g. Gompertz, Chapman Richards), we",
+              " advice using it to ensure an optimal fit.\n"))
   cat1(paste0("#' @param ", "grid_n ", "If \\code{grid_start = TRUE}, the",
               " number of points sampled in the model parameter space.\n"))
   cat1(paste0("#' @param ", "normaTest ", "The test used to test the", 

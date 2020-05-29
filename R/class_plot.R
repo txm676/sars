@@ -109,7 +109,23 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
     df <- x$data
     xx <- df$A
     yy <- df$S
-    ff <- x$calculated
+    xx2 <- seq(min(xx), max(xx), length.out = 1000)
+    if (x$model$name == "Linear model"){
+      c1 <- x$par[1]
+      m <- x$par[2]
+      ff <- c1 + (m * xx2)#have to have 1000 points for linear so it matches
+                               #with xx2 for plotting
+    } else {
+      #create a set of 1000 fitted points using fitted model parameters
+      #to ensure a smooth curve
+      if (!all(x$model$mod.fun(xx, x$par) == x$calculated)){
+        stop("Error in plotting, contact package owner")
+      }
+      ff <- x$model$mod.fun(xx2, x$par)
+      if (anyNA(ff)){
+        stop("Error in plotting, contact package owner")
+      }
+    }
     if (is.null(yRange)){
       yMax <- max(c(yy,ff))#fitted line can be above the largest observed point
       yMin <- min(c(yy,ff))
@@ -121,7 +137,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
          ylim = yRange, ...)
     title(main = ModTitle, adj = TiAdj, line = TiLine,
           cex.main = cex.main, ...)
-    lines(x = xx, y = ff, lwd = lwd, col = lcol,  ...)
+    lines(x = xx2, y = ff, lwd = lwd, col = lcol,  ...)
 
   }
 
@@ -149,12 +165,30 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
     } else {
       par(mfrow = di)
     }#eo is.null if
-      lapply(x, function(x){
-
-      df <- x$data
+      
+      df <- x[[1]]$data
       xx <- df$A
       yy <- df$S
-      ff <- x$calculated
+      xx2 <- seq(min(xx), max(xx), length.out = 1000)
+      
+      lapply(x, function(y){
+      if (y$model$name == "Linear model"){
+        c1 <- y$par[1]
+        m <- y$par[2]
+        ff <- c1 + (m * xx2)#have to have 1000 points for linear so it matches
+                            #with xx2 for plotting
+      } else {
+        #create a set of 1000 fitted points using fitted model parameters
+        #to ensure a smooth curve
+        if (!all(y$model$mod.fun(xx, y$par) == y$calculated)){
+          stop("Error in plotting, contact package owner")
+        }
+        ff <- y$model$mod.fun(xx2, y$par)
+        if (anyNA(ff)){
+          stop("Error in plotting, contact package owner")
+        }
+      }
+      
       ModTitle <- x$model$name
       if (is.null(yRange)){
         yMax <- max(c(yy,ff))#fitted line can be above the largest observed
@@ -167,7 +201,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
            ylim = yRange, ...)
       title(main = ModTitle, adj = TiAdj, line = TiLine,
             cex.main = cex.main, ...)
-      lines(x = xx, y = ff, lwd = lwd, col = lcol, ...)
+      lines(x = xx2, y = ff, lwd = lwd, col = lcol, ...)
     })
      par(mfrow = c(1,1))#change par back to default
     }# !mfplot
@@ -180,7 +214,25 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
       nams <-  vapply(x, function(x) x$model$name, FUN.VALUE = character(1))
 
       #fitted values for each model
-      mf <- lapply(x, function(x) x$calculated)
+     # mf <- lapply(x, function(x) x$calculated)
+      xx2 <- seq(min(xx), max(xx), length.out = 1000)
+      mf <- lapply(x, function(y) {
+        if (y$model$name == "Linear model"){
+          c1 <- y$par[1]
+          m <- y$par[2]
+          ff <- c1 + (m * xx2)#have to have 1000 points for linear so it fits
+                              #in mf2 matrix
+        } else {
+          #create a set of 1000 fitted points using fitted model parameters
+          #to ensure a smooth curve
+          ff <- y$model$mod.fun(xx2, y$par)
+          if (anyNA(ff)){
+            stop("Error in plotting, contact package owner")
+          }
+          #ff <- x$calculated
+        }
+        ff
+        })#eo lapply
       mf2 <- matrix(unlist(mf), ncol = length(x), byrow = FALSE)
       mf2 <- as.data.frame(mf2)
       colnames(mf2) <- nams
@@ -211,7 +263,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
            cex = cex, cex.lab = cex.lab, cex.axis = cex.axis,
            ylim = yRange, bty = "L")
       }
-      matlines(xx, mf2, lwd = lwd, lty = seq_along(mf2), col=seq_along(mf2))
+      matlines(xx2, mf2, lwd = lwd, lty = seq_along(mf2), col=seq_along(mf2))
       title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main)
      if (pLeg == TRUE) legend(max(xx) + (max(xx) * 0.05), yMax,
                               legend = nams, horiz = FALSE,
@@ -391,9 +443,27 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   xx <- df$A
   yy <- df$S
   nams <-  vapply(dat2, function(x) x$model$name, FUN.VALUE = character(1))
+  xx2 <- seq(min(xx), max(xx), length.out = 1000)
 
   #fitted values for each model
-  mf <- lapply(dat2, function(x) x$calculated)
+  mf <- lapply(dat2, function(y) {
+    if (y$model$name == "Linear model"){
+      c1 <- y$par[1]
+      m <- y$par[2]
+      ff <- c1 + (m * xx2)#have to have 1000 points for linear so it fits
+      #in mf2 matrix
+    } else {
+      #create a set of 1000 fitted points using fitted model parameters
+      #to ensure a smooth curve
+      ff <- y$model$mod.fun(xx2, y$par)
+      if (anyNA(ff)){
+        stop("Error in plotting, contact package owner")
+      }
+      #ff <- x$calculated
+    }
+    ff
+  })
+  
   mf2 <- matrix(unlist(mf), ncol = length(dat2), byrow = FALSE)
   mf2 <- as.data.frame(mf2)
   colnames(mf2) <- nams
@@ -414,8 +484,8 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
   wfv <- rowSums(mf3)
 
   #this is a test error for development
-  if (!all(round(wfv) == round(x$mmi)))
-    stop("Multimodel fitted values do not match between functions")
+ # if (!all(round(wfv) == round(x$mmi)))
+   # stop("Multimodel fitted values do not match between functions")
 
   if (allCurves & (!mmSep)){
     mf2$MultiModel <- wfv
@@ -501,7 +571,7 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
         cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
       }#eo confInt
     }#eo no legend
-      matlines(xx, mf2, lwd = lwd, lty = seq_along(mf2), col=seq_along(mf2))
+      matlines(xx2, mf2, lwd = lwd, lty = seq_along(mf2), col=seq_along(mf2))
       title(main = ModTitle, adj = TiAdj, line = TiLine,cex.main = cex.main)
       if (pLeg){
         if (!mmSep) {
@@ -515,7 +585,7 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
                  lwd = c(rep(lwd, length(nams2)), lwd.Sep))
         }
       }#eo if PLeg
-      if (mmSep) lines(xx, wfv, lwd = lwd.Sep, col = col.Sep)
+      if (mmSep) lines(xx2, wfv, lwd = lwd.Sep, col = col.Sep)
   } else if (!allCurves){
     #just multimodel SAR curve
     if (confInt){
@@ -525,12 +595,12 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
       points(x = xx, y = yy, pch = pch, col = pcol,
              cex = cex)
       title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main)
-      lines(x = xx, y = wfv, lwd = lwd, col = lcol)
+      lines(x = xx2, y = wfv, lwd = lwd, col = lcol)
     } else {
       plot(x = xx, y = yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol,
       cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange)
       title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main)
-      lines(x = xx, y = wfv, lwd = lwd, col = lcol)
+      lines(x = xx2, y = wfv, lwd = lwd, col = lcol)
     }#eo confint
   }
   }

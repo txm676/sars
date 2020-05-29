@@ -53,8 +53,9 @@ the test).}
 the test).}
 
 \item{grid_start}{Logical argument specifying whether a grid search procedure
-should be implemented to test multiple starting parameter values (default:
-\code{grid_start = FALSE}).}
+should be implemented to test multiple starting parameter values. The
+default is set to FALSE, but we would recommend using it to ensure the fits
+of certain models (e.g. Gompertz, Chapman Richards) are optimal.}
 
 \item{grid_n}{If \code{grid_start = TRUE}, the number of points sampled in
 the model parameter space.}
@@ -136,6 +137,19 @@ Occasionally a model fit will converge and pass the model fitting
   the resultant 'multi' object to check the individual model fits. To re-run
   the \code{sar_multi} function without a particular model, simply remove it
   from the \code{obj} argument.
+  
+  Choosing starting parameter values for non-linear regression optimisation
+  algorithms is not always straight forward, depending on the data at hand.
+  In the package, we use various approaches to choose default starting
+  parameters. However, if any of the resultant model fits does not converge,
+  returns a singular gradient at parameter estimates, or the plot of the
+  model fit does not look optimum, try using the \code{grid_start} argument
+  to undertake a more extensive selection of starting values, or provide your
+  own starting values (\code{start}). While using \code{grid_start} is more
+  time consuming, it will often provide (much) better fits for certain
+  models, and so we recommend its use where possible. Note, that
+  \code{grid_start} has been disabled for a small number of models (e.g.
+  Weibull 3 par.). See the vignette for more information.
 
   The generation of confidence intervals around the multimodel curve (using
   \code{confInt == TRUE}), may throw up errors that we have yet to come
@@ -153,16 +167,6 @@ Occasionally a model fit will converge and pass the model fitting
   formulas such that now our IC formulas are the same as those used in the
   \link[stats]{nls} function. See the "On the calculation of information
   criteria" section in the package vignette for more information.
-  
-  Choosing starting parameter values for non-linear regression optimisation
-  algorithms is not always straight forward, depending on the data at hand.
-  In the package, we use various approaches to choose default starting
-  parameters. However, if any of the resultant model fits does not
-  converge, returns a singular gradient at parameter estimates, or the plot
-  of the model fit does not look optimum, try using the \code{grid_start}
-  argument to undertake a more extensive selection of starting values, or
-  provide your own starting values (\code{start}). See the vignette for more
-  information.
 }
 \examples{
 data(galap)

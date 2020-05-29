@@ -235,8 +235,9 @@ sar_multi <- function(data,
 #'   (default = 0.05, i.e. any test with a P value < 0.05 is flagged as failing
 #'   the test).
 #' @param grid_start Logical argument specifying whether a grid search procedure
-#'   should be implemented to test multiple starting parameter values (default:
-#'   \code{grid_start = FALSE}).
+#'   should be implemented to test multiple starting parameter values. The
+#'   default is set to FALSE, but we would recommend using it to ensure the fits
+#'   of certain models (e.g. Gompertz, Chapman Richards) are optimal.
 #' @param grid_n If \code{grid_start = TRUE}, the number of points sampled in
 #'   the model parameter space.
 #' @param confInt A logical argument specifying whether confidence intervals
@@ -305,6 +306,19 @@ sar_multi <- function(data,
 #'   the resultant 'multi' object to check the individual model fits. To re-run
 #'   the \code{sar_multi} function without a particular model, simply remove it
 #'   from the \code{obj} argument.
+#'   
+#'   Choosing starting parameter values for non-linear regression optimisation
+#'   algorithms is not always straight forward, depending on the data at hand.
+#'   In the package, we use various approaches to choose default starting
+#'   parameters. However, if any of the resultant model fits does not converge,
+#'   returns a singular gradient at parameter estimates, or the plot of the
+#'   model fit does not look optimum, try using the \code{grid_start} argument
+#'   to undertake a more extensive selection of starting values, or provide your
+#'   own starting values (\code{start}). While using \code{grid_start} is more
+#'   time consuming, it will often provide (much) better fits for certain
+#'   models, and so we recommend its use where possible. Note, that
+#'   \code{grid_start} has been disabled for a small number of models (e.g.
+#'   Weibull 3 par.). See the vignette for more information.
 #'
 #'   The generation of confidence intervals around the multimodel curve (using
 #'   \code{confInt == TRUE}), may throw up errors that we have yet to come
@@ -322,16 +336,6 @@ sar_multi <- function(data,
 #'   formulas such that now our IC formulas are the same as those used in the
 #'   \link[stats]{nls} function. See the "On the calculation of information
 #'   criteria" section in the package vignette for more information.
-#'   
-#'   Choosing starting parameter values for non-linear regression optimisation
-#'   algorithms is not always straight forward, depending on the data at hand.
-#'   In the package, we use various approaches to choose default starting
-#'   parameters. However, if any of the resultant model fits does not
-#'   converge, returns a singular gradient at parameter estimates, or the plot
-#'   of the model fit does not look optimum, try using the \code{grid_start}
-#'   argument to undertake a more extensive selection of starting values, or
-#'   provide your own starting values (\code{start}). See the vignette for more
-#'   information.
 #'   
 #' @references Burnham, K. P., & Anderson, D. R. (2002). Model selection and
 #'   multi-model inference: a practical information-theoretic approach (2nd
@@ -634,7 +638,10 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
                         homoTest = homoTest,
                         neg_check = neg_check,
                         alpha_normtest = alpha_normtest,
-                        alpha_homotest = alpha_homotest, verb = verb)
+                        alpha_homotest = alpha_homotest, 
+                        grid_start = grid_start,
+                        grid_n = grid_n,
+                        verb = verb)
     res$details$confInt <- cis
   } else {
     res$details$confInt <- NA
@@ -658,9 +665,9 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
 #' @details Extrapolation (e.g. predicting the richness of areas too large to be
 #'   sampled) is one of the primary uses of the SAR. The \code{sar_pred}
 #'   function provides an easy method for undertaking such an exercise. The
-#'   function works by taking an already fitted SAR model, extacting the parameter
-#'   values and then using these values and the model function to predict the
-#'   richness for any value of area provided.
+#'   function works by taking an already fitted SAR model, extacting the
+#'   parameter values and then using these values and the model function to
+#'   predict the richness for any value of area provided.
 #'
 #'   If a multi-model SAR curve is used for prediction (i.e. using
 #'   \code{\link{sar_average}}), the model information criterion weight (i.e.

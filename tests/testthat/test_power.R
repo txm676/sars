@@ -11,6 +11,18 @@ test_that("sar_power returns correct results", {
 })
 
 
+#changed neg_expo function allowing z to be > 1, and also the change to 
+#asymp setting z to Rplus rather than R
+test_that("neg_expo and asymp returns correct results", {
+  fit <- sar_negexpo(niering)
+  expect_equal(round(fit$AICc, 2), 207.39)
+  expect_equal(as.vector(round(fit$par[2], 2)), 26.14)
+  fit2 <- sar_asymp(niering)
+  expect_equal(round(fit2$BIC, 2), 204.32)
+  expect_equal(as.vector(round(fit2$par[3], 5)), 0)
+})
+
+
 test_that("sar_power summary returns correct results", {
   fit <- sar_power(galap)
   fs <- summary(fit)

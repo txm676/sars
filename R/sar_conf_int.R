@@ -8,13 +8,19 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
                          homoTest = "cor.fitted",
                          neg_check = TRUE,
                          alpha_normtest = 0.05,
-                         alpha_homotest = 0.05, verb = TRUE){
+                         alpha_homotest = 0.05, 
+                         grid_start = FALSE,
+                         grid_n = NULL,
+                         verb = TRUE){
 
   if (!"multi" %in% class(fit)) stop ("class of 'fit' should be 'multi'")
   if (length(fit$details$mod_names) < 2) 
     stop ("less than two models in the sar average object")
 
   #model names for matching
+  
+  #NB lots of the hashed code relates to changes to do with grid_start being more
+  #fully incorporated into the package, and having to chat how this works
 
 #  x1 <- c("Power", "PowerR", "Extended_Power_model_1", 
           #"Extended_Power_model_2", "Persistence_function_1",
@@ -24,16 +30,16 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
         #  "Rational_function","Gompertz", "Cumulative_Weibull_4_par.", 
         #  "Beta-P_cumulative", "Heleg(Logistic)", "Linear_model")
 
-  x2 <- c("sar_power(", "sar_powerR(", "sar_epm1(", "sar_epm2(", "sar_p1(",
-          "sar_p2(", "sar_loga(", "sar_koba(", "sar_mmf(", "sar_monod(",
-          "sar_negexpo(", "sar_chapman(", "sar_weibull3(", "sar_asymp(", 
-          "sar_ratio(", "sar_gompertz(", "sar_weibull4(", "sar_betap(", 
-          "sar_heleg(", "sar_linear(")
+ # x2 <- c("sar_power(", "sar_powerR(", "sar_epm1(", "sar_epm2(", "sar_p1(",
+      #    "sar_p2(", "sar_loga(", "sar_koba(", "sar_mmf(", "sar_monod(",
+      #    "sar_negexpo(", "sar_chapman(", "sar_weibull3(", "sar_asymp(", 
+      #    "sar_ratio(", "sar_gompertz(", "sar_weibull4(", "sar_betap(", 
+       #   "sar_heleg(", "sar_linear(")
 
-  x3 <-   c("power", "powerR","epm1","epm2","p1","p2","loga","koba","mmf",
-            "monod","negexpo","chapman",
-            "weibull3","asymp","ratio","gompertz","weibull4","betap","heleg",
-            "linear")
+#  x3 <-   c("power", "powerR","epm1","epm2","p1","p2","loga","koba","mmf",
+  #          "monod","negexpo","chapman",
+   #         "weibull3","asymp","ratio","gompertz","weibull4","betap","heleg",
+    #        "linear")
 
 
   #observed data
@@ -42,8 +48,8 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   #weights and model names
   wei <- fit$details$weights_ics
   nams <- as.vector(names(wei))
-  ns1 <- which(x3 %in% nams)
-  nams_short <- x3[ns1]#for use below
+#  ns1 <- which(x3 %in% nams)
+ # nams_short <- x3[ns1]#for use below
   
   #loop over all models in sar_average fit and fill matrices of fitted values
   #and, resids & transformed residuals
@@ -54,36 +60,48 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   {
 
   #select the expression of the selected model
-  wn <- which(x3 %in% nams[i])
-  w2 <- x2[wn]
+  #wn <- which(x3 %in% nams[i])
+ # w2 <- x2[wn]
 
-  #fit the best model to observed data; extract fitted values and residuals
-  me <- suppressWarnings(eval(parse(text = paste(w2, "dat)", sep = ""))))
+  #fit the ith model to observed data; extract fitted values and residuals
+    
+  #me <- suppressWarnings(eval(parse(text = paste(w2, "dat)", sep = ""))))
+  #original code did not account for grid_start, when this is used you can get 
+  #different parameter values from fitting the model without this, so instead 
+  #of re-fitting, just take the fits from the fit object
+    
+  me <- fit$details$fits[nams[i]][[1]]
   meF <- me$calculated
   meR <- me$residuals
 
   if (nams[i] == "linear"){
   #based on code from mmSAR in Rforge
-   jacob <- numDeriv::jacobian(me$model$rss.fun, me$par, data = me$data[1, ],
-                               model = me$model,  opt = FALSE)
+   jacob <- suppressWarnings(numDeriv::jacobian(me$model$rss.fun, me$par, 
+                              data = me$data[1, ],model = me$model,  
+                              opt = FALSE))
 
    for (k in 2:nrow(dat)) {
-     jacob <- rbind(jacob, numDeriv::jacobian(me$model$rss.fun, me$par,
-                          data = me$data[k, ],model = me$model, opt = FALSE))
+     jacob <- rbind(jacob, suppressWarnings(numDeriv::jacobian(me$model$rss.fun,
+                                             me$par, data = me$data[k, ],
+                                             model = me$model, opt = FALSE)))
   }
   } else {
   #based on code from mmSAR in Rforge
-  jacob <- numDeriv::jacobian(me$model$rss.fun, me$par, data = me$data[1, ],
-                    opt = FALSE)
+  jacob <- suppressWarnings(numDeriv::jacobian(me$model$rss.fun, me$par, 
+                                    data = me$data[1, ], opt = FALSE))
 
   for (k in 2:nrow(dat)) {
-    jacob <- rbind(jacob, numDeriv::jacobian(me$model$rss.fun, me$par,
-                                   data = me$data[k, ], opt = FALSE))
+    jacob <- rbind(jacob, suppressWarnings(numDeriv::jacobian(me$model$rss.fun, 
+                                           me$par, data = me$data[k, ], 
+                                           opt = FALSE)))
   }
   }#eo if linear
 
   ##occasionally the jacobian function returns NA for certain models: 
   #need to remove these,
+  #looks like it happens when the slope parameter (e.g. z) is very close to
+  #0, even if still > 0 (e.g. 1.1e-17) as looking in the source code jacobian 
+  #seems to have a zero sensitivity of 1e-4
   #so just fill all NAs for this model and it will be removed below
   if (anyNA(jacob)){
     calculated[i, ] <- NA
@@ -112,7 +130,8 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   #methods and their applications" p 259 eq (6.9)
   diagHatMat <- diag(hatMat)
   tr <- meR - mean(meR)
-  tr <- tr / sqrt(1 - diagHatMat)#checked and this gives same values as mmSAR
+  #checked and this gives same values as mmSAR
+  tr <- suppressWarnings(tr / sqrt(1 - diagHatMat))
 
   #fill in the matrices for this model
   calculated[i, ] <- meF
@@ -138,10 +157,13 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
   transResiduals <- transResiduals[-wna, ]
   wei <- wei[-wna]
   nams <- nams[-wna]
-  nams_short <- nams_short[-wna]
-  if (identical(!nrow(calculated), nrow(residuals),
-                nrow(transResiduals), length(wei),
-length(nams), length(nams_short))) 
+#  nams_short <- nams_short[-wna]
+  #identical only works with two objects, so use sapply to compare all objects
+  #in a pairwise fashion
+  if (!all(sapply(list(nrow(residuals),
+                    nrow(transResiduals), length(wei),
+                    length(nams)), 
+               FUN = identical, nrow(calculated))))
     stop ("Problem with removed models following transResiduals checks")
  }
 
@@ -204,8 +226,10 @@ for (l in seq_len(nrow(dat))) {
     badBoot <- FALSE
 
     df <- data.frame("A" = dat$A, "S" = bootMatrix[nGoodBoot, ])
-    optimres <- tryCatch(suppressMessages(sar_average(obj = nams_short,
+    optimres <- tryCatch(suppressMessages(sar_average(obj = nams,
                                                       data = df, 
+                                                      grid_start = grid_start,
+                                                      grid_n = grid_n,
                                       verb = FALSE)), error = function(e) NA)
 
     if (length(optimres) == 1) {

@@ -27,7 +27,9 @@ test_that("sar_pred on multi-model curve returns correct results", {
   fit3 <- sar_average(data = niering)
   p3 <- sar_pred(fit3, area = c(50, 500))
   expect_equal(nrow(p3), 2)
-  expect_equal(round(p3$Prediction[2], 2), 46.82)
+  #this changed from 46.82 following change to neg_expo function, allowing
+  #z to be > 1, and also the change to asymp setting z to Rplus rather than R
+  expect_equal(round(p3$Prediction[2], 2), 47.71)
   expect_match(as.character(p3$Model[1]), "Multi")
 })
 

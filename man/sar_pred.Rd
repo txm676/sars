@@ -27,9 +27,9 @@ Predict the richness on an island of a given size using either
 Extrapolation (e.g. predicting the richness of areas too large to be
   sampled) is one of the primary uses of the SAR. The \code{sar_pred}
   function provides an easy method for undertaking such an exercise. The
-  function works by taking an already fitted SAR model, extacting the parameter
-  values and then using these values and the model function to predict the
-  richness for any value of area provided.
+  function works by taking an already fitted SAR model, extacting the
+  parameter values and then using these values and the model function to
+  predict the richness for any value of area provided.
 
   If a multi-model SAR curve is used for prediction (i.e. using
   \code{\link{sar_average}}), the model information criterion weight (i.e.

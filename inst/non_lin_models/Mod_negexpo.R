@@ -6,7 +6,7 @@ model <- list(
   shape="convex",
   asymp=function(pars)pars["d"],
   #limits for parameters
-  parLim = c("Rplus","unif"),
+  parLim = c("Rplus","Rplus"),
   custStart=function(data)c(max(data$S),.01),
   #initials values function
   init=function(data){
