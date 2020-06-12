@@ -210,13 +210,23 @@ print.sars <- function(x, ...){
     print(object2)
   }
   if (attributes(object)$type == "threshold_ci"){
+    m <- object$Method
     cat("\nThreshold confidence interval summary\n", sep = "")
+    cat("\nMethod: ", m, "\n", sep = "")
     #cat("\n", "Confidence intervals generated for:", names(object[[1]]),
     #   "\n", sep = " ")
-    for (i in 1:length(object[[2]])){
-      CI <- round(object[[2]][[i]], 2)
-      cat("\nModel: ", names(object[[1]][i]),"\n", sep = "")
-      cat("Confidence interval of the breakpoint:", CI[1],"-", CI[2], "\n")
+    if (m == "boot"){
+      for (i in 1:length(object[[2]])){
+        CI <- round(object[[2]][[i]], 2)
+        cat("\nModel: ", names(object[[1]][i]),"\n", sep = "")
+        cat("Confidence interval of the breakpoint:", CI[1],"-", CI[2], "\n")
+      }
+    } else{
+      for (i in 1:(length(object) - 1)){
+        CI <- round(object[[i]], 2)
+        cat("\nModel: ", names(object)[i],"\n", sep = "")
+        cat("Confidence interval of the breakpoint:", CI[1],"-", CI[2], "\n")
+      }
     }
   }
   if (attributes(object)$type == "threshold_coef"){

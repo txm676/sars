@@ -6,16 +6,19 @@
 
 #' function to find the threshold for one threshold cont and zero slope
 #' @noRd
-find_one_threshold_cont <- function(x, y, fct, interval){
-  sequence <- seq(min(x), max(x), interval)
-  s1 <- lapply(sequence,fct,x=x,y=y)
+find_one_threshold_cont <- function(x, y, fct, interval, nisl = NULL){
+  if (is.null(nisl)){
+    sequence <- seq(min(x), max(x), interval)
+    } else {
+    n <- nisl-1
+    if (n == 0) {n <- 1}
+    sequence <- seq(min(sort(x)[-(1:n)]), max(rev(sort(x))[-(1:n)]), interval)
+  }
+  s1 <- lapply(sequence, fct, x = x, y = y)
   w <- which.min(s1)
-  #if multiple threshold values return same min RSS, randomly pick one
   if (length(w) == 1){
     threshold <- sequence[w]
   } else{
-    warning("Multiple threshold values returned same minimum rss;", 
-            " one value / pair has been randomly selected")
     w2 <- w[sample(1:length(w), 1)]
     threshold <- sequence[w2]
   }
@@ -24,20 +27,24 @@ find_one_threshold_cont <- function(x, y, fct, interval){
 
 #' function to find the threshold for one threshold discon
 #' @noRd
-find_one_threshold_disc <- function(x, y, fct){
-  rss <- vector(length = length(x))
-  for (i in 1:length(x)){
+find_one_threshold_disc <- function(x, y, fct, nisl = NULL){
+  if (is.null(nisl)){
+    x1 <- x
+    } else {
+    n <- nisl-1
+    if (n == 0) {n <- 1}
+    x1 <- x[x >= min(sort(x)[-(1:n)]) & x <= max(rev(sort(x))[-(1:n)])]
+  }
+  rss <- vector(length = length(x1))
+  for (i in 1:length(x1)){
     rss[i] <- fct(x[i], x, y)
   }
   w <- which.min(rss)
-  #if multiple threshold values return same min RSS, randomly pick one
   if (length(w) == 1){
-    threshold <- x[w]
+    threshold <- x1[w]
   } else{
-    warning("Multiple threshold values returned same minimum rss;", 
-            " one value / pair has been randomly selected")
     w2 <- w[sample(1:length(w), 1)]
-    threshold <- x[w2]
+    threshold <- x1[w2]
   }
   return(threshold)
 }
@@ -47,45 +54,53 @@ find_one_threshold_disc <- function(x, y, fct){
 #' @importFrom doParallel registerDoParallel
 #' @importFrom foreach foreach "%dopar%"
 #' @noRd
-find_two_thresholds_cont <- function(x, y, fct, interval, parallel, cores){
-  sequence <- seq(min(x), max(x), interval)
+find_two_thresholds_cont <- function(x, y, fct, interval, nisl = NULL, parallel, 
+                                     cores){
+  if (is.null(nisl)){
+    sequence <- seq(min(x), max(x), interval)
+    } else {
+    n <- nisl-1
+    if (n == 0) {n <- 1}
+    sequence <- seq(min(sort(x)[-(1:n)]), max(rev(sort(x))[-(1:n)]), interval)
+  }
   N <- length(sequence)
   if (parallel){
-    cl = makeCluster(cores); on.exit(stopCluster(cl))
+    cores <- cores
+    cl <- makeCluster(cores); on.exit(stopCluster(cl))
     registerDoParallel(cl)
-    i = 1 #Dummy line 
+    i <- 1 #Dummy line 
     ssr_t1 <- foreach(i=seq(from= 1, to=N-1, by=1))  %dopar% { 
       ssr_t2 <- vector("list", length = length((i+1):N))
       k <- 1
       for (j in (i + 1):N){
         ssr_t2[[k]] <- c(fct(sequence[i], sequence[j], x, y), 
                          sequence[i], sequence[j])
-        k <- k + 1
       }
+      k <- k + 1
       ssr_t2
     }#eo dopar
   } else{
-    ssr_t1 <- vector("list", length = N-1)
-    for (i in 1:(N-1)){
-      ssr_t2 <- vector("list", length = length((i+1):N))
-      k <- 1
+    ssr_t1 <- vector("list", length = N - 1)
+    for (i in 1:(N - 1)){
+      ssr_t2 <- vector("list", length = length((i + 1):N))
+      j <- 1
       for (j in (i + 1):N){
-        ssr_t2[[k]] <- c(fct(sequence[i], sequence[j], x, y), 
-                         sequence[i], sequence[j])
-        k <- k + 1
+        ssr_t2[[j]] <- c(fct(sequence[i], sequence[j], x, y), sequence[i], 
+                         sequence[j])
       }
+      j <- j + 1
       ssr_t1[[i]] <- ssr_t2
     }
   }
   l2 <- do.call(rbind, lapply(ssr_t1, function(x) do.call(rbind, x)))
-  #if multiple threshold values return same min RSS, randomly pick one
   thb <- l2[which(l2[,1] == min(l2[,1])), , drop = FALSE]
+  
+  th <- l2[which(l2[,1] == min(l2[,1])),][2:3]
+  
   if (nrow(thb) == 1){
     th <- as.vector(thb)[2:3]
   } else {
-    warning("Multiple threshold values returned same minimum rss;", 
-            " one value / pair has been randomly selected")
-    rr <- sample(1:nrow(thb), 1)
+    rr <- sample(1:nrow(th), 1)
     th <- as.vector(thb[rr,])[2:3]
   }
   return(th)
@@ -94,32 +109,36 @@ find_two_thresholds_cont <- function(x, y, fct, interval, parallel, cores){
 
 #' function to find the threshold for two threshold disc
 #' @noRd
-find_two_thresholds_disc <- function(x, y, fct){
-  N <- length(x) - 1
+find_two_thresholds_disc <- function(x, y, fct, nisl = NULL){
+  if(is.null(nisl)){n <- 0}
+  if(is.null(nisl)){
+    x1 <- x
+    } else {
+    n <- nisl - 1
+    if (n == 0) {n <- 1}
+    x1 <- x[x >= min(sort(x)[-(1:n)]) & x <= max(rev(sort(x))[-(1:n)])]
+  }
+  N <- length(x1) - 1
   ssr_t1 <-  vector("list", length = N)
-  for(i in 1:N){
-    ssr_t2 <- vector("list", length = length((i+1):N))
-    k <- 1
-    for (j in (i+1):N){
-      ssr_t2[[k]] <- c(fct(x[i], x[j], x, y), x[i], x[j])
-      k <- k + 1
+  for(i in 1:(N)){
+    ssr_t2 <- vector("list", length = length((i + 1):(N)))
+    j <- 1
+    for (j in (i + 1):(N)){
+      ssr_t2[[j]] <- c(fct(x1[i], x1[j], x, y), x1[i], x1[j])
     }
+    j <- j + 1
     ssr_t1[[i]] <- ssr_t2
   }
   l2 <- do.call(rbind, lapply(ssr_t1, function(x) do.call(rbind, x)))
-  #if multiple threshold values return same min RSS, randomly pick one
   thb <- l2[which(l2[,1] == min(l2[,1])), , drop = FALSE]
   if (nrow(thb) == 1){
     th <- as.vector(thb)[2:3]
   } else {
-    warning("Multiple threshold values returned same minimum rss;", 
-            " one value / pair has been randomly selected")
     rr <- sample(1:nrow(thb), 1)
     th <- as.vector(thb[rr,])[2:3]
   }
   return(th)
 }
-
 
 
 #rss functions for each model
@@ -173,9 +192,9 @@ fct_disc_two <- function(th, th2, x, y) {
 #'
 #' @description Fit up to six piecewise (threshold) regression models to SAR
 #'   data.
-#' @usage sar_threshold(data, mod = "All", interval = NULL, non_th_models =
-#'   TRUE, logAxes = "none", con = 1, logT = log, parallel = FALSE, cores =
-#'   NULL)
+#' @usage sar_threshold(data, mod = "All", interval = NULL, nisl = NULL,
+#'   non_th_models = TRUE, logAxes = "none", con = 1, logT = log, parallel =
+#'   FALSE, cores = NULL)
 #' @param data A dataset in the form of a dataframe with two columns: the first
 #'   with island/site areas, and the second with the species richness of each
 #'   island/site.
@@ -191,6 +210,7 @@ fct_disc_two <- function(th, th2, x, y) {
 #'   log-transformed area it is 0.01. However, these values may not be suitable
 #'   depending on the range of area values in a dataset, and thus users are
 #'   advised to manually set this argument.
+#' @param nisl ****(n.b. it needs to be > xxx)
 #' @param non_th_models Logical argument (default = TRUE) of whether two
 #'   non-threshold models (i.e. a simple linear regression: y ~ x; and an
 #'   intercept only model: y ~ 1) should also be fitted.
@@ -279,7 +299,7 @@ fct_disc_two <- function(th, th2, x, y) {
 #' plot(fitT[[1]][[1]])
 #' @export
 
-sar_threshold <- function(data, mod = "All", interval = NULL,
+sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
                           non_th_models = TRUE, logAxes = "none", 
                           con = 1, logT = log,
                           parallel = FALSE, cores = NULL){
@@ -314,6 +334,9 @@ sar_threshold <- function(data, mod = "All", interval = NULL,
     stop("con should be a numeric vector of length 1")
   if (nrow(data) < 10) warning("Sample size is quite small for fitting",
                                " threshold models, see documentation")
+  if ((!is.null(nisl)) && nisl > length(data[,1]) / 2){
+    stop('nisl is larger than half of the total number of islands')
+  }
   
   #create list to hold final model fits;
   #and create a names vector to provide, as naming the list elements 
@@ -365,7 +388,7 @@ sar_threshold <- function(data, mod = "All", interval = NULL,
   if (any(c("All", "ContOne") %in% mod)) {
     #one breakpoint continuous
     threshold_cont <- find_one_threshold_cont(x, y, fct_cont_one, 
-                                              interval)
+                                              interval, nisl)
     res[[r]] <- lm(y ~ x + I((x - threshold_cont) * 
                                as.numeric(x > threshold_cont)))
    # names(res[[r]]$coefficients) <- c("Intercept", "z1", 
@@ -377,7 +400,7 @@ sar_threshold <- function(data, mod = "All", interval = NULL,
   #one breakpoint zero slope
   if (any(c("All", "ZslopeOne") %in% mod)) {
     threshold_zslope <- find_one_threshold_cont(x, y, fct_zslope_one, 
-                                                interval)
+                                                interval, nisl)
     res[[r]] <- lm(y ~ 1 + I((x - threshold_zslope) * 
                                as.numeric(x > threshold_zslope)))
    # names(res[[r]]$coefficients) <- c("Intercept", "z2")
@@ -388,9 +411,9 @@ sar_threshold <- function(data, mod = "All", interval = NULL,
   
   #one breakpoint discontinuous
   if (any(c("All", "DiscOne") %in% mod)) {
-    threshold_disc <- find_one_threshold_disc(x, y, fct_disc_one)
+    threshold_disc <- find_one_threshold_disc(x, y, fct_disc_one, nisl)
     
-    res[[r]] <- lm(y ~ x*(x<=threshold_disc[1]) + x*(x>threshold_disc[1]))
+    res[[r]] <- lm(y ~ x*(x <= threshold_disc[1]) + x*(x > threshold_disc[1]))
     
     names[r] <- "DiscOne"
     th[[r]] <- threshold_disc
@@ -399,7 +422,8 @@ sar_threshold <- function(data, mod = "All", interval = NULL,
   #two threshold continuous
   if (any(c("All", "ContTwo") %in% mod)) {
     threshold_two_cont <- find_two_thresholds_cont(x, y, 
-                                                   fct_cont_two, interval, 
+                                                   fct_cont_two, interval,
+                                                   nisl,
                                                    parallel = parallel, 
                                                    cores = cores)
     res[[r]] <- lm(y ~ x + I((x - threshold_two_cont[1]) * 
@@ -414,7 +438,7 @@ sar_threshold <- function(data, mod = "All", interval = NULL,
   if (any(c("All", "ZslopeTwo") %in% mod)) {
     threshold_two_zslope <- find_two_thresholds_cont(x, y, 
                                                      fct_zslope_two, 
-                                                     interval, 
+                                                     interval, nisl,
                                                      parallel = parallel, 
                                                      cores = cores)
     res[[r]] <- lm(y ~ 1 + I((x - threshold_two_zslope[1]) * 
@@ -429,10 +453,10 @@ sar_threshold <- function(data, mod = "All", interval = NULL,
   #two breakpoint discontinuous
   if (any(c("All", "DiscTwo") %in% mod)) {
     threshold_two_disc <- find_two_thresholds_disc(x, y, 
-                                                   fct_disc_two)
-    res[[r]] <- lm(y ~ x*(x<=threshold_two_disc[1]) + 
-                     x*(x>threshold_two_disc[1] & x<=threshold_two_disc[2]) + 
-                     x*(x>threshold_two_disc[2]))
+                                                   fct_disc_two, nisl)
+    res[[r]] <- lm(y ~ x * (x <= threshold_two_disc[1]) + 
+                     x*(x > threshold_two_disc[1] & x<=threshold_two_disc[2]) + 
+                     x * (x > threshold_two_disc[2]))
     
     names[r] <- "DiscTwo"
     th[[r]] <- threshold_two_disc
@@ -460,21 +484,26 @@ sar_threshold <- function(data, mod = "All", interval = NULL,
 #' Calculate confidence intervals around breakpoints
 #'
 #' @description Generate confidence intervals around the breakpoints of the
-#'   one-threshold continuous and left-horizontal models, using bootstrapping.
-#' @usage threshold_ci(object, interval = NULL, Nboot = 100, verb = TRUE)
+#' one-threshold continuous and left-horizontal models, using bootstrapping.
+#' @usage threshold_ci(object, method = "boot", interval = NULL, Nboot = 100,
+#'   verb = TRUE)
 #' @param object An object of class 'thresholds', generated using the
 #'   \code{\link{sar_threshold}} function. The object must contain fits of
 #'   either (or both) of the one-threshold continuous or the one-threshold
 #'   left-horizontal model.
+#' @param method *** should be one of \code{boot} or \code{F}.
 #' @param interval The amount to increment the threshold value by in the
 #'   iterative model fitting process. The default for non-transformed area
 #'   reverts to 1, while for log-transformed area it is 0.01. It is advised that
-#'   the same interval value used when running \code{\link{sar_threshold}}
-#'   is used here.
-#' @param Nboot Number of bootstrap samples.
+#'   the same interval value used when running \code{\link{sar_threshold}} is
+#'   used here.
+#' @param Nboot Number of bootstrap samples (for use with \code{method =
+#'   "boot"}).
 #' @param verb Should progress be reported. If \code{TRUE}, every 50th bootstrap
-#'   sample is reported.
-#' @details Calculates confidence intervals (95 percent) around the breakpoint
+#'   sample is reported (for use with \code{method = "boot"}).
+#' @details *F* method
+#'
+#'   Calculates confidence intervals (95 percent) around the breakpoint
 #'   estimates using the bootstrap approach of Toms & Lesperance (2003). If the
 #'   number of bootstrap samples (\code{Nboot}) is large, the function can take
 #'   a while to run.
@@ -490,82 +519,128 @@ sar_threshold <- function(data, mod = "All", interval = NULL,
 #' @examples
 #' data(aegean2)
 #' a2 <- aegean2[1:168,]
-#' fitT <- sar_threshold(data = a2, mod = c("ContOne", "DiscOne"), 
+#' fitT <- sar_threshold(data = a2, mod = "ContOne", 
 #' interval = 0.1, non_th_models = TRUE, logAxes = "area", logT = log10)
 #' #calculate confidence intervals (using very low Nboot just as an example)
-#' CI <- threshold_ci(fitT, interval = NULL, Nboot = 3)
+#' CI <- threshold_ci(fitT, method = "boot", interval = NULL, Nboot = 3)
 #' CI
+#' ##F EXAMPLE
 #' @importFrom stats fitted resid
 #' @export
 
-threshold_ci <- function(object, interval = NULL, Nboot = 100, verb = TRUE){
-  
-  if (!"threshold" %in% class(object))
+threshold_ci <- function(object, method = "boot", interval = NULL, 
+                         Nboot = 100, verb = TRUE) 
+{
+  if (!"threshold" %in% class(object)) 
     stop("Object should be of class 'threshold'")
   names <- object[[2]]
   if (!any(names %in% c("ContOne", "ZslopeOne"))) 
-  stop("Confidence interval is only available for models ContOne and ZslopeOne")
-  
-  if(!is.null(interval)){
-    if (!is.numeric(interval) | length(interval) != 1)
+    stop("Confidence interval is only available for models ContOne and ZslopeOne")
+  if (!is.null(interval)) {
+    if (!is.numeric(interval) | length(interval) != 1) 
       stop("interval should be a numeric vector of length 1")
-    if (interval > max(object[[4]]$A)) stop("interval must be smaller than max",
-                                              "area")
+    if (interval > max(object[[4]]$A)) 
+      stop("interval must be smaller than max", "area")
   }
-  if (is.null(interval)){
+  if (is.null(interval)) {
     logAxes <- object[[5]][1]
-    if (logAxes == "none"){
+    if (logAxes == "none") {
       interval <- 1
-    } else {
+    }
+    else {
       interval <- 0.01
     }
   }
-  
-  w1 <- which(names %in% c("ContOne", "ZslopeOne"))
-  bootR <- vector("list", length = 2)
-  bootR[[1]] <- vector("list", length = length(w1))
-  names(bootR[[1]]) <- names[w1]
-  bootR[[2]] <- vector("list", length = length(w1))
-  names(bootR[[2]]) <- names[w1]
-  k <- 1
-  names(bootR) <- c("Bootstrap values", "CIs")
-  
-  for (j in w1){
-    n1 <- names[[j]]
-    if (n1 == "ContOne") {fct = fct_cont_one} else {fct = fct_zslope_one}
-    mods <- object[[1]][[j]]
-    x <- object[[4]]$A
-    y <- object[[4]]$S
-    res <- resid(mods)
-    fit <- fitted(mods)
-    new.df <- data.frame(res, x)
-    
-    boot <- vector(length = Nboot)
-    for (i in 1:Nboot){
-      
-      new.res <- sample(new.df$res, replace = T)
-      xbt <- new.df$x
-      ybt <- fit + new.res
-      sequence <- seq(min(xbt), max(xbt), interval)
-      s1 <- lapply(sequence,fct,x = xbt,y = ybt)
-      w <- which.min(s1)
-      
-      if (length(w) == 1){
-        boot[i] <- sequence[w]
-      } else{
-        w2 <- w[sample(1:length(w), 1)]
-        boot[i] <- sequence[w2]
+  if (method == "boot") {
+    w1 <- which(names %in% c("ContOne", "ZslopeOne"))
+    bootR <- vector("list", length = 3)
+    bootR[[1]] <- vector("list", length = length(w1))
+    names(bootR[[1]]) <- names[w1]
+    bootR[[2]] <- vector("list", length = length(w1))
+    names(bootR[[2]]) <- names[w1]
+    k <- 1
+    names(bootR) <- c("Bootstrap values", "CIs")
+    for (j in w1) {
+      n1 <- names[[j]]
+      if (n1 == "ContOne") {
+        fct <- fct_cont_one
       }
-     if (verb){
-       if (i %% 50 == 0) cat("Bootstrap sample", i, "out of", Nboot, 
-                             "for model", k, "of", length(w1), "\n")
-     }
-    }#eo i
-    CI <- quantile(boot, c(0.025, 0.975))
-    bootR[[1]][[k]] <- boot
-    bootR[[2]][[k]] <- CI
-    k <- k + 1
-  }#eo j
+      else {
+        fct <- fct_zslope_one
+      }
+      mods <- object[[1]][[j]]
+      x <- object[[4]]$A
+      y <- object[[4]]$S
+      res <- resid(mods)
+      fit <- fitted(mods)
+      new.df <- data.frame(res, x)
+      boot <- vector(length = Nboot)
+      for (i in 1:Nboot) {
+        new.res <- sample(new.df$res, replace = T)
+        xbt <- new.df$x
+        ybt <- fit + new.res
+        sequence <- seq(min(xbt), max(xbt), interval)
+        s1 <- lapply(sequence, fct, x = xbt, y = ybt)
+        w <- which.min(s1)
+        if (length(w) == 1) {
+          boot[i] <- sequence[w]
+        }
+        else {
+          w2 <- w[sample(1:length(w), 1)]
+          boot[i] <- sequence[w2]
+        }
+        if (verb) {
+          if (i%%50 == 0) 
+            cat("Bootstrap sample", i, "out of", Nboot, 
+                "for model", k, "of", length(w1), "\n")
+        }
+      }
+      CI <- quantile(boot, c(0.025, 0.975))
+      bootR[[1]][[k]] <- boot
+      bootR[[2]][[k]] <- CI
+      k <- k + 1
+    }
+    bootR[[3]] <- "boot"
+    names(bootR)[3] <- "Method"
+  } else if (method == "F") {
+    w1 <- which(names %in% c("ContOne", "ZslopeOne"))
+    Fconf <- vector("list", length = length(w1) + 1)
+    names(Fconf) <- c(names[w1], "Method")
+    k <- 1
+    
+    for (j in w1) {
+      n1 <- names[[j]]
+      if (n1 == "ContOne") {
+        fct = fct_cont_one
+      }
+      else {
+        fct = fct_zslope_one
+      }
+      
+      mods <- object[[1]][[j]]
+      x <- object[[4]]$A
+      y <- object[[4]]$S
+      x1 <- seq(min(x), max(x), interval)
+      mod <- object[[1]][[j]]
+      res.lm <- summary(mod)
+      left.f <- deparse(formula(mod)[[3]])
+      S <- sapply(x1, fct, x = x, y = y)
+      s2.opt <- res.lm$sigma^2
+      S.opt <- min(S)
+      Fstat <- (S - S.opt) / s2.opt
+      alpha.ci <- 0.05
+      z <- qf(1-alpha.ci, 1, res.lm$df[3])
+      CI <- which(Fstat <= z)
+      CI.lower <- x1[min(CI)]
+      CI.upper <- x1[max(CI)]
+      Fconf[[k]] <- c(CI.lower, CI.upper)
+      k <- k + 1
+    }
+    bootR <- Fconf
+    bootR[[(length(w1) + 1)]] <- "F"
+  } else{
+    stop("method should be one of 'boot' or 'F'")
+  }
   class(bootR) <- "sars"
   attr(bootR, 'type') <- 'threshold_ci'
   return(bootR)

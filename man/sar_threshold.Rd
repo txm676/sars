@@ -4,9 +4,9 @@
 \alias{sar_threshold}
 \title{Fit threshold SAR models}
 \usage{
-sar_threshold(data, mod = "All", interval = NULL, non_th_models =
-  TRUE, logAxes = "none", con = 1, logT = log, parallel = FALSE, cores =
-  NULL)
+sar_threshold(data, mod = "All", interval = NULL, nisl = NULL,
+  non_th_models = TRUE, logAxes = "none", con = 1, logT = log, parallel =
+  FALSE, cores = NULL)
 }
 \arguments{
 \item{data}{A dataset in the form of a dataframe with two columns: the first
@@ -26,6 +26,8 @@ models). The default for non-transformed area reverts to 1, while for
 log-transformed area it is 0.01. However, these values may not be suitable
 depending on the range of area values in a dataset, and thus users are
 advised to manually set this argument.}
+
+\item{nisl}{****(n.b. it needs to be > xxx)}
 
 \item{non_th_models}{Logical argument (default = TRUE) of whether two
 non-threshold models (i.e. a simple linear regression: y ~ x; and an

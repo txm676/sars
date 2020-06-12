@@ -26,3 +26,70 @@ test_that("sar_threshold returns correct results", {
   expect_equal(length(s2$Model_table$Th2[!is.na(s2$Model_table$Th2)]), 3)
 })
 
+
+test_that("nisl argument returns correct results", {
+  data(aegean2)
+  a2 <- aegean2[1:168,]
+  fitT <- sar_threshold(data = a2, mod = "All",
+                        interval = 0.1, nisl = 75, non_th_models = TRUE, 
+                        logAxes = "both", logT = log2)
+  
+  s <- summary(fitT)
+  expect_false(any(na.omit(s$Model_table$seg1) < 75))
+  expect_false(any(na.omit(s$Model_table$seg3) < 75))
+  expect_error(sar_threshold(data = a2, mod = "All",
+                             interval = 0.1, nisl = 750), 
+                     "nisl is larger than half of the total number of islands")
+})
+
+
+test_that("threshold_ci returns correct results", {
+  data(aegean2)
+  a2 <- aegean2[1:168,]
+  #fit with just one model (boot and F methods)
+  fitT <- sar_threshold(data = a2, mod = "ContOne", interval = 0.1, 
+                        non_th_models = TRUE, logAxes = "area", logT = log10)
+  CI1 <- threshold_ci(fitT, method = "boot", interval = NULL, Nboot = 3)
+  
+  fitT <- sar_threshold(data = a2, mod = "ContOne", interval = 0.1, 
+                        non_th_models = TRUE, logAxes = "area", logT = log10)
+  CI2 <- threshold_ci(fitT, method = "F", interval = NULL, Nboot = 3)
+  
+  #fit with both models (boot and F methods)
+  fitT <- sar_threshold(data = a2, mod = c("ContOne","ZslopeOne"),
+                        interval = 0.1, non_th_models = TRUE, 
+                        logAxes = "area", logT = log10)
+  CI3 <- threshold_ci(fitT, method = "boot", interval = NULL, Nboot = 3)
+  
+  fitT <- sar_threshold(data = a2, mod = c("ContOne","ZslopeOne"),
+                        interval = 0.1, non_th_models = TRUE, 
+                        logAxes = "area", logT = log10)
+  CI4 <- threshold_ci(fitT, method = "F", interval = NULL, Nboot = 3)
+
+  #can't check actual boot answers as are random draws
+  expect_equal(round(CI2[[1]], 1), c(0.4, 1.2))
+  expect_equal(length(CI1[[1]]$ContOne), 3)
+  expect_equal(length(CI1[[2]]$ContOne), 2)
+  expect_true(is.numeric(CI3[[2]]$ZslopeOne[1]))
+  expect_equal(length(CI3[[2]]), 2)
+  expect_equal(round(CI4[[2]], 1), c(0.1, 0.7))
+  expect_match(CI1$Method, "boot")
+  expect_match(CI2[[2]], "F")
+  expect_error(threshold_ci(fitT, method = "T"), 
+               "method should be one of 'boot' or 'F'")
+  expect_is(CI4, "sars")
+})
+
+
+test_that("get_coef returns correct results", {
+  data(aegean2)
+  a2 <- aegean2[1:168,]
+  fitT <- sar_threshold(data = a2, mod = c("ContOne", "DiscOne", "ZslopeOne"),
+                        interval = 0.1, non_th_models = TRUE, logAxes = "area", logT = log10)
+  coefs <- get_coef(fitT)
+  expect_equal(coefs[[1]], c(134.13,  54.31, 125.28))
+  expect_equal(coefs[[3]], c(NA, NA, -208.65))
+  expect_is(coefs, "sars")
+  expect_error(get_coef(5), "fit object should be of class 'threshold'")
+})
+

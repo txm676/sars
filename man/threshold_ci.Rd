@@ -4,7 +4,8 @@
 \alias{threshold_ci}
 \title{Calculate confidence intervals around breakpoints}
 \usage{
-threshold_ci(object, interval = NULL, Nboot = 100, verb = TRUE)
+threshold_ci(object, method = "boot", interval = NULL, Nboot = 100,
+  verb = TRUE)
 }
 \arguments{
 \item{object}{An object of class 'thresholds', generated using the
@@ -12,16 +13,19 @@ threshold_ci(object, interval = NULL, Nboot = 100, verb = TRUE)
 either (or both) of the one-threshold continuous or the one-threshold
 left-horizontal model.}
 
+\item{method}{*** should be one of \code{boot} or \code{F}.}
+
 \item{interval}{The amount to increment the threshold value by in the
 iterative model fitting process. The default for non-transformed area
 reverts to 1, while for log-transformed area it is 0.01. It is advised that
-the same interval value used when running \code{\link{sar_threshold}}
-is used here.}
+the same interval value used when running \code{\link{sar_threshold}} is
+used here.}
 
-\item{Nboot}{Number of bootstrap samples.}
+\item{Nboot}{Number of bootstrap samples (for use with \code{method =
+"boot"}).}
 
 \item{verb}{Should progress be reported. If \code{TRUE}, every 50th bootstrap
-sample is reported.}
+sample is reported (for use with \code{method = "boot"}).}
 }
 \value{
 A list of class "sars" with two elements. The first element contains
@@ -30,10 +34,12 @@ A list of class "sars" with two elements. The first element contains
 }
 \description{
 Generate confidence intervals around the breakpoints of the
-  one-threshold continuous and left-horizontal models, using bootstrapping.
+one-threshold continuous and left-horizontal models, using bootstrapping.
 }
 \details{
-Calculates confidence intervals (95 percent) around the breakpoint
+*F* method
+
+  Calculates confidence intervals (95 percent) around the breakpoint
   estimates using the bootstrap approach of Toms & Lesperance (2003). If the
   number of bootstrap samples (\code{Nboot}) is large, the function can take
   a while to run.
@@ -44,11 +50,12 @@ Calculates confidence intervals (95 percent) around the breakpoint
 \examples{
 data(aegean2)
 a2 <- aegean2[1:168,]
-fitT <- sar_threshold(data = a2, mod = c("ContOne", "DiscOne"), 
+fitT <- sar_threshold(data = a2, mod = "ContOne", 
 interval = 0.1, non_th_models = TRUE, logAxes = "area", logT = log10)
 #calculate confidence intervals (using very low Nboot just as an example)
-CI <- threshold_ci(fitT, interval = NULL, Nboot = 3)
+CI <- threshold_ci(fitT, method = "boot", interval = NULL, Nboot = 3)
 CI
+##F EXAMPLE
 }
 \references{
 Toms, J.D. & Lesperance, M.L. (2003) Piecewise regression: a tool
