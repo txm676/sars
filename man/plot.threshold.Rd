@@ -70,7 +70,7 @@ of the plotting window, when plotting multiple plots. For example, \code{di
 (\code{NULL}) creates a plotting window large enough to fit all plots in.}
 
 \item{\dots}{Further graphical parameters (see \code{\link[graphics]{par}},
-\code{\link[graphics]{plot}},\code{\link[graphics]{title}},
+\code{\link[graphics]{plot.default}},\code{\link[graphics]{title}},
 \code{\link[graphics]{lines}}) may be supplied as arguments.}
 }
 \description{

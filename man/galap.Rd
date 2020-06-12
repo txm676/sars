@@ -4,11 +4,13 @@
 \name{galap}
 \alias{galap}
 \title{A SAR dataset describing the plants of the Galapagos Islands}
-\format{Adata frame with 2 columns and 16 rows. Each row contains the area of
+\format{
+Adata frame with 2 columns and 16 rows. Each row contains the area of
   an island (km2) in the Galapagos (1st column) and the number of plants on
   that island (2nd column).Preston (1962) also includes the island of
   Albemarle, but we have excluded this as it is almost six times larger than
-  the second largest island.}
+  the second largest island.
+}
 \source{
 Preston FW 1962. The Canonical Distribution of Commonness and Rarity:
   Part I. – Ecology 43:185-215.

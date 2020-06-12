@@ -525,7 +525,7 @@ sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
 #' CI <- threshold_ci(fitT, method = "boot", interval = NULL, Nboot = 3)
 #' CI
 #' ##F EXAMPLE
-#' @importFrom stats fitted resid
+#' @importFrom stats fitted resid qf
 #' @export
 
 threshold_ci <- function(object, method = "boot", interval = NULL, 

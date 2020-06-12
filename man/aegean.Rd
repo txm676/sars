@@ -4,9 +4,11 @@
 \name{aegean}
 \alias{aegean}
 \title{A SAR dataset describing invertebrates on islands in the Aegean Sea, Greece}
-\format{A data frame with 2 columns and 90 rows. Each row contains the area
+\format{
+A data frame with 2 columns and 90 rows. Each row contains the area
   of an island in the Aegean (1st column) and the number of inverts on that
-  island (2nd column).}
+  island (2nd column).
+}
 \source{
 Sfenthourakis, S. & Triantis K.A. (2009). Habitat diversity,
  ecological requirements of species and the Small Island Effect. Diversity

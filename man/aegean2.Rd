@@ -4,9 +4,11 @@
 \name{aegean2}
 \alias{aegean2}
 \title{A SAR dataset describing plants on islands in the Aegean Sea, Greece}
-\format{A data frame with 2 columns and 173 rows. Each row contains the area
+\format{
+A data frame with 2 columns and 173 rows. Each row contains the area
   of an island in the Aegean (1st column) and the number of plants on that
-  island (2nd column).}
+  island (2nd column).
+}
 \source{
 Matthews, T.J. et al. (In review) Unravelling the small-island effect
  through phylogenetic community ecology

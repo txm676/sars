@@ -4,10 +4,12 @@
 \name{cole_sim}
 \alias{cole_sim}
 \title{A simulated species-site abundance matrix with site areas}
-\format{A list with two elements. The first element contains a species-site
+\format{
+A list with two elements. The first element contains a species-site
   abundance matrix in which the rows are species, and the columns are
   sites/islands. Each value in the matrix is the abundance of a species at a
-  given site. The second element contains a vector of the areas of each site.}
+  given site. The second element contains a vector of the areas of each site.
+}
 \source{
 Matthews et al. 2015.
 }

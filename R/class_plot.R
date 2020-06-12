@@ -676,7 +676,7 @@ contsPlot <- function (xx, yy, xypred.cont, data, column, xlab = xlab,
 #'  = c(1, 3)} creates a plotting window with 1 row and 3 columns. The default
 #'  (\code{NULL}) creates a plotting window large enough to fit all plots in.
 #'@param \dots Further graphical parameters (see \code{\link[graphics]{par}},
-#'  \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
+#'  \code{\link[graphics]{plot.default}},\code{\link[graphics]{title}},
 #'  \code{\link[graphics]{lines}}) may be supplied as arguments.
 #'@note The raw \code{\link{lm}} model fit objects are returned with the
 #'  \code{\link{sar_threshold}} function if the user wishes to construct their
