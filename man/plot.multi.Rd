@@ -112,7 +112,7 @@ function.}
 
 \item{\dots}{Further graphical parameters (see
 \code{\link[graphics]{par}},
-\code{\link[graphics]{plot}},\code{\link[graphics]{title}},
+\code{\link[graphics]{plot.default}},\code{\link[graphics]{title}},
 \code{\link[graphics]{lines}}) may be supplied as arguments.}
 }
 \description{
