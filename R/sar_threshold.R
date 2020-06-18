@@ -493,7 +493,7 @@ sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
 #'   \code{\link{sar_threshold}} function. The object must contain fits of
 #'   either (or both) of the one-threshold continuous or the one-threshold
 #'   left-horizontal model.
-#' @param cl The confidence level. Default value is 0.95 (95%).
+#' @param cl The confidence level. Default value is 0.95 (95 percent).
 #' @param method Either bootstraping (\code{boot}) or inverted F test
 #'   (\code{F}).
 #' @param interval The amount to increment the threshold value by in the
@@ -527,11 +527,12 @@ sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
 #' a2 <- aegean2[1:168,]
 #' fitT <- sar_threshold(data = a2, mod = "ContOne", 
 #' interval = 0.1, non_th_models = TRUE, logAxes = "area", logT = log10)
-#' #calculate confidence intervals (using very low Nboot just as an example)
+#' #calculate confidence intervals using bootstrapping
+#' #(very low Nboot just as an example)
 #' CI <- threshold_ci(fitT, method = "boot", interval = NULL, Nboot = 3)
 #' CI
-#' #F EXAMPLE
-#' CI2 <- threshold_ci(fitT, method = "F", interval = NULL)
+#' #Use the F method instead, with 90% confidence interval
+#' CI2 <- threshold_ci(fitT, cl = 0.90, method = "F", interval = NULL)
 #' CI2
 #' @importFrom stats fitted resid qf
 #' @export

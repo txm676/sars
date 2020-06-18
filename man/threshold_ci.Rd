@@ -4,8 +4,8 @@
 \alias{threshold_ci}
 \title{Calculate confidence intervals around breakpoints}
 \usage{
-threshold_ci(object, method = "boot", interval = NULL, Nboot = 100,
-  verb = TRUE)
+threshold_ci(object, cl = 0.95, method = "boot", interval = NULL,
+  Nboot = 100, verb = TRUE)
 }
 \arguments{
 \item{object}{An object of class 'thresholds', generated using the
@@ -13,13 +13,16 @@ threshold_ci(object, method = "boot", interval = NULL, Nboot = 100,
 either (or both) of the one-threshold continuous or the one-threshold
 left-horizontal model.}
 
-\item{method}{*** should be one of \code{boot} or \code{F}.}
+\item{cl}{The confidence level. Default value is 0.95 (95 percent).}
+
+\item{method}{Either bootstraping (\code{boot}) or inverted F test
+(\code{F}).}
 
 \item{interval}{The amount to increment the threshold value by in the
-iterative model fitting process. The default for non-transformed area
-reverts to 1, while for log-transformed area it is 0.01. It is advised that
-the same interval value used when running \code{\link{sar_threshold}} is
-used here.}
+iterative model fitting process used in both the F and boot methods. The
+default for non-transformed area reverts to 1, while for log-transformed
+area it is 0.01. It is advised that the same interval value used when
+running \code{\link{sar_threshold}} is used here.}
 
 \item{Nboot}{Number of bootstrap samples (for use with \code{method =
 "boot"}).}
@@ -28,21 +31,25 @@ used here.}
 sample is reported (for use with \code{method = "boot"}).}
 }
 \value{
-A list of class "sars" with two elements. The first element contains
-  the full set of bootstrapped breakpoint estimates for each model. The
-  second contains the 95 percent confidence interval values.
+A list of class "sars" with two elements. If method “F” is used, the
+  list contains only the confidence interval values. If method “boot” is
+  used, the list contains two elements. The first element is the full set of
+  bootstrapped breakpoint estimates for each model and the second contains
+  the confidence interval values.
 }
 \description{
 Generate confidence intervals around the breakpoints of the
-one-threshold continuous and left-horizontal models, using bootstrapping.
+  one-threshold continuous and left-horizontal models. Two types of
+  confidence interval can be implemented: a confidence interval derived from
+  an inverted F test and an empirical bootstrap confidence interval.
 }
 \details{
-*F* method
-
-  Calculates confidence intervals (95 percent) around the breakpoint
-  estimates using the bootstrap approach of Toms & Lesperance (2003). If the
-  number of bootstrap samples (\code{Nboot}) is large, the function can take
-  a while to run.
+Full details of the two approaches can be found in Toms and
+  Lesperance (2003). If the number of bootstrap samples is large, the
+  function can take a while to run. Following Toms and Lesperance (2003), we
+  therefore recommend the use of the inverted F test confidence interval when
+  sample size is large, and bootstrapped confidence intervals when sample
+  size is smaller.
 
   Currently only available for the one-threshold continuous and left-
   horizontal threshold models.
@@ -52,12 +59,18 @@ data(aegean2)
 a2 <- aegean2[1:168,]
 fitT <- sar_threshold(data = a2, mod = "ContOne", 
 interval = 0.1, non_th_models = TRUE, logAxes = "area", logT = log10)
-#calculate confidence intervals (using very low Nboot just as an example)
+#calculate confidence intervals using bootstrapping
+#(very low Nboot just as an example)
 CI <- threshold_ci(fitT, method = "boot", interval = NULL, Nboot = 3)
 CI
-##F EXAMPLE
+#Use the F method instead, with 90\% confidence interval
+CI2 <- threshold_ci(fitT, cl = 0.90, method = "F", interval = NULL)
+CI2
 }
 \references{
 Toms, J.D. & Lesperance, M.L. (2003) Piecewise regression: a tool
   for identifying ecological thresholds. Ecology, 84, 2034-2041.
+}
+\author{
+Francois Rigal and Christian Paroissin
 }
