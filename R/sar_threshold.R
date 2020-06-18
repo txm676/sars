@@ -334,7 +334,7 @@ sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
     stop("con should be a numeric vector of length 1")
   if (nrow(data) < 10) warning("Sample size is quite small for fitting",
                                " threshold models, see documentation")
-  if ((!is.null(nisl)) && nisl > length(data[,1]) / 2){
+  if ((!is.null(nisl)) && nisl > length(data[,1] / 2)){
     stop('nisl is larger than half of the total number of islands')
   }
   
@@ -484,36 +484,42 @@ sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
 #' Calculate confidence intervals around breakpoints
 #'
 #' @description Generate confidence intervals around the breakpoints of the
-#' one-threshold continuous and left-horizontal models, using bootstrapping.
-#' @usage threshold_ci(object, method = "boot", interval = NULL, Nboot = 100,
-#'   verb = TRUE)
+#'   one-threshold continuous and left-horizontal models. Two types of
+#'   confidence interval can be implemented: a confidence interval derived from
+#'   an inverted F test and an empirical bootstrap confidence interval.
+#' @usage threshold_ci(object, cl = 0.95, method = "boot", interval = NULL,
+#'   Nboot = 100, verb = TRUE)
 #' @param object An object of class 'thresholds', generated using the
 #'   \code{\link{sar_threshold}} function. The object must contain fits of
 #'   either (or both) of the one-threshold continuous or the one-threshold
 #'   left-horizontal model.
-#' @param method *** should be one of \code{boot} or \code{F}.
+#' @param cl The confidence level. Default value is 0.95 (95%).
+#' @param method Either bootstraping (\code{boot}) or inverted F test
+#'   (\code{F}).
 #' @param interval The amount to increment the threshold value by in the
-#'   iterative model fitting process. The default for non-transformed area
-#'   reverts to 1, while for log-transformed area it is 0.01. It is advised that
-#'   the same interval value used when running \code{\link{sar_threshold}} is
-#'   used here.
+#'   iterative model fitting process used in both the F and boot methods. The
+#'   default for non-transformed area reverts to 1, while for log-transformed
+#'   area it is 0.01. It is advised that the same interval value used when
+#'   running \code{\link{sar_threshold}} is used here.
 #' @param Nboot Number of bootstrap samples (for use with \code{method =
 #'   "boot"}).
 #' @param verb Should progress be reported. If \code{TRUE}, every 50th bootstrap
 #'   sample is reported (for use with \code{method = "boot"}).
-#' @details *F* method
-#'
-#'   Calculates confidence intervals (95 percent) around the breakpoint
-#'   estimates using the bootstrap approach of Toms & Lesperance (2003). If the
-#'   number of bootstrap samples (\code{Nboot}) is large, the function can take
-#'   a while to run.
+#' @details Full details of the two approaches can be found in Toms and
+#'   Lesperance (2003). If the number of bootstrap samples is large, the
+#'   function can take a while to run. Following Toms and Lesperance (2003), we
+#'   therefore recommend the use of the inverted F test confidence interval when
+#'   sample size is large, and bootstrapped confidence intervals when sample
+#'   size is smaller.
 #'
 #'   Currently only available for the one-threshold continuous and left-
 #'   horizontal threshold models.
-#'
-#' @return A list of class "sars" with two elements. The first element contains
-#'   the full set of bootstrapped breakpoint estimates for each model. The
-#'   second contains the 95 percent confidence interval values.
+#' @return A list of class "sars" with two elements. If method “F” is used, the
+#'   list contains only the confidence interval values. If method “boot” is
+#'   used, the list contains two elements. The first element is the full set of
+#'   bootstrapped breakpoint estimates for each model and the second contains
+#'   the confidence interval values.
+#' @author Francois Rigal and Christian Paroissin
 #' @references Toms, J.D. & Lesperance, M.L. (2003) Piecewise regression: a tool
 #'   for identifying ecological thresholds. Ecology, 84, 2034-2041.
 #' @examples
@@ -524,11 +530,13 @@ sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
 #' #calculate confidence intervals (using very low Nboot just as an example)
 #' CI <- threshold_ci(fitT, method = "boot", interval = NULL, Nboot = 3)
 #' CI
-#' ##F EXAMPLE
+#' #F EXAMPLE
+#' CI2 <- threshold_ci(fitT, method = "F", interval = NULL)
+#' CI2
 #' @importFrom stats fitted resid qf
 #' @export
 
-threshold_ci <- function(object, method = "boot", interval = NULL, 
+threshold_ci <- function(object, cl = 0.95, method = "boot", interval = NULL, 
                          Nboot = 100, verb = TRUE) 
 {
   if (!"threshold" %in% class(object)) 
@@ -595,7 +603,8 @@ threshold_ci <- function(object, method = "boot", interval = NULL,
                 "for model", k, "of", length(w1), "\n")
         }
       }
-      CI <- quantile(boot, c(0.025, 0.975))
+      qt <- (1 - cl) / 2
+      CI <- quantile(boot, c(q, 1 - qt))
       bootR[[1]][[k]] <- boot
       bootR[[2]][[k]] <- CI
       k <- k + 1
@@ -623,13 +632,12 @@ threshold_ci <- function(object, method = "boot", interval = NULL,
       x1 <- seq(min(x), max(x), interval)
       mod <- object[[1]][[j]]
       res.lm <- summary(mod)
-      left.f <- deparse(formula(mod)[[3]])
       S <- sapply(x1, fct, x = x, y = y)
       s2.opt <- res.lm$sigma^2
       S.opt <- min(S)
       Fstat <- (S - S.opt) / s2.opt
-      alpha.ci <- 0.05
-      z <- qf(1-alpha.ci, 1, res.lm$df[3])
+      alpha.ci <- 1 - cl
+      z <- qf(1 - alpha.ci, 1, res.lm$df[3])
       CI <- which(Fstat <= z)
       CI.lower <- x1[min(CI)]
       CI.upper <- x1[max(CI)]

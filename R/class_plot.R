@@ -49,7 +49,7 @@
 #'   and thus the default is \code{pLeg = FALSE}.
 #' @param \dots Further graphical parameters (see
 #'   \code{\link[graphics]{par}},
-#'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
+#'   \code{\link[graphics]{plot.default}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
 #' @importFrom graphics par plot legend barplot
 #' @importFrom graphics points lines polygon title matlines matplot
@@ -314,7 +314,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
 #'   function.
 #' @param \dots Further graphical parameters (see
 #'   \code{\link[graphics]{par}},
-#'   \code{\link[graphics]{plot}},\code{\link[graphics]{title}},
+#'   \code{\link[graphics]{plot.default}},\code{\link[graphics]{title}},
 #'   \code{\link[graphics]{lines}}) may be supplied as arguments.
 #' @note In some versions of R and R studio, when plotting all model fits on the
 #'   same plot with a legend it is necessary to manually extend your plotting
