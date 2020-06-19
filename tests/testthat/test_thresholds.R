@@ -24,6 +24,25 @@ test_that("sar_threshold returns correct results", {
   expect_equal(s2$Model_table$AIC, c(1974.90, 1974.87, 1975.10, 2195.69,
                                      2426.60))
   expect_equal(length(s2$Model_table$Th2[!is.na(s2$Model_table$Th2)]), 3)
+  
+  #table 1 in paper
+  fit4 <- sar_threshold(data = aegean2, mod = "All", interval = 0.1, 
+                        non_th_models = TRUE, logAxes = "area", 
+                        logT = log10, parallel = TRUE, cores = 2)
+  
+  s4 <- summary(fit4, order = "BIC") 
+  expect_equal(c(s4$Model_table$AIC), c(2020.25, 2019.48, 2020.42, 
+                                        2045.94, 2047.78, 2061.70,
+                                        2305.05, 2535.84))
+  #repeat but without parallel processing
+  fit5 <- sar_threshold(data = aegean2, mod = "All", interval = 0.1, 
+                        non_th_models = TRUE, logAxes = "area", 
+                        logT = log10, parallel = F)
+  
+  s5 <- summary(fit5, order = "BIC") 
+  expect_equal(c(s5$Model_table$AIC), c(2020.25, 2019.48, 2020.42, 
+                                        2045.94, 2047.78, 2061.70,
+                                        2305.05, 2535.84))
 })
 
 

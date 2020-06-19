@@ -75,32 +75,33 @@ find_two_thresholds_cont <- function(x, y, fct, interval, nisl = NULL, parallel,
       for (j in (i + 1):N){
         ssr_t2[[k]] <- c(fct(sequence[i], sequence[j], x, y), 
                          sequence[i], sequence[j])
+        k <- k + 1
       }
-      k <- k + 1
       ssr_t2
     }#eo dopar
   } else{
     ssr_t1 <- vector("list", length = N - 1)
     for (i in 1:(N - 1)){
       ssr_t2 <- vector("list", length = length((i + 1):N))
-      j <- 1
+      k <- 1
       for (j in (i + 1):N){
-        ssr_t2[[j]] <- c(fct(sequence[i], sequence[j], x, y), sequence[i], 
+        ssr_t2[[k]] <- c(fct(sequence[i], sequence[j], x, y), sequence[i], 
                          sequence[j])
+        k <- k + 1
       }
-      j <- j + 1
       ssr_t1[[i]] <- ssr_t2
     }
   }
   l2 <- do.call(rbind, lapply(ssr_t1, function(x) do.call(rbind, x)))
   thb <- l2[which(l2[,1] == min(l2[,1])), , drop = FALSE]
   
-  th <- l2[which(l2[,1] == min(l2[,1])),][2:3]
+  #th <- l2[which(l2[,1] == min(l2[,1])),][2:3]
   
   if (nrow(thb) == 1){
     th <- as.vector(thb)[2:3]
   } else {
-    rr <- sample(1:nrow(th), 1)
+#    rr <- sample(1:nrow(th), 1)
+    rr <- sample(1:nrow(thb), 1)
     th <- as.vector(thb[rr,])[2:3]
   }
   return(th)
@@ -122,11 +123,11 @@ find_two_thresholds_disc <- function(x, y, fct, nisl = NULL){
   ssr_t1 <-  vector("list", length = N)
   for(i in 1:(N)){
     ssr_t2 <- vector("list", length = length((i + 1):(N)))
-    j <- 1
+    k <- 1
     for (j in (i + 1):(N)){
-      ssr_t2[[j]] <- c(fct(x1[i], x1[j], x, y), x1[i], x1[j])
+      ssr_t2[[k]] <- c(fct(x1[i], x1[j], x, y), x1[i], x1[j])
+      k <- k + 1
     }
-    j <- j + 1
     ssr_t1[[i]] <- ssr_t2
   }
   l2 <- do.call(rbind, lapply(ssr_t1, function(x) do.call(rbind, x)))
