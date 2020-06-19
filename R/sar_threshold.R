@@ -605,7 +605,7 @@ threshold_ci <- function(object, cl = 0.95, method = "boot", interval = NULL,
         }
       }
       qt <- (1 - cl) / 2
-      CI <- quantile(boot, c(q, 1 - qt))
+      CI <- quantile(boot, c(qt, 1 - qt))
       bootR[[1]][[k]] <- boot
       bootR[[2]][[k]] <- CI
       k <- k + 1
