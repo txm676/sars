@@ -43,6 +43,19 @@ test_that("sar_threshold returns correct results", {
   expect_equal(c(s5$Model_table$AIC), c(2020.25, 2019.48, 2020.42, 
                                         2045.94, 2047.78, 2061.70,
                                         2305.05, 2535.84))
+  
+  #check AIC and BIC returns same as normal AIC/BIC functions
+  data(aegean)
+  xd2 <- sar_threshold(aegean, mod = c("DiscTwo"), non_th_models = F)
+  obj <- xd2[[1]][[1]]
+  n <- length(obj$residuals)
+  val <- logLik(obj)
+  P <- 7 #is 8 in package, but we include extra par for threshold search
+          #which is not done in lm
+  lAIC2 <- (2 * P) - (2 * val)
+  lBIC2 <- (-2 * val) + (P * log(n))
+  expect_equal(as.vector(lAIC2), AIC(obj))
+  expect_equal(as.vector(lBIC2), BIC(obj))
 })
 
 
@@ -58,7 +71,11 @@ test_that("nisl argument returns correct results", {
   expect_false(any(na.omit(s$Model_table$seg3) < 75))
   expect_error(sar_threshold(data = a2, mod = "All",
                              interval = 0.1, nisl = 750), 
-                     "nisl is larger than half of the total number of islands")
+          "nisl is equal or larger than half of the total number of islands")
+  #check with exactly half, i.e. nisl half the number of islands (Should error)
+  expect_error(sar_threshold(data = a2, mod = "All",
+                             interval = 0.1, nisl = 84), 
+       "nisl is equal or larger than half of the total number of islands")
 })
 
 

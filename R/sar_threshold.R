@@ -8,7 +8,8 @@
 #' @noRd
 find_one_threshold_cont <- function(x, y, fct, interval, nisl = NULL){
   if (is.null(nisl)){
-    sequence <- seq(min(x), max(x), interval)
+    #max(x) - interval, to avoid having largest island as main threshold
+    sequence <- seq(min(x), (max(x) - interval), interval) 
     } else {
     n <- nisl-1
     if (n == 0) {n <- 1}
@@ -19,6 +20,8 @@ find_one_threshold_cont <- function(x, y, fct, interval, nisl = NULL){
   if (length(w) == 1){
     threshold <- sequence[w]
   } else{
+    warning("Multiple threshold values returned same minimum rss;", 
+            " one value / pair has been randomly selected")
     w2 <- w[sample(1:length(w), 1)]
     threshold <- sequence[w2]
   }
@@ -29,9 +32,10 @@ find_one_threshold_cont <- function(x, y, fct, interval, nisl = NULL){
 #' @noRd
 find_one_threshold_disc <- function(x, y, fct, nisl = NULL){
   if (is.null(nisl)){
-    x1 <- x
+    #remove largest island so it cannot be threshold
+    x1 <- x[1:(length(x) - 1)]
     } else {
-    n <- nisl-1
+    n <- nisl - 1
     if (n == 0) {n <- 1}
     x1 <- x[x >= min(sort(x)[-(1:n)]) & x <= max(rev(sort(x))[-(1:n)])]
   }
@@ -43,6 +47,8 @@ find_one_threshold_disc <- function(x, y, fct, nisl = NULL){
   if (length(w) == 1){
     threshold <- x1[w]
   } else{
+    warning("Multiple threshold values returned same minimum rss;", 
+            " one value / pair has been randomly selected")
     w2 <- w[sample(1:length(w), 1)]
     threshold <- x1[w2]
   }
@@ -57,7 +63,7 @@ find_one_threshold_disc <- function(x, y, fct, nisl = NULL){
 find_two_thresholds_cont <- function(x, y, fct, interval, nisl = NULL, parallel, 
                                      cores){
   if (is.null(nisl)){
-    sequence <- seq(min(x), max(x), interval)
+    sequence <- seq(min(x), (max(x) - interval), interval)
     } else {
     n <- nisl-1
     if (n == 0) {n <- 1}
@@ -95,12 +101,11 @@ find_two_thresholds_cont <- function(x, y, fct, interval, nisl = NULL, parallel,
   l2 <- do.call(rbind, lapply(ssr_t1, function(x) do.call(rbind, x)))
   thb <- l2[which(l2[,1] == min(l2[,1])), , drop = FALSE]
   
-  #th <- l2[which(l2[,1] == min(l2[,1])),][2:3]
-  
   if (nrow(thb) == 1){
     th <- as.vector(thb)[2:3]
   } else {
-#    rr <- sample(1:nrow(th), 1)
+    warning("Multiple threshold values returned same minimum rss;", 
+            " one value / pair has been randomly selected")
     rr <- sample(1:nrow(thb), 1)
     th <- as.vector(thb[rr,])[2:3]
   }
@@ -113,7 +118,8 @@ find_two_thresholds_cont <- function(x, y, fct, interval, nisl = NULL, parallel,
 find_two_thresholds_disc <- function(x, y, fct, nisl = NULL){
   if(is.null(nisl)){n <- 0}
   if(is.null(nisl)){
-    x1 <- x
+    #remove largest island so it cannot be threshold
+    x1 <- x[1:(length(x) - 1)]
     } else {
     n <- nisl - 1
     if (n == 0) {n <- 1}
@@ -121,7 +127,7 @@ find_two_thresholds_disc <- function(x, y, fct, nisl = NULL){
   }
   N <- length(x1) - 1
   ssr_t1 <-  vector("list", length = N)
-  for(i in 1:(N)){
+  for (i in 1:(N)){
     ssr_t2 <- vector("list", length = length((i + 1):(N)))
     k <- 1
     for (j in (i + 1):(N)){
@@ -135,11 +141,61 @@ find_two_thresholds_disc <- function(x, y, fct, nisl = NULL){
   if (nrow(thb) == 1){
     th <- as.vector(thb)[2:3]
   } else {
+    warning("Multiple threshold values returned same minimum rss;", 
+            " one value / pair has been randomly selected")
     rr <- sample(1:nrow(thb), 1)
     th <- as.vector(thb[rr,])[2:3]
   }
   return(th)
 }
+
+
+
+
+
+
+
+find_two_thresholds_disc <- function(x, y, fct){
+  N <- length(x) - 1
+  ssr_t1 <-  vector("list", length = N)
+  for(i in 1:N){
+    ssr_t2 <- vector("list", length = length((i+1):N))
+    k <- 1
+    for (j in (i+1):N){
+      ssr_t2[[k]] <- c(fct(x[i], x[j], x, y), x[i], x[j])
+      k <- k + 1
+    }
+    ssr_t1[[i]] <- ssr_t2
+  }
+  l2 <- do.call(rbind, lapply(ssr_t1, function(x) do.call(rbind, x)))
+  #if multiple threshold values return same min RSS, randomly pick one
+  thb <- l2[which(l2[,1] == min(l2[,1])), , drop = FALSE]
+  if (nrow(thb) == 1){
+    th <- as.vector(thb)[2:3]
+  } else {
+    warning("Multiple threshold values returned same minimum rss;", 
+            " one value / pair has been randomly selected")
+    rr <- sample(1:nrow(thb), 1)
+    th <- as.vector(thb[rr,])[2:3]
+  }
+  return(th)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #rss functions for each model
@@ -335,8 +391,8 @@ sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
     stop("con should be a numeric vector of length 1")
   if (nrow(data) < 10) warning("Sample size is quite small for fitting",
                                " threshold models, see documentation")
-  if ((!is.null(nisl)) && nisl > length(data[,1] / 2)){
-    stop('nisl is larger than half of the total number of islands')
+  if ((!is.null(nisl)) && nisl >= (length(data[,1]) / 2)){
+    stop('nisl is equal or larger than half of the total number of islands')
   }
   
   #create list to hold final model fits;
@@ -458,7 +514,6 @@ sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
     res[[r]] <- lm(y ~ x * (x <= threshold_two_disc[1]) + 
                      x*(x > threshold_two_disc[1] & x<=threshold_two_disc[2]) + 
                      x * (x > threshold_two_disc[2]))
-    
     names[r] <- "DiscTwo"
     th[[r]] <- threshold_two_disc
     r <- r + 1
