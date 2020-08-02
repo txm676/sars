@@ -150,54 +150,6 @@ find_two_thresholds_disc <- function(x, y, fct, nisl = NULL){
 }
 
 
-
-
-
-
-
-find_two_thresholds_disc <- function(x, y, fct){
-  N <- length(x) - 1
-  ssr_t1 <-  vector("list", length = N)
-  for(i in 1:N){
-    ssr_t2 <- vector("list", length = length((i+1):N))
-    k <- 1
-    for (j in (i+1):N){
-      ssr_t2[[k]] <- c(fct(x[i], x[j], x, y), x[i], x[j])
-      k <- k + 1
-    }
-    ssr_t1[[i]] <- ssr_t2
-  }
-  l2 <- do.call(rbind, lapply(ssr_t1, function(x) do.call(rbind, x)))
-  #if multiple threshold values return same min RSS, randomly pick one
-  thb <- l2[which(l2[,1] == min(l2[,1])), , drop = FALSE]
-  if (nrow(thb) == 1){
-    th <- as.vector(thb)[2:3]
-  } else {
-    warning("Multiple threshold values returned same minimum rss;", 
-            " one value / pair has been randomly selected")
-    rr <- sample(1:nrow(thb), 1)
-    th <- as.vector(thb[rr,])[2:3]
-  }
-  return(th)
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #rss functions for each model
 
 #' one thr continuous rss
