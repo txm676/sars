@@ -27,7 +27,11 @@ log-transformed area it is 0.01. However, these values may not be suitable
 depending on the range of area values in a dataset, and thus users are
 advised to manually set this argument.}
 
-\item{nisl}{****(n.b. it needs to be > xxx)}
+\item{nisl}{Set the minimum number of islands to be contained within each of
+the two segments (in the case of one-threshold models), or the first and
+last segments (in the case of two-threshold models). It needs to be less
+than than half of the total number of islands in the dataset. Default =
+NULL.}
 
 \item{non_th_models}{Logical argument (default = TRUE) of whether two
 non-threshold models (i.e. a simple linear regression: y ~ x; and an
@@ -66,12 +70,15 @@ Fit up to six piecewise (threshold) regression models to SAR
   data.
 }
 \details{
-Fitting the continuous and left-horizontal piecewise models
-  (particularly the two-threshold models) can be time consuming if the
-  range in area is large and/or the \code{interval} argument is small. For
-  the two-threshold continuous slope and left-horizontal models, the use of
-  parallel processing (using the \code{parallel} argument) is recommended.
-  The number of cores (\code{cores}) must be provided.
+This function is described in more detail in the accompanying paper
+  (Matthews & Rigal, 2020).
+
+  Fitting the continuous and left-horizontal piecewise models (particularly
+  the two-threshold models) can be time consuming if the range in area is
+  large and/or the \code{interval} argument is small. For the two-threshold
+  continuous slope and left-horizontal models, the use of parallel processing
+  (using the \code{parallel} argument) is recommended. The number of cores
+  (\code{cores}) must be provided.
 
   Note that the interval argument is not used to fit discontinuous models,
   as, in these cases, the breakpoint must be at a datapoint.
@@ -102,6 +109,14 @@ Fitting the continuous and left-horizontal piecewise models
   given model fit). In these cases, we just randomly choose and return one
   and also produce a warning. If this occurs it is worth checking the data
   and model fits carefully.
+  
+  The \code{nisl} argument can be useful to avoid situations where a segment
+  contains only one island, for example. However, setting strict criteria on
+  the number of data points to be included in segments could be seen as
+  "forcing" the fit of the model, and arguably if a model fit is not
+  interpretable, it is simply that the model does not provide a good
+  representation of the data. Thus, it should not be used without careful
+  thought.
 }
 \note{
 Due to the increased number of parameters, fitting piecewise regression
@@ -129,8 +144,12 @@ Lomolino, M.V. & Weiser, M.D. (2001) Towards a more general
   Gao, D., Cao, Z., Xu, P. & Perry, G. (2019) On piecewise models and
   species-area patterns. Ecology and Evolution, 9, 8351-8361.
 
-  Matthews, T.J. et al. (In review) Unravelling the small-island effect
-  through phylogenetic community ecology
+  Matthews, T.J. et al. (In Press) Unravelling the small-island effect
+  through phylogenetic community ecology. Journal of Biogeography.
+  
+  Matthews, T.J. & Rigal, F. (In Review) Thresholds and the species–area
+  relationship: a set of functions for fitting, evaluating and plotting a
+  range of commonly used piecewise models. Frontiers of Biogeography.
 }
 \author{
 Francois Rigal and Thomas J. Matthews

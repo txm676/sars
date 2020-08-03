@@ -63,6 +63,7 @@ find_one_threshold_disc <- function(x, y, fct, nisl = NULL){
 find_two_thresholds_cont <- function(x, y, fct, interval, nisl = NULL, parallel, 
                                      cores){
   if (is.null(nisl)){
+    #remove largest island so it cannot be threshold
     sequence <- seq(min(x), (max(x) - interval), interval)
     } else {
     n <- nisl-1
@@ -116,8 +117,8 @@ find_two_thresholds_cont <- function(x, y, fct, interval, nisl = NULL, parallel,
 #' function to find the threshold for two threshold disc
 #' @noRd
 find_two_thresholds_disc <- function(x, y, fct, nisl = NULL){
-  if(is.null(nisl)){n <- 0}
-  if(is.null(nisl)){
+  if (is.null(nisl)){n <- 0}
+  if (is.null(nisl)){
     #remove largest island so it cannot be threshold
     x1 <- x[1:(length(x) - 1)]
     } else {
@@ -125,9 +126,9 @@ find_two_thresholds_disc <- function(x, y, fct, nisl = NULL){
     if (n == 0) {n <- 1}
     x1 <- x[x >= min(sort(x)[-(1:n)]) & x <= max(rev(sort(x))[-(1:n)])]
   }
-  N <- length(x1) - 1
-  ssr_t1 <-  vector("list", length = N)
-  for (i in 1:(N)){
+  N <- length(x1)
+  ssr_t1 <-  vector("list", length = (N - 1))
+  for (i in 1:(N - 1)){
     ssr_t2 <- vector("list", length = length((i + 1):(N)))
     k <- 1
     for (j in (i + 1):(N)){
@@ -219,7 +220,11 @@ fct_disc_two <- function(th, th2, x, y) {
 #'   log-transformed area it is 0.01. However, these values may not be suitable
 #'   depending on the range of area values in a dataset, and thus users are
 #'   advised to manually set this argument.
-#' @param nisl ****(n.b. it needs to be > xxx)
+#' @param nisl Set the minimum number of islands to be contained within each of
+#'   the two segments (in the case of one-threshold models), or the first and
+#'   last segments (in the case of two-threshold models). It needs to be less
+#'   than than half of the total number of islands in the dataset. Default =
+#'   NULL.
 #' @param non_th_models Logical argument (default = TRUE) of whether two
 #'   non-threshold models (i.e. a simple linear regression: y ~ x; and an
 #'   intercept only model: y ~ 1) should also be fitted.
@@ -236,12 +241,15 @@ fct_disc_two <- function(th, th2, x, y) {
 #'   two-threshold models are being fitted.
 #' @param cores Number of cores to use. Only applicable when \code{parallel =
 #'   TRUE}.
-#' @details Fitting the continuous and left-horizontal piecewise models
-#'   (particularly the two-threshold models) can be time consuming if the
-#'   range in area is large and/or the \code{interval} argument is small. For
-#'   the two-threshold continuous slope and left-horizontal models, the use of
-#'   parallel processing (using the \code{parallel} argument) is recommended.
-#'   The number of cores (\code{cores}) must be provided.
+#' @details This function is described in more detail in the accompanying paper
+#'   (Matthews & Rigal, 2020).
+#'
+#'   Fitting the continuous and left-horizontal piecewise models (particularly
+#'   the two-threshold models) can be time consuming if the range in area is
+#'   large and/or the \code{interval} argument is small. For the two-threshold
+#'   continuous slope and left-horizontal models, the use of parallel processing
+#'   (using the \code{parallel} argument) is recommended. The number of cores
+#'   (\code{cores}) must be provided.
 #'
 #'   Note that the interval argument is not used to fit discontinuous models,
 #'   as, in these cases, the breakpoint must be at a datapoint.
@@ -273,6 +281,14 @@ fct_disc_two <- function(th, th2, x, y) {
 #'   and also produce a warning. If this occurs it is worth checking the data
 #'   and model fits carefully.
 #'   
+#'   The \code{nisl} argument can be useful to avoid situations where a segment
+#'   contains only one island, for example. However, setting strict criteria on
+#'   the number of data points to be included in segments could be seen as
+#'   "forcing" the fit of the model, and arguably if a model fit is not
+#'   interpretable, it is simply that the model does not provide a good
+#'   representation of the data. Thus, it should not be used without careful
+#'   thought.
+#'   
 #' @return A list of class "threshold" and "sars" with five elements. The first
 #'   element contains the different model fits (lm objects). The second element
 #'   contains the names of the fitted models, the third  contains the threshold
@@ -293,8 +309,12 @@ fct_disc_two <- function(th, th2, x, y) {
 #'   Gao, D., Cao, Z., Xu, P. & Perry, G. (2019) On piecewise models and
 #'   species-area patterns. Ecology and Evolution, 9, 8351-8361.
 #'
-#'   Matthews, T.J. et al. (In review) Unravelling the small-island effect
-#'   through phylogenetic community ecology
+#'   Matthews, T.J. et al. (In Press) Unravelling the small-island effect
+#'   through phylogenetic community ecology. Journal of Biogeography.
+#'   
+#'   Matthews, T.J. & Rigal, F. (In Review) Thresholds and the species–area
+#'   relationship: a set of functions for fitting, evaluating and plotting a
+#'   range of commonly used piecewise models. Frontiers of Biogeography.
 #' @author Francois Rigal and Thomas J. Matthews
 #' @examples
 #' data(aegean2)

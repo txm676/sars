@@ -222,7 +222,7 @@ summary.sars <- function(object, order = "BIC", ...){
     colnames(tdf) <- c("Th1", "Th2")
     
     #Work out the number of datapoints in each segment
-    a <- mods[[1]]$model$x
+    a <- object[[4]]$A
     nbi <- matrix(NA, nrow = length(names), ncol = 3)
     for (i in 1:length(th)){
       if (!is.na(th[[i]][1])){
