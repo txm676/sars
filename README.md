@@ -93,7 +93,7 @@ mm_galap <- sar_average(data = galap)
 #> 
 #>  Now attempting to fit the 20 SAR models: 
 #> 
-#> --  multi_sars ---------------------------------------------------------------- multi-model SAR --
+#> --  multi_sars ---------------------------------------------------- multi-model SAR --
 #> > power    : v
 #> > powerR   : v
 #> > epm1     : v
@@ -122,7 +122,7 @@ mm_galap <- sar_average(data = galap)
 #> Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model
 #> 16 remaining models used to construct the multi  SAR:
 #>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-#> --------------------------------------------------------------------------------------------------
+#> --------------------------------------------------------------------------------------
 ```
 
 Each of the ‘fitted’ objects have corresponding plot methods:
@@ -164,7 +164,7 @@ To fit the two-threshold continuous model to the ‘aegean2’ dataset
 ``` r
 fit <- sar_threshold(data = aegean2, mod = c("ContTwo"), interval = 0.1, 
                      non_th_models = FALSE, logAxes = "area", con = 1,
-                     logT = log10, nisl = NULL, parallel = TRUE, cores = 3)
+                     logT = log10, nisl = NULL)
 plot(fit, cex = 0.8, cex.main = 1.1, cex.lab = 1.1, pcol = "grey") #Figure 1
 ```
 

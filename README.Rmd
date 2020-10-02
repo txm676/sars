@@ -105,7 +105,7 @@ To fit the two-threshold continuous model to the 'aegean2' dataset
 ```{r}
 fit <- sar_threshold(data = aegean2, mod = c("ContTwo"), interval = 0.1, 
                      non_th_models = FALSE, logAxes = "area", con = 1,
-                     logT = log10, nisl = NULL, parallel = TRUE, cores = 3)
+                     logT = log10, nisl = NULL)
 plot(fit, cex = 0.8, cex.main = 1.1, cex.lab = 1.1, pcol = "grey") #Figure 1
 ```
 

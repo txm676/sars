@@ -49,7 +49,7 @@ plot.coleman <- function(x, xlab = "Relative area (log transformed)",
                    x$Relative_areas, x$Species_richness)
     colnames(df) <- c("pv", "sd", "ra", "os")
 
-    df <- arrange(df, ra)
+    df <- dplyr::arrange(df, "ra")
 
     plot(x = log(df$ra), y = df$os, ylim = c(min((df$pv - df$sd)),
                                              max((df$pv + df$sd))),
