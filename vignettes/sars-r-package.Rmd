@@ -388,9 +388,9 @@ such, the package provide a set of functions for fitting six piecewise
 regression models to ISAR data, calculating confidence intervals around the
 breakpoint estimates (for certain models), comparing the models using various
 information criteria, and plotting the resultant model fits. The six piecewise
-models are a selection of 6 models out of the 14 listed by [@Gao2019] and
-comprise the continuous one-threshold and two-threshold , discontinuous
-one-threshold and two-threshold , and left-horizontal one-threshold and
+models are a selection of 6 models out of the 14 listed by @Gao2019 and
+comprise the continuous one-threshold and two-threshold, discontinuous
+one-threshold and two-threshold, and left-horizontal one-threshold and
 two-threshold models (see @Gao2019 for further information).
 
 The main function is ‘sar_threshold’, which fits the six piecewise models, in
@@ -409,7 +409,7 @@ generating confidence intervals around the threshold estimates, can be found in
 @Matthews2020.
 
 
-```{r}
+```{r, fig.width=6, fig.height=6}
 
 #load an example dataset, and fit the continuous two-threshold model 
 #to the data (with area transformed using log to the base 10), using an 
@@ -423,7 +423,7 @@ fit <- sar_threshold(data = aegean2, mod = c("ContTwo"), interval = 0.1,
 summary(fit)
 
 #Plot the resultant model fit 
-plot(fit, cex = 0.7, cex.main = 0.8, cex.lab = 0.7, pcol = "grey") 
+plot(fit, cex = 0.8, cex.main = 1, cex.lab = 0.8, pcol = "grey") 
 ```
 
 ## On the calculation of information criteria
