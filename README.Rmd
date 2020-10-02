@@ -29,13 +29,15 @@ options(cli.unicode = FALSE)
 
 **sars** provides functionality to fit twenty SAR model using non-linear regression, and to calculate multi-model averaged curves using various information criteria. The software also provides easy to use functionality to plot multi-model SAR curves and to generate confidence intervals using bootstrapping. Additional SAR related functions
 include fitting the linear version of the power model and comparing parameters with the non-linear version, fitting
-the general dynamic model of island biogeography, fitting the random placement model to a species abundance -
-site matrix, and extrapolating fitted SAR models to predict richness on larger islands / sample areas.
+the general dynamic model of island biogeography, fitting the random placement model to a species abundance-site matrix, and extrapolating fitted SAR models to predict richness on larger islands / sample areas. Version 1.3.0
+has added functions for fitting, evaluating and plotting a range of commonly used piecewise SAR models (see 
+@Matthews2020 for details on these functions).
 
-As this is version 1.2.3 of the package, it is possible that there are some bugs in places. Please report any
+As this is version 1.3.0 of the package, it is possible that there are some bugs in places. Please report any
 issues to us via GitHub.
 
-The package has an associated vignette that provides examples of how to use the package.
+The package has an associated vignette that provides examples of how to use the package, and an accompanying 
+paper [@Matthews2019].
 
 A website for the package can be found here: https://txm676.github.io/sars/
 
@@ -97,6 +99,14 @@ mm_galap
 
 
 plot(mm_galap, pLeg = FALSE, mmSep = TRUE)
+```
+
+To fit the two-threshold continuous model to the 'aegean2' dataset
+```{r}
+fit <- sar_threshold(data = aegean2, mod = c("ContTwo"), interval = 0.1, 
+                     non_th_models = FALSE, logAxes = "area", con = 1,
+                     logT = log10, nisl = NULL, parallel = TRUE, cores = 3)
+plot(fit, cex = 0.8, cex.main = 1.1, cex.lab = 1.1, pcol = "grey") #Figure 1
 ```
 
 ## References

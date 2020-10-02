@@ -18,12 +18,12 @@ options(cli.unicode = FALSE)
 
 
 
-This vignette is heavily based on the paper that accompanies the package.To 
-cite this vignette, please cite the corresponding paper:
+This vignette is heavily based on the paper that accompanies the package
+[@Matthews2019].To cite this vignette, please cite the corresponding paper:
 
 Matthews, T.J., Triantis, K., Whittaker, R.J. and Guilhaumon, F. (2019) sars:
 an R package for fitting, evaluating and comparing species–area relationship
-models. Ecography, In press
+models. Ecography, 42, 1446-1455.
 
 Version 1.1.1 of the package has been archived on the Zenodo research data
 repository (DOI: 10.5281/zenodo.2573067).
@@ -378,6 +378,53 @@ p3 <- sar_average(data = galap)
 sar_pred(p3, area = c(5000, 10000))
 ```
 
+## SAR thresholds
+An increasing number of studies have focused on identifying thresholds in the
+ISAR, including studies i) focused on identifying the small island effect, ii)
+determining whether the ISAR has an upper asymptote and iii) identifying
+thresholds in habitat ISARs, which are often systems of conservation concern.
+The most common approach in such studies is to use piecewise regression. As
+such, the package provide a set of functions for fitting six piecewise
+regression models to ISAR data, calculating confidence intervals around the
+breakpoint estimates (for certain models), comparing the models using various
+information criteria, and plotting the resultant model fits. The six piecewise
+models are a selection of 6 models out of the 14 listed by [@Gao2019] and
+comprise the continuous one-threshold and two-threshold , discontinuous
+one-threshold and two-threshold , and left-horizontal one-threshold and
+two-threshold models (see @Gao2019 for further information).
+
+The main function is ‘sar_threshold’, which fits the six piecewise models, in
+addition to a linear model and an intercept only model for comparison (using the
+‘non_th_models’ argument). Summary and plot generic functions are available
+which return user-friendly output. As the coefficients in the fitted breakpoint
+regression models do not all represent the intercepts and slopes of the
+different segments (for these it is necessary to add different coefficients
+together), a separate function (‘get_coef’) can be used to calculate these. A
+separate function (‘threshold_ci’) generates the confidence intervals around the
+breakpoints of the one-threshold continuous and left-horizontal models.
+
+Detailed information on fitting and plotting the threshold models, as well as
+the additional functions for calculating model slopes and intercepts, and
+generating confidence intervals around the threshold estimates, can be found in
+@Matthews2020.
+
+
+```{r}
+
+#load an example dataset, and fit the continuous two-threshold model 
+#to the data (with area transformed using log to the base 10), using an 
+#interval of 0.1 (for speed) and parallel processing.
+data(aegean2)
+fit <- sar_threshold(data = aegean2, mod = c("ContTwo"), interval = 0.1, 
+                     non_th_models = FALSE, logAxes = "area", con = 1,
+                     logT = log10, nisl = NULL, parallel = TRUE, cores = 3)
+
+#generate model fitting summary table (generally more useful when fitting multiple models)
+summary(fit)
+
+#Plot the resultant model fit 
+plot(fit, cex = 0.7, cex.main = 0.8, cex.lab = 0.7, pcol = "grey") 
+```
 
 ## On the calculation of information criteria
 There are different ways to calculate the various information criteria (IC) used

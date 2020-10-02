@@ -95,3 +95,22 @@ sar_pred(p2, area = c(5000, 10000))
 p3 <- sar_average(data = galap)
 sar_pred(p3, area = c(5000, 10000))
 
+## ---- fig.width=6, fig.height=6-----------------------------------------------
+#load an example dataset, and fit the continuous two-threshold model 
+#to the data (with area transformed using log to the base 10), using an 
+#interval of 0.1 (for speed) and parallel processing.
+data(aegean2)
+fit <- sar_threshold(data = aegean2, mod = c("ContTwo"), interval = 0.1, 
+                     non_th_models = FALSE, logAxes = "area", con = 1,
+                     logT = log10, nisl = NULL, parallel = TRUE, cores = 3)
+
+#generate model fitting summary table (generally more useful when fitting multiple models)
+summary(fit)
+
+#Plot the resultant model fit 
+plot(fit, cex = 0.7, cex.main = 0.8, cex.lab = 0.7, pcol = "grey") 
+
+
+
+
+

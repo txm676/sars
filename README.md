@@ -22,15 +22,18 @@ functionality to plot multi-model SAR curves and to generate confidence
 intervals using bootstrapping. Additional SAR related functions include
 fitting the linear version of the power model and comparing parameters
 with the non-linear version, fitting the general dynamic model of island
-biogeography, fitting the random placement model to a species abundance-site 
-matrix, and extrapolating fitted SAR models to predict richness
-on larger islands / sample areas.
+biogeography, fitting the random placement model to a species
+abundance-site matrix, and extrapolating fitted SAR models to predict
+richness on larger islands / sample areas. Version 1.3.0 has added
+functions for fitting, evaluating and plotting a range of commonly used
+piecewise SAR models (see Matthews and Rigal (n.d.) for details on these
+functions).
 
-As this is version 1.2.3 of the package, it is possible that there are
+As this is version 1.3.0 of the package, it is possible that there are
 some bugs in places. Please report any issues to us via GitHub.
 
 The package has an associated vignette that provides examples of how to
-use the package.
+use the package, and an accompanying paper (Matthews et al. 2019).
 
 A website for the package can be found here:
 <https://txm676.github.io/sars/>
@@ -90,7 +93,7 @@ mm_galap <- sar_average(data = galap)
 #> 
 #>  Now attempting to fit the 20 SAR models: 
 #> 
-#> --  multi_sars ----------------------------------------------------------------------- multi-model SAR --
+#> --  multi_sars ---------------------------------------------------------------- multi-model SAR --
 #> > power    : v
 #> > powerR   : v
 #> > epm1     : v
@@ -119,7 +122,7 @@ mm_galap <- sar_average(data = galap)
 #> Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model
 #> 16 remaining models used to construct the multi  SAR:
 #>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-#> ---------------------------------------------------------------------------------------------------------
+#> --------------------------------------------------------------------------------------------------
 ```
 
 Each of the ‘fitted’ objects have corresponding plot methods:
@@ -156,21 +159,50 @@ plot(mm_galap, pLeg = FALSE, mmSep = TRUE)
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
+To fit the two-threshold continuous model to the ‘aegean2’ dataset
+
+``` r
+fit <- sar_threshold(data = aegean2, mod = c("ContTwo"), interval = 0.1, 
+                     non_th_models = FALSE, logAxes = "area", con = 1,
+                     logT = log10, nisl = NULL, parallel = TRUE, cores = 3)
+plot(fit, cex = 0.8, cex.main = 1.1, cex.lab = 1.1, pcol = "grey") #Figure 1
+```
+
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+
 ## References
 
 <div id="refs" class="references">
 
 <div id="ref-Arrhenius1921">
 
-Arrhenius, Olof. 1921. “Species and Area.” *The Journal of Ecology* 9
-(1): 95. <https://doi.org/10.2307/2255763>.
+Arrhenius, O. 1921. “Species and Area.” *The Journal of Ecology* 9 (1):
+95. <https://doi.org/10.2307/2255763>.
 
 </div>
 
 <div id="ref-Gleason1922">
 
-Gleason, Henry Allan. 1922. “On the Relation Between Species and Area.”
+Gleason, H. A. 1922. “On the Relation Between Species and Area.”
 *Ecology* 3 (2): 158–62. <https://doi.org/10.2307/1929150>.
+
+</div>
+
+<div id="ref-Matthews2020">
+
+Matthews, T. J., and F. Rigal. n.d. “Thresholds and the species–area
+relationship: a set of functions for fitting, evaluating and plotting a
+range of commonly used piecewise models in R.” *Frontiers of
+Biogeography* – (NULL): –. [NULL](NULL).
+
+</div>
+
+<div id="ref-Matthews2019">
+
+Matthews, T. J., K. A. Triantis, R. J. Whittaker, and F. Guilhaumon.
+2019. “sars: an R package for fitting, evaluating and comparing
+species–area relationship models.” *Ecography* 42: 1446–55.
+<https://doi.org/10.1111/ecog.04271>.
 
 </div>
 

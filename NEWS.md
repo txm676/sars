@@ -1,3 +1,9 @@
+
+
+##version 1.3.0
+  * Added a set of functions for fitting, evaluating and plotting a range of commonly 
+    used piecewise SAR models (see help page and accompanying paper)
+
 ##version 1.2.3
   * return shape algorithm fail info to model summary table
   * added grid_start argument option to sar_average and sar_multi
