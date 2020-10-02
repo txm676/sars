@@ -130,6 +130,21 @@ print.summary.sars <- function(x, ...){
         "\n\n" ,sep = "")
     print(object$Model_table)
   }
+  if (attributes(object)$type == "threshold"){
+    cat("\nSar_threshold object summary:\n", sep = "")
+    cat("\n", paste(length(object[[2]]$LL), "models fitted"),
+        "\n", sep = "")
+    lT <- object[[3]]
+    lT2 <- switch(lT,
+                  "none" = "untransformed axes",
+                  "area" = "area log-transformed",
+                  "both" = "area and richness log-transformed")
+    cat("\n", paste("Models fitted with", lT2),
+        "\n", sep = "")
+    cat("\n", paste("Models ranked using", object[[1]]),
+        "\n\n" ,sep = "")
+    print(object[[2]])
+  }
 }
 
 
@@ -187,6 +202,35 @@ print.sars <- function(x, ...){
   
   if (attributes(object)$type == "pred"){
     cat("\nThis is a sar_pred object:\n\n", sep = "")
+    print.data.frame(object)
+  }
+  if (attributes(object)$type == "threshold"){
+    object2 <- object
+    class(object2) <- "list"
+    print(object2)
+  }
+  if (attributes(object)$type == "threshold_ci"){
+    m <- object$Method
+    cat("\nThreshold confidence interval summary\n", sep = "")
+    cat("\nMethod: ", m, "\n", sep = "")
+    #cat("\n", "Confidence intervals generated for:", names(object[[1]]),
+    #   "\n", sep = " ")
+    if (m == "boot"){
+      for (i in 1:length(object[[2]])){
+        CI <- round(object[[2]][[i]], 2)
+        cat("\nModel: ", names(object[[1]][i]),"\n", sep = "")
+        cat("Confidence interval of the breakpoint:", CI[1],"-", CI[2], "\n")
+      }
+    } else{
+      for (i in 1:(length(object) - 1)){
+        CI <- round(object[[i]], 2)
+        cat("\nModel: ", names(object)[i],"\n", sep = "")
+        cat("Confidence interval of the breakpoint:", CI[1],"-", CI[2], "\n")
+      }
+    }
+  }
+  if (attributes(object)$type == "threshold_coef"){
+    cat("\nSlopes and intercepts of fitted breakpoint models: \n\n", sep = "")
     print.data.frame(object)
   }
 }
