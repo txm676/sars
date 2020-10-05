@@ -203,11 +203,11 @@ fct_disc_two <- function(th, th2, x, y) {
 #' @description Fit up to six piecewise (threshold) regression models to SAR
 #'   data.
 #' @usage sar_threshold(data, mod = "All", interval = NULL, nisl = NULL,
-#'   non_th_models = TRUE, logAxes = "none", con = 1, logT = log, parallel =
+#'   non_th_models = TRUE, logAxes = "area", con = 1, logT = log, parallel =
 #'   FALSE, cores = NULL)
-#' @param data A dataset in the form of a dataframe with two columns: the first
-#'   with island/site areas, and the second with the species richness of each
-#'   island/site.
+#' @param data A dataset in the form of a dataframe with at least two columns:
+#'   the first with island/site areas, and the second with the species richness
+#'   of each island/site.
 #' @param mod A vector of model names: an individual model, a set of models, or
 #'   all models. Can be any of 'All' (fit all models), 'ContOne' (continuous
 #'   one-threshold), 'ZslopeOne' (left-horizontal one-threshold), 'DiscOne'
@@ -230,7 +230,7 @@ fct_disc_two <- function(th, th2, x, y) {
 #'   intercept only model: y ~ 1) should also be fitted.
 #' @param logAxes What log-transformation (if any) should be applied to the area
 #'   and richness values. Should be one of "none" (no transformation), "area"
-#'   (only area is log-transformed) or "both" (both area and richness
+#'   (only area is log-transformed; default) or "both" (both area and richness
 #'   log-transformed).
 #' @param con The constant to add to the species richness values in cases where
 #'   one of the islands has zero species.
@@ -309,7 +309,7 @@ fct_disc_two <- function(th, th2, x, y) {
 #'   Gao, D., Cao, Z., Xu, P. & Perry, G. (2019) On piecewise models and
 #'   species-area patterns. Ecology and Evolution, 9, 8351-8361.
 #'
-#'   Matthews, T.J. et al. (In Press) Unravelling the small-island effect
+#'   Matthews, T.J. et al. (2020) Unravelling the small-island effect
 #'   through phylogenetic community ecology. Journal of Biogeography.
 #'   
 #'   Matthews, T.J. & Rigal, F. (In Review) Thresholds and the species–area
@@ -329,7 +329,7 @@ fct_disc_two <- function(th, th2, x, y) {
 #' @export
 
 sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
-                          non_th_models = TRUE, logAxes = "none", 
+                          non_th_models = TRUE, logAxes = "area", 
                           con = 1, logT = log,
                           parallel = FALSE, cores = NULL){
   
