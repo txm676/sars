@@ -93,7 +93,7 @@ mm_galap <- sar_average(data = galap)
 #> 
 #>  Now attempting to fit the 20 SAR models: 
 #> 
-#> --  multi_sars ---------------------------------------------------- multi-model SAR --
+#> --  multi_sars ---------------------------------------------------------- multi-model SAR --
 #> > power    : v
 #> > powerR   : v
 #> > epm1     : v
@@ -122,7 +122,7 @@ mm_galap <- sar_average(data = galap)
 #> Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model
 #> 16 remaining models used to construct the multi  SAR:
 #>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-#> --------------------------------------------------------------------------------------
+#> --------------------------------------------------------------------------------------------
 ```
 
 Each of the ‘fitted’ objects have corresponding plot methods:
@@ -193,7 +193,7 @@ Gleason, H. A. 1922. “On the Relation Between Species and Area.”
 Matthews, T. J., and F. Rigal. n.d. “Thresholds and the species–area
 relationship: a set of functions for fitting, evaluating and plotting a
 range of commonly used piecewise models in R.” *Frontiers of
-Biogeography* – (NULL): –. [NULL](NULL).
+Biogeography*.
 
 </div>
 

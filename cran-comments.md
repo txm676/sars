@@ -1,6 +1,7 @@
 
-##This is a new submission
+##This is a re-submission
 *version 1.3.0 of sars package
+*I have removed the NULL URLs from markdown as requested
 
 ##Test environments
 *local Windows 10 install, R 4.0.1
