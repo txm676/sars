@@ -16,7 +16,6 @@ License: GPL-3 | file LICENSE
 URL: https://github.com/txm676/sars, https://txm676.github.io/sars/
 BugReports: https://github.com/txm676/sars/issues
 Imports:
-    dplyr,
     graphics,
     nortest,
     stats,
