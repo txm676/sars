@@ -813,8 +813,14 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL,
   ##get max y-value across model fits and observed to 
   #set y-axis range (unless provided)
   if (is.null(yRange)){
-    nc <- ncol(data)
-    ff <- range(data[ ,2:nc])
+    all_values <- data$S #start with observed richness values
+    #then add in any predicted values from cont or disc models (if they are included)
+    #The >1 argument is because the first column is just the area values
+    if (ncol(xypred.cont) > 1) all_values <- c(all_values, 
+                                               unlist(xypred.cont[,2:ncol(xypred.cont)]))
+    if (ncol(xypred.disc) > 1) all_values <- c(all_values, 
+                                               unlist(xypred.disc[,2:ncol(xypred.disc)]))
+    ff <- range(all_values)
     yRange <- c(ff[1], ff[2])
   }
   if (is.null(xlab)) {
