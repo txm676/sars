@@ -3,7 +3,7 @@ model <- list(
   name = c("Extended Power model 1"),
   formula = expression(S==c*A^(z*A^-d)),
   exp = expression(c*A^(z*A^-d)),
-  shape = "sigmoid",
+  shape = "convex/sigmoid",
   asymp = function(pars)FALSE,
   parLim  =  c("Rplus","R","R"),
   custStart = function(data)c(5,.25,.15),

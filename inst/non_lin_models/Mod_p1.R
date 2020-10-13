@@ -4,7 +4,7 @@ model <- list(
   formula = expression(S == c*A^z * exp(-d*A)),
   exp = expression(c*A^z * exp(-d*A)),
   mod = s~c*a^z * exp(-d*a),
-  shape = "convex",
+  shape = "convex/sigmoid",
   asymp = function(pars)FALSE,
   custStart = function(data)c(5,.25,.15),
   #limits for parameters

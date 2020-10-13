@@ -96,7 +96,7 @@ model <- list(
   name = c("Asymptotic regression"),
   formula = expression(S == d - c*z^A),
   exp = expression(d - c*z^A),
-  shape = "convex",
+  shape = "convex/sigmoid",
   asymp = function(pars)pars["d"],
   parLim  =  c("Rplus","R","Rplus"),
   #initial values function

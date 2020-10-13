@@ -1,4 +1,10 @@
 
+##version 1.3.1
+  * Corrected bug in obs_shape function
+  * Added new model shape category (convex/sigmoid) for epm1, asymp
+    and p1 models (allowing them to be tested for observed sigmoid shape)
+  * Corrected bug in plot function for sar_threshold meaning dataframes with more
+    than 2 columns could not be plotted.
 
 ##version 1.3.0
   * Added a set of functions for fitting, evaluating and plotting a range of commonly 
