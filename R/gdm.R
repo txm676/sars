@@ -11,7 +11,7 @@
 #'   column should include island area values, one island richness values and
 #'   one island age values.
 #' @param model Name of the SAR model to be used to fit the GDM. Can be any
-#'   of 'logo', 'linear', 'power', or 'all'.
+#'   of 'loga', 'linear', 'power', or 'all'.
 #' @param mod_sel Logical argument specifying whether, for a given SAR model,
 #'   a model comparison of the GDM with other nested candidate models should
 #'   be undertaken.
@@ -174,19 +174,21 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3)){
   
   if (model == "power" | model == "all"){
    
-    fit <- nls(SR ~ exp(Int + A * log(Area) + Ti * Time + Ti2 * Time ^ 2), 
+    s_pow <- sar_power(data)#use sar_power to get starting pars for nls
+    fit <- nls(SR ~ exp(log(Int) + A * log(Area) + Ti * Time + Ti2 * Time ^ 2), 
                data = data, 
-               start = data.frame(Int = 0, A = 1, Ti = 1, Ti2 = 0))
+               start = data.frame(Int = s_pow$par[1], A = s_pow$par[2], Ti = 1, Ti2 = 0))
     
     if (mod_sel == TRUE){
       fitL <- vector("list", length = 4)
       fitL[[1]] <- fit
-      fitL[[2]] <- nls(formula = SR ~ exp(Int + A * log(Area) + Ti * Time), 
+      fitL[[2]] <- nls(formula = SR ~ exp(log(Int) + A * log(Area) + Ti * Time), 
                        data = data, 
-                       start = data.frame(Int = 0, A = 1, Ti = 1))
-      fitL[[3]] <- nls(formula = SR ~ exp(Int + A * log(Area)), 
-                       data = data, start = data.frame(Int = 0, A = 1))
-      fitL[[4]] <- lm(log(SR) ~ 1, data = data)
+                       start = data.frame(Int = s_pow$par[1], A = s_pow$par[2], Ti = 1))
+      
+      fitL[[3]] <- nls(formula = SR ~ exp(log(Int) + A * log(Area)), 
+                       data = data, start = data.frame(Int = s_pow$par[1], A = s_pow$par[2]))
+      fitL[[4]] <- lm(SR ~ 1, data = data)
       fit <- fitL
     }
     if (mod_sel){
