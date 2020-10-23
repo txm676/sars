@@ -25,7 +25,8 @@ Imports:
     numDeriv,
     doParallel,
     foreach,
-    parallel
+    parallel,
+    AICcmodavg
 Depends: R(>= 3.0.0)
 Encoding: UTF-8
 LazyData: true

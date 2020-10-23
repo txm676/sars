@@ -5,6 +5,10 @@
     and p1 models (allowing them to be tested for observed sigmoid shape)
   * Corrected bug in plot function for sar_threshold meaning dataframes with more
     than 2 columns could not be plotted.
+  * Changed gdm power function to return c rather than log c. And corrected a bug
+    for the intercept only power gdm model.
+  * Updated gdm function to return AICc and R2, and fit the GDM using the linear version of the
+    power and logarithmic models. Also implemented a start_vals argument to provide starting values
 
 ##version 1.3.0
   * Added a set of functions for fitting, evaluating and plotting a range of commonly 

@@ -150,7 +150,7 @@ print.summary.sars <- function(x, ...){
 
 
 #' @export
-#'
+
 
 print.sars <- function(x, ...){
   object <- x
@@ -236,9 +236,23 @@ print.sars <- function(x, ...){
 }
 
 
-#' @export
+##internal function to calculate R2 for GDM models (same as in optim)
+#' @importFrom stats fitted resid
+R2_gdm <-  function(fit){
+  r1 <- resid(fit)
+  f1 <- fitted(fit)
+  s1 <- r1 + f1 #have to do this as nls object doesn't have data in it
+  rss <- sum(r1 ^ 2)
+  res <- 1 - ((rss) /  sum((s1 - mean(s1))^2))
+  round(res, 3)
+}
 
+
+#' @export
+#' @importFrom AICcmodavg AICc
+#' @importFrom stats AIC
 print.gdm <- function(x, ...){
+  
   object <- x
   if (attributes(object)$Type %in% c("loga", "linear", "power")){
     mod <- match.arg(attributes(object)$Type, c("logarithmic",
@@ -260,9 +274,13 @@ print.gdm <- function(x, ...){
       obNL <- object[1:3]
       df <- data.frame("RSE" = vapply(obNL, function(x) summary(x)$sigma,
                                       numeric(1)),
-                       "AIC" = vapply(obNL, AIC, numeric(1)))
-      df <- rbind(df, c(summary(object[[4L]])$sigma, AIC(object[[4]])))
+                       "R2" = vapply(obNL, R2_gdm, numeric(1)),
+                       "AIC" = vapply(obNL, AIC, numeric(1)),
+                       "AICc" = vapply(obNL, AICc, numeric(1)))
+      df <- rbind(df, c(summary(object[[4L]])$sigma, R2_gdm(object[[4]]),
+                        AIC(object[[4]]), AICc(object[[4]])))
       df$Delta.AIC <-  df$AIC - min(df$AIC)
+      df$Delta.AICc <- df$AICc - min(df$AICc)
       rownames(df) <- c("GDM", "A + T", "A", "Intercept")
       df <- df[order(df$Delta.AIC),]
       print(df)
@@ -275,17 +293,45 @@ print.gdm <- function(x, ...){
       if (!attributes(object)$mod_sel){
         df <- data.frame("RSE" = vapply(object, function(x) summary(x)$sigma,
                                         numeric(1)),
-                       "AIC" = vapply(object, AIC, numeric(1)))
+                        "R2" = vapply(object, R2_gdm, numeric(1)),
+                       "AIC" = vapply(object, AIC, numeric(1)),
+                       "AICc" = vapply(object, AICc, numeric(1)))
       } else {
         df <- data.frame("RSE" = vapply(object,
                                         function(x) summary(x[[1]])$sigma,
                                         numeric(1)),
+                         "R2" = vapply(object, function(x) R2_gdm(x[[1]]),
+                                        numeric(1)),
                          "AIC" = vapply(object, function(x) AIC(x[[1]]),
-                                        numeric(1)))
+                                        numeric(1)),
+                         "AICc" = vapply(object, function(x) AICc(x[[1]]),
+                                         numeric(1)))
       }
       df$Delta.AIC <-  df$AIC - min(df$AIC)
+      df$Delta.AICc <-  df$AICc - min(df$AICc)
       rownames(df) <- c("Logarithmic", "Linear", "Power")
       df <- df[order(df$Delta.AIC),]
       print(df)
     }
+  
+  if (attributes(object)$Type == "lin_pow"){
+    cat("\n",paste("GDM fit using the linear power model", sep = " "),
+        "\n\n")
+    if (!attributes(object)$mod_sel){
+    class(object) <- "lm"
+    print(object)
+    } else {
+    cat("\nAll model summaries:\n\n")
+    df <- data.frame("RSE" = vapply(object, function(x) summary(x)$sigma,
+                                    numeric(1)),
+                     "R2" = vapply(object, R2_gdm, numeric(1)),
+                     "AIC" = vapply(object, AIC, numeric(1)),
+                     "AICc" = vapply(object, AICc, numeric(1)))
+    df$Delta.AIC <-  df$AIC - min(df$AIC)
+    df$Delta.AICc <- df$AICc - min(df$AICc)
+    rownames(df) <- c("GDM", "A + T", "A", "Intercept")
+    df <- df[order(df$Delta.AIC),]
+    print(df)
+    }
   }
+}
