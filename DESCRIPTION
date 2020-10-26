@@ -26,7 +26,8 @@ Imports:
     doParallel,
     foreach,
     parallel,
-    AICcmodavg
+    AICcmodavg,
+    BAT
 Depends: R(>= 3.0.0)
 Encoding: UTF-8
 LazyData: true

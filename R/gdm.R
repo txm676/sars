@@ -127,7 +127,7 @@
 #' @examples
 #' #create an example dataset and fit the GDM using the logarithmic SAR model
 #' data(galap)
-#' galap$t <- rgamma(16, 5, scale = 2)
+#' galap$t <- c(4, 1, 13, 16, 15, 2, 6, 4, 5, 11, 3, 9, 8, 10, 12, 7)
 #' g <- gdm(galap, model = "loga", mod_sel = FALSE)
 #'
 #' #Compare the GDM (using the logarithmic model) with other nested candidate
