@@ -9,6 +9,12 @@ r:
 r_packages:
   - covr
   - rmarkdown
+  
+#needed for travis to be able to install the rgl package
+#which is a dependency I think of BAT
+before_install:
+   - apt-get install libglu1-mesa-dev
+
 
 notifications:
   email:
