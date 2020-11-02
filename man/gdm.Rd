@@ -129,7 +129,7 @@ The intercept (Int) parameter that is returned in the power model
 \examples{
 #create an example dataset and fit the GDM using the logarithmic SAR model
 data(galap)
-galap$t <- c(1,16,2,15,3,14,4,13,5,12,6,11,7,10,8,9)
+galap$t <- c(4, 1, 13, 16, 15, 2, 6, 4, 5, 11, 3, 9, 8, 10, 12, 7)
 g <- gdm(galap, model = "loga", mod_sel = FALSE)
 
 #Compare the GDM (using the logarithmic model) with other nested candidate
