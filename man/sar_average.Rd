@@ -8,9 +8,9 @@ sar_average(obj = c("power",
   "powerR","epm1","epm2","p1","p2","loga","koba",
   "mmf","monod","negexpo","chapman","weibull3","asymp",
   "ratio","gompertz","weibull4","betap","heleg", "linear"), data = NULL, crit
-  = "Info", normaTest = "lillie", homoTest = "cor.fitted", neg_check = FALSE,
-  alpha_normtest = 0.05, alpha_homotest = 0.05, grid_start = FALSE,
-  grid_n = NULL, confInt = FALSE, ciN = 100, verb = TRUE)
+  = "Info", normaTest = "none", homoTest = "none", homoCor = "spearman",
+  neg_check = FALSE, alpha_normtest = 0.05, alpha_homotest = 0.05, grid_start
+  = FALSE, grid_n = NULL, confInt = FALSE, ciN = 100, verb = TRUE)
 }
 \arguments{
 \item{obj}{Either a vector of model names or a fit_collection object created
@@ -30,16 +30,18 @@ AICc (\code{crit = "AICc"}) can be chosen regardless of the sample size. For
 BIC, use \code{crit ="Bayes"}.}
 
 \item{normaTest}{The test used to test the normality of the residuals of each
-model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
-default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
-(Kolmogorov-Smirnov test), or "none" (no residuals normality test is
-undertaken).}
+model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test),
+"shapiro" (Shapiro-Wilk test of normality), "kolmo" (Kolmogorov-Smirnov
+test), or "none" (no residuals normality test is undertaken; the default).}
 
 \item{homoTest}{The test used to check for homogeneity of the residuals of
-each model. Can be any of "cor.fitted" (a correlation of the residuals with
-the model fitted values; the default), "cor.area" (a correlation of the
-residuals with the area values), or "none" (no residuals homogeneity test
-is undertaken).}
+each model. Can be any of "cor.fitted" (a correlation of the squared
+residuals with the model fitted values), "cor.area" (a correlation of the
+squared residuals with the area values), or "none" (no residuals
+homogeneity test is undertaken; the default).}
+
+\item{homoCor}{The correlation test to be used when \code{homoTest !=
+"none"}. Can be any of "spearman" (the default), "pearson", or "kendall".}
 
 \item{neg_check}{Whether or not a check should be undertaken to flag any
 models that predict negative richness values.}
@@ -107,11 +109,13 @@ The multimodel SAR curve is constructed using information criterion
   heterogeneity tests, and checks for negative predicted richness values),
   these are undertaken and any model that fails the selected test(s) is
   removed from the multimodel SAR. The order of the additional checks inside
-  the function is: normality of residuals, homogeneity of residuals, and a
-  check for negative fitted values. Once a model fails one test it is removed
-  and thus is not available for further tests. Thus, a model may fail
-  multiple tests but the returned warning will only provide information on a
-  single test.
+  the function is (if all are turned on): normality of residuals, homogeneity
+  of residuals, and a check for negative fitted values. Once a model fails
+  one test it is removed and thus is not available for further tests. Thus, a
+  model may fail multiple tests but the returned warning will only provide
+  information on a single test. We have now changed the defaults so that
+  no checks are undertaken, so it is up to the user to select any checks if
+  appropriate.
 
   The resultant models are then used to construct the multimodel SAR curve.
   For each model in turn, the model fitted values are multiplied by the
@@ -163,7 +167,7 @@ Occasionally a model fit will converge and pass the model fitting
   have been calculated using the same approach. For example, the 'sars'
   package used to use formulas based on the rss, while the \link[stats]{nls}
   function function in the stats package uses formulas based on the ll. To
-  increase the compatability between nls and sars, we have changed our
+  increase the compatibility between nls and sars, we have changed our
   formulas such that now our IC formulas are the same as those used in the
   \link[stats]{nls} function. See the "On the calculation of information
   criteria" section in the package vignette for more information.

@@ -31,7 +31,7 @@ functions for fitting, evaluating and plotting a range of commonly used
 piecewise SAR models (see Matthews and Rigal (n.d.) for details on these
 functions).
 
-As this is version 1.3.0 of the package, it is possible that there are
+As this is version 1.3.1 of the package, it is possible that there are
 some bugs in places. Please report any issues to us via GitHub.
 
 The package has an associated vignette that provides examples of how to
@@ -95,7 +95,7 @@ mm_galap <- sar_average(data = galap)
 #> 
 #>  Now attempting to fit the 20 SAR models: 
 #> 
-#> --  multi_sars ------------------------------------------------------------------ multi-model SAR --
+#> --  multi_sars ---------------------------------------------- multi-model SAR --
 #> > power    : v
 #> > powerR   : v
 #> > epm1     : v
@@ -107,7 +107,7 @@ mm_galap <- sar_average(data = galap)
 #> > mmf      : v
 #> > monod    : v
 #> > negexpo  : v
-#> > chapman  : Warning: could not compute parameters statistics
+#> > chapman  : v
 #> > weibull3 : v
 #> > asymp    : v
 #> > ratio    : v
@@ -117,14 +117,11 @@ mm_galap <- sar_average(data = galap)
 #> > heleg    : v
 #> > linear   : v
 #> 
-#> Model fitting completed - all models succesfully fitted.  Now undertaking model validation checks.
-#> Additional models  will be excluded if necessary:
+#> No model validation checks selected
 #> 
-#> 4 models failed the residuals normality test and  have been excluded  from the multi SAR:
-#> Extended Power model 1, Asymptotic regression, Cumulative Weibull 4 par., Linear model
-#> 16 remaining models used to construct the multi  SAR:
-#>  Power, PowerR, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Rational function, Gompertz, Beta-P cumulative, Heleg(Logistic) 
-#> ----------------------------------------------------------------------------------------------------
+#> 20 remaining models used to construct the multi  SAR:
+#>  Power, PowerR, Extended Power model 1, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, MMF, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Asymptotic regression, Rational function, Gompertz, Cumulative Weibull 4 par., Beta-P cumulative, Heleg(Logistic), Linear model 
+#> --------------------------------------------------------------------------------
 ```
 
 Each of the ‘fitted’ objects have corresponding plot methods:
@@ -149,9 +146,7 @@ mm_galap
 #> 
 #> This is a sar_average fit object:
 #> 
-#> 16 models successfully fitted
-#> 
-#> 4 models were unable to be fitted or were removed due to model checks
+#> 20 models successfully fitted
 #> 
 #> AICc used to rank models
 

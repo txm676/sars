@@ -1,8 +1,8 @@
 #' Fit the Asymptotic regression model
 
 #' @description Fit the Asymptotic regression model to SAR data.
-#' @usage sar_asymp(data, start = NULL, grid_start = FALSE, grid_n = NULL, normaTest = 'lillie',
-#'   homoTest = 'cor.fitted')
+#' @usage sar_asymp(data, start = NULL, grid_start = FALSE, grid_n = NULL, normaTest = 'none',
+#'   homoTest = 'none', homoCor = 'spearman')
 #' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness
 #'   of each island/site.
@@ -10,13 +10,15 @@
 #' @param grid_start Logical argument specifying whether a grid search procedure should be implemented to test multiple starting parameter values. The default is set to FALSE, but for certain models (e.g. Gompertz, Chapman Richards), we advice using it to ensure an optimal fit.
 #' @param grid_n If \code{grid_start = TRUE}, the number of points sampled in the model parameter space.
 #' @param normaTest The test used to test the normality of the residuals of the
-#'   model. Can be any of 'lillie' (Lilliefors Kolmogorov-Smirnov test; the
-#'   default), 'shapiro' (Shapiro-Wilk test of normality), 'kolmo'
-#'   (Kolmogorov-Smirnov test), or 'none' (no residuals normality test is undertaken).
+#'   model. Can be any of 'lillie' (Lilliefors test
+#', 'shapiro' (Shapiro-Wilk test of normality), 'kolmo'
+#'   (Kolmogorov-Smirnov test), or 'none' (no residuals normality test is undertaken; the default).
 #' @param homoTest The test used to check for homogeneity of the residuals of
 #'   the model. Can be any of 'cor.fitted' (a correlation of the residuals with
-#'   the model fitted values; the default), 'cor.area' (a correlation of the
-#'   residuals with the area values), or 'none' (no residuals homogeneity test is undertaken).
+#'   the model fitted values), 'cor.area' (a correlation of the
+#'   residuals with the area values), or 'none' (no residuals homogeneity test is undertaken; the default).
+#' @param homoCor The correlation test to be used when \code{homoTest !='none'}. Can be any of 'spearman'
+#'   (the default), 'pearson', or 'kendall'.
 #' @details The model is fitted using non-linear regression. The model parameters are estimated
 #'   by minimizing the residual sum of squares with an unconstrained Nelder-Mead optimization algorithm
 #'   and the \code{\link{optim}} function. To avoid numerical problems and speed up the convergence process,
@@ -26,8 +28,8 @@
 #'   The fitting process also determines the observed shape of the model fit,
 #'   and whether or not the observed fit is asymptotic (see Triantis et al. 2012 for further details).
 
-#'   Model validation is undertaken by assessing the normality (\code{normaTest}) and homogeneity (\code{homoTest})
-#'   of the residuals and a warning is provided in \code{\link{summary.sars}} if either test is failed.
+#'   Model validation can be undertaken by assessing the normality (\code{normaTest}) and homogeneity (\code{homoTest})
+#'   of the residuals and a warning is provided in \code{\link{summary.sars}} if either test is chosen and fails.
 
 #'   A selection of information criteria (e.g. AIC, BIC) are returned and can be used to compare models
 #'   (see also \code{\link{sar_average}})
@@ -70,11 +72,19 @@
 #' @export
 
 sar_asymp <- function(data, start = NULL, grid_start = FALSE, 
-grid_n = NULL, normaTest =  "lillie", homoTest = "cor.fitted"){
+grid_n = NULL, normaTest =  "none", homoTest = "none", homoCor = "spearman"){
 if (!(is.matrix(data) | is.data.frame(data)))  
 stop('data must be a matrix or dataframe')
 if (is.matrix(data)) data <- as.data.frame(data)
 if (anyNA(data)) stop('NAs present in data')
+normaTest <- match.arg(normaTest, c('none', 'shapiro', 'kolmo',
+'lillie')) 
+homoTest <- match.arg(homoTest, c('none', 'cor.area',
+'cor.fitted')) 
+if (homoTest != 'none'){
+homoCor <- match.arg(homoCor, c('spearman', 'pearson',
+'kendall')) 
+}
 if (!is.logical(grid_start)) stop('grid_start should be logical')
 if (grid_start){
   if (!is.numeric(grid_n))
@@ -92,6 +102,10 @@ if (isTRUE(all.equal(xr[1], xr[2]))) {
        warning('All richness values identical')
      }}
 #Asymptotic Regression
+#Note that Tjorve and Williams et al give the function to the 
+#power of -A. Checked and Flater (1996), https://www.jstor.org/stable/3001471?seq=1
+#and the original Ratkowsky source give it as power of positive A so we have kept
+#our use of this here.
 model <- list(
   name = c("Asymptotic regression"),
   formula = expression(S == d - c*z^A),
@@ -115,7 +129,8 @@ model <- list(
 model <- compmod(model)
 fit <- get_fit(model = model, data = data, start = start,  
 grid_start = grid_start, grid_n = grid_n, algo = 'Nelder-Mead', 
-       normaTest =  normaTest, homoTest = homoTest, verb = TRUE)
+       normaTest =  normaTest, homoTest = homoTest, 
+       homoCor = homoCor, verb = TRUE)
 if(is.na(fit$value)){
   return(list(value = NA))
 }else{ 

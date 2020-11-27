@@ -1,25 +1,27 @@
 #' Fit the linear model
 
 #' @description Fit the linear model to SAR data.
-#' @usage sar_linear(data, normaTest =  'lillie', homoTest = 'cor.fitted')
+#' @usage sar_linear(data, normaTest =  'none', homoTest = 'none', homoCor =
+#'   'spearman')
 #' @param data A dataset in the form of a dataframe with two columns: the
 #'   first with island/site areas, and the second with the species richness
 #'   of each island/site.
-#' @param normaTest The test used to test the normality of the residuals of
-#'   the model. Can be any of 'lillie' (Lilliefors Kolmogorov-Smirnov test;
-#'   the default), 'shapiro' (Shapiro-Wilk test of normality), 'kolmo'
-#'   (Kolmogorov-Smirnov test), or 'none' (no residuals normality test is
-#'   undertaken).
+#' @param normaTest The test used to test the normality of the residuals of the
+#'   model. Can be any of 'lillie' (Lilliefors Kolmogorov-Smirnov test),
+#'   'shapiro' (Shapiro-Wilk test of normality), 'kolmo' (Kolmogorov-Smirnov
+#'   test), or 'none' (no residuals normality test is undertaken; the default).
 #' @param homoTest The test used to check for homogeneity of the residuals of
-#'   the model. Can be any of 'cor.fitted' (a correlation of the residuals
-#'   with the model fitted values; the default), 'cor.area' (a correlation of
-#'   the residuals with the area values), or 'none' (no residuals homogeneity
-#'   test is undertaken).
+#'   the model. Can be any of 'cor.fitted' (a correlation of the residuals with
+#'   the model fitted values), 'cor.area' (a correlation of the residuals with
+#'   the area values), or 'none' (no residuals homogeneity test is undertaken;
+#'   the default).
+#' @param homoCor The correlation test to be used when \code{homoTest !=
+#'   "none"}. Can be any of "spearman" (the default), "pearson", or "kendall".
 #' @details The model is fitted using linear regression and the
-#'   \code{\link{lm}} function. Model validation is undertaken by assessing
+#'   \code{\link{lm}} function. Model validation can be undertaken by assessing
 #'   the normality (\code{normaTest}) and homogeneity (\code{homoTest}) of
 #'   the residuals and a warning is provided in \code{\link{summary.sars}} if
-#'   either test is failed.
+#'   either test is chosen and fails.
 #'
 #'   A selection of information criteria (e.g. AIC, BIC) are returned and can
 #'   be used to compare models (see also \code{\link{sar_average}}).
@@ -51,7 +53,8 @@
 #' plot(fit)
 #' @export 
 
-sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
+sar_linear <- function(data, normaTest =  "none", homoTest = "none",
+                       homoCor = "spearman"){
   if (!(is.matrix(data) | is.data.frame(data))) 
     stop('data must be a matrix or dataframe') 
   if (is.matrix(data)) data <- as.data.frame(data) 
@@ -64,6 +67,7 @@ sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
   fit$par <- mod$coefficients
   names(fit$par) <- c("c", "m")
   res <- as.vector(mod$residuals)
+  squ_res <- res^2
   fit$value <- sum(res^2)#residual sum of squares
   fit$verge <- TRUE#should always converge
   fit$data <- data
@@ -87,6 +91,7 @@ sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
   fit$AIC <- (2 * P) - (2 * val)
   fit$AICc <- -2 * val + 2 * P * (n / (n - P - 1))
   fit$BIC <- (-2 * val) + (P * log(n))
+
   #R2 (Kvaleth, 1985, Am. Statistician)
   fit$R2 <-  1 - ( (value) /  sum((data$S - mean(data$S))^2) )
   #R2a (He & Legendre 1996, p724)
@@ -99,6 +104,10 @@ sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
   #normality and homogeneity tests
   normaTest <- match.arg(normaTest, c("none", "shapiro", "kolmo", "lillie"))
   homoTest <- match.arg(homoTest, c("none","cor.area","cor.fitted"))
+  if (homoTest != "none"){
+    homoCor <- match.arg(homoCor, c("spearman","pearson",
+                                    "kendall"))
+  }
   #normality of residuals
   if (normaTest == "shapiro") {
     normaTest <- list("test" = "shapiro", 
@@ -110,19 +119,20 @@ sar_linear <- function(data, normaTest =  "lillie", homoTest = "cor.fitted"){
     normaTest <- list("test" = "kolmo", 
                       tryCatch(ks.test(res, "pnorm"), error = function(e)NA))
   } else{
-    normaTest <- "none"
+    normaTest <- list("test" = "none", "none")
   }
   #Homogeneity of variance
   if (homoTest == "cor.area"){
     homoTest  <- list("test" = "cor.area", 
-                      tryCatch(cor.test(res,data$A), 
+                      tryCatch(cor.test(squ_res,data$A, method = homoCor), 
                           error = function(e)list(estimate=NA,p.value=NA)))
   } else if (homoTest == "cor.fitted"){
     homoTest  <- list("test" = "cor.fitted", 
-                      tryCatch(cor.test(res,as.vector(mod$fitted.values)), 
+                      tryCatch(cor.test(squ_res,as.vector(mod$fitted.values),
+                                        method = homoCor), 
                           error = function(e)list(estimate=NA,p.value=NA)))
   } else {
-    homoTest <- "none"
+    homoTest <- list("test" = "none", "none")
   }
 
   fit$normaTest <- normaTest

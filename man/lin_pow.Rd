@@ -5,7 +5,7 @@
 \title{Fit the log-log version of the power model}
 \usage{
 lin_pow(data, con = 1, logT = log, compare = FALSE, normaTest =
-  "lillie", homoTest = "cor.fitted")
+  "none", homoTest = "none", homoCor = "spearman")
 }
 \arguments{
 \item{data}{A dataset in the form of a dataframe with two columns: the first
@@ -22,16 +22,18 @@ Can be any of \code{log}(default), \code{log2} or \code{log10}.}
 z-value for comparison (default: \code{compare = FALSE}).}
 
 \item{normaTest}{The test used to test the normality of the residuals of the
-model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
-default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
-(Kolmogorov-Smirnov test), or "none" (no residuals normality test is
-undertaken).}
+model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test),
+"shapiro" (Shapiro-Wilk test of normality), "kolmo" (Kolmogorov-Smirnov
+test), or "none" (no residuals normality test is undertaken; the default).}
 
 \item{homoTest}{The test used to check for homogeneity of the residuals of
 the model. Can be any of "cor.fitted" (a correlation of the residuals with
-the model fitted values; the default), "cor.area" (a correlation of the
-residuals with the area values), or "none" (no residuals homogeneity test
-is undertaken).}
+the model fitted values), "cor.area" (a correlation of the residuals with
+the area values), or "none" (no residuals homogeneity test is undertaken;
+the default).}
+
+\item{homoCor}{The correlation test to be used when \code{homoTest !=
+"none"}. Can be any of "spearman" (the default), "pearson", or "kendall".}
 }
 \value{
 A list of class "sars" with up to seven elements. The first element
@@ -41,7 +43,7 @@ A list of class "sars" with up to seven elements. The first element
   contains the log-transformed observed data. The remaining elements depend
   on the function arguments selected and can include the results of the
   non-linear power model fit, the log-transformation function used (i.e.
-  \code{logT}) and the results of the residuals normality and heterogeneity
+  \code{logT}) and the results of any residuals normality and heterogeneity
   tests.
 
   The \code{\link{summary.sars}} function returns a more useful summary of
@@ -53,8 +55,8 @@ Fit the log-log version of the power model to SAR data and
 }
 \details{
 A check is made for any islands with zero species. If any zero
-  species islands are found, a constant (default: \code{con = 1}) is added
-  to each species richness value to enable log transformation. Natural
+  species islands are found, a constant (default: \code{con = 1}) is added to
+  each species richness value to enable log transformation. Natural
   logarithms are used as default, but log2 and log10 can be used instead
   using the \code{logT} argument.
 

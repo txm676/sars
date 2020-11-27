@@ -35,22 +35,23 @@ display_sars_models <- function() {
 #'   "powerR","epm1","epm2","p1","p2","loga","koba",
 #'   "mmf","monod","negexpo","chapman","weibull3","asymp",
 #'   "ratio","gompertz","weibull4","betap","heleg","linear"), normaTest =
-#'   "lillie", homoTest = "cor.fitted", grid_start = FALSE, grid_n = NULL,
-#'    verb = TRUE)
+#'   "none", homoTest = "none", homoCor = "spearman", grid_start = FALSE, grid_n
+#'   = NULL, verb = TRUE)
 #' @param data A dataset in the form of a dataframe with two columns: the first
 #'   with island/site areas, and the second with the species richness of each
 #'   island/site.
 #' @param obj A vector of model names.
 #' @param normaTest The test used to test the normality of the residuals of each
-#'   model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
-#'   default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
-#'   (Kolmogorov-Smirnov test), or "none" (no residuals normality test is
-#'   undertaken).
+#'   model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test),
+#'   "shapiro" (Shapiro-Wilk test of normality), "kolmo" (Kolmogorov-Smirnov
+#'   test), or "none" (no residuals normality test is undertaken; the default).
 #' @param homoTest The test used to check for homogeneity of the residuals of
-#'   each model. Can be any of "cor.fitted" (a correlation of the residuals with
-#'   the model fitted values; the default), "cor.area" (a correlation of the
-#'   residuals with the area values), or "none" (no residuals homogeneity test
-#'   is undertaken).
+#'   each model. Can be any of "cor.fitted" (a correlation of the squared
+#'   residuals with the model fitted values), "cor.area" (a correlation of the
+#'   squared residuals with the area values), or "none" (no residuals
+#'   homogeneity test is undertaken; the default).
+#' @param homoCor The correlation test to be used when \code{homoTest !=
+#'   "none"}. Can be any of "spearman" (the default), "pearson", or "kendall".
 #' @param grid_start Logical argument specifying whether a grid search procedure
 #'   should be implemented to test multiple starting parameter values (default:
 #'   \code{grid_start = FALSE}).
@@ -82,8 +83,9 @@ sar_multi <- function(data,
                               "chapman","weibull3","asymp","ratio",
                               "gompertz", "weibull4","betap","heleg",
                               "linear"),
-                      normaTest = "lillie",
-                      homoTest = "cor.fitted",
+                      normaTest = "none",
+                      homoTest = "none",
+                      homoCor = "spearman",
                       grid_start = FALSE,
                       grid_n = NULL,
                       verb = TRUE){
@@ -122,6 +124,10 @@ sar_multi <- function(data,
                                       "kolmo", "lillie"))
   homoTest <- match.arg(homoTest, c("none","cor.area",
                                     "cor.fitted"))
+  if (homoTest != "none"){
+    homoCor <- match.arg(homoCor, c("spearman","pearson",
+                                    "kendall"))
+  }
   
   #if (verb) cat_line(rule(left = paste0(cyan(symbol$bullet),
   #bold(" multi_sars")),right="multi-model SAR"))
@@ -151,13 +157,17 @@ sar_multi <- function(data,
                                     "(data", ", normaTest = ",
                                     paste0("'", normaTest, "'"),
                                     ", homoTest = ", paste0("'", homoTest,
-                                                            "'"), ")")))
+                                                            "'"), 
+                                    ", homoCor = ", paste0("'", homoCor,
+                                                            "'"),")")))
     } else{ #if grid_start provided, implement it (for non-linear models)
       f <- eval(parse(text = paste0(mods[x],
                                     "(data", ", normaTest = ",
                                     paste0("'", normaTest, "'"),
                                     ", homoTest = ", paste0("'", homoTest,
-                                                            "'"), 
+                                                            "'"),
+                                    ", homoCor = ", paste0("'", homoCor,
+                                                            "'"),
                                     ", grid_start = ", 
                                     paste0(grid_start), ", grid_n = ",
                                     paste0(grid_n),")")))
@@ -200,9 +210,9 @@ sar_multi <- function(data,
 #'   "powerR","epm1","epm2","p1","p2","loga","koba",
 #'   "mmf","monod","negexpo","chapman","weibull3","asymp",
 #'   "ratio","gompertz","weibull4","betap","heleg", "linear"), data = NULL, crit
-#'   = "Info", normaTest = "lillie", homoTest = "cor.fitted", neg_check = FALSE,
-#'   alpha_normtest = 0.05, alpha_homotest = 0.05, grid_start = FALSE,
-#'   grid_n = NULL, confInt = FALSE, ciN = 100, verb = TRUE)
+#'   = "Info", normaTest = "none", homoTest = "none", homoCor = "spearman",
+#'   neg_check = FALSE, alpha_normtest = 0.05, alpha_homotest = 0.05, grid_start
+#'   = FALSE, grid_n = NULL, confInt = FALSE, ciN = 100, verb = TRUE)
 #' @param obj Either a vector of model names or a fit_collection object created
 #'   using \code{\link{sar_multi}}. If a vector of names is provided,
 #'   \code{sar_average} first calls \code{sar_multi} before generating the
@@ -217,15 +227,16 @@ sar_multi <- function(data,
 #'   AICc (\code{crit = "AICc"}) can be chosen regardless of the sample size. For
 #'   BIC, use \code{crit ="Bayes"}.
 #' @param normaTest The test used to test the normality of the residuals of each
-#'   model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
-#'   default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
-#'   (Kolmogorov-Smirnov test), or "none" (no residuals normality test is
-#'   undertaken).
+#'   model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test),
+#'   "shapiro" (Shapiro-Wilk test of normality), "kolmo" (Kolmogorov-Smirnov
+#'   test), or "none" (no residuals normality test is undertaken; the default).
 #' @param homoTest The test used to check for homogeneity of the residuals of
-#'   each model. Can be any of "cor.fitted" (a correlation of the residuals with
-#'   the model fitted values; the default), "cor.area" (a correlation of the
-#'   residuals with the area values), or "none" (no residuals homogeneity test
-#'   is undertaken).
+#'   each model. Can be any of "cor.fitted" (a correlation of the squared
+#'   residuals with the model fitted values), "cor.area" (a correlation of the
+#'   squared residuals with the area values), or "none" (no residuals
+#'   homogeneity test is undertaken; the default).
+#' @param homoCor The correlation test to be used when \code{homoTest !=
+#'   "none"}. Can be any of "spearman" (the default), "pearson", or "kendall".
 #' @param neg_check Whether or not a check should be undertaken to flag any
 #'   models that predict negative richness values.
 #' @param alpha_normtest The alpha value used in the residual normality test
@@ -257,11 +268,13 @@ sar_multi <- function(data,
 #'   heterogeneity tests, and checks for negative predicted richness values),
 #'   these are undertaken and any model that fails the selected test(s) is
 #'   removed from the multimodel SAR. The order of the additional checks inside
-#'   the function is: normality of residuals, homogeneity of residuals, and a
-#'   check for negative fitted values. Once a model fails one test it is removed
-#'   and thus is not available for further tests. Thus, a model may fail
-#'   multiple tests but the returned warning will only provide information on a
-#'   single test.
+#'   the function is (if all are turned on): normality of residuals, homogeneity
+#'   of residuals, and a check for negative fitted values. Once a model fails
+#'   one test it is removed and thus is not available for further tests. Thus, a
+#'   model may fail multiple tests but the returned warning will only provide
+#'   information on a single test. We have now changed the defaults so that
+#'   no checks are undertaken, so it is up to the user to select any checks if
+#'   appropriate.
 #'
 #'   The resultant models are then used to construct the multimodel SAR curve.
 #'   For each model in turn, the model fitted values are multiplied by the
@@ -332,7 +345,7 @@ sar_multi <- function(data,
 #'   have been calculated using the same approach. For example, the 'sars'
 #'   package used to use formulas based on the rss, while the \link[stats]{nls}
 #'   function function in the stats package uses formulas based on the ll. To
-#'   increase the compatability between nls and sars, we have changed our
+#'   increase the compatibility between nls and sars, we have changed our
 #'   formulas such that now our IC formulas are the same as those used in the
 #'   \link[stats]{nls} function. See the "On the calculation of information
 #'   criteria" section in the package vignette for more information.
@@ -364,8 +377,9 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
                                 "gompertz", "weibull4","betap","heleg",
                                 "linear"), data = NULL,
                         crit = "Info",
-                        normaTest = "lillie",
-                        homoTest = "cor.fitted",
+                        normaTest = "none",
+                        homoTest = "none",
+                        homoCor = "spearman",
                         neg_check = FALSE,
                         alpha_normtest = 0.05,
                         alpha_homotest = 0.05,
@@ -403,7 +417,8 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   if (is.character(obj)){
     fits <- sar_multi(data = data, obj = obj,
                       normaTest = normaTest,
-                      homoTest = homoTest, 
+                      homoTest = homoTest,
+                      homoCor = homoCor,
                       grid_start = grid_start,
                       grid_n = grid_n,
                       verb = verb)
@@ -417,7 +432,11 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
                                       "kolmo", "lillie"))
   homoTest <- match.arg(homoTest, c("none","cor.area",
                                     "cor.fitted"))
-
+  if (homoTest != "none"){
+    homoCor <- match.arg(homoCor, c("spearman","pearson",
+                                    "kendall"))
+  }
+  
   #if obj = character vector, check the test names match up with
   #those provide here. Doesn't actually matter but can be brought to
   #attention of use
@@ -431,8 +450,8 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
                                  object.")
       normaTest <- wn
     }
-    if (wh != homoTest){warning("normaTest argument does not match the
-                                 normaTest stored in the fit collection
+    if (wh != homoTest){warning("homoTest argument does not match the
+                                 homoTest stored in the fit collection
                                  object. The multi SAR curve will proceed
                                  with the test used in the fit collection
                                  object.")
@@ -555,8 +574,14 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
     }
   }
 
-  if (length(badMods) == bml & verb) cat("\nAll models passed the model",
-                                         " validation checks\n\n")
+  if (length(badMods) == bml & verb) {
+    if((normaTest == "none" & homoTest == "none" & !(neg_check))){
+      cat("\nNo model validation checks selected\n\n")
+    } else{
+      cat("\nAll models passed the model",
+          "validation checks\n\n")
+    }
+  }
 
   if (length(badMods) == 0) badMods <- 0
   if (length(fits) < 2) stop("Fewer than two models could be fitted and /",
@@ -636,6 +661,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
         " some time:\n")
     cis <- sar_conf_int(fit = res, n = ciN, crit = crit, normaTest = normaTest,
                         homoTest = homoTest,
+                        homoCor = homoCor,
                         neg_check = neg_check,
                         alpha_normtest = alpha_normtest,
                         alpha_homotest = alpha_homotest, 
@@ -760,7 +786,7 @@ sar_pred <- function(fit, area){
             }, FUN.VALUE = numeric(length = length(area)))
            #get model names in fit_collection
            mns <-  vapply(fit, function(x) x$model$name, FUN.VALUE = character(1))
-           #build data.frame depening on whether one area value provided or multiple
+           #build data.frame depending on whether one area value provided or multiple
            if (length(area) == 1){
             pred <- data.frame("Model" = mns, "Area" = rep(area, length(pred0)),
                                "Prediction" = pred0)

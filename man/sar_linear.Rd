@@ -4,24 +4,27 @@
 \alias{sar_linear}
 \title{Fit the linear model}
 \usage{
-sar_linear(data, normaTest =  'lillie', homoTest = 'cor.fitted')
+sar_linear(data, normaTest =  'none', homoTest = 'none', homoCor =
+  'spearman')
 }
 \arguments{
 \item{data}{A dataset in the form of a dataframe with two columns: the
 first with island/site areas, and the second with the species richness
 of each island/site.}
 
-\item{normaTest}{The test used to test the normality of the residuals of
-the model. Can be any of 'lillie' (Lilliefors Kolmogorov-Smirnov test;
-the default), 'shapiro' (Shapiro-Wilk test of normality), 'kolmo'
-(Kolmogorov-Smirnov test), or 'none' (no residuals normality test is
-undertaken).}
+\item{normaTest}{The test used to test the normality of the residuals of the
+model. Can be any of 'lillie' (Lilliefors Kolmogorov-Smirnov test),
+'shapiro' (Shapiro-Wilk test of normality), 'kolmo' (Kolmogorov-Smirnov
+test), or 'none' (no residuals normality test is undertaken; the default).}
 
 \item{homoTest}{The test used to check for homogeneity of the residuals of
-the model. Can be any of 'cor.fitted' (a correlation of the residuals
-with the model fitted values; the default), 'cor.area' (a correlation of
-the residuals with the area values), or 'none' (no residuals homogeneity
-test is undertaken).}
+the model. Can be any of 'cor.fitted' (a correlation of the residuals with
+the model fitted values), 'cor.area' (a correlation of the residuals with
+the area values), or 'none' (no residuals homogeneity test is undertaken;
+the default).}
+
+\item{homoCor}{The correlation test to be used when \code{homoTest !=
+"none"}. Can be any of "spearman" (the default), "pearson", or "kendall".}
 }
 \value{
 A list of class 'sars' with the following components: \itemize{
@@ -48,10 +51,10 @@ Fit the linear model to SAR data.
 }
 \details{
 The model is fitted using linear regression and the
-  \code{\link{lm}} function. Model validation is undertaken by assessing
+  \code{\link{lm}} function. Model validation can be undertaken by assessing
   the normality (\code{normaTest}) and homogeneity (\code{homoTest}) of
   the residuals and a warning is provided in \code{\link{summary.sars}} if
-  either test is failed.
+  either test is chosen and fails.
 
   A selection of information criteria (e.g. AIC, BIC) are returned and can
   be used to compare models (see also \code{\link{sar_average}}).

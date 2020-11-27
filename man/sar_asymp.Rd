@@ -4,8 +4,8 @@
 \alias{sar_asymp}
 \title{Fit the Asymptotic regression model}
 \usage{
-sar_asymp(data, start = NULL, grid_start = FALSE, grid_n = NULL, normaTest = 'lillie',
-  homoTest = 'cor.fitted')
+sar_asymp(data, start = NULL, grid_start = FALSE, grid_n = NULL, normaTest = 'none',
+  homoTest = 'none', homoCor = 'spearman')
 }
 \arguments{
 \item{data}{A dataset in the form of a dataframe with two columns: 
@@ -19,14 +19,17 @@ of each island/site.}
 \item{grid_n}{If \code{grid_start = TRUE}, the number of points sampled in the model parameter space.}
 
 \item{normaTest}{The test used to test the normality of the residuals of the
-model. Can be any of 'lillie' (Lilliefors Kolmogorov-Smirnov test; the
-default), 'shapiro' (Shapiro-Wilk test of normality), 'kolmo'
-(Kolmogorov-Smirnov test), or 'none' (no residuals normality test is undertaken).}
+  model. Can be any of 'lillie' (Lilliefors test
+, 'shapiro' (Shapiro-Wilk test of normality), 'kolmo'
+  (Kolmogorov-Smirnov test), or 'none' (no residuals normality test is undertaken; the default).}
 
 \item{homoTest}{The test used to check for homogeneity of the residuals of
 the model. Can be any of 'cor.fitted' (a correlation of the residuals with
-the model fitted values; the default), 'cor.area' (a correlation of the
-residuals with the area values), or 'none' (no residuals homogeneity test is undertaken).}
+the model fitted values), 'cor.area' (a correlation of the
+residuals with the area values), or 'none' (no residuals homogeneity test is undertaken; the default).}
+
+\item{homoCor}{The correlation test to be used when \code{homoTest !='none'}. Can be any of 'spearman'
+(the default), 'pearson', or 'kendall'.}
 }
 \value{
 A list of class 'sars' with the following components: 
@@ -69,8 +72,8 @@ not work, custom values can be provided (using the \code{start} argument), or a 
   can be undertaken using the \code{grid_start} argument. See the vignette for more information.
   The fitting process also determines the observed shape of the model fit,
   and whether or not the observed fit is asymptotic (see Triantis et al. 2012 for further details).
-  Model validation is undertaken by assessing the normality (\code{normaTest}) and homogeneity (\code{homoTest})
-  of the residuals and a warning is provided in \code{\link{summary.sars}} if either test is failed.
+  Model validation can be undertaken by assessing the normality (\code{normaTest}) and homogeneity (\code{homoTest})
+  of the residuals and a warning is provided in \code{\link{summary.sars}} if either test is chosen and fails.
   A selection of information criteria (e.g. AIC, BIC) are returned and can be used to compare models
   (see also \code{\link{sar_average}})
 }

@@ -4,9 +4,10 @@
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom stats rmultinom
 
-sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
-                         homoTest = "cor.fitted",
-                         neg_check = TRUE,
+sar_conf_int <- function(fit, n, crit = "Info", normaTest = "none",
+                         homoTest = "none",
+                         homoCor = "spearman",
+                         neg_check = FALSE,
                          alpha_normtest = 0.05,
                          alpha_homotest = 0.05, 
                          grid_start = FALSE,
@@ -167,7 +168,7 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "lillie",
     stop ("Problem with removed models following transResiduals checks")
  }
 
-  #run the boostrapping (based on code in mmSAR)
+  #run the bootstrapping (based on code in mmSAR)
 
   if (verb) {
     pb <- txtProgressBar(min = 0, max = n, style = 3)

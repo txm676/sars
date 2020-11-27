@@ -1,8 +1,10 @@
 #Chapman–Richards 3 S = a [1 − exp(−bA)]c Flather (1996)
+#note there was an error in our original formula (corrected
+#Nov 2020)
 model <- list(
   name = c("Chapman Richards"),
-  formula = expression(S == d * (1 - exp(-z*A)^c )),
-  exp = expression(d * (1 - exp(-z*A)^c )),
+  formula = expression(S == d * (1 - exp(-z*A))^c),
+  exp = expression(d * (1 - exp(-z*A))^c),
   shape = "sigmoid",
   asymp = function(pars)pars["d"],
   #limits for parameters
@@ -12,5 +14,5 @@ model <- list(
     d=max(data$S) 
     Z=(-log((-data$S/(max(data$S)+1))+1))/data$A
     z = mean(Z)
-    c(d,z,1)}
+    c(d,z,0.5)}
 )

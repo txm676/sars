@@ -21,7 +21,7 @@ test_that("sar_threshold returns correct results", {
                         non_th_models = TRUE, interval = 1, logAxes = "area")
   s2 <- summary(fit2)
   expect_equal(s2$`Axes transformation`, "area")
-  expect_equal(s2$Model_table$AIC, c(1974.90, 1974.87, 1975.10, 2195.69,
+  expect_equal(s2$Model_table$AIC, c(1974.90, 1974.87, 1977.10, 2195.69,
                                      2426.60))
   expect_equal(length(s2$Model_table$Th2[!is.na(s2$Model_table$Th2)]), 3)
   
@@ -31,7 +31,7 @@ test_that("sar_threshold returns correct results", {
                         logT = log10, parallel = TRUE, cores = 2)
   
   s4 <- summary(fit4, order = "BIC") 
-  expect_equal(c(s4$Model_table$AIC), c(2020.25, 2019.48, 2020.42, 
+  expect_equal(c(s4$Model_table$AIC), c(2020.25, 2019.48, 2022.42, 
                                         2045.94, 2047.78, 2061.70,
                                         2305.05, 2535.84))
   #repeat but without parallel processing
@@ -40,22 +40,32 @@ test_that("sar_threshold returns correct results", {
                         logT = log10, parallel = F)
   
   s5 <- summary(fit5, order = "BIC") 
-  expect_equal(c(s5$Model_table$AIC), c(2020.25, 2019.48, 2020.42, 
+  expect_equal(c(s5$Model_table$AIC), c(2020.25, 2019.48, 2022.42, 
                                         2045.94, 2047.78, 2061.70,
                                         2305.05, 2535.84))
   
   #check AIC and BIC returns same as normal AIC/BIC functions
   data(aegean)
   xd2 <- sar_threshold(aegean, mod = c("DiscTwo"), non_th_models = F)
+  xs <- summary(xd2)
   obj <- xd2[[1]][[1]]
   n <- length(obj$residuals)
   val <- logLik(obj)
-  P <- 7 #is 8 in package, but we include extra par for threshold search
-          #which is not done in lm
+  expect_equal(attributes(val)$df, 7)#lm doesn't account for two threshold parameters
+  attr(val, 'df') <- 9 #so need to add these two in for this model
+  P <- 9
   lAIC2 <- (2 * P) - (2 * val)
   lBIC2 <- (-2 * val) + (P * log(n))
-  expect_equal(as.vector(lAIC2), AIC(obj))
-  expect_equal(as.vector(lBIC2), BIC(obj))
+  expect_equal(as.vector(lAIC2), AIC(val))
+  expect_equal(round(xs$Model_table$AIC, 2), round(AIC(val), 2))
+  expect_equal(as.vector(lBIC2), BIC(val))
+  expect_equal(round(xs$Model_table$BIC, 2), round(BIC(val), 2))
+  #AICc 
+  LL <- xs$Model_table$LL
+  K <- 9
+  n <- nrow(aegean)
+  AICcm <- -2*LL+2*K*(n/(n-K-1))#- function taken directly from AICcmodavg
+  expect_equal(round(xs$Model_table$AICc, 1), round(AICcm, 1))
 })
 
 
@@ -127,5 +137,15 @@ test_that("get_coef returns correct results", {
   expect_equal(coefs[[3]], c(NA, NA, -208.65))
   expect_is(coefs, "sars")
   expect_error(get_coef(5), "fit object should be of class 'threshold'")
+  fitT2 <- sar_threshold(data = a2, mod = c("ContTwo"),
+                         interval = 1, non_th_models = FALSE, logAxes = "area")
+  ContTwo <- fitT2[[1]][[1]]
+  coefs2 <- get_coef(fitT2)
+  p1 <- (predict(ContTwo, data.frame("x" = -2)) - predict(ContTwo, data.frame("x" = -4)))/2
+  expect_equal(as.vector(round(p1,2)), coefs2[[2]])
+  p2 <- (predict(ContTwo, data.frame("x" = 2)) - predict(ContTwo, data.frame("x" = 0)))/2
+  expect_equal(as.vector(round(p2,2)), coefs2[[4]])
+  p3 <- (predict(ContTwo, data.frame("x" = 6)) - predict(ContTwo, data.frame("x" = 4)))/2
+  expect_equal(as.vector(round(p3,2)), coefs2[[6]])
 })
 

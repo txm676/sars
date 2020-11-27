@@ -13,30 +13,10 @@ obs_shape <- function(x){
     pars <- x$par
     Areas <- seq(range(data$A)[1], range(data$A)[2], length.out = 9999)
 
-    
-    fun_d1 <- function(A, par, model) {
-      nam <- names(par)
-      for (i in seq_along(par)) {
-        assign(nam[i], par[i])
-      }
-      eval(model$d1.exp)
-    }
-    
-
-    fun_d2 <- function(A, par, model) {
-      nam <- names(par)
-      for (i in seq_along(par)) {
-        assign(nam[i], par[i])
-      }
-      eval(model$d2.exp)
-    }
-    
-    
-    
     #function to detect sign changes and provide roots
-    getRoots <- function(fun, d1 = TRUE, Areas, pars, model) {
+    getRoots <- function(fun, d1 = TRUE, Areas, pars) {
         #values and sign of the function evaluated
-        values <- fun(Areas, pars, model)
+        values <- fun(Areas, pars)
         signs <- sign(values)
         minMax <- NA
         sigCh <- vector()
@@ -48,8 +28,8 @@ obs_shape <- function(x){
           nMinMax <- length(sigCh)
           if (nMinMax != 0){
             #check whether is first derivative function??
-            #dc <- as.list(match.call())
-            #if (as.character(dc$fun)[3] == "d1.fun") {
+           # dc <- as.list(match.call())
+           # if (as.character(dc$fun)[3] == "d1.fun") {
             if (d1) {
               if (nMinMax > 1){
              warning("more than one minimum and/or maximum in the derivative,
@@ -82,7 +62,7 @@ obs_shape <- function(x){
           roots <- vapply(seq_along(sigCh), FUN = function(x){
                             uniroot(fun, c(Areas[sigCh[x]],
                                         Areas[sigCh[x] + 1]),
-                                    par = pars, model = model)$root},
+                                     par = pars)$root},
                             FUN.VALUE = double(1))
           res <- list(sigCh = sigCh, roots = roots, minMax = minMax)
           return(res)
@@ -136,11 +116,11 @@ obs_shape <- function(x){
           asymp <- TRUE
       }#eo if
 
-      roots.d1 <- tryCatch(getRoots(fun_d1, d1 = TRUE, Areas, pars, model),
+      roots.d1 <- tryCatch(getRoots(model$d1.fun, d1 = TRUE, Areas, pars),
                            error = function(e) list(sigCh = NA, roots = NA,
                                                     minMax = NA))
       if (model$shape %in% c("sigmoid", "convex/sigmoid")) {
-        roots.d2 <- tryCatch(getRoots(fun_d2, d1 = FALSE, Areas, pars, model),
+        roots.d2 <- tryCatch(getRoots(model$d2.fun, d1 = FALSE, Areas, pars),
                              error = function(e) list(sigCh = NA,
                                                     roots = NA, minMax = NA))
       } else {

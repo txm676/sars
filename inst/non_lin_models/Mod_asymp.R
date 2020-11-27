@@ -1,4 +1,8 @@
 #Asymptotic Regression
+#Note that Tjorve and Williams et al give the function to the 
+#power of -A. Checked and Flater (1996), https://www.jstor.org/stable/3001471?seq=1
+#and the original Ratkowsky source give it as power of positive A so we have kept
+#our use of this here.
 model <- list(
   name = c("Asymptotic regression"),
   formula = expression(S == d - c*z^A),

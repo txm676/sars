@@ -35,8 +35,8 @@ cat_roxygen <- function(model, funName, fileName){
               " model to SAR data.", "\n"))
   cat1(paste0("#' @usage ", funName,
               "(data, start = NULL, grid_start = FALSE, grid_n = NULL,", 
-              " normaTest = 'lillie',", "\n"))
-  cat1(paste0("#'   homoTest = 'cor.fitted')\n"))
+              " normaTest = 'none',", "\n"))
+  cat1(paste0("#'   homoTest = 'none', homoCor = 'spearman')\n"))
   cat1(paste0("#' @param ", "data ", "A dataset in the form of a dataframe ",
                 "with two columns: \n"))
   cat1(paste0("#'   the first with island/site areas, and the second with ",
@@ -54,19 +54,22 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#' @param ", "normaTest ", "The test used to test the", 
               " normality of the residuals of the\n"))
   cat1(paste0("#'   model. Can be any of 'lillie' (Lilliefors ", 
-              "Kolmogorov-Smirnov test; the\n"))
-  cat1(paste0("#'   default), 'shapiro' (Shapiro-Wilk test of normality),", 
+              "test\n"))
+  cat1(paste0("#', 'shapiro' (Shapiro-Wilk test of normality),", 
               " 'kolmo'", "\n"))
   cat1(paste0("#'   (Kolmogorov-Smirnov test), or 'none' (no residuals ", 
-              "normality test is undertaken).\n"))
+              "normality test is undertaken; the default).\n"))
   cat1(paste0("#' @param ", "homoTest ","The test used to check for", 
               " homogeneity of the residuals of\n"))
   cat1(paste0("#'   the model. Can be any of 'cor.fitted' (a correlation ", 
               "of the residuals with\n"))
-  cat1(paste0("#'   the model fitted values; the default), 'cor.area'", 
+  cat1(paste0("#'   the model fitted values), 'cor.area'", 
               " (a correlation of the\n"))
   cat1(paste0("#'   residuals with the area values), or 'none' (no residuals", 
-              " homogeneity test is undertaken).\n"))
+              " homogeneity test is undertaken; the default).\n"))
+  cat1(paste0("#' @param ", "homoCor ","The correlation test to be used", 
+              " when \\code{homoTest !='none'}. Can be any of 'spearman'\n"))
+  cat1(paste0("#'   (the default), 'pearson', or 'kendall'.\n"))
   
   cat1(paste0("#' @details The model is fitted using non-linear regression.", 
               " The model parameters are estimated", "\n"))
@@ -84,11 +87,11 @@ cat_roxygen <- function(model, funName, fileName){
               " also determines the observed shape of the model fit,\n")) 
   cat1(paste0("#'   and whether or not the observed fit is asymptotic (see", 
               " Triantis et al. 2012 for further details).\n\n"))
-  cat1(paste0("#'   Model validation is undertaken by assessing the", 
+  cat1(paste0("#'   Model validation can be undertaken by assessing the", 
               " normality (\\code{normaTest}) and homogeneity", 
               " (\\code{homoTest})\n")) 
   cat1(paste0("#'   of the residuals and a warning is provided in", 
-              " \\code{\\link{summary.sars}} if either test is failed.",
+              " \\code{\\link{summary.sars}} if either test is chosen and fails.",
               "\n\n")) 
   cat1(paste0("#'   A selection of information criteria (e.g. AIC, BIC) are", 
               " returned and can be used to compare models\n")) 
@@ -189,16 +192,22 @@ model_factory <- function(f, overwrite = FALSE){
   
   #function definition
   cat1(paste0(funName,' <- function(data, start = NULL, grid_start = FALSE,', 
-                        ' \ngrid_n = NULL, normaTest =  "lillie", homoTest =',
-                        ' "cor.fitted"){',"\n"))
+                        ' \ngrid_n = NULL, normaTest =  "none", homoTest =',
+                        ' "none", homoCor = "spearman"){',"\n"))
   
   #checks
   cat1("if (!(is.matrix(data) | is.data.frame(data)))", 
        " \nstop('data must be a matrix or dataframe')\n")
   cat1("if (is.matrix(data)) data <- as.data.frame(data)\n")
   cat1("if (anyNA(data)) stop('NAs present in data')\n")
-  #cat1("normtest <- match.arg(normtest, c('none', 'shapiro', 
-  #'kolmo', 'lillie'))","\n")
+  cat1("normaTest <- match.arg(normaTest, c('none', 'shapiro', 'kolmo',\n")
+  cat1("'lillie'))","\n")
+  cat1("homoTest <- match.arg(homoTest, c('none', 'cor.area',\n")
+  cat1("'cor.fitted'))","\n")
+  cat1("if (homoTest != 'none'){\n")
+  cat1("homoCor <- match.arg(homoCor, c('spearman', 'pearson',\n")
+  cat1("'kendall'))","\n")
+  cat1("}\n")
   cat1("if (!is.logical(grid_start)) stop('grid_start should be logical')\n")
   cat1("if (grid_start){\n")
   cat1("  if (!is.numeric(grid_n))\n")
@@ -232,7 +241,8 @@ model_factory <- function(f, overwrite = FALSE){
   
   cat1("fit <- get_fit(model = model, data = data, start = start,", 
       " \ngrid_start = grid_start, grid_n = grid_n, algo = 'Nelder-Mead', 
-       normaTest =  normaTest, homoTest = homoTest, verb = TRUE)\n")
+       normaTest =  normaTest, homoTest = homoTest, 
+       homoCor = homoCor, verb = TRUE)\n")
   cat1("if(is.na(fit$value)){\n")
   cat1("  return(list(value = NA))\n")
   cat1("}else{","\n")

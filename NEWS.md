@@ -1,6 +1,7 @@
 
 ##version 1.3.1
-  * Corrected bug in obs_shape function
+  * Corrected bug in obs_shape function which meant it was not recognising sigmoid fits
+  * this was linked to a bug in the function used to calculate 1st and 2nd derivatives (also corrected)
   * Added new model shape category (convex/sigmoid) for epm1, asymp
     and p1 models (allowing them to be tested for observed sigmoid shape)
   * Corrected bug in plot function for sar_threshold meaning dataframes with more
@@ -9,6 +10,12 @@
     for the intercept only power gdm model.
   * Updated gdm function to return AICc and R2, and fit the GDM using the linear version of the
     power and logarithmic models. Also implemented a start_vals argument to provide starting values
+  * Corrected bug in homogeneity of variance test - it was previously using the raw residuals rather
+    than the squared residuals. And lin_pow homog test was also using untransformed area rather than log(area).
+  * Changed the defaults for residual normality and homogeneity tests to be "none" - then up to 
+    the user to turn them on and select which test they want.
+  * Correcting number of parameters for DiscTwo in sar_threshold (from 8 to 9)
+  * Corrected bug in Chapman model function - the ^c term was in the wrong place
 
 ##version 1.3.0
   * Added a set of functions for fitting, evaluating and plotting a range of commonly 

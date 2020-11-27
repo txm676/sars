@@ -1,4 +1,6 @@
 #LOGISTIC FUNCTION (HE & LEGENDRE 1996)
+#doesn't make sense to fit negative relationships with this
+#model, so pars should be Rplus.
 model <- list(
   name=c("Heleg(Logistic)"),
   formula=expression(S == c/(f + A^(-z))),

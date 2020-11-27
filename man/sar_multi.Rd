@@ -8,8 +8,8 @@ sar_multi(data, obj = c("power",
   "powerR","epm1","epm2","p1","p2","loga","koba",
   "mmf","monod","negexpo","chapman","weibull3","asymp",
   "ratio","gompertz","weibull4","betap","heleg","linear"), normaTest =
-  "lillie", homoTest = "cor.fitted", grid_start = FALSE, grid_n = NULL,
-   verb = TRUE)
+  "none", homoTest = "none", homoCor = "spearman", grid_start = FALSE, grid_n
+  = NULL, verb = TRUE)
 }
 \arguments{
 \item{data}{A dataset in the form of a dataframe with two columns: the first
@@ -19,16 +19,18 @@ island/site.}
 \item{obj}{A vector of model names.}
 
 \item{normaTest}{The test used to test the normality of the residuals of each
-model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
-default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
-(Kolmogorov-Smirnov test), or "none" (no residuals normality test is
-undertaken).}
+model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test),
+"shapiro" (Shapiro-Wilk test of normality), "kolmo" (Kolmogorov-Smirnov
+test), or "none" (no residuals normality test is undertaken; the default).}
 
 \item{homoTest}{The test used to check for homogeneity of the residuals of
-each model. Can be any of "cor.fitted" (a correlation of the residuals with
-the model fitted values; the default), "cor.area" (a correlation of the
-residuals with the area values), or "none" (no residuals homogeneity test
-is undertaken).}
+each model. Can be any of "cor.fitted" (a correlation of the squared
+residuals with the model fitted values), "cor.area" (a correlation of the
+squared residuals with the area values), or "none" (no residuals
+homogeneity test is undertaken; the default).}
+
+\item{homoCor}{The correlation test to be used when \code{homoTest !=
+"none"}. Can be any of "spearman" (the default), "pearson", or "kendall".}
 
 \item{grid_start}{Logical argument specifying whether a grid search procedure
 should be implemented to test multiple starting parameter values (default:

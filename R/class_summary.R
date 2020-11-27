@@ -110,7 +110,7 @@ summary.sars <- function(object, order = "BIC", ...){
     shape <- object$observed_shape
     asymp <- object$asymptote
     conv <- object$verge
-    res <- list("Model" = name, "residuals" = round(resid, 1),
+    res <- list("Model" = name, "residuals" = resid,
                 "Parameters" = pars_tab,
                 "parNames" = parN, "formula" = formula, "AIC" = round(ic, 2),
                 "AICc" = round(ic2, 2), "BIC" = round(bi, 2),
@@ -164,7 +164,7 @@ summary.sars <- function(object, order = "BIC", ...){
     th <- object[[3]]
     #no. parameter for each model
     k <- c("ContOne" = 5, "ZslopeOne" = 4, "DiscOne" = 6, "ContTwo" = 7, 
-           "ZslopeTwo" = 6, "DiscTwo" = 8, "Linear" = 3, "Intercept" = 2)
+           "ZslopeTwo" = 6, "DiscTwo" = 9, "Linear" = 3, "Intercept" = 2)
     #get IC values
     ICs <- mapply(function(x, y){
       val <- logLik(x)
@@ -228,10 +228,16 @@ summary.sars <- function(object, order = "BIC", ...){
       if (!is.na(th[[i]][1])){
         if (length(th[[i]]) == 1){
           nbi[i, 1:2] <- c(length(a[a <= th[[i]]]), length(a[a > th[[i]]]))
+          if (sum(nbi[i, 1:2]) != length(a)){
+            stop("issue with calculating no. points in each segment")
+          }
         } else {
           nbi[i, 1:3] <- c(length(a[a <= th[[i]][1]]),
                            length(a[a > th[[i]][1] & a <= th[[i]][2]]),
                            length(a[a > th[[i]][2]]))
+          if (sum(nbi[i, 1:3]) != length(a)){
+            stop("issue with calculating no. points in each segment")
+          }
         }
       }
     }

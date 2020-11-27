@@ -3,7 +3,7 @@
 #' @description Fit the log-log version of the power model to SAR data and
 #'   return parameter values, summary statistics and the fitted values.
 #' @usage lin_pow(data, con = 1, logT = log, compare = FALSE, normaTest =
-#'   "lillie", homoTest = "cor.fitted")
+#'   "none", homoTest = "none", homoCor = "spearman")
 #' @param data A dataset in the form of a dataframe with two columns: the first
 #'   with island/site areas, and the second with the species richness of each
 #'   island/site.
@@ -14,18 +14,19 @@
 #' @param compare Fit the standard (non-linear) power model and return the
 #'   z-value for comparison (default: \code{compare = FALSE}).
 #' @param normaTest The test used to test the normality of the residuals of the
-#'   model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test; the
-#'   default), "shapiro" (Shapiro-Wilk test of normality), "kolmo"
-#'   (Kolmogorov-Smirnov test), or "none" (no residuals normality test is
-#'   undertaken).
+#'   model. Can be any of "lillie" (Lilliefors Kolmogorov-Smirnov test),
+#'   "shapiro" (Shapiro-Wilk test of normality), "kolmo" (Kolmogorov-Smirnov
+#'   test), or "none" (no residuals normality test is undertaken; the default).
 #' @param homoTest The test used to check for homogeneity of the residuals of
 #'   the model. Can be any of "cor.fitted" (a correlation of the residuals with
-#'   the model fitted values; the default), "cor.area" (a correlation of the
-#'   residuals with the area values), or "none" (no residuals homogeneity test
-#'   is undertaken).
+#'   the model fitted values), "cor.area" (a correlation of the residuals with
+#'   the area values), or "none" (no residuals homogeneity test is undertaken;
+#'   the default).
+#' @param homoCor The correlation test to be used when \code{homoTest !=
+#'   "none"}. Can be any of "spearman" (the default), "pearson", or "kendall".
 #' @details A check is made for any islands with zero species. If any zero
-#'   species islands are found, a constant (default: \code{con = 1}) is added
-#'   to each species richness value to enable log transformation. Natural
+#'   species islands are found, a constant (default: \code{con = 1}) is added to
+#'   each species richness value to enable log transformation. Natural
 #'   logarithms are used as default, but log2 and log10 can be used instead
 #'   using the \code{logT} argument.
 #'
@@ -42,7 +43,7 @@
 #'   contains the log-transformed observed data. The remaining elements depend
 #'   on the function arguments selected and can include the results of the
 #'   non-linear power model fit, the log-transformation function used (i.e.
-#'   \code{logT}) and the results of the residuals normality and heterogeneity
+#'   \code{logT}) and the results of any residuals normality and heterogeneity
 #'   tests.
 #'
 #'   The \code{\link{summary.sars}} function returns a more useful summary of
@@ -56,8 +57,8 @@
 
 
 lin_pow <- function(data, con = 1, logT = log,
-                    compare = FALSE, normaTest =  "lillie", 
-                    homoTest = "cor.fitted") {
+                    compare = FALSE, normaTest =  "none", 
+                    homoTest = "none", homoCor = "spearman") {
 
   if (!(is.matrix(data) | is.data.frame(data)))
     stop("data must be a matrix or dataframe")
@@ -94,6 +95,7 @@ lin_pow <- function(data, con = 1, logT = log,
   fv <- linearPower.fit$fitted.values
   linearPower.fit <- summary.lm(linearPower.fit)
   resid <- linearPower.fit$residuals
+  sq_resid <- resid^2
   res <- list(Model = linearPower.fit, calculated = fv, data = log.data)
 
   if (compare == TRUE){
@@ -104,6 +106,10 @@ lin_pow <- function(data, con = 1, logT = log,
   #normality and homogeneity tests
   normaTest <- match.arg(normaTest, c("none", "shapiro", "kolmo", "lillie"))
   homoTest <- match.arg(homoTest, c("none","cor.area","cor.fitted"))
+  if (homoTest != "none"){
+    homoCor <- match.arg(homoCor, c("spearman","pearson",
+                                    "kendall"))
+  }
   #normality of residuals
   if (normaTest == "shapiro") {
     normaTest <- list("test" = "shapiro", tryCatch(shapiro.test(resid),
@@ -115,18 +121,20 @@ lin_pow <- function(data, con = 1, logT = log,
     normaTest <- list("test" = "kolmo", tryCatch(ks.test(resid, "pnorm"),
                                                  error = function(e)NA))
   } else{
-    normaTest <- "none"
+    normaTest <- list("test" = "none", "none")
   }
   #Homogeneity of variance
   if (homoTest == "cor.area"){
-    homoTest  <- list("test" = "cor.area", tryCatch(cor.test(resid,data$A),
+    homoTest  <- list("test" = "cor.area", tryCatch(cor.test(sq_resid,log.data$A,
+                                                             method = homoCor),
                             error = function(e)list(estimate=NA,p.value=NA)))
   } else if (homoTest == "cor.fitted"){
     homoTest  <- list("test" = "cor.fitted",
-                  tryCatch(cor.test(resid,as.vector(res$calculated)),
+                  tryCatch(cor.test(sq_resid,as.vector(res$calculated),
+                                    method = homoCor),
                   error = function(e)list(estimate=NA,p.value=NA)))
   } else {
-    homoTest <- "none"
+    homoTest <- list("test" = "none", "none")
   }
   res$normaTest <- normaTest
   res$homoTest <- homoTest

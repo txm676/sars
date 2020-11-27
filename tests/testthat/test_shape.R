@@ -6,8 +6,9 @@ test_that("observed_shape info is correct", {
   fit2 <- sar_power(galap)
   fit3 <- sar_average(data = galap)
   s3 <- summary(fit3)
-  x <- substr(fit$observed_shape, 1, 41)
-  x3 <- substr(s3$Model_table$Shape[15], 1, 41)#epm2 again
+  x <- fit$observed_shape
+  x3 <- s3$Model_table$Shape[17]#epm2 again
+  expect_match(s3$Model_table$Model[17], "epm2")
   expect_match(x, "sigmoid")
   expect_match(fit2$observed_shape, "convex up")
   expect_match(x3, "sigmoid")

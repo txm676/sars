@@ -1,9 +1,20 @@
 context("lin_pow")
 
 test_that("lin_pow returns correct results", {
-   fit <- lin_pow(galap, con = 1)
+   fit <- lin_pow(galap, con = 1, normaTest = "lillie",
+                  homoTest = "cor.fitted", homoCor = "spearman")
    expect_equal(round(fit$Model$coefficients[2], 2), 0.34)
    expect_equal(round(fit$normaTest[[2]]$p.value, 2), 0.35)
+   expect_equal(round(fit$homoTest[[2]]$p.value, 2), 0.13)
+   #checking homotest matches cor.test done manually
+   fit2 <- lin_pow(aegean, homoTest = "cor.area", homoCor = "pearson")
+   AO <- aegean[order(aegean$a),]#is ordered inside function
+   rs2 <-  fit2$Model$residuals^2
+   rs3 <-  summary(fit2)$Model$residuals^2
+   pp <- cor.test(rs2, log(AO$a), method = "pearson")
+   pp2 <- cor.test(rs3, log(AO$a), method = "pearson")
+   expect_equal(fit2$homoTest[[2]]$p.value, pp$p.value)
+   expect_equal(fit2$homoTest[[2]]$p.value, pp2$p.value)
 })
 
 test_that("lin_pow log-transformation works",{

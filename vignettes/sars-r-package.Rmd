@@ -183,22 +183,26 @@ fitC <- sar_multi(data = galap, obj = c("power", "loga", "monod"))
 plot(fitC) #see Fig.1
 ```
 
-Model fit validation Model fits can be evaluated through tests of the
-normality and homoscedasticity of the residuals. Any of three tests can be
-selected to test the normality of the residuals: 1) the Lilliefors extension
-of the Kolmogorov normality test (the default; normaTest = “lillie”), 2) the
-Shapiro-Wilk test of normality (to be preferred when sample size is small;
-“shapiro”), and 3) the Kolmogorov-Smirnov test (“kolmo”). Alternatively, an
-option to omit a residuals normality test is provided (“none”). Three options
-are provided to check for the homogeneity of the residuals: 1) a correlation
-of the residuals with the model fitted values (the default; “cor.fitted”), 2)
-a correlation of the residuals with the area values (“cor.area”), or 3) no
-homogeneity test (“none”). If a test is selected and is significant at the 5%
-level a warning is provided in the model summary; alternatively, the full
-results of the three tests can be accessed in the model fit output. A third
-model validation check for negative predicted richness values (i.e. when at
-least one of the fitted values is negative) is automatically undertaken and a
-warning is provided in the model summary if negative values are predicted.
+Model fit validation Model fits can be evaluated through tests of the normality
+and homoscedasticity of the residuals. Any of three tests can be selected to
+test the normality of the residuals: 1) the Lilliefors extension of the
+Kolmogorov normality test (normaTest = “lillie”), 2) the Shapiro-Wilk test of
+normality (to be preferred when sample size is small; “shapiro”), and 3) the
+Kolmogorov-Smirnov test (“kolmo”). As a default, the option to omit a residuals
+normality test (“none”) is used - thus it is up to the user to select a test if
+appropriate. Three options are provided to check for the homogeneity of the
+residuals: 1) a correlation of the squared residuals with the model fitted
+values (“cor.fitted”), 2) a correlation of the squared residuals with the area
+values (“cor.area”), or 3) no homogeneity test (“none”; the default). If a test
+is selected and is significant at the 5% level a warning is provided in the
+model summary; alternatively, the full results of the three tests can be
+accessed in the model fit output. A third model validation check for negative
+predicted richness values (i.e. when at least one of the fitted values is
+negative) can be undertaken and a warning is provided in the model summary if
+negative values are predicted. It should be noted that in earlier versions of
+the package (pre Version 1.3.1) there was a bug in the test checking for
+homogeneity of the residual variance - the correlation used the raw residuals
+rather than the squared residuals. This has now been corrected.
 
 ```{r}
 #load an example dataset, fit the linear SAR model whilst running residual
@@ -251,27 +255,27 @@ models to this bootstrapped set of response values, and the multimodel
 averaged fitted values stored. Percentile confidence intervals are then
 calculated using all bootstrapped fitted values.
 
-The ‘sar_average’ function can be used without specifying any models, in
-which case the package attempts to fit each of the 20 models in Table 1;
-alternatively, a vector of model names or a ‘fit_collection’ object
-(generated using the ‘sar_multi’ function) can be provided using the ‘obj’
-argument. The three model validation tests listed above (normality and
-homogeneity of residuals, and negative predicted values) can be selected; if
-any model fails one or more of the tests during the fitting process it is
-removed from the resultant multimodel SAR curve. The output of the
-‘sar_average’ function is a list of class ‘multi’ and class ‘sars’, with two
-elements. The first element (‘mmi’) contains the multi model inference
-(fitted values of the multimodel SAR curve), and the second element
-(‘details’) contains a range of information regarding the fitting process,
-including the successfully fitted models, the models removed due to failing
-any of the validation tests, and the information criterion values, delta
-values and weights for the successfully fitted models. The returned object
-can easily be plotted using the ‘plot.multi’ generic function, and multiple
-plot options are available (using the ‘type’ argument; see Fig. 2). The fits
-of all the successfully fitted models and the multimodel SAR curve (with or
-without confidence intervals) can be plotted together (‘type’ = “multi”), and
-a barplot of the information criterion weights of each model can also be
-produced (‘type’ = “bar”).
+The ‘sar_average’ function can be used without specifying any models, in which
+case the package attempts to fit each of the 20 models in Table 1;
+alternatively, a vector of model names or a ‘fit_collection’ object (generated
+using the ‘sar_multi’ function) can be provided using the ‘obj’ argument. The
+three model validation tests listed above (normality and homogeneity of
+residuals, and negative predicted values) can be selected (by default none are
+selected, so it is up to the user to select any that are appropriate); if any
+model fails one or more of the tests during the fitting process it is removed
+from the resultant multimodel SAR curve. The output of the ‘sar_average’
+function is a list of class ‘multi’ and class ‘sars’, with two elements. The
+first element (‘mmi’) contains the multi model inference (fitted values of the
+multimodel SAR curve), and the second element (‘details’) contains a range of
+information regarding the fitting process, including the successfully fitted
+models, the models removed due to failing any of the validation tests, and the
+information criterion values, delta values and weights for the successfully
+fitted models. The returned object can easily be plotted using the ‘plot.multi’
+generic function, and multiple plot options are available (using the ‘type’
+argument; see Fig. 2). The fits of all the successfully fitted models and the
+multimodel SAR curve (with or without confidence intervals) can be plotted
+together (‘type’ = “multi”), and a barplot of the information criterion weights
+of each model can also be produced (‘type’ = “bar”).
 
 ```{r, fig.width=7, fig.height=19}
 #load an example dataset (Niering, 1963), run the ‘sar_average’ function

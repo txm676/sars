@@ -3,6 +3,14 @@
 
 #  LINK FUNCTIONS FOR CONSTRAINT OPTIMIZATION (internal)
 
+#We use transLink for Rplus and unif parameters to provide starting parameter
+#values that then constrain the parameter values optim generates to be within a
+#more sensible range (i.e. mimicking boundary conditions). Otherwise the scale
+#of the parameter is too large and optim generates unsuitable parameter
+#estimates to test that can be negative etc. The transformed starting estimates
+#are back-transformed within the model rss function anyway so it is the proper
+#parameter estimates that are used to generate the rss.
+
 transLink <- function(x,boundType) {
 
   # fonction logit

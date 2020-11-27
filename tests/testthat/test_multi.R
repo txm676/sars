@@ -2,15 +2,25 @@ context("sar_average")
 
 test_that("sar_average returns correct results", {
 
-  fit3 <- sar_average(data = galap, normaTest = "none", homoTest = "none",
-                    neg_check = FALSE)
-  expect_equal(round(sum(fit3$mmi), 1), 1640.9)
+  fit3 <- sar_average(data = galap)
+  expect_equal(round(sum(fit3$mmi), 1), 1643.5)
   expect_output(str(fit3), "List of 2")
   expect_is(fit3, "multi")
   expect_match(fit3$details$homo_test, "none")
   expect_match(fit3$details$norm_test, "none")
   expect_match(fit3$details$ic, "AICc")
   expect_error(sar_multi(5), "argument is of length zero")
+  
+  fit4 <- sar_average(data = galap, normaTest = "lillie", 
+                      homoTest = "cor.fitted",
+                      neg_check = FALSE)
+  expect_equal(round(sum(fit4$mmi), 1), 1633.9)
+  expect_match(fit4$details$norm_test, "lillie")
+  expect_match(fit4$details$homo_test, "cor.fitted")
+  expect_equal(length(fit4$details$mod_names), 14)
+  expect_error(sar_average(data = galap, homoTest = 4))
+  expect_error(sar_average(data = galap, homoTest = "cor.fitted",
+                           homoCor = "correlation"))
 })
 
 
@@ -18,12 +28,12 @@ test_that("sar_average using fit_collection object works", {
   ff <- sar_multi(data = galap, obj = c("power", "p1", "loga", "monod",
                                         "linear"))
   expect_warning(sar_average(obj = ff, data = galap, normaTest = "none",
-                    neg_check = FALSE))
-  fit3 <- sar_average(obj = ff, data = galap, neg_check = FALSE)
-  expect_equal(round(sum(fit3$mmi), 1), 1662.1)
+                    neg_check = FALSE, homoTest = "cor.fitted"))
+  fit3 <- sar_average(obj = ff, data = galap)
+  expect_equal(round(sum(fit3$mmi), 1), 1662.8)
   expect_output(str(fit3), "List of 2")
   expect_is(fit3, "multi")
-  expect_match(fit3$details$homo_test, "cor.fitted")
+  expect_match(fit3$details$homo_test, "none")
   expect_match(fit3$details$ic, "AICc")
   expect_error(sar_multi(5), "argument is of length zero")
 })
