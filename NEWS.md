@@ -15,7 +15,7 @@
   * Changed the defaults for residual normality and homogeneity tests to be "none" - then up to 
     the user to turn them on and select which test they want.
   * Correcting number of parameters for DiscTwo in sar_threshold (from 8 to 9)
-  * Corrected bug in Chapman model function - the ^c term was in the wrong place
+  * Corrected bug in Chapman model function - the ^c term was in the wrong place.
 
 ##version 1.3.0
   * Added a set of functions for fitting, evaluating and plotting a range of commonly 

@@ -151,7 +151,7 @@ test_that("news ICs works for multi models", {
   AICcm <- -2*LL+2*K*(n/(n-K-1))#- function taken directly from AICcmodavg
   nl <- c(nl, AICcm)
   expect_equal(round(ff4,3), round(nl,3))
-  
+}) 
   
   
 test_that("news ICs works for betap", { 
