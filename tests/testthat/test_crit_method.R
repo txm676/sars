@@ -159,6 +159,8 @@ test_that("news ICs works for betap", {
   #betap model - using sars without grid_start gives suboptimal
   #parameter estimates so have to use it with that turned on for it
   #to match with nls
+  y <- galap$s
+  x <- galap$a
   fit6 <- sar_betap(galap, grid_start = TRUE, grid_n = 100)
   ff4 <- c(fit6$AIC, fit6$BIC, 
            fit6$AICc)

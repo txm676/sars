@@ -23,13 +23,13 @@ test_that("gdm functions return correct results", {
   expect_error(sars::gdm(galap, mod_sel = "d"), 
                "mod_sel argument should be TRUE or FALSE")
   #matches with BAT values
-  BTP <- BAT::gdm(galap$s, area = galap$a, time = galap$t)
-  expect_equal(as.vector(round(BTP[3,3], 2)), 
-               as.vector(round(g2[[1]]$m$getAllPars()[3], 2)))
-  expect_equal(as.vector(round(BTP[3,4], 2)), 
-               as.vector(round(g2[[1]]$m$getAllPars()[4], 2)))
-  expect_equal(as.vector(round(BTP[3,2], 2)), 
-               as.vector(round(g2[[1]]$m$getAllPars()[2], 2)))
+#  BTP <- BAT::gdm(galap$s, area = galap$a, time = galap$t)
+#  expect_equal(as.vector(round(BTP[3,3], 2)), 
+ #              as.vector(round(g2[[1]]$m$getAllPars()[3], 2)))
+#  expect_equal(as.vector(round(BTP[3,4], 2)), 
+ #              as.vector(round(g2[[1]]$m$getAllPars()[4], 2)))
+#  expect_equal(as.vector(round(BTP[3,2], 2)), 
+#               as.vector(round(g2[[1]]$m$getAllPars()[2], 2)))
   
   ###matches with sar_loga
   g3 <- sars::gdm(galap, model = "loga", mod_sel = TRUE)
@@ -42,12 +42,12 @@ test_that("gdm functions return correct results", {
                as.vector(round(loga$m$getPars()[1], 1)))
   expect_equal(loga_sars$AIC, AIC(loga))
   #matches with BAT values
-  expect_equal(as.vector(round(BTP[2,3], 2)), 
-               as.vector(round(g3[[1]]$m$getAllPars()[3], 2)))
-  expect_equal(as.vector(round(BTP[2,4], 2)), 
-               as.vector(round(g3[[1]]$m$getAllPars()[4], 2)))
-  expect_equal(as.vector(round(BTP[2,2], 2)), 
-               as.vector(round(g3[[1]]$m$getAllPars()[2], 2)))
+ # expect_equal(as.vector(round(BTP[2,3], 2)), 
+  #             as.vector(round(g3[[1]]$m$getAllPars()[3], 2)))
+ # expect_equal(as.vector(round(BTP[2,4], 2)), 
+ #              as.vector(round(g3[[1]]$m$getAllPars()[4], 2)))
+#  expect_equal(as.vector(round(BTP[2,2], 2)), 
+#               as.vector(round(g3[[1]]$m$getAllPars()[2], 2)))
   
   ###matches with sar_linear
   g4 <- sars::gdm(galap, model = "linear", mod_sel = TRUE)
@@ -60,12 +60,12 @@ test_that("gdm functions return correct results", {
                as.vector(round(linear$m$getPars()[1], 1)))
   expect_equal(lin_sars$AIC, AIC(linear))
   #matches with BAT values
-  expect_equal(as.vector(round(BTP[1,3], 2)), 
-               as.vector(round(g4[[1]]$m$getAllPars()[3], 2)))
-  expect_equal(as.vector(round(BTP[1,4], 2)), 
-               as.vector(round(g4[[1]]$m$getAllPars()[4], 2)))
-  expect_equal(as.vector(round(BTP[1,2], 2)), 
-               as.vector(round(g4[[1]]$m$getAllPars()[2], 2)))
+ # expect_equal(as.vector(round(BTP[1,3], 2)), 
+ #              as.vector(round(g4[[1]]$m$getAllPars()[3], 2)))
+#  expect_equal(as.vector(round(BTP[1,4], 2)), 
+#               as.vector(round(g4[[1]]$m$getAllPars()[4], 2)))
+#  expect_equal(as.vector(round(BTP[1,2], 2)), 
+#               as.vector(round(g4[[1]]$m$getAllPars()[2], 2)))
   
   ###all model comparison matches with individual model fits
   g5 <- sars::gdm(galap, model = "all", mod_sel = FALSE)
@@ -73,9 +73,9 @@ test_that("gdm functions return correct results", {
   expect_equal(AIC(g2[[1]]), AIC(g5[[3]]))
   expect_equal(AICcmodavg::AICc(g3[[1]]), AICcmodavg::AICc(g5[[1]]))
   #matches with BAT values (Delta AIC of linear vs. power)
-  expect_equal(round(AIC(g5[[2]]) - AIC(g5[[3]]), 2), round(BTP[1,7], 2)) 
-  expect_equal(round(AICcmodavg::AICc(g5[[2]]) - AICcmodavg::AICc(g5[[3]]), 2), 
-               round(BTP[1,9], 2)) 
+ # expect_equal(round(AIC(g5[[2]]) - AIC(g5[[3]]), 2), round(BTP[1,7], 2)) 
+#  expect_equal(round(AICcmodavg::AICc(g5[[2]]) - AICcmodavg::AICc(g5[[3]]), 2), 
+ #              round(BTP[1,9], 2)) 
   
   g5b <- sars::gdm(galap, model = "all", mod_sel = TRUE)
   expect_equal(length(g5b), 3)
