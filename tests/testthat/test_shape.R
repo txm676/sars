@@ -8,7 +8,10 @@ test_that("observed_shape info is correct", {
   s3 <- summary(fit3)
   x <- fit$observed_shape
   x3 <- s3$Model_table$Shape[17]#epm2 again
-  expect_match(s3$Model_table$Model[17], "epm2")
+  #in R 3.6.3 it returns the s3..[17] as a factor but later
+  #versions of R return it as a character vector. The as.vector()
+  #is thus here to pass Travis test for past versions.
+  expect_match(as.vector(s3$Model_table$Model[17]), "epm2")
   expect_match(x, "sigmoid")
   expect_match(fit2$observed_shape, "convex up")
   expect_match(x3, "sigmoid")
