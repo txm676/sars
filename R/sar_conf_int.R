@@ -4,15 +4,15 @@
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom stats rmultinom
 
-sar_conf_int <- function(fit, n, crit = "Info", normaTest = "none",
-                         homoTest = "none",
-                         homoCor = "spearman",
-                         neg_check = FALSE,
-                         alpha_normtest = 0.05,
-                         alpha_homotest = 0.05, 
-                         grid_start = FALSE,
-                         grid_n = NULL,
-                         verb = TRUE){
+sar_conf_int <- function(fit, n, crit, obj_all, normaTest,
+                         homoTest,
+                         homoCor,
+                         neg_check,
+                         alpha_normtest,
+                         alpha_homotest, 
+                         grid_start,
+                         grid_n,
+                         verb){
 
   if (!"multi" %in% class(fit)) stop ("class of 'fit' should be 'multi'")
   if (length(fit$details$mod_names) < 2) 
@@ -43,6 +43,7 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "none",
     #        "linear")
 
 
+  
   #observed data
   dat <- fit$details$fits[[1L]]$data
 
@@ -186,11 +187,7 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "none",
 
   #choosing an IC criterion (AIC or AICc or BIC): same code as within
   #sar_average as needs to be identical
-  IC <- switch(crit,
-               Info= if ( (nrow(dat) / 3) < 40 ) { "AICc" } else { "AIC" },
-               AIC = "AIC",
-               AICc = "AICc",
-               Bayes = "BIC")
+  IC <- crit
 
   #listof calculated values
   bootCalculated <- vector("list", length = nBoot)
@@ -212,6 +209,8 @@ sar_conf_int <- function(fit, n, crit = "Info", normaTest = "none",
 for (l in seq_len(nrow(dat))) {
   positives <- transResiduals[chousModel, ][transResiduals[chousModel, ] > 0]
   negatives <- transResiduals[chousModel, ][transResiduals[chousModel, ] < 0]
+  #I think this line ensures that there can be no negative S values, but then
+  #I am not sure why the test is needed? Check with FG
   vtci <- negatives[abs(negatives) <= calculated[chousModel, l] ]
   vtci <- c(vtci, positives)
   value <- sample(vtci, 1)
@@ -227,10 +226,23 @@ for (l in seq_len(nrow(dat))) {
     badBoot <- FALSE
 
     df <- data.frame("A" = dat$A, "S" = bootMatrix[nGoodBoot, ])
-    optimres <- tryCatch(suppressMessages(sar_average(obj = nams,
-                                                      data = df, 
-                                                      grid_start = grid_start,
-                                                      grid_n = grid_n,
+    
+    #in here we use for model names obj_all which means that all the models
+    #that the user originally tried to fit are used, even if some of them were
+    #removed from the original mmi curve due to failing residuals tests etc.
+    #It also now uses the same arguments for checks and grid_start etc that
+    #the user originally uses with their mmi curve
+    optimres <- tryCatch(suppressMessages(sar_average(obj = obj_all,
+                                                data = df,
+                                                crit = crit, 
+                                                normaTest = normaTest,
+                                                homoTest = homoTest,
+                                                homoCor = homoCor,
+                                                neg_check = neg_check,
+                                                alpha_normtest = alpha_normtest,
+                                                alpha_homotest = alpha_homotest, 
+                                                grid_start = grid_start,
+                                                grid_n = grid_n,
                                       verb = FALSE)), error = function(e) NA)
 
     if (length(optimres) == 1) {
@@ -313,7 +325,7 @@ for (l in seq_len(nrow(dat))) {
   bootSort <- apply(bootHat, 2, sort)
   alp <- 0.025
   c1 <- ceiling(n  * alp) #maybe a better way
-  c2 <- floor(n  * (1-alp))
+  c2 <- ceiling(n  * (1-alp))
   CI <- data.frame("L" = bootSort[c1, ], "U" = bootSort[c2, ])
   return(CI)
 }

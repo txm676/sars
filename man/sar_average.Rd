@@ -126,9 +126,10 @@ The multimodel SAR curve is constructed using information criterion
   procedure transforms the residuals from the individual model fits and
   occasionally NAs / Inf values can be produced - in these cases, the model
   is removed from the confidence interval calculation (but not the multimodel
-  curve itself). When several SAR models are used and the number of
-  bootstraps (\code{ciN}) is large, generating the confidence intervals can
-  take a long time.
+  curve itself). When several SAR models are used, when grid_start is turned
+  on and when the number of bootstraps (\code{ciN}) is large, generating the
+  confidence intervals can take a (very) long time. Parallel processing will
+  be added to future versions.
 
   The \code{sar_models()} function can be used to bring up a list of the 20
   model names. \code{display_sars_models()} generates a table of the 20

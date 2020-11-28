@@ -285,9 +285,10 @@ sar_multi <- function(data,
 #'   procedure transforms the residuals from the individual model fits and
 #'   occasionally NAs / Inf values can be produced - in these cases, the model
 #'   is removed from the confidence interval calculation (but not the multimodel
-#'   curve itself). When several SAR models are used and the number of
-#'   bootstraps (\code{ciN}) is large, generating the confidence intervals can
-#'   take a long time.
+#'   curve itself). When several SAR models are used, when grid_start is turned
+#'   on and when the number of bootstraps (\code{ciN}) is large, generating the
+#'   confidence intervals can take a (very) long time. Parallel processing will
+#'   be added to future versions.
 #'
 #'   The \code{sar_models()} function can be used to bring up a list of the 20
 #'   model names. \code{display_sars_models()} generates a table of the 20
@@ -413,6 +414,8 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   if (length(obj) < 2)
     stop("more than 1 fit is required to construct a sar_multi")
   
+  if(verb) cat("\nModels to be fitted using grid start approach: \n")
+  
   #if a vector of names is provided, then call sar_multi first
   if (is.character(obj)){
     fits <- sar_multi(data = data, obj = obj,
@@ -426,6 +429,10 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
     fits <- obj
   }
 
+  #save the full list of models that the user wants to fit for use with
+  #the CI function
+  if (confInt) obj_all <- obj
+  
   #####BAD MODEL CHECKS#######################
 
   normaTest <- match.arg(normaTest, c("none", "shapiro",
@@ -659,7 +666,8 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   if (confInt){
     cat("\nCalculating sar_multi confidence intervals - this may take",
         " some time:\n")
-    cis <- sar_conf_int(fit = res, n = ciN, crit = crit, normaTest = normaTest,
+    cis <- sar_conf_int(fit = res, n = ciN, crit = IC, obj_all = obj_all,
+                        normaTest = normaTest,
                         homoTest = homoTest,
                         homoCor = homoCor,
                         neg_check = neg_check,

@@ -10,6 +10,8 @@ r_packages:
   - covr
   - rmarkdown
   
+#issue on travis where kept stalling trying to codecov
+install: travis_wait mvn install
 
 notifications:
   email:

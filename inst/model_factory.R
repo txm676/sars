@@ -242,7 +242,7 @@ model_factory <- function(f, overwrite = FALSE){
   cat1("fit <- get_fit(model = model, data = data, start = start,", 
       " \ngrid_start = grid_start, grid_n = grid_n, algo = 'Nelder-Mead', 
        normaTest =  normaTest, homoTest = homoTest, 
-       homoCor = homoCor, verb = TRUE)\n")
+       homoCor = homoCor)\n")
   cat1("if(is.na(fit$value)){\n")
   cat1("  return(list(value = NA))\n")
   cat1("}else{","\n")

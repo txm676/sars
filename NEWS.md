@@ -1,4 +1,11 @@
 
+##version 1.3.2
+  * Changed mmi confidence interval function to fit all the models the user originally selects to
+    the boostrapped samples. Also so it takes all of the original arguments (e.g. normates, IC crit etc)
+    provided by the user.
+  * Now return residuals from the non-linear models as observed - fitted rather than vice versa, to match
+    lm and nls etc. 
+
 ##version 1.3.1
   * Corrected bug in obs_shape function which meant it was not recognising sigmoid fits
   * this was linked to a bug in the function used to calculate 1st and 2nd derivatives (also corrected)

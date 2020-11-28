@@ -13,7 +13,7 @@ test_that("sar_p2 returns correct results", {
 test_that("sar_p2 summary returns correct results", {
   fit <- sar_p2(galap)
   fs <- summary(fit)
-  expect_equal(round(sum(fs$residuals), 1), -170.2)
+  expect_equal(round(sum(fs$residuals), 1), 170.2)
   expect_output(str(fs), "List of 16")
   expect_is(fs, "summary.sars")
   expect_equal(fs$normaTest[[2]], "none")

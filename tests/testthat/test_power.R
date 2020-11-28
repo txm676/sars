@@ -29,7 +29,7 @@ test_that("neg_expo and asymp returns correct results", {
 test_that("sar_power summary returns correct results", {
   fit <- sar_power(galap, normaTest = "lillie")
   fs <- summary(fit)
-  expect_equal(round(sum(fs$residuals), 1), 31.1)
+  expect_equal(round(sum(fs$residuals), 1), -31.1)
   expect_output(str(fs), "List of 16")
   expect_is(fs, "summary.sars")
   expect_equal(round(fs$normaTest[[2]]$p.value, 3), 0.056)

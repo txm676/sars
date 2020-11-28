@@ -37,7 +37,7 @@ test_that("sar_monod summary returns correct results", {
   fit <- sar_monod(aegean)
   fs <- summary(fit)
   expect_equal(nrow(aegean), 90)
-  expect_equal(round(sum(fs$residuals),4), -161.7902)
+  expect_equal(round(sum(fs$residuals),4), 161.7902)
   expect_output(str(fs), "List of 16")
   expect_is(fs, "summary.sars")
   fit2 <- summary(sar_monod(aegean, normaTest = "lillie"))
