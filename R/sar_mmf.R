@@ -102,6 +102,8 @@ if (isTRUE(all.equal(xr[1], xr[2]))) {
        warning('All richness values identical')
      }}
 #"Morgan Mercier Family" curve (Williams et al. 2009 formula)
+#have double checked and the Williams formula is definitely equivalent
+#to the Tjorve and Godeau et al formulas.
 model <- list(
   name=c("MMF"),
   formula=expression(S==d/(1+c*A^(-z))),
@@ -126,7 +128,7 @@ model <- compmod(model)
 fit <- get_fit(model = model, data = data, start = start,  
 grid_start = grid_start, grid_n = grid_n, algo = 'Nelder-Mead', 
        normaTest =  normaTest, homoTest = homoTest, 
-       homoCor = homoCor, verb = TRUE)
+       homoCor = homoCor)
 if(is.na(fit$value)){
   return(list(value = NA))
 }else{ 

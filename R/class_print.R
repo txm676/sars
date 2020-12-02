@@ -254,9 +254,11 @@ R2_gdm <-  function(fit){
 print.gdm <- function(x, ...){
   
   object <- x
-  if (attributes(object)$Type %in% c("loga", "linear", "power")){
+  if (attributes(object)$Type %in% c("loga", "linear", "power_area",
+                                     "power_area_time")){
     mod <- match.arg(attributes(object)$Type, c("logarithmic",
-                                                "linear", "power"))
+                                                "linear", "power_area",
+                                                "power_area_time"))
     if (!attributes(object)$mod_sel){
       cat("\n",paste("GDM fit using the", mod, "SAR model", sep = " "),
           "\n\n")
@@ -309,18 +311,24 @@ print.gdm <- function(x, ...){
       }
       df$Delta.AIC <-  df$AIC - min(df$AIC)
       df$Delta.AICc <-  df$AICc - min(df$AICc)
-      rownames(df) <- c("Logarithmic", "Linear", "Power")
+      rownames(df) <- c("Logarithmic", "Linear", "Power_area", "Power_area_time")
       df <- df[order(df$Delta.AIC),]
       print(df)
     }
   
-  if (attributes(object)$Type == "lin_pow"){
-    cat("\n",paste("GDM fit using the linear power model", sep = " "),
+  if (attributes(object)$Type == "ATT2"){
+    cat("\n",paste("GDM fit using the original ATT2 model", sep = " "),
         "\n\n")
     if (!attributes(object)$mod_sel){
-    class(object) <- "lm"
-    print(object)
+    object2 <- object
+    class(object2) <- "lm"
+    print(object2)
     } else {
+      object2 <- object[[1]]
+      class(object2) <- "lm"
+      print(object2)
+    }
+    if (attributes(object)$mod_sel){
     cat("\nAll model summaries:\n\n")
     df <- data.frame("RSE" = vapply(object, function(x) summary(x)$sigma,
                                     numeric(1)),

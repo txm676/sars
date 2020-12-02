@@ -446,7 +446,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   
   #if obj = character vector, check the test names match up with
   #those provide here. Doesn't actually matter but can be brought to
-  #attention of use
+  #attention of user
   if (!is.character(obj)){
     wn <- obj[[1]]$normaTest[[1]]
     wh <- obj[[1]]$homoTest[[1]]

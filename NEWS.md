@@ -5,6 +5,8 @@
     provided by the user.
   * Now return residuals from the non-linear models as observed - fitted rather than vice versa, to match
     lm and nls etc. 
+  * Added power_area_time variant to gdm function, and changed the linear power GDM function to fit the orginal
+    GDM model of Whittaker et al. (2008) - the ATT2 model (i.e. semi-log SAR)
 
 ##version 1.3.1
   * Corrected bug in obs_shape function which meant it was not recognising sigmoid fits

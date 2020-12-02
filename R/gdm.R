@@ -12,7 +12,7 @@
 #'   column should include island area values, one island richness values and
 #'   one island age values.
 #' @param model Name of the SAR model to be used to fit the GDM. Can be any of
-#'   'loga', 'linear', 'power', 'all', or 'lin_pow'.
+#'   'loga', 'linear', 'power_area', 'power_area_time', 'all', or 'ATT2'.
 #' @param mod_sel Logical argument specifying whether, for a given SAR model, a
 #'   model comparison of the GDM with other nested candidate models should be
 #'   undertaken.
@@ -26,22 +26,25 @@
 #'   richness, A =area, and T = island age. The T^2 term is included as the GDM
 #'   predicts a hump-shaped relationship between island richness and island age.
 #'   However, a variety of different SAR models have been used to fit the GDM
-#'   and four options are available here: three using non-linear regression and
+#'   and five options are available here: four using non-linear regression and
 #'   one using linear regression.
 #'
 #'   Non-linear models
 #'
-#'   Three SAR models can be used here to fit the GDM: the logarithmic
+#'   Four SAR models can be used here to fit the GDM: the logarithmic
 #'   (\code{model = "loga"}), linear (\code{model = "linear"}) and power
-#'   (\code{model = "power"}) SAR models. Model fitting follows the procedure in
-#'   Cardoso et al. (2015). For example, when the linear SAR model is used, the
-#'   GDM can be fitted using the expression: S ~ Int + A*Area + Ti*T + Ti2*T^2,
-#'   where Int, A, Ti and Ti2 are free parameters to be estimated. For all three
-#'   models, the GDM is fitted using non-linear regression and the
-#'   \code{\link{nls}} function. For ease of fitting, the logarithmic and power
-#'   SAR models are included in their logarithmic form, e.g. the power model is
-#'   fitted using: S ~ exp(Int + A*log(A)), where Int and A are parameters to be
-#'   estimated.
+#'   (\code{model = "power_area"}) SAR models. Another variant of the GDM
+#'   includes power functions of both area and time (\code{model =
+#'   "power_area_time"}). Model fitting follows the procedure in Cardoso et al.
+#'   (2015). For example, when the linear SAR model is used, the GDM can be
+#'   fitted using the expression: S ~ Int + A*Area + Ti*T + Ti2*T^2, where Int,
+#'   A, Ti and Ti2 are free parameters to be estimated. When the power model is
+#'   used just for area, the equivalent expression is: S ~ exp(Int + A*log(Area)
+#'   + Ti*T + Ti2*T^2). For all four models, the GDM is fitted using non-linear
+#'   regression and the \code{\link{nls}} function. It should be noted that the
+#'   two power models are fitted using S ~ exp(...) to ensure the same response
+#'   variable (i.e. S and not log(S)) is used in all GDM models and thus AIC etc
+#'   can be used to compare them.
 #'
 #'   For each model fit, the residual standard error (RSE), R2 and AIC and AICc
 #'   values are reported. However, as the model fit object is returned, it is
@@ -52,9 +55,9 @@
 #'   and compared with three other (nested) candidate models: area and time
 #'   (i.e. no time^2 term), just area, and an intercept only model. The
 #'   intercept only model is fitted using \code{lm} rather than \code{nls}. If
-#'   \code{model = "all"}, the GDM is fitted three times (using the power, loga
-#'   and linear SAR models), and the fits compared using \code{AIC} and
-#'   \code{AICc}.
+#'   \code{model = "all"}, the GDM is fitted four times (using the power_area,
+#'   power_area_time, loga and linear SAR models), and the fits compared using
+#'   \code{AIC} and \code{AICc}.
 #'
 #'   Non-linear regression models are sensitive to the starting parameter values
 #'   selected. The defaults used here have been chosen as they provide a
@@ -66,50 +69,53 @@
 #'   full GDM non-linear models, and not for the nested models that are fitted
 #'   when \code{mod_sel = TRUE} or for the linear models (where they are not
 #'   needed). If used with \code{model = "all"}, the same starting parameter
-#'   values will be provided to each of the three GDM models (power SAR,
-#'   logarithmic SAR and linear SAR).
+#'   values will be provided to each of the four GDM models (power_area,
+#'   power_area_time, logarithmic and linear).
 #'   
-#'   Linear Power Model
+#'   Linear ATT2 Model
 #'
-#'   As an alternative to fitting the GDM with the power SAR using non-linear
-#'   regression, the model is often fitted using linear regression (in its
-#'   log-log form). This can also be useful if you are having problems with the
-#'   non-linear regression algorithms not converging for this model. If
-#'   \code{model = "lin_pow"} is used, the GDM is fitted using the log-log
-#'   version of the power model (with log(richness) and log(area)) using linear
-#'   regression. A constant of 1 is added to all richness values if any zeros
-#'   are detected. Using this option is basically a wrapper for the \code{lm}
-#'   function. If \code{mod_sel == TRUE}, the GDM is fitted and compared with
-#'   three other (nested) candidate models: area and time (i.e. no time^2 term),
-#'   just area, and an intercept only model.
+#'   As an alternative to fitting the GDM using non-linear regression, the model
+#'   can be fitted in various ways using linear regression. This can also be
+#'   useful if you are having problems with the non-linear regression algorithms
+#'   not converging. If \code{model = "ATT2"} is used, the GDM is fitted using
+#'   the semi-log logarithmic SAR model using linear regression (with
+#'   untransformed richness and time, and log(area)); this is the original GDM
+#'   model fitted by Whittaker et al. (2008) and we have used their chosen name
+#'   (ATT2) to represent it. Steinbauer et al. (2013) fitted variants of this
+#'   model using linear regression by log-transforming richness and / or time.
+#'   While we do not provide functionality for fitting these variants, this is
+#'   easily done by simply providing the log-transformed variable values to the
+#'   function rather than the untransformed values. Using \code{model = "ATT2"}
+#'   is basically a wrapper for the \code{lm} function. If \code{mod_sel ==
+#'   TRUE}, the GDM is fitted and compared with three other (nested) candidate
+#'   models: log(area) and time (i.e. no time^2 term), just log(area), and an
+#'   intercept only model.
 #'   
 #' @return Different objects are returned depending on whether the non-linear or
-#'   linear models are fitted.
+#'   linear regression models are fitted.
 #'
 #'   Non-linear models
 #'
-#'   An object of class 'gdm'. If \code{model} is one of "loga", "linear" or
-#'   "power" the returned object is a \code{\link{nls}} model fit object. If
-#'   \code{model == "all"}, the returned object is a list with three elements;
-#'   each element being a \code{nls} fit object. If \code{mod_sel == TRUE} and
-#'   \code{model != "all"}, a list with four elements is returned; each element
-#'   being a \code{lm} or \code{nls} fit object. When \code{model == "all"}, a
-#'   list with three elements is returned; each element being a list of the four
-#'   model fits for a particular SAR model.
+#'   An object of class 'gdm'. If \code{model} is one of "loga", "linear",
+#'   "power_area" or "power_area_time" the returned object is a
+#'   \code{\link{nls}} model fit object. If \code{model == "all"}, the returned
+#'   object is a list with four elements; each element being a \code{nls} fit
+#'   object. If \code{mod_sel == TRUE} and \code{model != "all"}, a list with
+#'   four elements is returned; each element being a \code{lm} or \code{nls} fit
+#'   object. When \code{model == "all"}, a list with four elements is returned;
+#'   each element being a list of the four model fits for a particular SAR
+#'   model.
 #'
-#'   Linear Power Model
+#'   Linear ATT2 Model
 #'
-#'   If \code{model = "lin_pow"} is used, the returned object is
+#'   If \code{model = "ATT2"} is used, the returned object is
 #'   of class 'gdm' and 'lm' and all of the method functions associated with
 #'   standard 'lm' objects (e.g. plot and summary) can be used. If \code{mod_sel
 #'   = TRUE} a list with four elements is returned; each element being a
 #'   \code{lm} object.
 #'
-#' @note The intercept (Int) parameter that is returned in the power model
-#'   (\code{model = "power"}) fits is on the log scale.
-#'
-#'   R2 is calculated using the same function as used in the main sars model
-#'   functions.
+#' @note The intercept (Int) parameter that is returned in the power models fits
+#'   (\code{model = "power_area" | "power_area_time"}) is on the log scale.
 #'
 #' @importFrom stats nls lm
 #' @references Whittaker, R. J., Triantis, K. A., & Ladle, R. J. (2008). A
@@ -124,6 +130,14 @@
 #'   Assessment Tools, an R package for the measurement and estimation of alpha
 #'   and beta taxon, phylogenetic and functional diversity. Methods in Ecology
 #'   and Evolution, 6, 232-236.
+#'   
+#'   Steinbauer, M.J., Dolos, K., Field, R., Reineking, B. & Beierkuhnlein, C.
+#'   (2013) Re-evaluating the general dynamic theory of oceanic island
+#'   biogeography. Frontiers of Biogeography, 5.
+#'   
+#'   Carey, M., Boland, J., Weigelt, P. & Keppel, G. (2020) Towards an extended
+#'   framework for the general dynamic theory of biogeography. Journal of
+#'   Biogeography, 47, 2554-2566.
 #' @examples
 #' #create an example dataset and fit the GDM using the logarithmic SAR model
 #' data(galap)
@@ -134,16 +148,16 @@
 #' #models
 #' g2 <- gdm(galap, model = "loga", mod_sel = TRUE)
 #'
-#' #compare the GDM fitted using the linear, logarithmic and power SAR models
+#' #compare the GDM fitted using the linear, logarithmic and both power models
 #' g3 <- gdm(galap, model = "all", mod_sel = FALSE)
 #'
-#' #fit the GDM using the log-log power model and linear regression, and
-#' #compare it with other nested models
-#' g4 <- gdm(galap, model = "lin_pow", mod_sel = TRUE)
+#' #fit the GDM using the original ATT2 model of Whittaker et al. 2008 using lm,
+#' #and compare it with other nested models
+#' g4 <- gdm(galap, model = "ATT2", mod_sel = TRUE)
 #'
 #' #provide different starting parameter values when fitting the non-linear
 #' #power model GDM
-#' g5 <- gdm(galap, model = "power",
+#' g5 <- gdm(galap, model = "power_area",
 #' start_vals = data.frame("Int" = 0, "A" = 1, Ti = 1, Ti2 = 0))
 #' @export
 
@@ -159,7 +173,8 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3),
     warning("More than three columns in dataframe: using the first three")
     data <- data[, 1:3]
   }
-  if (!(model %in% c("power", "loga", "linear", "all", "lin_pow"))) {
+  if (!(model %in% c("power_area", "power_area_time",
+                     "loga", "linear", "all", "ATT2"))) {
     stop("provided model name not available")
   }
   if (!is.logical(mod_sel)) stop("mod_sel argument should be TRUE or FALSE")
@@ -182,10 +197,10 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3),
       stop("colnames of start_vals shoud be c(Int, A, Ti, Ti2)")
     }
   } else{
-    start_vals <- data.frame(Int = 0, A = 1, Ti = 1, Ti2 = 0)
+    start_vals <- data.frame(Int = 1, A = 1, Ti = 1, Ti2 = 0)
   }
   
-  if (model == "all") allMods <- vector("list", length = 3)
+  if (model == "all") allMods <- vector("list", length = 4)
 
   if (model == "loga" | model == "all"){
       
@@ -197,10 +212,10 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3),
        fitL <- vector("list", length = 4)
        fitL[[1]] <- fit
        fitL[[2]] <- nls(formula = SR ~ Int + A * log(Area) + Ti * Time, 
-                        data = data, start = data.frame(Int = 0,  A = 1, 
+                        data = data, start = data.frame(Int = 1,  A = 1, 
                                                         Ti = 1))
        fitL[[3]] <- nls(formula = SR ~ Int + A * log(Area), 
-                        data = data, start = data.frame(Int = 0, A = 1))
+                        data = data, start = data.frame(Int = 1, A = 1))
        fitL[[4]] <- lm(SR ~ 1, data = data) #intercept only is mean of Y; 
        #so can use lm as no functional form implied
        fit <- fitL
@@ -226,9 +241,9 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3),
       fitL[[1]] <- fit
       fitL[[2]] <- nls(formula = SR ~ Int + A * Area + Ti * Time, 
                        data = data, 
-                       start = data.frame(Int = 0, A = 1, Ti = 1))
+                       start = data.frame(Int = 1, A = 1, Ti = 1))
       fitL[[3]] <- nls(formula = SR ~ Int + A * Area, 
-                       data = data, start = data.frame(Int = 0, A = 1))
+                       data = data, start = data.frame(Int = 1, A = 1))
       fitL[[4]] <- lm(SR ~ 1, data = data)
       fit <- fitL
     }
@@ -242,7 +257,7 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3),
     if (model == "all") allMods[[2]] <- fit
   }
   
-  if (model == "power" | model == "all"){
+  if (model == "power_area" | model == "all"){
    
     fit <- nls(SR ~ exp(Int + A * log(Area) + Ti * Time + Ti2 * Time ^ 2), 
                          data = data, 
@@ -253,10 +268,10 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3),
       fitL[[1]] <- fit
       fitL[[2]] <- nls(formula = SR ~ exp(Int + A * log(Area) + Ti * Time), 
                        data = data, 
-                       start = data.frame(Int = 0, A = 1, Ti = 1))
+                       start = data.frame(Int = 1, A = 1, Ti = 1))
       
       fitL[[3]] <- nls(formula = SR ~ exp(Int + A * log(Area)), 
-                       data = data, start = data.frame(Int = 0, A = 1))
+                       data = data, start = data.frame(Int = 1, A = 1))
       fitL[[4]] <- lm(SR ~ 1, data = data)
       fit <- fitL
     }
@@ -265,29 +280,59 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3),
     } else {
       class(fit) <- c("gdm", "nls")
     }
-    attr(fit, "Type") <- "power"
+    attr(fit, "Type") <- "power_area"
     attr(fit, "mod_sel") <- mod_sel
     if (model == "all") allMods[[3]] <- fit
   }
   
-  if (model == "lin_pow"){
-    data$Time2 <- data$Time ^ 2
-    data$log_Area <- log(data$Area)
-    if (any(data$SR == 0)){
-      data$SR <- data$SR + 1
-    }
-    data$log_SR <- log(data$SR)
-    fit <- lm(log_SR ~ log_Area + Time + Time2, data = data)
+  if (model == "power_area_time" | model == "all"){
+    
+    fit <- nls(SR ~ exp(Int + A * log(Area) + Ti * log(Time) + 
+                          Ti2 * (log(Time) ^ 2)), 
+               data = data, 
+               start = start_vals)
+    
     if (mod_sel == TRUE){
       fitL <- vector("list", length = 4)
       fitL[[1]] <- fit
-      fitL[[2]] <- lm(log_SR ~ log_Area + Time, data = data)
-      fitL[[3]] <- lm(log_SR ~ log_Area, data = data)
-      fitL[[4]] <- lm(log_SR ~ 1, data = data)
+      fitL[[2]] <- nls(formula = SR ~ exp(Int + A * log(Area) + Ti * log(Time)), 
+                       data = data, 
+                       start = data.frame(Int = 1, A = 1, Ti = 1))
+      
+      fitL[[3]] <- nls(formula = SR ~ exp(Int + A * log(Area)), 
+                       data = data, start = data.frame(Int = 1, A = 1))
+      
+      fitL[[4]] <- lm(SR ~ 1, data = data)
+      fit <- fitL
+    }
+    if (mod_sel){
+      class(fit) <- c("gdm")
+    } else {
+      class(fit) <- c("gdm", "nls")
+    }
+    attr(fit, "Type") <- "power_area_time"
+    attr(fit, "mod_sel") <- mod_sel
+    if (model == "all") allMods[[4]] <- fit
+  }
+  
+  if (model == "ATT2"){
+    data$Time2 <- data$Time ^ 2
+    data$log_Area <- log(data$Area)
+   # if (any(data$SR == 0)){
+   #   data$SR <- data$SR + 1
+    #}
+    #data$log_SR <- log(data$SR)
+    fit <- lm(SR ~ log_Area + Time + Time2, data = data)
+    if (mod_sel == TRUE){
+      fitL <- vector("list", length = 4)
+      fitL[[1]] <- fit
+      fitL[[2]] <- lm(SR ~ log_Area + Time, data = data)
+      fitL[[3]] <- lm(SR ~ log_Area, data = data)
+      fitL[[4]] <- lm(SR ~ 1, data = data)
       fit <- fitL
     }
     class(fit) <- c("gdm", "lm")
-    attr(fit, "Type") <- "lin_pow"
+    attr(fit, "Type") <- "ATT2"
     attr(fit, "mod_sel") <- mod_sel
   }
 

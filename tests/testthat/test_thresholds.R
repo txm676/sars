@@ -29,22 +29,19 @@ test_that("sar_threshold returns correct results", {
   fit4 <- sar_threshold(data = aegean2, mod = "All", interval = 0.1, 
                         non_th_models = TRUE, logAxes = "area", 
                         logT = log10, parallel = TRUE, cores = 2)
-  ##Nov 2020: R-devel has possibly a bug in which doesn't let the 
-  #summary table be sorted by BIC, i.e. this mt[order(mt[order]),]
-  #doesn't order by the order object. So hash out and see if gets fixed.
- # s4 <- summary(fit4, order = "BIC") 
-#  expect_equal(c(s4$Model_table$AIC), c(2020.25, 2019.48, 2022.42, 
-      #                                  2045.94, 2047.78, 2061.70,
-     #                                   2305.05, 2535.84))
+  s4 <- summary(fit4, order = "BIC")
+  expect_equal(c(s4$Model_table$AIC), c(2020.25, 2019.48, 2022.42,
+                                        2045.94, 2047.78, 2061.70,
+                                        2305.05, 2535.84))
   #repeat but without parallel processing
- # fit5 <- sar_threshold(data = aegean2, mod = "All", interval = 0.1, 
- #                       non_th_models = TRUE, logAxes = "area", 
-  #                      logT = log10, parallel = F)
-  
- # s5 <- summary(fit5, order = "BIC") 
- # expect_equal(c(s5$Model_table$AIC), c(2020.25, 2019.48, 2022.42, 
- #                                       2045.94, 2047.78, 2061.70,
- #                                       2305.05, 2535.84))
+  fit5 <- sar_threshold(data = aegean2, mod = "All", interval = 0.1,
+                        non_th_models = TRUE, logAxes = "area",
+                        logT = log10, parallel = F)
+
+  s5 <- summary(fit5, order = "BIC")
+  expect_equal(c(s5$Model_table$AIC), c(2020.25, 2019.48, 2022.42,
+                                        2045.94, 2047.78, 2061.70,
+                                        2305.05, 2535.84))
   
   #check AIC and BIC returns same as normal AIC/BIC functions
   data(aegean)

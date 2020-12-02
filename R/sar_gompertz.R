@@ -102,6 +102,8 @@ if (isTRUE(all.equal(xr[1], xr[2]))) {
        warning('All richness values identical')
      }}
 #gompertz model
+#have checked and this formula is equivalent to those listed
+#in Tjorve and Williams etc, and generates identical output.
 model <- list(
   name=c("Gompertz"),
   formula=expression(S==d*exp(-exp(-z*(A-c)))),
@@ -153,7 +155,7 @@ model <- compmod(model)
 fit <- get_fit(model = model, data = data, start = start,  
 grid_start = grid_start, grid_n = grid_n, algo = 'Nelder-Mead', 
        normaTest =  normaTest, homoTest = homoTest, 
-       homoCor = homoCor, verb = TRUE)
+       homoCor = homoCor)
 if(is.na(fit$value)){
   return(list(value = NA))
 }else{ 

@@ -1,4 +1,6 @@
 # MONOD CURVE (MONOD 1950, Willimas et al. 2009 formula)
+#Have checked and this formula is equivalent to that in 
+#Tjorve and generates the same output etc.
 model <- list(
   name=c("Monod"),
   formula=expression(S==d/(1+c*A^(-1))),

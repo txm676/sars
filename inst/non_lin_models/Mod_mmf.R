@@ -1,4 +1,6 @@
 #"Morgan Mercier Family" curve (Williams et al. 2009 formula)
+#have double checked and the Williams formula is definitely equivalent
+#to the Tjorve and Godeau et al formulas.
 model <- list(
   name=c("MMF"),
   formula=expression(S==d/(1+c*A^(-z))),

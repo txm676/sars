@@ -131,7 +131,7 @@ model <- compmod(model)
 fit <- get_fit(model = model, data = data, start = start,  
 grid_start = grid_start, grid_n = grid_n, algo = 'Nelder-Mead', 
        normaTest =  normaTest, homoTest = homoTest, 
-       homoCor = homoCor, verb = TRUE)
+       homoCor = homoCor)
 if(is.na(fit$value)){
   return(list(value = NA))
 }else{ 

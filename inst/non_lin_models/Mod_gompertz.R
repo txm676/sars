@@ -1,4 +1,6 @@
 #gompertz model
+#have checked and this formula is equivalent to those listed
+#in Tjorve and Williams etc, and generates identical output.
 model <- list(
   name=c("Gompertz"),
   formula=expression(S==d*exp(-exp(-z*(A-c)))),

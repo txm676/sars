@@ -70,27 +70,22 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   res2  <-  list(startvalues=start,data=data,model=model,
                  calculated=S.calc,residuals=residu)
 
-  #Residuals normality test
-
-  l <- data[[2]]
-
-  if(length(l)<5) {
-
-      warning("The Lilliefors test cannot be performed with less than 5",
-              " data points\n")
-
-  }#eo if length
-
-  if(length(l)<3) {
-
-      warning("The Shapiro test cannot be performed with less than 3",
-              " data points\n")
-
-  }#eo if length
+  #Residual tests
 
   normaTest <- match.arg(normaTest, c("none", "shapiro", "kolmo", "lillie"))
   homoTest <- match.arg(homoTest, c("none","cor.area","cor.fitted"))
 
+  l <- data[[2]]
+  
+  if (length(l) < 5 & normaTest == "lillie") {
+    
+    warning("The Lilliefors test cannot be performed with less than 5",
+            " data points, changing to no residual normality test\n")
+    
+    normaTest <- "none"
+    
+  }#eo if length
+  
   #normality of residuals
   if (normaTest == "shapiro") {
     normaTest <- list("test" = "shapiro", tryCatch(shapiro.test(residu),
@@ -272,6 +267,7 @@ if (any(model$parLim == "Rplus")){
   RPM <- sort(data$S, decreasing = TRUE)[1:4]
   RPM75 <- max(data$S) * 0.75
   RPM <- c(RPM, RPM75)
+  RPM <- c(RPM)
   WPM <- which(model$parLim == "Rplus")
   WPM2 <- which(!model$parLim == "Rplus")
 

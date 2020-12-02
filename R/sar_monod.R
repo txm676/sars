@@ -102,6 +102,8 @@ if (isTRUE(all.equal(xr[1], xr[2]))) {
        warning('All richness values identical')
      }}
 # MONOD CURVE (MONOD 1950, Willimas et al. 2009 formula)
+#Have checked and this formula is equivalent to that in 
+#Tjorve and generates the same output etc.
 model <- list(
   name=c("Monod"),
   formula=expression(S==d/(1+c*A^(-1))),
@@ -124,7 +126,7 @@ model <- compmod(model)
 fit <- get_fit(model = model, data = data, start = start,  
 grid_start = grid_start, grid_n = grid_n, algo = 'Nelder-Mead', 
        normaTest =  normaTest, homoTest = homoTest, 
-       homoCor = homoCor, verb = TRUE)
+       homoCor = homoCor)
 if(is.na(fit$value)){
   return(list(value = NA))
 }else{ 

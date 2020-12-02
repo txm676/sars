@@ -65,39 +65,37 @@ Additionally, it is only recently that the SAR for archipelagos as units of
 analysis and not just islands has started to be studied, and thus we know
 little about the form of archipelago SARs.
 
-Due to the increased recognition of model uncertainty in SAR research, a
-number of recent studies have employed a multi-model inference approach
-(@BurnhamAnderson2002) in the analysis of SARs, whereby either (1) multiple
-SAR models are compared using various criteria (e.g. AIC) and a best model is
-chosen (e.g. @Dengler2009), or (2) multiple SAR models are fitted and a
-multi-model averaged curve is calculated using, for example, AIC weights
-(e.g. @Guilhaumon2008). We are not aware of any published software package
-that enables users to fit, and create multi-model averaged curves using more
-than eight SAR models. Considering currently available software, the BAT R
-package provides functions to fit three SAR models (linear, power and
-logarithmic); however, this package is focused on general biodiversity
-assessment and thus does not provide any additional SAR functionality. The
-mmSAR R package (@Guilhaumon2010) is focussed on SARs and while it allows
-users to fit eight SAR models using an information theoretic framework, it
-does not include several models that have been found to provide the best fits
-to several empirical datasets. To provide a set of tools to fill these gaps,
-we have developed the R package ‘sars’. The package provides functions to fit
-20 SAR models using non-linear and linear regression, calculate multi-model
-averaged curves using various information criteria, and generate confidence
-intervals using bootstrapping. Novel features compared with mmSAR include (i)
-user-friendly functions  for plotting (the user can now plot weighted
-multimodel SAR curves along with the individual SAR model curves) and (ii)
-determining the observed shape of the model fit (i.e. linear, convex up,
-convex down or sigmoidal) and (iii) presence or not of an asymptote, and (iv)
-functions to fit, plot and evaluate
-
-@Coleman1981's random placement model using a species-site abundance matrix,
-and (v) to fit the general dynamic model (GDM) of island biogeography
-(@Whittaker2008). In addition, the mmSAR package (which has been deprecated)
-no longer complies with recognised programming good practice , is not on CRAN
-(the main repository of R packages), and is not user friendly (e.g. it
-requires the user to load individual models prior to fitting). There was
-therefore a need to design a new package from scratch.
+Due to the increased recognition of model uncertainty in SAR research, a number
+of recent studies have employed a multi-model inference approach
+(@BurnhamAnderson2002) in the analysis of SARs, whereby either (1) multiple SAR
+models are compared using various criteria (e.g. AIC) and a best model is chosen
+(e.g. @Dengler2009), or (2) multiple SAR models are fitted and a multi-model
+averaged curve is calculated using, for example, AIC weights (e.g.
+@Guilhaumon2008). We are not aware of any published software package that
+enables users to fit, and create multi-model averaged curves using more than
+eight SAR models. Considering currently available software, the BAT R package
+provides functions to fit three SAR models (linear, power and logarithmic);
+however, this package is focused on general biodiversity assessment and thus
+does not provide any additional SAR functionality. The mmSAR R package
+(@Guilhaumon2010) is focussed on SARs and while it allows users to fit eight SAR
+models using an information theoretic framework, it does not include several
+models that have been found to provide the best fits to several empirical
+datasets. To provide a set of tools to fill these gaps, we have developed the R
+package ‘sars’. The package provides functions to fit 20 SAR models using
+non-linear and linear regression, calculate multi-model averaged curves using
+various information criteria, and generate confidence intervals using
+bootstrapping. Novel features compared with mmSAR include (i) user-friendly
+functions  for plotting (the user can now plot weighted multimodel SAR curves
+along with the individual SAR model curves) and (ii) determining the observed
+shape of the model fit (i.e. linear, convex up, convex down or sigmoidal) and
+(iii) presence or not of an asymptote, and (iv) functions to fit, plot and
+evaluate @Coleman1981's random placement model using a species-site abundance
+matrix, and (v) to fit the general dynamic model (GDM) of island biogeography
+(@Whittaker2008). In addition, the mmSAR package (which has been deprecated) no
+longer complies with recognised programming good practice , is not on CRAN (the
+main repository of R packages), and is not user friendly (e.g. it requires the
+user to load individual models prior to fitting). There was therefore a need to
+design a new package from scratch.
 
 ## METHODS AND FEATURES 
 The ‘sars’ (species–area relationships) package has been programmed using
@@ -214,46 +212,54 @@ summary(fit) #a warning is provided  indicating the normality test failed
 fit$normaTest
 ```
 
-Observed model shape and identifying an asymptote Whilst each of the 20
-models has a general shape (@Triantis2012), the actual observed shape of the
-model fit can be different, for some models, depending on the parameter
-estimates. This is important as the shape of the curve has significant
-implications for conservation applications and the testing of macroecological
-theory (@Rosenzweig1995). In ‘sars’, the observed shape of a model fit is
-determined using the sequential algorithm outlined in @Triantis2012. The
-shape is calculated using the model fit within the observed range of area
-values. Briefly, the algorithm works by first determining whether the fit is
-a straight line. Then, if the fit is classified as not being linear, the
-observed shape is classified as either convex or sigmoidal by analysis of the
-second derivative (with respect to area) of the model fit (the full algorithm
-is detailed in @Triantis2012, p. 220). There has also been considerable
-debate in the SAR literature as to whether or not the SAR is asymptotic. In
-the ‘sars’ package, to determine whether a fit is asymptotic, for the
-relevant models the fitted model parameters are analysed to check whether the
-estimated asymptote is within the range of the sample data (@Triantis2012).
+### Observed model shape and identifying an asymptote 
+Whilst each of the 20 models has a general shape (@Triantis2012), the actual
+observed shape of the model fit can be different, for some models, depending on
+the parameter estimates. This is important as the shape of the curve has
+significant implications for conservation applications and the testing of
+macroecological theory (@Rosenzweig1995). In ‘sars’, the observed shape of a
+model fit is determined using the sequential algorithm outlined in
+@Triantis2012. The shape is calculated using the model fit within the observed
+range of area values. Briefly, the algorithm works by first determining whether
+the fit is a straight line. Then, if the fit is classified as not being linear,
+the observed shape is classified as either convex (upwards or downwards) or
+sigmoidal by analysis of the second derivative (with respect to area) of the
+model fit (the full algorithm is detailed in @Triantis2012, p. 220). It should
+be noted that a small number of models (e.g. Extended Power 2) are listed in
+previous papers (e.g. @Tjorve2009) as being sigmoidal without an upper asymptote
+(and we have followed these classifications). However, a recent study
+(@Godeau2020) has argued that sigmoidal models must have an upper asymptote by
+definition; thus, the classification of these models is currently uncertain.
 
-Multimodel SAR curve As well as fitting individual models, the package
-provides a function (‘sar_average’) to fit up to 20 models, compare the
-resultant fits using information criteria, and construct a
-multimodel-averaged SAR curve based on information criteria weight (see
+There has also been considerable debate in the SAR literature as to whether or
+not the SAR is asymptotic. In the ‘sars’ package, to determine whether a fit is
+asymptotic, for the relevant models the fitted model parameters are analysed to
+check whether the estimated asymptote is within the range of the sample data
+(@Triantis2012).
+
+### Multimodel SAR curve 
+As well as fitting individual models, the package provides a function
+(‘sar_average’) to fit up to 20 models, compare the resultant fits using
+information criteria, and construct a multimodel-averaged SAR curve based on
+information criteria weight (see
 @Guilhaumon2010). The multimodel average curve is constructed as a linear
 combination of individual model fits by multiplying the predicted richness
 values of each of the successfully fitted models by the model’s information
 criterion weight, and then summing the resultant values across all models
-(@BurnhamAnderson2002). Three information criteria are available in the
-package: AIC, AICc and BIC. Confidence intervals around the multimodel
-averaged curve can be calculated using a non-parametric bootstrap algorithm
-described in @Guilhaumon2010. Briefly, each of the SAR models used in the
-‘sar_average’ function is fitted to the data, and the fitted values and
-residuals stored. The residuals are then transformed using the approach in
+(@BurnhamAnderson2002). Three information criteria are available in the package:
+AIC, AICc and BIC. Confidence intervals around the multimodel averaged curve can
+be calculated using a non-parametric bootstrap algorithm described in
+@Guilhaumon2010. Briefly, each of the SAR models used in the ‘sar_average’
+function is fitted to the data, and the fitted values and residuals stored. The
+residuals are then transformed using the approach in
 @DavisonHinkley1997 (p.259). For each bootstrap sample, an individual model fit
-is selected with the probability of selection being equal to that model’s
-information criterion weight. The transformed residuals from this fit are
-then sampled with replacement and added to the model’s fitted richness
-values. The ‘sar_average’ function is then used to fit all candidate SAR
-models to this bootstrapped set of response values, and the multimodel
-averaged fitted values stored. Percentile confidence intervals are then
-calculated using all bootstrapped fitted values.
+  is selected with the probability of selection being equal to that model’s
+  information criterion weight. The transformed residuals from this fit are then
+  sampled with replacement and added to the model’s fitted richness values. The
+  ‘sar_average’ function is then used to fit all candidate SAR models to this
+  bootstrapped set of response values, and the multimodel averaged fitted values
+  stored. Percentile confidence intervals are then calculated using all
+  bootstrapped fitted values.
 
 The ‘sar_average’ function can be used without specifying any models, in which
 case the package attempts to fit each of the 20 models in Table 1;
@@ -303,27 +309,27 @@ plot(fit, type = "bar", ModTitle = "b) Model weights", cex.lab = 1.3)
 ```
 
 ## Additional functions 
-In addition to the main functions used to fit and compare the 20 SAR models,
-the sars package provides additional functions for specific SAR-based
-analyses. First, a function is provided to fit the log–log version of the
-power model (a function that is often fitted in SAR studies; Rosenzweig 1995)
-and compare parameter values with those generated using the non-linear power
-model. The log–log version of the power model is not equivalent to its
-non-linear counterpart because of non-equivalence in the study of the
-variation in a variable and in its transformation, and bias of
-back-transformed results obtained on a logarithmic scale. Second, a function
-has been added that enables the fitting of @Coleman1981's random placement
-model to a species/sites abundance matrix. According to this model, the
-number of species occurring on an island depends on the relative area of the
-island and the regional relative species abundances. The fit of the random
-placement model can be determined through use of a diagnostic plot (which can
-be generated from the function output) of island area (log transformed)
-against species richness, alongside the model’s predicted values (see
-@Wang2010). Following @Wang2010, the model is rejected if more than a third
-of the observed data points fall beyond one standard deviation from the
-expected curve. Finally, a function is provided to fit the general dynamic
-model of island biogeography (@Whittaker2008) using three different SAR
-models (linear, logarithmic and power).
+In addition to the main functions used to fit and compare the 20 SAR models, the
+sars package provides additional functions for specific SAR-based analyses.
+First, a function is provided to fit the log–log version of the power model (a
+function that is often fitted in SAR studies; Rosenzweig 1995) and compare
+parameter values with those generated using the non-linear power model. The
+log–log version of the power model is not equivalent to its non-linear
+counterpart because of non-equivalence in the study of the variation in a
+variable and in its transformation, and bias of back-transformed results
+obtained on a logarithmic scale. Second, a function has been added that enables
+the fitting of @Coleman1981's random placement model to a species/sites
+abundance matrix. According to this model, the number of species occurring on an
+island depends on the relative area of the island and the regional relative
+species abundances. The fit of the random placement model can be determined
+through use of a diagnostic plot (which can be generated from the function
+output) of island area (log transformed) against species richness, alongside the
+model’s predicted values (see
+@Wang2010). Following @Wang2010, the model is rejected if more than a third of
+the observed data points fall beyond one standard deviation from the expected
+curve. Finally, a function is provided to fit the general dynamic model of
+island biogeography (@Whittaker2008) using five different SAR models (linear,
+logarithmic, power(area), power(area and time), linear power).
 
 ```{r, fig.width=6, fig.height=6}
 #load an example dataset, fit the log-log power model, return a model fit

@@ -135,6 +135,9 @@ summary.sars <- function(object, order = "BIC", ...){
                      "Weight" = as.vector(ranks))
     df$IC <- vapply(object$details$fits,
                     function(x){x[[cri]]}, FUN.VALUE = numeric(1))
+    if(!all(object$details$ics == df$IC)){
+      stop("error with ICs - contact package author")
+    }
     colnames(df)[3] <- paste(cri)
     df$R2 <- vapply(object$details$fits,
                     function(x){x$R2}, FUN.VALUE = numeric(1))
