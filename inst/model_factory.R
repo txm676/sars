@@ -105,14 +105,14 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#'     \\item{value} { Residual sum of squares}\n"))
   cat1(paste0("#'     \\item{counts} {  The number of iterations for the", 
               " convergence of the fitting algorithm}\n"))
-  cat1(paste0("#'     \\item{convergence} { Numeric code indicating model", 
-              " convergence (0 = converged)}\n"))
+  cat1(paste0("#'     \\item{convergence} { Numeric code returned from optim", 
+              " indicating model convergence (0 = converged)}\n"))
   cat1(paste0("#'     \\item{message} { Any message from the model fit", 
               " algorithm}\n"))
   cat1(paste0("#'     \\item{hessian} { A symmetric matrix giving an", 
               " estimate of the Hessian at the solution found}\n"))
-  cat1(paste0("#'     \\item{verge} { Logical code indicating model", 
-              " convergence}\n"))
+  cat1(paste0("#'     \\item{verge} { Logical code indicating that optim model", 
+              " convergence value is zero}\n"))
   cat1(paste0("#'     \\item{startValues} { The start values for the model", 
               " parameters used in the optimisation}\n"))
   cat1(paste0("#'     \\item{data} { Observed data}\n"))

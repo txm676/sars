@@ -12,6 +12,8 @@ test_that("new ICs works for individual models", {
   n <- stats::nls(y ~ c + z*log(x), start = list("c" = 0.29, "z" = 30))
   nl <- c(stats::AIC(n), stats::BIC(n))
   expect_equal(round(nl,4), c(187.1908, 189.5086))
+  #check residuals
+  expect_equal(as.vector(round(residuals(n), 2)), round(s2$residuals, 2))
   #try with different model (p1)
   s3 <- sar_p1(galap)
   n2 <- stats::nls(y ~ c * x^z *(exp(-d*x)), 
@@ -35,6 +37,8 @@ test_that("new ICs works for individual models", {
   AICcm <- -2*LL+2*K*(n/(n-K-1))#- function taken directly from AICcmodavg
   llic <- c(llic, AICcm)
   expect_equal(round(l,4), round(llic, 4))
+  #check residuals
+  expect_equal(as.vector(round(residuals(ll), 4)), round(s2$residuals, 4))
   
   #test chapman model
   s3 <- sar_chapman(galap)
@@ -101,6 +105,9 @@ test_that("news ICs works for multi models", {
   nl <- c(nl, AICcm)
   expect_equal(round(ff4,4), round(nl,4))
   expect_equal(round(ff4,3), c(186.073, 188.391, 188.073))
+  #check residuals
+  expect_equal(as.vector(round(residuals(n4), 1)), 
+               round(fit4$details$fits$koba$residuals, 1))
   #Gompertz model
   ff4 <- c(fit4$details$fits$gompertz$AIC, fit4$details$fits$gompertz$BIC, 
            fit4$details$fits$gompertz$AICc)

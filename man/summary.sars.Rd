@@ -26,17 +26,18 @@ The \code{summary.sars} function returns an object of class
   whether or not the fit is asymptotic, and the results of any additional
   model checks undertaken (e.g. normality of the residuals).
 
-  For a 'sars' object of Type 'multi', a list with 4 elements is returned:
-  (i) a vector of the names of the models that were successfully fitted
-  and passed any additional checks, (ii) a character string containing the
-  name of the criterion used to rank models, (iii) a data frame of the
-  ranked models, and (iv) a vector of the names of any models that were
-  not fitted or did not pass any additional checks. In regards to (iii;
-  \code{Model_table}), the dataframe contains the fit summaries for each
-  successfully fitted model (including the value of the model criterion
-  used to compare models, the R2 and adjusted R2, and the observed shape
-  of the fit); the models are ranked in decreasing order of information
-  criterion weight.
+  For a 'sars' object of Type 'multi', a list with 5 elements is returned:
+  (i) a vector of the names of the models that were successfully fitted and
+  passed any additional checks, (ii) a character string containing the name
+  of the criterion used to rank models, (iii) a data frame of the ranked
+  models, (iv) a vector of the names of any models that were not fitted or
+  did not pass any additional checks, and (v) a logical vector specifying
+  whether the \code{\link{optim}} convergence code for each model that passed
+  all the checks is zero. In regards to (iii; \code{Model_table}), the
+  dataframe contains the fit summaries for each successfully fitted model
+  (including the value of the model criterion used to compare models, the R2
+  and adjusted R2, and the observed shape of the fit); the models are ranked
+  in decreasing order of information criterion weight.
 
   For a 'sars' object of Type 'lin_pow', a list with up to 7 elements is
   returned: (i) the model fit output from the \code{\link{lm}} function, (ii)

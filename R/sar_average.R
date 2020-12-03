@@ -285,10 +285,12 @@ sar_multi <- function(data,
 #'   procedure transforms the residuals from the individual model fits and
 #'   occasionally NAs / Inf values can be produced - in these cases, the model
 #'   is removed from the confidence interval calculation (but not the multimodel
-#'   curve itself). When several SAR models are used, when grid_start is turned
-#'   on and when the number of bootstraps (\code{ciN}) is large, generating the
-#'   confidence intervals can take a (very) long time. Parallel processing will
-#'   be added to future versions.
+#'   curve itself). There is also a constraint within the procedure to remove
+#'   any transformed residuals that result in negative richness values. When
+#'   several SAR models are used, when grid_start is turned on and when the
+#'   number of bootstraps (\code{ciN}) is large, generating the confidence
+#'   intervals can take a (very) long time. Parallel processing will be added to
+#'   future versions.
 #'
 #'   The \code{sar_models()} function can be used to bring up a list of the 20
 #'   model names. \code{display_sars_models()} generates a table of the 20
@@ -309,17 +311,34 @@ sar_multi <- function(data,
 #'   criterion values} \item{weights_ics} { The information criterion weights of
 #'   each model fit} \item{n_points} {  Number of data points} \item{n_mods} {
 #'   The number of successfully fitted models} \item{no_fit} { Names of the
-#'   models which could not be fitted or did not pass model checks} }
-#'
+#'   models which could not be fitted or did not pass model checks}
+#'   \item{convergence} { Logical value indicating whether \code{\link{optim}}
+#'   model convergence code = 0, for each model} }
+#'   
 #'   The \code{\link{summary.sars}} function returns a more useful summary of
 #'   the model fit results, and the \code{\link{plot.multi}} plots the
 #'   multimodel curve.
-#' @note Occasionally a model fit will converge and pass the model fitting
-#'   checks (e.g. residual normality) but the resulting fit is nonsensical (e.g.
-#'   a horizontal line with intercept at zero). Thus, it can be useful to plot
-#'   the resultant 'multi' object to check the individual model fits. To re-run
-#'   the \code{sar_multi} function without a particular model, simply remove it
-#'   from the \code{obj} argument.
+#' @note There are different types of non-convergence and these are dealt with
+#'   differently in the package. If the optimisation algorithm fails to return
+#'   any solution, the model fit is defined as NA and is then removed, and so
+#'   does not appear in the model summary table or multi-model curve etc.
+#'   However, the optimisation algorithm (e.g. Nelder-Mead) can also return
+#'   non-NA model fits but where the solution is potentially non-optimal (e.g.
+#'   degeneracy of the Nelder–Mead simplex) - these cases are identified by any
+#'   \code{\link{optim}} convergence code that is not zero. We have decided not
+#'   to remove these fits (i.e. they are kept in the model summary table and
+#'   multimodel curve) - as arguably a non-optimal fit is still better than no
+#'   fit - but any instances can be checked using the returned
+#'   \code{details$converged} vector and then the model fitting re-run without
+#'   these models, if preferred. Increasing the starting parameters grid search
+#'   (see below) may also help avoid this issue.
+#'
+#'   Occasionally a model fit will be able to be fitted and pass the model
+#'   fitting checks (e.g. residual normality) but the resulting fit is
+#'   nonsensical (e.g. a horizontal line with intercept at zero). Thus, it can
+#'   be useful to plot the resultant 'multi' object to check the individual
+#'   model fits. To re-run the \code{sar_multi} function without a particular
+#'   model, simply remove it from the \code{obj} argument.
 #'   
 #'   Choosing starting parameter values for non-linear regression optimisation
 #'   algorithms is not always straight forward, depending on the data at hand.
@@ -637,7 +656,10 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   mmi <- apply(wm, 1 , sum)
 
   res <- mmi
-
+  
+  #get convergence info (of models that have passed checks)
+  conv <- vapply(fits, FUN=function(x){x$verge}, FUN.VALUE = logical(1))
+  
   details <- list(
     mod_names = modNames,
     fits = fits,
@@ -652,7 +674,8 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
     weights_ics = weights_ICs,
     n_points = nPoints,
     n_mods = nMods,
-    no_fit = as.vector(badMods)
+    no_fit = as.vector(badMods),
+    convergence = conv
   )
 
   res <- list(mmi = mmi, details = details)

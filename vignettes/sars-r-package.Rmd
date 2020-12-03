@@ -113,7 +113,7 @@ the 20 model names and a Table can be generated in the package using the
 is fitted using standard linear regression), all models are fitted using
 non-linear regression and the model parameters are estimated by minimizing
 the residual sum of squares with an unconstrained Nelder-Mead optimization
-algorithm and the ‘optim’ R function.
+algorithm and the ‘optim’ R function. 
 
 Choosing starting parameter values for non-linear regression optimisation
 algorithms is not always straight forward, depending on the data at hand. The
@@ -181,26 +181,32 @@ fitC <- sar_multi(data = galap, obj = c("power", "loga", "monod"))
 plot(fitC) #see Fig.1
 ```
 
-Model fit validation Model fits can be evaluated through tests of the normality
-and homoscedasticity of the residuals. Any of three tests can be selected to
-test the normality of the residuals: 1) the Lilliefors extension of the
-Kolmogorov normality test (normaTest = “lillie”), 2) the Shapiro-Wilk test of
-normality (to be preferred when sample size is small; “shapiro”), and 3) the
-Kolmogorov-Smirnov test (“kolmo”). As a default, the option to omit a residuals
-normality test (“none”) is used - thus it is up to the user to select a test if
-appropriate. Three options are provided to check for the homogeneity of the
-residuals: 1) a correlation of the squared residuals with the model fitted
-values (“cor.fitted”), 2) a correlation of the squared residuals with the area
-values (“cor.area”), or 3) no homogeneity test (“none”; the default). If a test
-is selected and is significant at the 5% level a warning is provided in the
-model summary; alternatively, the full results of the three tests can be
-accessed in the model fit output. A third model validation check for negative
-predicted richness values (i.e. when at least one of the fitted values is
-negative) can be undertaken and a warning is provided in the model summary if
-negative values are predicted. It should be noted that in earlier versions of
-the package (pre Version 1.3.1) there was a bug in the test checking for
-homogeneity of the residual variance - the correlation used the raw residuals
-rather than the squared residuals. This has now been corrected.
+### Model fit validation 
+Model fits can be evaluated through tests of the normality and homoscedasticity
+of the residuals. Any of three tests can be selected to test the normality of
+the residuals: 1) the Lilliefors extension of the Kolmogorov normality test
+(normaTest = “lillie”), 2) the Shapiro-Wilk test of normality (to be preferred
+when sample size is small; “shapiro”), and 3) the Kolmogorov-Smirnov test
+(“kolmo”). As a default, the option to omit a residuals normality test (“none”)
+is used - thus it is up to the user to select a test if appropriate. Three
+options are provided to check for the homogeneity of the residuals: 1) a
+correlation of the squared residuals with the model fitted values
+(“cor.fitted”), 2) a correlation of the squared residuals with the area values
+(“cor.area”), or 3) no homogeneity test (“none”; the default). If a test is
+selected and is significant at the 5% level a warning is provided in the model
+summary; alternatively, the full results of the three tests can be accessed in
+the model fit output. A third model validation check for negative predicted
+richness values (i.e. when at least one of the fitted values is negative) can be
+undertaken and a warning is provided in the model summary if negative values are
+predicted. It should be noted that in earlier versions of the package (pre
+Version 1.3.1) there was a bug in the test checking for homogeneity of the
+residual variance - the correlation used the raw residuals rather than the
+squared residuals. This has now been corrected. Finally, the convergence code
+from the optim algorithm can be checked manually. Occasionally the optim
+algorithm may not fully converge (e.g. due to degeneracy of the Nelder–Mead
+simplex) but still return a fitted model. As such, for each model fit we provide
+the optim model convergence code (anything other than 0 can indicate an issue)
+and a logical value (verge) specifying whether or not the code was 0.
 
 ```{r}
 #load an example dataset, fit the linear SAR model whilst running residual
@@ -294,7 +300,7 @@ fit <- sar_average(data= niering, obj =c("power","loga","koba","mmf","monod",
                                          "negexpo","chapman","weibull3","asymp"),
 normaTest = "none", homoTest = "none", neg_check = FALSE, confInt = TRUE, ciN
 = 50) #a message is provided indicating that one model (asymp) could not be
-#fitted
+#used in the confidence interval calculation
 
 par(mfrow = c(3,1)) #plot all model fits and the multimodel SAR curve as a separate curve on top
 plot(fit, ModTitle = "a) Multimodel SAR", mmSep = TRUE)
@@ -307,6 +313,20 @@ plot(fit, allCurves = FALSE, ModTitle =
 #Barplot of the information criterion weights of each model 
 plot(fit, type = "bar", ModTitle = "b) Model weights", cex.lab = 1.3)
 ```
+
+One thing to note is how the sar_average() function deals with model
+non-convergence. There are different types of non-convergence and these are
+dealt with differently. If the optimisation algorithm fails to return any
+solution, the model fit is defined as NA and is then removed, and so does not
+appear in the model summary table or multi-model curve etc. However, the
+optimisation algorithm (e.g. Nelder-Mead) can also return non-NA model fits but
+where the solution is potentially non-optimal (e.g. degeneracy of the
+Nelder–Mead simplex) - these cases are identified by any optim convergence code
+that is not zero. We have decided not to remove these fits (i.e. they are kept
+in the model summary table and multimodel curve), but any instances can be
+checked using the returned 'details$converged' vector and then the model fitting
+re-run without these models, if preferred. Increasing the starting parameters
+grid search (see above) may also help avoid this issue.
 
 ## Additional functions 
 In addition to the main functions used to fit and compare the 20 SAR models, the

@@ -42,7 +42,7 @@ fit <- sar_average(data= niering, obj =c("power","loga","koba","mmf","monod",
                                          "negexpo","chapman","weibull3","asymp"),
 normaTest = "none", homoTest = "none", neg_check = FALSE, confInt = TRUE, ciN
 = 50) #a message is provided indicating that one model (asymp) could not be
-#fitted
+#used in the confidence interval calculation
 
 par(mfrow = c(3,1)) #plot all model fits and the multimodel SAR curve as a separate curve on top
 plot(fit, ModTitle = "a) Multimodel SAR", mmSep = TRUE)

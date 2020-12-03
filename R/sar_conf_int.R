@@ -209,16 +209,23 @@ sar_conf_int <- function(fit, n, crit, obj_all, normaTest,
 for (l in seq_len(nrow(dat))) {
   positives <- transResiduals[chousModel, ][transResiduals[chousModel, ] > 0]
   negatives <- transResiduals[chousModel, ][transResiduals[chousModel, ] < 0]
-  #I think this line ensures that there can be no negative S values, but then
-  #I am not sure why the test is needed? Check with FG
+  #this line ensures that there can be no negative S values resulting from 
+  #adding negative trans residuals to them
   vtci <- negatives[abs(negatives) <= calculated[chousModel, l] ]
   vtci <- c(vtci, positives)
   value <- sample(vtci, 1)
   bootMatrix[nGoodBoot, l] <- calculated[chousModel, l] + value
 }#end of for
 
-      #test if one species richness is negative
-      test <- length( which(bootMatrix[nGoodBoot, ] < 0) )
+  #test if one species richness is negative. Although we filter out any
+  #negative trans residuals that would make the calculated value < 0 when added
+  #to it, you can still get negative data values if the original calculated
+  #value is < 0 and the selected positive trans residual is < abs(calculated
+  #value). mmsAR originally dealt with this by only selecting positive trans 
+  #residuals which were > abs(calculated vale), but if no positive trans 
+  #residuals are > it just errors. This way the while loop just restarts and
+  #should (eventually) select a different model.
+  test <- length(which(bootMatrix[nGoodBoot, ] < 0))
 
     }#end of while
 
@@ -293,6 +300,9 @@ for (l in seq_len(nrow(dat))) {
 
     if (filtNlig != 0) {
 
+      #this just calculates the mmi curve and have checked and it matches with
+      #optimres$mmi. Eventually remove this and replace with that for 
+      #simplicity.
       for (i in 1:filtNlig){
 
         #Delta IC = ICi - ICmin
@@ -324,7 +334,7 @@ for (l in seq_len(nrow(dat))) {
   #sort and return the CIs
   bootSort <- apply(bootHat, 2, sort)
   alp <- 0.025
-  c1 <- ceiling(n  * alp) #maybe a better way
+  c1 <- ceiling(n  * alp)#ceiling avoids any cases of 0
   c2 <- ceiling(n  * (1-alp))
   CI <- data.frame("L" = bootSort[c1, ], "U" = bootSort[c2, ])
   return(CI)

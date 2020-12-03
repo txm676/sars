@@ -39,10 +39,10 @@
 #'     \item{par} { The model parameters}
 #'     \item{value} { Residual sum of squares}
 #'     \item{counts} {  The number of iterations for the convergence of the fitting algorithm}
-#'     \item{convergence} { Numeric code indicating model convergence (0 = converged)}
+#'     \item{convergence} { Numeric code returned from optim indicating model convergence (0 = converged)}
 #'     \item{message} { Any message from the model fit algorithm}
 #'     \item{hessian} { A symmetric matrix giving an estimate of the Hessian at the solution found}
-#'     \item{verge} { Logical code indicating model convergence}
+#'     \item{verge} { Logical code indicating that optim model convergence value is zero}
 #'     \item{startValues} { The start values for the model parameters used in the optimisation}
 #'     \item{data} { Observed data}
 #'     \item{model} { A list of model information (e.g. the model name and formula)}

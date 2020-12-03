@@ -141,9 +141,10 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   
   res3 <- list(AIC=AIC, AICc=AICc, BIC=BIC, R2=R2, R2a=R2a)
 
-  #convergence verif -> 71 is R2<=0
   verge <- ifelse(res1$convergence==0, TRUE, FALSE)
-  verge <- ifelse(R2 <= 0, FALSE, TRUE)
+  #Removed Nov 2020
+  #(Korvath - negative R2 indicates complete lack of fit)
+  #verge <- ifelse(R2 <= 0, FALSE, TRUE)
 
   res <- c(res1,list(verge=verge),res2,res3)
 
