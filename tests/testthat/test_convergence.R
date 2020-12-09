@@ -8,7 +8,7 @@ test_that("various functions return correct convergence info", {
   expect_equal(c1, 0)
   expect_true(c2)
   
-  fit2 <- sar_average(data = galap, normaTest = "lillie")
+  fit2 <- sar_average(data = galap, normaTest = "lillie", grid_start = "none")
   f1 <- fit2$details$convergence
   expect_equal(length(f1), length(fit2$details$fits))
   expect_identical(names(f1), names(fit2$details$fits))
@@ -23,7 +23,7 @@ test_that("various functions return correct convergence info", {
   test <- data.frame("a" =  c(0.52,  2.33,  2.59,  4.66,  4.84, 11.40, 18.39),
                      "s" = c(7.458806, 15.904833, 66.768317, 44.708306,
                              82.288296, 57.104797, 29.598247))
-  s3 <- sar_average(data = test)
+  s3 <- sar_average(data = test, grid_start = "none")
   expect_false(all(s3$details$convergence))
   expect_false(all(summary(s3)$Convergence))
   expect_false(s3$details$fits$chapman$verge)

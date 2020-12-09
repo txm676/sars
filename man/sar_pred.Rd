@@ -45,6 +45,12 @@ This function is used in the ISAR extrapolation paper of Matthews &
 
   Code to calculate confidence intervals around the predictions using
   bootstrapping will be added in a later version of the package.
+
+  As grid_start has a random component, when \code{grid_start != "none"} in
+  your model fitting, you can get slightly different results each time you
+  fit a model or run \code{sar_average} and then run \code{sar_pred} on it.
+  We would recommend using \code{grid_start = "exhaustive"} as this is more
+  likely to find the optimum fit for a given model.
 }
 \examples{
 data(galap)
@@ -57,9 +63,12 @@ fit2 <- sar_multi(galap, obj = c("power", "loga", "koba"))
 p2 <- sar_pred(fit2, area = c(5000, 10000))
 
 #calculate a multi-model curve and predict richness on islands of area = 5000 & 10000
-fit3 <- sar_average(data = galap)
+#using no grid_start for speed
+fit3 <- sar_average(data = galap, grid_start = "none")
 p3 <- sar_pred(fit3, area = c(5000, 10000))
 }
 \references{
-Matthews, T.J. & Aspin, T.W.H. (2019) ....
+Matthews, T.J. & Aspin, T.W.H. (2019) Model averaging fails to
+  improve the extrapolation capability of the island species–area
+  relationship. Journal of Biogeography, 46, 1558-1568.
 }

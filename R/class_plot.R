@@ -400,7 +400,7 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
 #' @examples
 #' data(galap)
 #' #plot a multimodel SAR curve with all model fits included
-#' fit <- sar_average(data = galap)
+#' fit <- sar_average(data = galap, grid_start = "none")
 #' plot(fit)
 #'
 #' #remove the legend

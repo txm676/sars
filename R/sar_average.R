@@ -35,8 +35,8 @@ display_sars_models <- function() {
 #'   "powerR","epm1","epm2","p1","p2","loga","koba",
 #'   "mmf","monod","negexpo","chapman","weibull3","asymp",
 #'   "ratio","gompertz","weibull4","betap","heleg","linear"), normaTest =
-#'   "none", homoTest = "none", homoCor = "spearman", grid_start = FALSE, grid_n
-#'   = NULL, verb = TRUE)
+#'   "none", homoTest = "none", homoCor = "spearman", grid_start = "partial", 
+#'   grid_n = NULL, verb = TRUE)
 #' @param data A dataset in the form of a dataframe with two columns: the first
 #'   with island/site areas, and the second with the species richness of each
 #'   island/site.
@@ -52,11 +52,11 @@ display_sars_models <- function() {
 #'   homogeneity test is undertaken; the default).
 #' @param homoCor The correlation test to be used when \code{homoTest !=
 #'   "none"}. Can be any of "spearman" (the default), "pearson", or "kendall".
-#' @param grid_start Logical argument specifying whether a grid search procedure
-#'   should be implemented to test multiple starting parameter values (default:
-#'   \code{grid_start = FALSE}).
-#' @param grid_n If \code{grid_start = TRUE}, the number of points sampled in
-#'   the model parameter space.
+#' @param grid_start Should a grid search procedure be implemented to test
+#'   multiple starting parameter values. Can be one of 'none', 'partial' or
+#'   'exhaustive' The default is set to 'partial'.
+#' @param grid_n If \code{grid_start = exhaustive}, the number of points sampled
+#'   in the starting parameter space (see details).
 #' @param verb verbose (default: \code{verb == TRUE}).
 #' @details The \code{sar_models()} function can be used to bring up a list of
 #'   the 20 model names. \code{display_sars_models()} generates a table of the
@@ -72,7 +72,8 @@ display_sars_models <- function() {
 #' plot(fit2)
 #'
 #' # construct a fit_collection object of all 20 SAR model fits
-#' fit3 <- sar_multi(galap)
+#' # using no grid_start for speed
+#' fit3 <- sar_multi(galap, grid_start = "none")
 #'
 #' @export
 
@@ -86,7 +87,7 @@ sar_multi <- function(data,
                       normaTest = "none",
                       homoTest = "none",
                       homoCor = "spearman",
-                      grid_start = FALSE,
+                      grid_start = "partial",
                       grid_n = NULL,
                       verb = TRUE){
   
@@ -110,11 +111,13 @@ sar_multi <- function(data,
       stop("provided model names do not match with model functions")
   }
   
-  if (!is.logical(grid_start)) stop("grid_start should be logical")
-  
-  if (grid_start){
+  if (!(grid_start %in% c("none", "partial", "exhaustive"))){
+    stop("grid_start should be one of 'none', 'partial' or 'exhaustive'")
+  }
+ 
+  if (grid_start == "exhaustive"){
     if (!is.numeric(grid_n)) 
-      stop("grid_n should be numeric if grid_start == TRUE")
+      stop("grid_n should be numeric if grid_start == exhaustive")
   }
   
   if (length(obj) < 2)
@@ -150,9 +153,8 @@ sar_multi <- function(data,
   
   fits <- suppressWarnings(lapply(obj, function(x){
     
-    #have to do separately because linear does not have grid_start;
-    #or if grid_start is set to FALSE
-    if (x == "linear" || !(grid_start)){
+    #have to do separately because linear does not have grid_start
+    if (x == "linear"){
       f <- eval(parse(text = paste0(mods[x],
                                     "(data", ", normaTest = ",
                                     paste0("'", normaTest, "'"),
@@ -169,7 +171,7 @@ sar_multi <- function(data,
                                     ", homoCor = ", paste0("'", homoCor,
                                                             "'"),
                                     ", grid_start = ", 
-                                    paste0(grid_start), ", grid_n = ",
+                                    paste0("'",grid_start,"'"), ", grid_n = ",
                                     paste0(grid_n),")")))
     }
     
@@ -212,7 +214,7 @@ sar_multi <- function(data,
 #'   "ratio","gompertz","weibull4","betap","heleg", "linear"), data = NULL, crit
 #'   = "Info", normaTest = "none", homoTest = "none", homoCor = "spearman",
 #'   neg_check = FALSE, alpha_normtest = 0.05, alpha_homotest = 0.05, grid_start
-#'   = FALSE, grid_n = NULL, confInt = FALSE, ciN = 100, verb = TRUE)
+#'   = "partial", grid_n = NULL, confInt = FALSE, ciN = 100, verb = TRUE)
 #' @param obj Either a vector of model names or a fit_collection object created
 #'   using \code{\link{sar_multi}}. If a vector of names is provided,
 #'   \code{sar_average} first calls \code{sar_multi} before generating the
@@ -245,12 +247,11 @@ sar_multi <- function(data,
 #' @param alpha_homotest The alpha value used in the residual homogeneity test
 #'   (default = 0.05, i.e. any test with a P value < 0.05 is flagged as failing
 #'   the test).
-#' @param grid_start Logical argument specifying whether a grid search procedure
-#'   should be implemented to test multiple starting parameter values. The
-#'   default is set to FALSE, but we would recommend using it to ensure the fits
-#'   of certain models (e.g. Gompertz, Chapman Richards) are optimal.
-#' @param grid_n If \code{grid_start = TRUE}, the number of points sampled in
-#'   the model parameter space.
+#' @param grid_start Should a grid search procedure be implemented to test
+#'   multiple starting parameter values. Can be one of 'none', 'partial' or
+#'   'exhaustive' The default is set to 'partial'.
+#' @param grid_n If \code{grid_start = exhaustive}, the number of points sampled
+#'   in the starting parameter space (see details).
 #' @param confInt A logical argument specifying whether confidence intervals
 #'   should be calculated for the multimodel curve using bootstrapping.
 #' @param ciN The number of bootstrap samples to be drawn to calculate the
@@ -291,7 +292,42 @@ sar_multi <- function(data,
 #'   number of bootstraps (\code{ciN}) is large, generating the confidence
 #'   intervals can take a (very) long time. Parallel processing will be added to
 #'   future versions.
-#'
+#'   
+#'   Choosing starting parameter values for non-linear regression optimisation
+#'   algorithms is not always straight forward, depending on the data at hand.
+#'   In the package, we use various approaches to choose default starting
+#'   parameters. However, we also use a grid search process which creates a
+#'   large array of different possible starting parameter values (within certain
+#'   bounds) and then randomly selects a proportion of these to test. There are
+#'   three options for the \code{grid_start} argument to control this process.
+#'   The default (\code{grid_start = "partial"}) randomly samples 500 different
+#'   sets of starting parameter values for each model, adds these to the model's
+#'   default starting values and tests all of these. A more comprehensive set of
+#'   starting parameter estimates can be used (\code{grid_start = "exhaustive"})
+#'   - this option allows the user to choose the number of starting parameter
+#'   sets to be tested (using the \code{grid_n} argument) and includes a range
+#'   of additional starting parameter estimates, e.g. very small values and
+#'   particular values we have found to be useful for individual models. Using
+#'   \code{grid_start = "exhaustive"} in combination with a large \code{grid_n}
+#'   can be very time consuming; however, we would recommend it as it makes it
+#'   more likely that the optimal model fit will be found, particularly for the
+#'   more complex models. This is particularly true if any of the model fits
+#'   does not converge, returns a singular gradient at parameter estimates, or
+#'   the plot of the model fit does not look optimum. The grid start procedure
+#'   can also be turned off (\code{grid_start = "none"}), meaning just the
+#'   default starting parameter estimates are used. Note that \code{grid_start}
+#'   has been disabled for a small number of models (e.g. Weibull 3 par.). See
+#'   the vignette for more information. Remember that, as grid_start has a
+#'   random component, when \code{grid_start != "none"}, you can get slightly
+#'   different results each time you fit a model or run \code{sar_average}.
+#'   
+#'   Even with grid_start, occasionally a model fit will be able to be fitted
+#'   and pass the model fitting checks (e.g. residual normality) but the
+#'   resulting fit is nonsensical (e.g. a horizontal line with intercept at
+#'   zero). Thus, it can be useful to plot the resultant 'multi' object to check
+#'   the individual model fits. To re-run the \code{sar_average} function
+#'   without a particular model, simply remove it from the \code{obj} argument.
+#'   
 #'   The \code{sar_models()} function can be used to bring up a list of the 20
 #'   model names. \code{display_sars_models()} generates a table of the 20
 #'   models with model information.
@@ -331,27 +367,7 @@ sar_multi <- function(data,
 #'   fit - but any instances can be checked using the returned
 #'   \code{details$converged} vector and then the model fitting re-run without
 #'   these models, if preferred. Increasing the starting parameters grid search
-#'   (see below) may also help avoid this issue.
-#'
-#'   Occasionally a model fit will be able to be fitted and pass the model
-#'   fitting checks (e.g. residual normality) but the resulting fit is
-#'   nonsensical (e.g. a horizontal line with intercept at zero). Thus, it can
-#'   be useful to plot the resultant 'multi' object to check the individual
-#'   model fits. To re-run the \code{sar_multi} function without a particular
-#'   model, simply remove it from the \code{obj} argument.
-#'   
-#'   Choosing starting parameter values for non-linear regression optimisation
-#'   algorithms is not always straight forward, depending on the data at hand.
-#'   In the package, we use various approaches to choose default starting
-#'   parameters. However, if any of the resultant model fits does not converge,
-#'   returns a singular gradient at parameter estimates, or the plot of the
-#'   model fit does not look optimum, try using the \code{grid_start} argument
-#'   to undertake a more extensive selection of starting values, or provide your
-#'   own starting values (\code{start}). While using \code{grid_start} is more
-#'   time consuming, it will often provide (much) better fits for certain
-#'   models, and so we recommend its use where possible. Note, that
-#'   \code{grid_start} has been disabled for a small number of models (e.g.
-#'   Weibull 3 par.). See the vignette for more information.
+#'   (see above) may also help avoid this issue.
 #'
 #'   The generation of confidence intervals around the multimodel curve (using
 #'   \code{confInt == TRUE}), may throw up errors that we have yet to come
@@ -376,10 +392,15 @@ sar_multi <- function(data,
 #'
 #'   Guilhaumon, F., Mouillot, D., & Gimenez, O. (2010). mmSAR: an R-package for
 #'   multimodel species-area relationship inference. Ecography, 33, 420-424.
+#'   
+#'   Matthews, T. J., K. A. Triantis, R. J. Whittaker, & F. Guilhaumon. (2019_.
+#'   sars: an R package for fitting, evaluating and comparing species–area
+#'   relationship models. Ecography, 42, 1446–55.
 #' @examples
 #' data(galap)
 #' #attempt to construct a multimodel SAR curve using all twenty sar models
-#' fit <- sar_average(data = galap)
+#' #using no grid_start just for speed here (not recommended generally)
+#' fit <- sar_average(data = galap, grid_start = "none")
 #' summary(fit)
 #' plot(fit)
 #'
@@ -387,6 +408,12 @@ sar_multi <- function(data,
 #' ff <- sar_multi(galap, obj = c("power", "loga", "monod", "weibull3"))
 #' fit2 <- sar_average(obj = ff, data = NULL)
 #' summary(fit2)
+#' 
+#' \dontrun{ 
+#' # construct a multimodel SAR curve using a more exhaustive set of starting 
+#' # parameter values 
+#' fit3 <- sar_average(data = galap, grid_start = "exhaustive", grid_n = 1000) 
+#' }
 #'
 #' @export
 
@@ -403,7 +430,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
                         neg_check = FALSE,
                         alpha_normtest = 0.05,
                         alpha_homotest = 0.05,
-                        grid_start = FALSE,
+                        grid_start = "partial",
                         grid_n = NULL,
                         confInt = FALSE,
                         ciN = 100,
@@ -423,17 +450,21 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
       stop("provided model names do not match with model functions")
   }
   
-  if (!is.logical(grid_start)) stop("grid_start should be logical")
+  if (!(grid_start %in% c("none", "partial", "exhaustive"))){
+    stop("grid_start should be one of 'none', 'partial' or 'exhaustive'")
+  }
   
-  if (grid_start){
+  if (grid_start == "exhaustive"){
     if (!is.numeric(grid_n)) 
-      stop("grid_n should be numeric if grid_start == TRUE")
+      stop("grid_n should be numeric if grid_start == exhaustive")
   }
   
   if (length(obj) < 2)
     stop("more than 1 fit is required to construct a sar_multi")
   
-  if(verb) cat("\nModels to be fitted using grid start approach: \n")
+  if(verb & grid_start != "none"){
+  cat("\nModels to be fitted using a grid start approach: \n")
+  }
   
   #if a vector of names is provided, then call sar_multi first
   if (is.character(obj)){
@@ -742,7 +773,15 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
 #'
 #'   Code to calculate confidence intervals around the predictions using
 #'   bootstrapping will be added in a later version of the package.
-#' @references Matthews, T.J. & Aspin, T.W.H. (2019) ....
+#'
+#'   As grid_start has a random component, when \code{grid_start != "none"} in
+#'   your model fitting, you can get slightly different results each time you
+#'   fit a model or run \code{sar_average} and then run \code{sar_pred} on it.
+#'   We would recommend using \code{grid_start = "exhaustive"} as this is more
+#'   likely to find the optimum fit for a given model.
+#' @references Matthews, T.J. & Aspin, T.W.H. (2019) Model averaging fails to
+#'   improve the extrapolation capability of the island species–area
+#'   relationship. Journal of Biogeography, 46, 1558-1568.
 #' @examples
 #' data(galap)
 #' #fit the power model and predict richness on an island of area = 5000
@@ -754,7 +793,8 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
 #' p2 <- sar_pred(fit2, area = c(5000, 10000))
 #' 
 #' #calculate a multi-model curve and predict richness on islands of area = 5000 & 10000
-#' fit3 <- sar_average(data = galap)
+#' #using no grid_start for speed
+#' fit3 <- sar_average(data = galap, grid_start = "none")
 #' p3 <- sar_pred(fit3, area = c(5000, 10000))
 #' @export
 

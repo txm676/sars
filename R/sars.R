@@ -16,7 +16,7 @@
 #'   combined into a fit collection (\code{\link{sar_multi}}). Plotting
 #'   functions (\code{\link{plot.sars}}) are provided that enable individual
 #'   model fits to be plotted on their own, or the fits of multiple models to be
-#'   overlayed on the same plot. Model fits are validated using a number of
+#'   overlayed on the same plot. Model fits can be validated using a number of
 #'   checks, e.g. the normality and homogeneity of the model residuals can be
 #'   assessed.
 #'
@@ -31,10 +31,11 @@
 #'   Other SAR related functions include: (i) \code{\link{lin_pow}}, which fits
 #'   the log-log power model and enables comparison of the model parameters with
 #'   those calculated using the non-linear power model, (ii) \code{\link{gdm}},
-#'   which fits the general dynamic model of island biogeography (Whittaker et
-#'   al. 2008) using several different functions, and (iii)
-#'   \code{\link{coleman}}, which fits Coleman's  (1981) random placement model
-#'   to a species-site abundance matrix.
+#'   which fits the general dynamic model of island biogeography (Whittaker et al.
+#'   2008) using several different functions, and (iii) \code{\link{coleman}},
+#'   which fits Coleman's  (1981) random placement model to a species-site
+#'   abundance matrix. Version 1.3.0 has added functions for fitting, evaluating
+#'   and plotting a range of commonly used piecewise SAR models.
 #' @author Thomas J. Matthews and Francois Guilhaumon
 #' @references Coleman, B. D. (1981). On random placement and species-area
 #'   relations. Mathematical Biosciences, 54, 191-215.
@@ -62,8 +63,9 @@
 #' summary(fit)
 #' plot(fit)
 #' 
-#' #Construct a multimodel averaged SAR curve
-#' fit_multi <- sar_average(data = galap)
+#' #Construct a multimodel averaged SAR curve, using no grid_start simply
+#' #for speed (not recommended - see documentation for sar_average())
+#' fit_multi <- sar_average(data = galap, grid_start = "none")
 #' summary(fit_multi)
 #' plot(fit_multi)
 

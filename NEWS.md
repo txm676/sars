@@ -9,6 +9,8 @@
     GDM model of Whittaker et al. (2008) - the ATT2 model (i.e. semi-log SAR)
   * Removed the check which assigned a model with R2 < 0 as having not converged.
   * Now return optim model convergence info for all models in a sar_average() fit (and its summary function).
+  * Changed grid_start to have three options: none, partial (default) and exhaustive - key change to previous
+    versions as now grid_start is implemented as default.
 
 ##version 1.3.1
   * Corrected bug in obs_shape function which meant it was not recognising sigmoid fits

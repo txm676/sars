@@ -119,28 +119,42 @@ Choosing starting parameter values for non-linear regression optimisation
 algorithms is not always straight forward, depending on the data at hand. The
 starting values for the parameter estimates used as defaults in the package are
 carefully chosen to avoid numerical problems and to speed up the convergence
-process. However, custom starting values can be provided for any of the 20
-models using the ‘start’ argument in the model fit functions. In addition, if
-any of the resultant model fits do not converge, return a singular gradient at
-parameter estimates, or the plot of the model fit does not look optimum, try
-using the ‘grid_start’ argument to undertake a more extensive selection of
-starting values. ‘grid_start’ creates 100 starting values for each parameter
+process. Custom starting values can be provided for any of the 20 models using
+the ‘start’ argument in the model fit functions. In addition, we also use a grid
+search process. ‘grid_start’ creates 100 starting values for each parameter
 within sensible bounds and then creates a large matrix storing all possible
 combinations of starting values across the n parameters in the model. For
-example, for a three parameter model this matrix contains one million rows. The
-‘grid_n’ argument can then be used to randomly select a number of the rows in
-this matrix to be used as the starting parameter values in the model fitting
-process. A large ‘grid_n’ will ensure a more extensive search of starting
-parameter value space, but will increase the time taken to fit the model. It
-should be noted that for certain models (e.g. Weibull 3 par.) 'grid_start' has
-been found to occasionally push model fits into strange parameter space (e.g.
-step curves) and so for these models 'grid_start' just reverts back to our
-provided parameter starting values. However, for these models the 'start'
-argument can still be used. For certain models, there are also checks to ensure
-that the returned parameters are logical. For example, the optimisation
-procedure can sometimes return a negative z-value for the asymptotic model,
-meaning in the term z^A, the base is negative. Thus, if a fitting process
-returns a negative z-value we return that the model could not be fitted.
+example, for a three parameter model this matrix contains one million rows. A
+random number of these rows are then selected and used as starting parameter
+values. There are three options for the grid_start argument to control this
+process. The default (grid_start = "partial") randomly samples 500 different
+sets of starting parameter values for each model, adds these to the model's
+default starting values and tests all of these. A more comprehensive set of
+starting parameter estimates can be used (grid_start = "exhaustive") - this
+option allows the user to choose the number of starting parameter sets to be
+tested (using the grid_n argument) and includes a range of additional starting
+parameter estimates, e.g. very small values and particular values we have found
+to be useful for individual models. A large ‘grid_n’ will ensure a more
+extensive search of starting parameter value space, but will increase the time
+taken to fit the model. More generally, using grid_start = "exhaustive" in
+combination with a large grid_n can be very time consuming; however, we would
+recommend it as it makes it more likely that the optimal model fit will be
+found, particularly for the more complex models. This is particularly true if
+any of the model fits does not converge, returns a singular gradient at
+parameter estimates, or the plot of the model fit does not look optimum. The
+grid start procedure can also be turned off (grid_start = "none"), meaning just
+the default starting parameter estimates are used. It should be noted that for
+certain models (e.g. Weibull 3 par.) 'grid_start' has been found to occasionally
+push model fits into strange parameter space (e.g. step curves) and so for these
+models 'grid_start' just reverts back to our provided parameter starting values.
+However, for these models the 'start' argument can still be used. For certain
+models, there are also checks to ensure that the returned parameters are
+logical. For example, the optimisation procedure can sometimes return a negative
+z-value for the asymptotic model, meaning in the term z^A, the base is negative.
+Thus, if a fitting process returns a negative z-value we return that the model
+could not be fitted. Remember that, as grid_start has a random component, when
+grid_start != "none", you can get slightly different results each time you fit a
+model or run sar_average().
 
 Each individual model fit returns an object of class ‘sars’, which is a list
 of 22 elements containing relevant model fit information, such as the model
@@ -169,7 +183,7 @@ library(sars)
 #the grid_start method of selecting starting parameter values, return a model 
 #fit summary and plot the model fit. 
 data(galap) 
-fit <- sar_loga(data = galap, grid_start = TRUE, grid_n = 100) 
+fit <- sar_loga(data = galap, grid_start = "partial") 
 summary(fit) 
 plot(fit)
 ```
@@ -295,12 +309,13 @@ of each model can also be produced (‘type’ = “bar”).
 #produce the plots in Figure 2 of the paper 
 data(niering) 
 
-#run the ‘sar_average’ function using a vector of model names 
+#run the ‘sar_average’ function using a vector of model names, and with simply
+#using the default model starting parameter estimates (grid_start = "none")
 fit <- sar_average(data= niering, obj =c("power","loga","koba","mmf","monod",
                                          "negexpo","chapman","weibull3","asymp"),
-normaTest = "none", homoTest = "none", neg_check = FALSE, confInt = TRUE, ciN
-= 50) #a message is provided indicating that one model (asymp) could not be
-#used in the confidence interval calculation
+grid_start = "none", normaTest = "none", homoTest = "none", neg_check = FALSE, 
+confInt = TRUE, ciN = 50) #a message is provided indicating that one model 
+#(asymp) could not be used in the confidence interval calculation
 
 par(mfrow = c(3,1)) #plot all model fits and the multimodel SAR curve as a separate curve on top
 plot(fit, ModTitle = "a) Multimodel SAR", mmSep = TRUE)
@@ -391,7 +406,13 @@ and the criterion values converted into model weights (i.e. the conditional
 probabilities for each of the n models). The n models are then each used to
 predict the richness of a larger area and these predictions are multiplied by
 the respective model weights and summed to provide a multi-model averaged
-prediction. Both of these options are available inside the package.
+prediction. Both of these options are available inside the package. 
+
+We would recommend using grid_start = "exhaustive" when fitting models for use
+with sar_pred(), as this is more likely to find the optimum fit for a given
+model. However, remember that, as grid_start has a random component, when
+grid_start != "none", you can get slightly different results each time you fit a
+model or run sar_average, and then run sar_pred().
 
 ```{r}
 #fit the power model and predict richness on an island of area = 5000
@@ -404,7 +425,8 @@ p2 <- sar_multi(galap, obj = c("power", "loga", "koba"))
 sar_pred(p2, area = c(5000, 10000))
 
 #calculate a multi-model curve and predict richness on islands of area = 5000 & 10000
-p3 <- sar_average(data = galap)
+#grid_start set to "none" for speed
+p3 <- sar_average(data = galap, grid_start = "none")
 sar_pred(p3, area = c(5000, 10000))
 ```
 

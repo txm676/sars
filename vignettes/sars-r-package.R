@@ -12,7 +12,7 @@ library(sars)
 #the grid_start method of selecting starting parameter values, return a model 
 #fit summary and plot the model fit. 
 data(galap) 
-fit <- sar_loga(data = galap, grid_start = TRUE, grid_n = 100) 
+fit <- sar_loga(data = galap, grid_start = "partial") 
 summary(fit) 
 plot(fit)
 
@@ -37,12 +37,13 @@ fit$normaTest
 #produce the plots in Figure 2 of the paper 
 data(niering) 
 
-#run the ‘sar_average’ function using a vector of model names 
+#run the ‘sar_average’ function using a vector of model names, and with simply
+#using the default model starting parameter estimates (grid_start = "none")
 fit <- sar_average(data= niering, obj =c("power","loga","koba","mmf","monod",
                                          "negexpo","chapman","weibull3","asymp"),
-normaTest = "none", homoTest = "none", neg_check = FALSE, confInt = TRUE, ciN
-= 50) #a message is provided indicating that one model (asymp) could not be
-#used in the confidence interval calculation
+grid_start = "none", normaTest = "none", homoTest = "none", neg_check = FALSE, 
+confInt = TRUE, ciN = 50) #a message is provided indicating that one model 
+#(asymp) could not be used in the confidence interval calculation
 
 par(mfrow = c(3,1)) #plot all model fits and the multimodel SAR curve as a separate curve on top
 plot(fit, ModTitle = "a) Multimodel SAR", mmSep = TRUE)
@@ -92,7 +93,8 @@ p2 <- sar_multi(galap, obj = c("power", "loga", "koba"))
 sar_pred(p2, area = c(5000, 10000))
 
 #calculate a multi-model curve and predict richness on islands of area = 5000 & 10000
-p3 <- sar_average(data = galap)
+#grid_start set to "none" for speed
+p3 <- sar_average(data = galap, grid_start = "none")
 sar_pred(p3, area = c(5000, 10000))
 
 ## ---- fig.width=6, fig.height=6-----------------------------------------------

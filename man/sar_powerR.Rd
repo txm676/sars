@@ -4,7 +4,8 @@
 \alias{sar_powerR}
 \title{Fit the PowerR model}
 \usage{
-sar_powerR(data, start = NULL, grid_start = FALSE, grid_n = NULL, normaTest = 'none',
+sar_powerR(data, start = NULL, grid_start = 'partial',
+  grid_n = NULL, normaTest = 'none',
   homoTest = 'none', homoCor = 'spearman')
 }
 \arguments{
@@ -14,9 +15,9 @@ of each island/site.}
 
 \item{start}{NULL or custom parameter start values for the optimisation algorithm.}
 
-\item{grid_start}{Logical argument specifying whether a grid search procedure should be implemented to test multiple starting parameter values. The default is set to FALSE, but for certain models (e.g. Gompertz, Chapman Richards), we advice using it to ensure an optimal fit.}
+\item{grid_start}{Should a grid search procedure be implemented to test multiple starting parameter values. Can be one of 'none', 'partial' or 'exhaustive' The default is set to 'partial'.}
 
-\item{grid_n}{If \code{grid_start = TRUE}, the number of points sampled in the model parameter space.}
+\item{grid_n}{If \code{grid_start = exhaustive}, the number of points sampled in the starting parameter space.}
 
 \item{normaTest}{The test used to test the normality of the residuals of the
   model. Can be any of 'lillie' (Lilliefors test
@@ -75,7 +76,10 @@ not work, custom values can be provided (using the \code{start} argument), or a 
   Model validation can be undertaken by assessing the normality (\code{normaTest}) and homogeneity (\code{homoTest})
   of the residuals and a warning is provided in \code{\link{summary.sars}} if either test is chosen and fails.
   A selection of information criteria (e.g. AIC, BIC) are returned and can be used to compare models
-  (see also \code{\link{sar_average}})
+  (see also \code{\link{sar_average}}).
+  
+  As grid_start has a random component, when \code{grid_start != 'none'} in your model fitting, you can
+   get slightly different results each time you fit a model
 }
 \examples{
 data(galap)

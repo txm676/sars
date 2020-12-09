@@ -52,8 +52,8 @@ test_that("new ICs works for individual models", {
   nl <- c(nl, AICcm)
   expect_equal(round(nl,4), round(c(s3$AIC, s3$BIC, s3$AICc), 4))
   
-  #test negexpo model
-  s3 <- sar_negexpo(galap)
+  #test negexpo model (no grid_start)
+  s3 <- sar_negexpo(galap, grid_start = "none")
   n2 <- stats::nls(y ~ d * (1 - exp(-z * x)), 
                    start = list("d" = 207.91232765, "z" = 0.01432358))
   nl <- c(stats::AIC(n2), stats::BIC(n2))
@@ -93,7 +93,7 @@ test_that("news ICs works for multi models", {
   nl <- c(nl, AICcm)
   expect_equal(round(ff,4), round(nl,4))
   #koba model
-  fit4 <- sar_average(data = galap)
+  fit4 <- sar_average(data = galap, obj = c("koba", "gompertz", "heleg"))
   ff4 <- c(fit4$details$fits$koba$AIC, fit4$details$fits$koba$BIC, 
            fit4$details$fits$koba$AICc)
   n4 <- nls(y ~ c * log(1 + x/z), start = list("c" = 40, "z" = 3.5))
@@ -105,9 +105,9 @@ test_that("news ICs works for multi models", {
   nl <- c(nl, AICcm)
   expect_equal(round(ff4,4), round(nl,4))
   expect_equal(round(ff4,3), c(186.073, 188.391, 188.073))
-  #check residuals
-  expect_equal(as.vector(round(residuals(n4), 1)), 
-               round(fit4$details$fits$koba$residuals, 1))
+  #check residuals (round to 0 as grid start can make v small changes)
+  expect_equal(as.vector(round(residuals(n4), 0)), 
+               round(fit4$details$fits$koba$residuals, 0))
   #Gompertz model
   ff4 <- c(fit4$details$fits$gompertz$AIC, fit4$details$fits$gompertz$BIC, 
            fit4$details$fits$gompertz$AICc)
@@ -132,6 +132,21 @@ test_that("news ICs works for multi models", {
   AICcm <- -2*LL+2*K*(n/(n-K-1))#- function taken directly from AICcmodavg
   nl <- c(nl, AICcm)
   expect_equal(round(ff4,4), round(nl,4))
+  ##check it works with grid_start turned off as well
+  fit8 <- sar_average(data = galap, obj = c("koba", "gompertz", "ratio"),
+                      grid_start = "none")
+  ff8 <- c(fit8$details$fits$ratio$AIC, fit8$details$fits$ratio$BIC, 
+           fit8$details$fits$ratio$AICc)
+  n4 <- nls(y ~ (c + z * x)/(1 + d * x), 
+            start = list("c" = 20.08886448, "z" = 3.48524535, "d" = 0.01529))
+  nl <- c(stats::AIC(n4), stats::BIC(n4))
+  LL <- logLik(n4)
+  K <- 3 + 1 #for variance
+  n <- nrow(galap)
+  AICcm <- -2*LL+2*K*(n/(n-K-1))#- function taken directly from AICcmodavg
+  nl <- c(nl, AICcm)
+  expect_equal(round(ff8,4), round(nl,4))
+  
   #weibull4 - with this and the betap model I can't get nls to converge at all,
   #even for sigmoid shaped fits, so I've used the warnOnly option and the port
   #algorithm to get it to return a non-converged object just for purposes of
@@ -143,7 +158,7 @@ test_that("news ICs works for multi models", {
                               15, 16, 16, 17, 16, 16))
   y2 <- test$R
   x2 <- test$A
-  fit5 <- sar_average(data = test)
+  fit5 <- sar_average(data = test, obj = c("power", "loga", "weibull4"))
   ff4 <- c(fit5$details$fits$weibull4$AIC, fit5$details$fits$weibull4$BIC, 
            fit5$details$fits$weibull4$AICc)
   n4 <- suppressWarnings(nls(y2 ~ d * (1 - exp(-c * x2^z))^f, 
@@ -168,7 +183,7 @@ test_that("news ICs works for betap", {
   #to match with nls
   y <- galap$s
   x <- galap$a
-  fit6 <- sar_betap(galap, grid_start = TRUE, grid_n = 100)
+  fit6 <- sar_betap(galap, grid_start = "exhaustive", grid_n = 100)
   ff4 <- c(fit6$AIC, fit6$BIC, 
            fit6$AICc)
   n4 <- suppressWarnings(nls(y ~ d * (1 - (1 + (x/c)^z)^-f), 

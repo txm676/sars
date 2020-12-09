@@ -156,7 +156,7 @@ In some versions of R and R studio, when plotting all model fits on the
 \examples{
 data(galap)
 #plot a multimodel SAR curve with all model fits included
-fit <- sar_average(data = galap)
+fit <- sar_average(data = galap, grid_start = "none")
 plot(fit)
 
 #remove the legend

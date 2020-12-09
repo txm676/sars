@@ -17,41 +17,13 @@ sar_conf_int <- function(fit, n, crit, obj_all, normaTest,
   if (!"multi" %in% class(fit)) stop ("class of 'fit' should be 'multi'")
   if (length(fit$details$mod_names) < 2) 
     stop ("less than two models in the sar average object")
-  
-  #model names for matching
-  
-  #NB lots of the hashed code relates to changes to do with grid_start being more
-  #fully incorporated into the package, and having to chat how this works
-  
-  #  x1 <- c("Power", "PowerR", "Extended_Power_model_1", 
-  #"Extended_Power_model_2", "Persistence_function_1",
-  # "Persistence_function_2", "Logarithmic", "Kobayashi", "MMF", 
-  # "Monod", "Negative_exponential", "Chapman_Richards", 
-  #  "Cumulative_Weibull_3_par.", "Asymptotic_regression", 
-  #  "Rational_function","Gompertz", "Cumulative_Weibull_4_par.", 
-  #  "Beta-P_cumulative", "Heleg(Logistic)", "Linear_model")
-  
-  # x2 <- c("sar_power(", "sar_powerR(", "sar_epm1(", "sar_epm2(", "sar_p1(",
-  #    "sar_p2(", "sar_loga(", "sar_koba(", "sar_mmf(", "sar_monod(",
-  #    "sar_negexpo(", "sar_chapman(", "sar_weibull3(", "sar_asymp(", 
-  #    "sar_ratio(", "sar_gompertz(", "sar_weibull4(", "sar_betap(", 
-  #   "sar_heleg(", "sar_linear(")
-  
-  #  x3 <-   c("power", "powerR","epm1","epm2","p1","p2","loga","koba","mmf",
-  #          "monod","negexpo","chapman",
-  #         "weibull3","asymp","ratio","gompertz","weibull4","betap","heleg",
-  #        "linear")
-  
-  
-  
+
   #observed data
   dat <- fit$details$fits[[1L]]$data
   
   #weights and model names
   wei <- fit$details$weights_ics
   nams <- as.vector(names(wei))
-  #  ns1 <- which(x3 %in% nams)
-  # nams_short <- x3[ns1]#for use below
   
   #loop over all models in sar_average fit and fill matrices of fitted values
   #and, resids & transformed residuals
@@ -60,14 +32,7 @@ sar_conf_int <- function(fit, n, crit, obj_all, normaTest,
   
   for (i in seq_along(nams))
   {
-    
-    #select the expression of the selected model
-    #wn <- which(x3 %in% nams[i])
-    # w2 <- x2[wn]
-    
-    #fit the ith model to observed data; extract fitted values and residuals
-    
-    #me <- suppressWarnings(eval(parse(text = paste(w2, "dat)", sep = ""))))
+
     #original code did not account for grid_start, when this is used you can get 
     #different parameter values from fitting the model without this, so instead 
     #of re-fitting, just take the fits from the fit object

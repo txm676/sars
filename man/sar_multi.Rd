@@ -8,8 +8,8 @@ sar_multi(data, obj = c("power",
   "powerR","epm1","epm2","p1","p2","loga","koba",
   "mmf","monod","negexpo","chapman","weibull3","asymp",
   "ratio","gompertz","weibull4","betap","heleg","linear"), normaTest =
-  "none", homoTest = "none", homoCor = "spearman", grid_start = FALSE, grid_n
-  = NULL, verb = TRUE)
+  "none", homoTest = "none", homoCor = "spearman", grid_start = "partial", 
+  grid_n = NULL, verb = TRUE)
 }
 \arguments{
 \item{data}{A dataset in the form of a dataframe with two columns: the first
@@ -32,12 +32,12 @@ homogeneity test is undertaken; the default).}
 \item{homoCor}{The correlation test to be used when \code{homoTest !=
 "none"}. Can be any of "spearman" (the default), "pearson", or "kendall".}
 
-\item{grid_start}{Logical argument specifying whether a grid search procedure
-should be implemented to test multiple starting parameter values (default:
-\code{grid_start = FALSE}).}
+\item{grid_start}{Should a grid search procedure be implemented to test
+multiple starting parameter values. Can be one of 'none', 'partial' or
+'exhaustive' The default is set to 'partial'.}
 
-\item{grid_n}{If \code{grid_start = TRUE}, the number of points sampled in
-the model parameter space.}
+\item{grid_n}{If \code{grid_start = exhaustive}, the number of points sampled
+in the starting parameter space (see details).}
 
 \item{verb}{verbose (default: \code{verb == TRUE}).}
 }
@@ -61,6 +61,7 @@ fit2 <- sar_multi(galap, obj = c("power", "loga", "linear"))
 plot(fit2)
 
 # construct a fit_collection object of all 20 SAR model fits
-fit3 <- sar_multi(galap)
+# using no grid_start for speed
+fit3 <- sar_multi(galap, grid_start = "none")
 
 }

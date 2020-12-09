@@ -2,20 +2,31 @@ context("sar_grid_start")
 
 test_that("grid_start is working correctly", {
   data(aegean)
-  expect_error(sar_power(aegean, grid_search = 1000))
-  expect_error(sar_power(aegean, grid_search = TRUE, grid_n = FALSE))
-  expect_warning(sar_chapman(aegean))
-  s <- suppressWarnings(sar_chapman(aegean))
-  expect_true(is.na(s$value))
-  s2 <- sar_chapman(aegean, grid_start = TRUE, grid_n = 100)
-  #there is a random component to grid_start so you can't check whether
-  #parameter values are equal; occasionally there might be small differences.
-  #expect_equal(0.044, as.vector(round(s2$par[2], 3)))
-  #so instead, just check it returns a numeric parameter
-  expect_true(is.numeric(s2$par[2]))
+  #individual models
+  expect_error(sar_power(aegean, grid_start = 1000), 
+               "grid_start should be one of none, partial or exhaustive")
+  expect_error(sar_power(aegean, grid_start = TRUE), 
+               "grid_start should be one of none, partial or exhaustive")
+  expect_error(sar_power(aegean, grid_start = "exhaustive", grid_n = NULL),
+               "grid_n should be numeric if grid_start == exhaustive")
+  expect_warning(sar_chapman(aegean, grid_start = "none"))#fails without GS.
+  #there is a random component to grid_start so can't check par values and 
+  #AIC etc. Instead check the length of the output
+  expect_length(sar_chapman(aegean), 23)#same with grid_start, now works
+  #check exhaustive works
+  expect_length(sar_power(aegean, grid_start = "exhaustive", grid_n = 200), 23)
   #checking it does not error within sar_average
   df <- aegean[1:10,]
   obj <- c("linear","power","powerR",
            "chapman","gompertz")
-  expect_error(sar_average(data = df, obj, grid_start = TRUE, grid_n = 5), NA)
+  expect_error(sar_average(data = df, obj, grid_start = TRUE), 
+               "grid_start should be one of 'none', 'partial' or 'exhaustive'")
+  expect_error(sar_average(data = df, obj, grid_start = "exhaustive", grid_n = NULL), 
+               "grid_n should be numeric if grid_start == exhaustive")
+  
+  expect_length(sar_average(data = df, obj, grid_start = "none"), 2)
+  expect_length(sar_average(data = df, obj, grid_start = "partial"), 2)
+  expect_length(sar_average(data = df, obj, 
+                            grid_start = "exhaustive", grid_n = 200), 2)
+  
 })

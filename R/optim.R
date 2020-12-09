@@ -213,10 +213,13 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
 
 #' @importFrom stats runif
 
-grid_start_fit <- function(model, data, n, algo = "Nelder-Mead",
+grid_start_fit <- function(model, data, n, type, algo = "Nelder-Mead",
                            normaTest = "none", homoTest = "none",
                            homoCor = "spearman", 
                            verb = TRUE) {
+  
+  #if type == "partial", just sample the 500 values from the start.list
+  #sequence values.
   
   #  if(length(model$parNames)<4){
   ns <- 100
@@ -245,6 +248,10 @@ grid_start_fit <- function(model, data, n, algo = "Nelder-Mead",
   def.start <- model$init(data)
   names(def.start) <- colnames(grid.start)
   grid.start <- rbind(grid.start, def.start)
+  
+  #if type == exhaustive, then do a more expansive search of starting par
+  #space.
+  if (type == "exhaustive"){
   
   #ensure very small values are included as useful for some models
   sm_val <- lapply(model$parNames, function(x){
@@ -309,7 +316,8 @@ if (model$name == "Gompertz"){
   colnames(gs2) <- colnames(grid.start)
   grid.start <- rbind(grid.start, gs2)
 }
-
+  
+}#eo if exhaustive
 
   #####################################################
   
@@ -340,12 +348,12 @@ if (model$name == "Gompertz"){
 
 ######################################## optimization wrapper
 get_fit <- function(model = model, data = data, start = NULL,
-                    grid_start = FALSE, grid_n = NULL, algo = "Nelder-Mead",
+                    grid_start = "partial", grid_n = NULL, algo = "Nelder-Mead",
                     normaTest = "none", homoTest = "none", 
                     homoCor = "spearman",
                     verb = TRUE){
   
-  if (isFALSE(is.null(start)) & (grid_start)){
+  if (isFALSE(is.null(start)) & (grid_start != "none")){
     stop("You must choose between 'start' and 'grid_start',",
          " but choose wisely\n")
   }
@@ -354,12 +362,15 @@ get_fit <- function(model = model, data = data, start = NULL,
   ##space (e.g. weibull 3 becomes wiggly), but not forbidden space (e.g. pars 
   ##are all positive) so for now, for these models, just fit using our starting
   ##parameter estimates.
-  if(grid_start) { #use grid_search
+  if (grid_start != "none") { #use grid_search
     
     if (!model$name %in% c("Cumulative Weibull 3 par.",
                            "Cumulative Weibull 4 par.")){
+      #for grid_start == partial, use n of 500.
+      if (grid_start == "partial") grid_n <- 500
     
-    fit <- grid_start_fit(model = model, data = data, n = grid_n,
+    fit <- grid_start_fit(model = model, data = data, n = grid_n, 
+                          type = grid_start,
                           algo = algo, normaTest = normaTest,
                           homoTest = homoTest, homoCor = homoCor, verb = verb)
     } else{

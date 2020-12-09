@@ -1,14 +1,15 @@
 #' Fit the Negative exponential model
 
 #' @description Fit the Negative exponential model to SAR data.
-#' @usage sar_negexpo(data, start = NULL, grid_start = FALSE, grid_n = NULL, normaTest = 'none',
+#' @usage sar_negexpo(data, start = NULL, grid_start = 'partial',
+#'   grid_n = NULL, normaTest = 'none',
 #'   homoTest = 'none', homoCor = 'spearman')
 #' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness
 #'   of each island/site.
 #' @param start NULL or custom parameter start values for the optimisation algorithm.
-#' @param grid_start Logical argument specifying whether a grid search procedure should be implemented to test multiple starting parameter values. The default is set to FALSE, but for certain models (e.g. Gompertz, Chapman Richards), we advice using it to ensure an optimal fit.
-#' @param grid_n If \code{grid_start = TRUE}, the number of points sampled in the model parameter space.
+#' @param grid_start Should a grid search procedure be implemented to test multiple starting parameter values. Can be one of 'none', 'partial' or 'exhaustive' The default is set to 'partial'.
+#' @param grid_n If \code{grid_start = exhaustive}, the number of points sampled in the starting parameter space.
 #' @param normaTest The test used to test the normality of the residuals of the
 #'   model. Can be any of 'lillie' (Lilliefors test
 #', 'shapiro' (Shapiro-Wilk test of normality), 'kolmo'
@@ -32,7 +33,10 @@
 #'   of the residuals and a warning is provided in \code{\link{summary.sars}} if either test is chosen and fails.
 
 #'   A selection of information criteria (e.g. AIC, BIC) are returned and can be used to compare models
-#'   (see also \code{\link{sar_average}})
+#'   (see also \code{\link{sar_average}}).
+#'   
+#'   As grid_start has a random component, when \code{grid_start != 'none'} in your model fitting, you can
+#'    get slightly different results each time you fit a model
 #' @importFrom stats lm quantile
 #' @return A list of class 'sars' with the following components: 
 #'   \itemize{
@@ -71,8 +75,10 @@
 #' plot(fit)
 #' @export
 
-sar_negexpo <- function(data, start = NULL, grid_start = FALSE, 
-grid_n = NULL, normaTest =  "none", homoTest = "none", homoCor = "spearman"){
+sar_negexpo <- function(data, start = NULL, 
+grid_start = "partial", grid_n = NULL, 
+normaTest =  "none", homoTest = 
+"none", homoCor = "spearman"){
 if (!(is.matrix(data) | is.data.frame(data)))  
 stop('data must be a matrix or dataframe')
 if (is.matrix(data)) data <- as.data.frame(data)
@@ -85,10 +91,12 @@ if (homoTest != 'none'){
 homoCor <- match.arg(homoCor, c('spearman', 'pearson',
 'kendall')) 
 }
-if (!is.logical(grid_start)) stop('grid_start should be logical')
-if (grid_start){
+if (!(grid_start %in% c('none', 'partial', 'exhaustive'))){
+stop('grid_start should be one of none, partial or exhaustive')
+}
+if (grid_start == 'exhaustive'){
   if (!is.numeric(grid_n))
-  stop('grid_n should be numeric if grid_start == TRUE')
+  stop('grid_n should be numeric if grid_start == exhaustive')
   }
 data <- data[order(data[,1]),]
 colnames(data) <- c('A','S')
