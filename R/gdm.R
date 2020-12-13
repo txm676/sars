@@ -345,28 +345,6 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3),
     return(fit)
   }
 }
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
