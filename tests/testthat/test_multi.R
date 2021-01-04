@@ -12,11 +12,11 @@ test_that("sar_average returns correct results", {
   expect_match(fit3$details$norm_test, "none")
   expect_match(fit3$details$ic, "AICc")
   expect_error(sar_multi(5), "argument is of length zero")
-  
   fit4 <- sar_average(data = galap, normaTest = "lillie", 
                       homoTest = "cor.fitted",
                       neg_check = FALSE)
-  expect_equal(round(sum(fit4$mmi), 0), 1634)#grid_start on so round to 0
+  #one run in 100 gave 1633 (due to random nature of grid_start)
+  expect_true(round(sum(fit4$mmi), 0) %in% c(1633, 1634))#grid_start on so round to 0
   expect_match(fit4$details$norm_test, "lillie")
   expect_match(fit4$details$homo_test, "cor.fitted")
   expect_equal(length(fit4$details$mod_names), 14)
