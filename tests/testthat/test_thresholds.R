@@ -29,7 +29,7 @@ test_that("sar_threshold returns correct results", {
   fit4 <- sar_threshold(data = aegean2, mod = "All", interval = 0.1, 
                         non_th_models = TRUE, logAxes = "area", 
                         logT = log10, parallel = TRUE, cores = 2)
-  s4 <- summary(fit4, order = "BIC")
+  s4 <- summary(fit4)
   expect_equal(c(s4$Model_table$AIC), c(2020.25, 2019.48, 2022.42,
                                         2045.94, 2047.78, 2061.70,
                                         2305.05, 2535.84))
@@ -38,7 +38,7 @@ test_that("sar_threshold returns correct results", {
                         non_th_models = TRUE, logAxes = "area",
                         logT = log10, parallel = F)
 
-  s5 <- summary(fit5, order = "BIC")
+  s5 <- summary(fit5)
   expect_equal(c(s5$Model_table$AIC), c(2020.25, 2019.48, 2022.42,
                                         2045.94, 2047.78, 2061.70,
                                         2305.05, 2535.84))

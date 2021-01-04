@@ -8,8 +8,6 @@
 #'   method (\code{print.summary.sars}; not documented) is used to print the
 #'   output.
 #' @param object An object of class 'sars'.
-#' @param order The information criterion used to order the model summary table
-#'   for objects of Type 'threshold' (Default = "BIC").
 #' @param \dots Further arguments.
 #' @param \dots Further arguments.
 #' @return The \code{summary.sars} function returns an object of class
@@ -43,19 +41,19 @@
 #'   log-transformation function used. If the argument \code{compare = TRUE} is
 #'   used in \code{\link{lin_pow}}, a 7th element is returned that contains the
 #'   parameter values from the non-linear power model.
-#'   
+#'
 #'   For a 'sars' object of Type 'threshold', a list with three elements is
 #'   returned: (i) the information criterion used to order the ranked model
-#'   summary table ('order'), (ii) a model summary table (models are ranked
-#'   using the 'order' argument), and (iii) details of any axes
-#'   log-transformations undertaken. Note that in the model summary table, if
-#'   log-area is used as the predictor, the threshold values will be on the log
-#'   scale used. Thus it may be preferable to back-transform them (e.g. using
-#'   \code{exp(th)} if natural logarithms are used) so that they are on the
-#'   scale of untransformed area. Th1 and Th2 in the table are the threshold
-#'   value(s), and seg1, seg2, seg3 provide the number of datapoints within each
-#'   segment (for the threshold models); one-threshold models have two
-#'   segements, and two-threshold models have three segments.
+#'   summary table (currently just BIC), (ii) a model summary table (models are
+#'   ranked using BIC), and (iii) details of any axes log-transformations
+#'   undertaken. Note that in the model summary table, if log-area is used as
+#'   the predictor, the threshold values will be on the log scale used. Thus it
+#'   may be preferable to back-transform them (e.g. using \code{exp(th)} if
+#'   natural logarithms are used) so that they are on the scale of untransformed
+#'   area. Th1 and Th2 in the table are the threshold value(s), and seg1, seg2,
+#'   seg3 provide the number of datapoints within each segment (for the
+#'   threshold models); one-threshold models have two segements, and
+#'   two-threshold models have three segments.
 #' @examples
 #' data(galap)
 #' #fit a multimodel SAR and get the model table
@@ -68,7 +66,7 @@
 #' @importFrom stats logLik
 #' @export
 
-summary.sars <- function(object, order = "BIC", ...){
+summary.sars <- function(object, ...){
   if (attributes(object)$type == "lin_pow"){
     rownames(object$Model$coefficients) <- c("LogC", "z")
     fit_df <- round(data.frame(Area = object$data$A,
@@ -249,8 +247,12 @@ summary.sars <- function(object, order = "BIC", ...){
     colnames(nbi) <- c("seg1", "seg2", "seg3")
     #combine variables and order by 'order' IC
     mt <- cbind(ICs, tdf, nbi)
-    mt <- mt[order(mt[order]),]
-    res <- list("order" = order, "Model_table" = mt, "Axes transformation" = object[[5]][[1]])
+    #can't use mt[order_mod] anymore (warned by CRAN)
+    #so instead just order by BIC
+    #mt <- mt[order(mt[order]),]
+    mt <- mt[order(mt$BIC),]
+    res <- list("order" = "BIC", "Model_table" = mt, 
+                "Axes transformation" = object[[5]][[1]])
   }
   class(res) <- "summary.sars"
   attr(res, "type") <- attr(object, "type")
