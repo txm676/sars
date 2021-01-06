@@ -39,6 +39,7 @@ test_that("sar_average using fit_collection object works", {
   expect_match(fit3$details$homo_test, "none")
   expect_match(fit3$details$ic, "AICc")
   expect_error(sar_multi(5), "argument is of length zero")
+  expect_equal(1,4)
 })
 
 test_that("confidence intervals are correct", {
