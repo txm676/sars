@@ -24,6 +24,7 @@ test_that("sar_pred on fit_collection returns correct results", {
 })
 
 test_that("sar_pred on multi-model curve returns correct results", {
+  skip_on_cran()
   #grid_start has a random component and so it is hard to use it to test,
   #as it can produce different sar_pred values each time it is run. So here
   #I have used grid_start = none except for the last.

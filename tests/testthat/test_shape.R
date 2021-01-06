@@ -1,6 +1,7 @@
 context("sar_shape")
 
 test_that("observed_shape info is correct", {
+  skip_on_cran()
   data(galap)
   fit <- sar_epm2(galap)
   fit2 <- sar_power(galap)

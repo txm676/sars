@@ -1,6 +1,7 @@
 context("sar_average")
 
 test_that("sar_average returns correct results", {
+  skip_on_cran()
 
   fit2 <- sar_average(data = galap, grid_start = "none")
   expect_equal(round(sum(fit2$mmi), 1), 1643.5)
@@ -26,6 +27,7 @@ test_that("sar_average returns correct results", {
 })
 
 test_that("sar_average using fit_collection object works", {
+  skip_on_cran()
   ff <- sar_multi(data = galap, obj = c("power", "p1", "loga", "monod",
                                         "linear"))
   expect_warning(sar_average(obj = ff, data = galap, normaTest = "none",

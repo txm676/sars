@@ -79,6 +79,7 @@ test_that("new ICs works for individual models", {
 
 
 test_that("news ICs works for multi models", {
+  skip_on_cran()
   y <- galap$s
   x <- galap$a
   fit3 <- sar_multi(galap, obj = c("power", "loga", "linear"))

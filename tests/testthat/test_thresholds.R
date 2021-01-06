@@ -2,6 +2,7 @@
 context("sar_threshold")
 
 test_that("sar_threshold returns correct results", {
+  skip_on_cran()
   data(aegean2)
   fit <- sar_threshold(aegean2, mod = c("ContOne", "DiscOne", "ZslopeOne"),
                        non_th_models = TRUE, interval = 0.01, logAxes = "area")
@@ -69,6 +70,7 @@ test_that("sar_threshold returns correct results", {
 
 
 test_that("nisl argument returns correct results", {
+  skip_on_cran()
   data(aegean2)
   a2 <- aegean2[1:168,]
   fitT <- sar_threshold(data = a2, mod = "All",
@@ -89,6 +91,7 @@ test_that("nisl argument returns correct results", {
 
 
 test_that("threshold_ci returns correct results", {
+  skip_on_cran()
   data(aegean2)
   a2 <- aegean2[1:168,]
   #fit with just one model (boot and F methods)
@@ -127,6 +130,7 @@ test_that("threshold_ci returns correct results", {
 
 
 test_that("get_coef returns correct results", {
+  skip_on_cran()
   data(aegean2)
   a2 <- aegean2[1:168,]
   fitT <- sar_threshold(data = a2, mod = c("ContOne", "DiscOne", "ZslopeOne"),

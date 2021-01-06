@@ -1,6 +1,7 @@
 context("sar_grid_start")
 
 test_that("grid_start is working correctly", {
+  skip_on_cran()
   data(aegean)
   #individual models
   expect_error(sar_power(aegean, grid_start = 1000), 
