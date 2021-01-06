@@ -21,7 +21,3 @@ notifications:
 ## Code coverage
 #after_success:
  # - Rscript -e 'covr::codecov()'
-
-#this makes sure all tests are run (including those skipped on CRAN)
-#env:
-#  - NOT_CRAN=true
