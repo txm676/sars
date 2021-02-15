@@ -6,11 +6,12 @@
 \usage{
 sar_average(obj = c("power",
   "powerR","epm1","epm2","p1","p2","loga","koba",
-  "mmf","monod","negexpo","chapman","weibull3","asymp",
-  "ratio","gompertz","weibull4","betap","heleg", "linear"), data = NULL, crit
-  = "Info", normaTest = "none", homoTest = "none", homoCor = "spearman",
-  neg_check = FALSE, alpha_normtest = 0.05, alpha_homotest = 0.05, grid_start
-  = "partial", grid_n = NULL, confInt = FALSE, ciN = 100, verb = TRUE)
+  "monod","negexpo","chapman","weibull3","asymp",
+  "ratio","gompertz","weibull4","betap","logistic", "heleg", "linear"), data =
+  NULL, crit = "Info", normaTest = "none", homoTest = "none", homoCor =
+  "spearman", neg_check = FALSE, alpha_normtest = 0.05, alpha_homotest =
+  0.05, grid_start = "partial", grid_n = NULL, confInt = FALSE, ciN = 100,
+  verb = TRUE)
 }
 \arguments{
 \item{obj}{Either a vector of model names or a fit_collection object created

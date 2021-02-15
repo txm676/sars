@@ -311,7 +311,7 @@ data(niering)
 
 #run the ‘sar_average’ function using a vector of model names, and with simply
 #using the default model starting parameter estimates (grid_start = "none")
-fit <- sar_average(data= niering, obj =c("power","loga","koba","mmf","monod",
+fit <- sar_average(data= niering, obj =c("power","loga","koba","logistic","monod",
                                          "negexpo","chapman","weibull3","asymp"),
 grid_start = "none", normaTest = "none", homoTest = "none", neg_check = FALSE, 
 confInt = TRUE, ciN = 50) #a message is provided indicating that one model 

@@ -1,29 +1,32 @@
 
+##Version 1.3.3
+  *It was realised that the mmf and heleg models are (basically) identical and 
+   almost always provide exactly the same fit. As such, the mmf model has been
+   deprecated and replaced with the sar_logistic() model, i.e. the standard logistic
+   model given in Tjorve (2003).
+
 ##version 1.3.2
   * Changed mmi confidence interval function to fit all the models the user
-    originally selects to the boostrapped samples. Also so it takes all of the original arguments (e.g.        normatest, IC crit etc)  provided by the user.
-  * Now return residuals from the non-linear models as observed - fitted rather than vice versa, to match
-    lm and nls etc. 
-  * Added power_area_time variant to gdm function, and changed the linear power GDM function to fit the        orginal
+    originally selects to the boostrapped samples. Also so it takes all of the original           arguments (e.g.        normatest, IC crit etc)  provided by the user.
+  * Now return residuals from the non-linear models as observed - fitted rather than vice        versa, to match lm and nls etc. 
+  * Added power_area_time variant to gdm function, and changed the linear power GDM function     to fit the        orginal
     GDM model of Whittaker et al. (2008) - the ATT2 model (i.e. semi-log SAR)
   * Removed the check which assigned a model with R2 < 0 as having not converged.
-  * Now return optim model convergence info for all models in a sar_average() fit (and its summary             function).
-  * Changed grid_start to have three options: none, partial (default) and exhaustive - key change to           previous versions as now grid_start is implemented as default.
+  * Now return optim model convergence info for all models in a sar_average() fit (and its       summary             function).
+  * Changed grid_start to have three options: none, partial (default) and exhaustive - key       change to           previous versions as now grid_start is implemented as default.
 
 ##version 1.3.1
   * Corrected bug in obs_shape function which meant it was not recognising sigmoid fits
-  * this was linked to a bug in the function used to calculate 1st and 2nd derivatives (also corrected)
+  * this was linked to a bug in the function used to calculate 1st and 2nd derivatives (also     corrected)
   * Added new model shape category (convex/sigmoid) for epm1, asymp
     and p1 models (allowing them to be tested for observed sigmoid shape)
   * Corrected bug in plot function for sar_threshold meaning dataframes with more
     than 2 columns could not be plotted.
   * Changed gdm power function to return c rather than log c. And corrected a bug
     for the intercept only power gdm model.
-  * Updated gdm function to return AICc and R2, and fit the GDM using the linear version of the
-    power and logarithmic models. Also implemented a start_vals argument to provide starting values
-  * Corrected bug in homogeneity of variance test - it was previously using the raw residuals rather
-    than the squared residuals. And lin_pow homog test was also using untransformed area rather than           log(area).
-  * Changed the defaults for residual normality and homogeneity tests to be "none" - then up to 
+  * Updated gdm function to return AICc and R2, and fit the GDM using the linear version of      the power and logarithmic models. Also implemented a start_vals argument to provide          starting values
+  * Corrected bug in homogeneity of variance test - it was previously using the raw residuals     rather than the squared residuals. And lin_pow homog test was also using untransformed       area rather than           log(area).
+  * Changed the defaults for residual normality and homogeneity tests to be "none" - then up     to 
     the user to turn them on and select which test they want.
   * Correcting number of parameters for DiscTwo in sar_threshold (from 8 to 9)
   * Corrected bug in Chapman model function - the ^c term was in the wrong place.

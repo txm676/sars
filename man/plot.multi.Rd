@@ -150,7 +150,8 @@ In some versions of R and R studio, when plotting all model fits on the
   \item{CW3 = } { Cumulative_Weibull_3_par.} \item{AR = } {
   Asymptotic_regression} \item{RF = } { Rational_function} \item{Gom = } {
   Gompertz} \item{CW4 = } { Cumulative_Weibull_4_par.} \item{BP = } {
-  Beta-P_cumulative} \item{Hel = } { Heleg(Logistic)} \item{Lin = } {
+  Beta-P_cumulative} \item{Logi = } { Logistic(Standard)}
+  \item{Hel = } { Heleg(Logistic)} \item{Lin = } {
   Linear_model}}
 }
 \examples{

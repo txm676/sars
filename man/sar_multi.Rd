@@ -6,10 +6,10 @@
 \usage{
 sar_multi(data, obj = c("power",
   "powerR","epm1","epm2","p1","p2","loga","koba",
-  "mmf","monod","negexpo","chapman","weibull3","asymp",
-  "ratio","gompertz","weibull4","betap","heleg","linear"), normaTest =
-  "none", homoTest = "none", homoCor = "spearman", grid_start = "partial", 
-  grid_n = NULL, verb = TRUE)
+  "monod","negexpo","chapman","weibull3","asymp",
+  "ratio","gompertz","weibull4","betap","logistic","heleg","linear"),
+  normaTest = "none", homoTest = "none", homoCor = "spearman", grid_start =
+  "partial", grid_n = NULL, verb = TRUE)
 }
 \arguments{
 \item{data}{A dataset in the form of a dataframe with two columns: the first

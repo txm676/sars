@@ -2,7 +2,7 @@
 % Please edit documentation in R/sar_average.R
 \name{sars_models}
 \alias{sars_models}
-\title{Display the 20 SAR model names}
+\title{Display the 21 SAR model names}
 \usage{
 sars_models()
 }
@@ -10,6 +10,9 @@ sars_models()
 A vector of model names.
 }
 \description{
-Display the 20 SAR model names as a vector. See
+Display the 21 SAR model names as a vector. See
   \code{\link{sar_multi}} for further information.
+}
+\note{
+sar_mmf is included here for now but has been deprecated (see News)
 }

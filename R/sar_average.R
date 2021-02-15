@@ -1,26 +1,35 @@
-#' Display the 20 SAR model names
+#' Display the 21 SAR model names
 #'
-#' @description Display the 20 SAR model names as a vector. See
+#' @description Display the 21 SAR model names as a vector. See
 #'   \code{\link{sar_multi}} for further information.
 #' @usage sars_models()
+#' @note sar_mmf is included here for now but has been deprecated (see News)
 #' @return A vector of model names.
 #' @export
 sars_models <- function() {
   c("power","powerR","epm1","epm2","p1","p2","loga","koba","mmf",
     "monod","negexpo","chapman","weibull3","asymp","ratio",
-    "gompertz","weibull4","betap","heleg", "linear")
+    "gompertz","weibull4","betap","logistic","heleg","linear")
 }
 
-
+#NB - Table1 is stored in sysdata.rda
 #' Display the model information table
 #'
 #' @description Display Table 1 of Matthews et al. (2019). See
 #'   \code{\link{sar_multi}} for further information.
 #' @usage display_sars_models()
-#' @return A table of model information for the twenty SAR models, including the
-#'   model function, number of parameters and general model shape.
+#' @return A table of model information for 21 SAR models, including the model
+#'   function, number of parameters and general model shape. This includes the
+#'   20 models in Matthews et al. (2019); however, note that the mmf model has
+#'   now been deprecated, and the standard logistic model listed in Tjorve
+#'   (2003) added instead. Note also, an error in the Chapman Richards model
+#'   equation has now been corrected, and the shape of some of the models have
+#'   been updated from sigmoid to convex/sigmoid.
 #' @references Matthews et al. (2019) sars: an R package for fitting, evaluating
-#'   and comparing species–area relationship models. Ecography, In Review.
+#'   and comparing species–area relationship models. Ecography,  42, 1446-1455.
+#'
+#'   Tjørve, E. (2003) Shapes and functions of species–area curves: a review of
+#'   possible models. Journal of Biogeography, 30, 827-835.
 #' @export
 display_sars_models <- function() {
   # display table 1 of the manuscript
@@ -33,10 +42,10 @@ display_sars_models <- function() {
 #'   plotted using \code{\link{plot.sars}}.
 #' @usage sar_multi(data, obj = c("power",
 #'   "powerR","epm1","epm2","p1","p2","loga","koba",
-#'   "mmf","monod","negexpo","chapman","weibull3","asymp",
-#'   "ratio","gompertz","weibull4","betap","heleg","linear"), normaTest =
-#'   "none", homoTest = "none", homoCor = "spearman", grid_start = "partial", 
-#'   grid_n = NULL, verb = TRUE)
+#'   "monod","negexpo","chapman","weibull3","asymp",
+#'   "ratio","gompertz","weibull4","betap","logistic","heleg","linear"),
+#'   normaTest = "none", homoTest = "none", homoCor = "spearman", grid_start =
+#'   "partial", grid_n = NULL, verb = TRUE)
 #' @param data A dataset in the form of a dataframe with two columns: the first
 #'   with island/site areas, and the second with the species richness of each
 #'   island/site.
@@ -80,9 +89,9 @@ display_sars_models <- function() {
 
 sar_multi <- function(data,
                       obj = c("power", "powerR","epm1","epm2","p1","p2",
-                              "loga","koba","mmf","monod","negexpo",
+                              "loga","koba","monod","negexpo",
                               "chapman","weibull3","asymp","ratio",
-                              "gompertz", "weibull4","betap","heleg",
+                              "gompertz", "weibull4","betap","logistic","heleg",
                               "linear"),
                       normaTest = "none",
                       homoTest = "none",
@@ -90,6 +99,10 @@ sar_multi <- function(data,
                       grid_start = "partial",
                       grid_n = NULL,
                       verb = TRUE){
+  
+  if ("mmf" %in% obj){
+    warning("mmf has been deprecated, see News")
+  }
   
   if (!((is.character(obj))  | (class(obj) == "sars")) )
     stop("obj must be of class character or sars")
@@ -107,7 +120,7 @@ sar_multi <- function(data,
     if (any(!(obj %in% c("linear","power","powerR","epm1","epm2","p1",
                          "p2","loga","koba","mmf","monod","negexpo",
                          "chapman","weibull3","asymp","ratio","gompertz",
-                         "weibull4","betap","heleg"))))
+                         "weibull4","betap","heleg","logistic"))))
       stop("provided model names do not match with model functions")
   }
   
@@ -210,11 +223,12 @@ sar_multi <- function(data,
 #'   using information criterion weights and up to twenty SAR models.
 #' @usage sar_average(obj = c("power",
 #'   "powerR","epm1","epm2","p1","p2","loga","koba",
-#'   "mmf","monod","negexpo","chapman","weibull3","asymp",
-#'   "ratio","gompertz","weibull4","betap","heleg", "linear"), data = NULL, crit
-#'   = "Info", normaTest = "none", homoTest = "none", homoCor = "spearman",
-#'   neg_check = FALSE, alpha_normtest = 0.05, alpha_homotest = 0.05, grid_start
-#'   = "partial", grid_n = NULL, confInt = FALSE, ciN = 100, verb = TRUE)
+#'   "monod","negexpo","chapman","weibull3","asymp",
+#'   "ratio","gompertz","weibull4","betap","logistic", "heleg", "linear"), data =
+#'   NULL, crit = "Info", normaTest = "none", homoTest = "none", homoCor =
+#'   "spearman", neg_check = FALSE, alpha_normtest = 0.05, alpha_homotest =
+#'   0.05, grid_start = "partial", grid_n = NULL, confInt = FALSE, ciN = 100,
+#'   verb = TRUE)
 #' @param obj Either a vector of model names or a fit_collection object created
 #'   using \code{\link{sar_multi}}. If a vector of names is provided,
 #'   \code{sar_average} first calls \code{sar_multi} before generating the
@@ -419,10 +433,10 @@ sar_multi <- function(data,
 
 
 sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
-                                "loga","koba","mmf","monod","negexpo",
+                                "loga","koba","monod","negexpo",
                                 "chapman","weibull3","asymp","ratio",
-                                "gompertz", "weibull4","betap","heleg",
-                                "linear"), data = NULL,
+                                "gompertz", "weibull4","betap","logistic", 
+                                "heleg", "linear"), data = NULL,
                         crit = "Info",
                         normaTest = "none",
                         homoTest = "none",
@@ -436,6 +450,10 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
                         ciN = 100,
                         verb = TRUE){
   
+  if ("mmf" %in% obj){
+    warning("mmf has been deprecated, see News")
+  }
+  
   if (!((is.character(obj))  | (class(obj) == "sars")) )
     stop("obj must be of class character or sars")
   
@@ -446,7 +464,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
     if (any(!(obj %in% c("linear","power","powerR","epm1","epm2","p1",
                          "p2","loga","koba","mmf","monod","negexpo",
                          "chapman","weibull3","asymp","ratio","gompertz",
-                         "weibull4","betap","heleg"))))
+                         "weibull4","betap","heleg","logistic"))))
       stop("provided model names do not match with model functions")
   }
   

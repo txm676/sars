@@ -1,7 +1,7 @@
-#' Fit the MMF model
+#' Fit the Logistic(Standard) model
 
-#' @description Fit the MMF model to SAR data.
-#' @usage sar_mmf(data, start = NULL, grid_start = 'partial',
+#' @description Fit the Logistic(Standard) model to SAR data.
+#' @usage sar_logistic(data, start = NULL, grid_start = 'partial',
 #'   grid_n = NULL, normaTest = 'none',
 #'   homoTest = 'none', homoCor = 'spearman')
 #' @param data A dataset in the form of a dataframe with two columns: 
@@ -70,16 +70,15 @@
 #'   relationship: biology and statistics. Journal of Biogeography, 39, 215-231.
 #' @examples
 #' data(galap)
-#' fit <- sar_mmf(galap)
+#' fit <- sar_logistic(galap)
 #' summary(fit)
 #' plot(fit)
 #' @export
 
-sar_mmf <- function(data, start = NULL, 
+sar_logistic <- function(data, start = NULL, 
 grid_start = "partial", grid_n = NULL, 
 normaTest =  "none", homoTest = 
 "none", homoCor = "spearman"){
-.Deprecated()
 if (!(is.matrix(data) | is.data.frame(data)))  
 stop('data must be a matrix or dataframe')
 if (is.matrix(data)) data <- as.data.frame(data)
@@ -110,30 +109,33 @@ if (isTRUE(all.equal(xr[1], xr[2]))) {
      } else{
        warning('All richness values identical')
      }}
-#"Morgan Mercier Family" curve (Williams et al. 2009 formula)
-#have double checked and the Williams formula is definitely equivalent
-#to the Tjorve and Godeau et al formulas.
-#Found to be equivalent to mmf and deprecated
+#Standard Logistic function
+#Formula given in Tjorve (2003)
+#d confirmed as asymptote in Tjorve (2003)
+#Starting parameter method taken from:
+#https://bscheng.com/2014/05/07/modeling-logistic-growth-data-in-r/
 model <- list(
-  name=c("MMF"),
-  formula=expression(S==d/(1+c*A^(-z))),
-  exp=expression(d/(1+c*A^(-z))),
-  shape="convex/sigmoid",
+  name=c("Logistic(Standard)"),
+  formula=expression(S==d/(1 + exp(-z*A + c))),
+  exp=expression(d/(1 + exp(-z*A + c))),
+  shape="sigmoid",
   asymp=function(pars)pars["d"],
   #limits for parameters
   parLim = c("Rplus","Rplus","Rplus"),
-  custStart=function(data)c(max(data$S),5,.25),
   init=function(data){
-    if(any(data$S==0)){data=data[data$S!=0,]}
-    d=(max(data$S)*4)
-    newVar = log((d/data$S) - 1)
-    reg = stats::lm(newVar~log(data$A))
-    c=exp(reg$coefficients[1])
-    z=-reg$coefficients[2]
-    c(d,c,z)
+    if (any(data$S == 0)){
+      p <- (data$S + 0.1)/(max(data$S) + 1)
+    } else{
+    p <- data$S/(max(data$S) + 1)
+    }
+    logitR <- log(p / (1-p)) #logit function (same as car::logit)
+    cc <- coef(lm(logitR ~ data$A, data = data))
+    d1 <- max(galap$s) + 1
+    #use abs, because in the formulation they use in that website, the sign
+    #of the c parameter is reversed (seemingly negative most of the time)
+    c(d1, cc[2], abs(cc[1]))
   }
 )
-
 model <- compmod(model)
 fit <- get_fit(model = model, data = data, start = start,  
 grid_start = grid_start, grid_n = grid_n, algo = 'Nelder-Mead', 
@@ -150,4 +152,4 @@ if(is.na(fit$value)){
   attr(fit, 'type') <- 'fit'
   return(fit)
 }
-}#end of sar_mmf
+}#end of sar_logistic

@@ -7,8 +7,13 @@
 display_sars_models()
 }
 \value{
-A table of model information for the twenty SAR models, including the
-  model function, number of parameters and general model shape.
+A table of model information for 21 SAR models, including the model
+  function, number of parameters and general model shape. This includes the
+  20 models in Matthews et al. (2019); however, note that the mmf model has
+  now been deprecated, and the standard logistic model listed in Tjorve
+  (2003) added instead. Note also, an error in the Chapman Richards model
+  equation has now been corrected, and the shape of some of the models have
+  been updated from sigmoid to convex/sigmoid.
 }
 \description{
 Display Table 1 of Matthews et al. (2019). See
@@ -16,5 +21,8 @@ Display Table 1 of Matthews et al. (2019). See
 }
 \references{
 Matthews et al. (2019) sars: an R package for fitting, evaluating
-  and comparing species–area relationship models. Ecography, In Review.
+  and comparing species–area relationship models. Ecography,  42, 1446-1455.
+
+  Tjørve, E. (2003) Shapes and functions of species–area curves: a review of
+  possible models. Journal of Biogeography, 30, 827-835.
 }

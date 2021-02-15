@@ -1,11 +1,20 @@
 #LOGISTIC FUNCTION (HE & LEGENDRE 1996)
 #doesn't make sense to fit negative relationships with this
 #model, so pars should be Rplus.
+#Tjorve's table in book chapter says asymptote par of Archibald logistic
+#is the c parameter in ours, but have checked and we are correct with c/f.
+#Table 3 of Tjorve (2009) states its shape is sigmoid but "only the convex
+#part is used", and Williams (2009) discusses it being sigmoid but in logA
+#space. We've found it can give both shapes in untransformed space, so
+#have classified it as convex/sigmoid.
+#Found to be equivalent to mmf and the latter deprecated.
+#nb. Tjorve (2009) has a mistake in their formula for this model (Archibald
+#logistic), and give corrected version in the sar book chapter
 model <- list(
   name=c("Heleg(Logistic)"),
   formula=expression(S == c/(f + A^(-z))),
   exp=expression(c/(f + A^(-z))),
-  shape="sigmoid",
+  shape="convex/sigmoid",
   asymp=function(pars)pars["c"]/pars["f"],
   parLim = c("Rplus","Rplus","Rplus"),
   custStart=function(data)c(max(data$S),10,.01),

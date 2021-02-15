@@ -1,11 +1,12 @@
 #"Morgan Mercier Family" curve (Williams et al. 2009 formula)
 #have double checked and the Williams formula is definitely equivalent
 #to the Tjorve and Godeau et al formulas.
+#Found to be equivalent to mmf and deprecated
 model <- list(
   name=c("MMF"),
   formula=expression(S==d/(1+c*A^(-z))),
   exp=expression(d/(1+c*A^(-z))),
-  shape="sigmoid",
+  shape="convex/sigmoid",
   asymp=function(pars)pars["d"],
   #limits for parameters
   parLim = c("Rplus","Rplus","Rplus"),

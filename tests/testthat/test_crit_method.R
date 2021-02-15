@@ -52,6 +52,19 @@ test_that("new ICs works for individual models", {
   nl <- c(nl, AICcm)
   expect_equal(round(nl,4), round(c(s3$AIC, s3$BIC, s3$AICc), 4))
   
+  #test logistic model
+  s3 <- sar_logistic(galap)
+  n2 <- stats::nls(y ~  d/(1 + exp(-z*x + c)), 
+                   start = list("d" = 212.84164599, 
+                                "z" = 0.02274824, "c" = 1.59457723))
+  nl <- c(stats::AIC(n2), stats::BIC(n2))
+  LL <- logLik(n2)
+  K <- 3 + 1# 1 for variance
+  n <- nrow(galap)
+  AICcm <- -2*LL+2*K*(n/(n-K-1))#- function taken directly from AICcmodavg
+  nl <- c(nl, AICcm)
+  expect_equal(round(nl,4), round(c(s3$AIC, s3$BIC, s3$AICc), 4))
+  
   #test negexpo model (no grid_start)
   s3 <- sar_negexpo(galap, grid_start = "none")
   n2 <- stats::nls(y ~ d * (1 - exp(-z * x)), 

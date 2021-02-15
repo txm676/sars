@@ -210,6 +210,11 @@ model_factory <- function(f, overwrite = FALSE){
                         ' \nnormaTest =  "none", homoTest =',
                         ' \n"none", homoCor = "spearman"){',"\n"))
   
+  #add deprecation warning to mmf function
+  if (funName == "sar_mmf"){
+    cat1(".Deprecated()\n")
+  }
+  
   #checks
   cat1("if (!(is.matrix(data) | is.data.frame(data)))", 
        " \nstop('data must be a matrix or dataframe')\n")

@@ -1,7 +1,7 @@
 
-##This is a re-submission
-*version 1.3.2 of sars package
-*I have added skip_on_cran() to the longer tests to shorten the test time
+##This is a new submission
+*version 1.3.3 of sars package
+
 
 ##Test environments
 *local Windows 10 install, R 4.0.1

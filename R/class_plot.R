@@ -395,7 +395,8 @@ plot.sars <- function(x, mfplot = FALSE, xlab = NULL, ylab = NULL,
 #'   \item{CW3 = } { Cumulative_Weibull_3_par.} \item{AR = } {
 #'   Asymptotic_regression} \item{RF = } { Rational_function} \item{Gom = } {
 #'   Gompertz} \item{CW4 = } { Cumulative_Weibull_4_par.} \item{BP = } {
-#'   Beta-P_cumulative} \item{Hel = } { Heleg(Logistic)} \item{Lin = } {
+#'   Beta-P_cumulative} \item{Logi = } { Logistic(Standard)}
+#'   \item{Hel = } { Heleg(Logistic)} \item{Lin = } {
 #'   Linear_model}}
 #' @examples
 #' data(galap)
@@ -938,12 +939,12 @@ mod_abbrev <- function(nams){
 
 x1 <-  c("power", "powerR","epm1","epm2","p1","p2","loga","koba","mmf",
          "monod","negexpo","chapman",
-         "weibull3","asymp","ratio","gompertz","weibull4","betap","heleg",
-         "linear")
+         "weibull3","asymp","ratio","gompertz","weibull4","betap","logistic",
+         "heleg","linear")
 
 x2 <- c("Pow", "PowR", "E1", "E2", "P1", "P2", "Loga", "Kob", "MMF",
         "Mon", "NegE",
-        "CR", "CW3", "AR", "RF", "Gom", "CW4", "BP", "Hel", "Lin")
+        "CR", "CW3", "AR", "RF", "Gom", "CW4", "BP", "Logi", "Hel", "Lin")
 
 df <- data.frame("Full_name" = x1, "Abbreviated_name" = x2)
 dfb <- vapply(nams, function(x) which(df$Full_name == x), FUN.VALUE = numeric(1))
