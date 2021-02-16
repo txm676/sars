@@ -399,6 +399,13 @@ sar_multi <- function(data,
 #'   formulas such that now our IC formulas are the same as those used in the
 #'   \link[stats]{nls} function. See the "On the calculation of information
 #'   criteria" section in the package vignette for more information.
+#'
+#'   The mmf model was found to be equivalent to the He & Legendre logistic, and
+#'   so the former has been deprecated (as of Feb 2021). We have removed it from
+#'   the default models in \code{sar_average}, although it is still available to
+#'   be used for the time being (using the \code{obj} argument). The standard
+#'   logistic model has been added in its place, and is now used as default
+#'   within \code{sar_average}.
 #'   
 #' @references Burnham, K. P., & Anderson, D. R. (2002). Model selection and
 #'   multi-model inference: a practical information-theoretic approach (2nd

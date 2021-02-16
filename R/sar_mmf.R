@@ -1,6 +1,6 @@
 #' Fit the MMF model
 
-#' @description Fit the MMF model to SAR data.
+#' @description Fit the MMF model to SAR data. This function has been deprecated.
 #' @usage sar_mmf(data, start = NULL, grid_start = 'partial',
 #'   grid_n = NULL, normaTest = 'none',
 #'   homoTest = 'none', homoCor = 'spearman')
@@ -70,7 +70,7 @@
 #'   relationship: biology and statistics. Journal of Biogeography, 39, 215-231.
 #' @examples
 #' data(galap)
-#' fit <- sar_mmf(galap)
+#' fit <- suppressWarnings(sar_mmf(galap))
 #' summary(fit)
 #' plot(fit)
 #' @export

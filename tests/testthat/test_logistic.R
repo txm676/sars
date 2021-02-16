@@ -12,6 +12,11 @@ test_that("sar_logistic returns correct results", {
   fit2 <- sar_logistic(galap, homoTest = "cor.area", homoCor = "kendall")
   expect_equal(round(fit2$homoTest[[2]]$p.value, 2), 0.17)
   expect_match(fit2$homoTest[[2]]$method, "Kendall's rank correlation tau")
+  #check it works with 0 richness values
+  g2 <- galap
+  g2$s[1] <- 0
+  fit3 <- sar_logistic(g2)
+  expect_equal(round(fit3$BIC, 2), 188.92)
 })
 
 test_that("sar_mmf returns correct results", {

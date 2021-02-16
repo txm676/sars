@@ -31,8 +31,13 @@ cat_roxygen <- function(model, funName, fileName){
   
   cat1(paste0("#' ","Fit the ", model$name," model", "\n"))
   cat1("\n")
-  cat1(paste0("#' @description ","Fit the ", model$name,
+  if (funName == "sar_mmf"){
+    cat1(paste0("#' @description ","Fit the ", model$name,
+                " model to SAR data. This function has been deprecated.", "\n"))
+  } else {
+    cat1(paste0("#' @description ","Fit the ", model$name,
               " model to SAR data.", "\n"))
+  }
   cat1(paste0("#' @usage ", funName, "(data, start = NULL,",
               " grid_start = 'partial',", "\n"))
   cat1(paste0("#'   grid_n = NULL, normaTest = 'none',", "\n"))
@@ -150,7 +155,8 @@ cat_roxygen <- function(model, funName, fileName){
               " Biogeography, 39, 215-231.\n"))
   
   #grid_start makes example too long for betap, so just for this model turn
-  #grid_start off
+  #grid_start off. For mmf, we need to suppress the warning that it is
+  #deprecated
   if (funName == "sar_betap"){
     cat1(paste0("#' @examples", "\n", 
                 "#' #Grid_start turned off for speed (not recommended)", "\n",
@@ -158,6 +164,10 @@ cat_roxygen <- function(model, funName, fileName){
                 "#' fit <- ", funName,
                 "(galap, grid_start = 'none')", "\n", 
                 "#' summary(fit)","\n", "#' plot(fit)\n"))
+  } else if (funName== "sar_mmf"){
+    cat1(paste0("#' @examples", "\n", "#' data(galap)", "\n",
+                "#' fit <- ", "suppressWarnings(", funName,
+                "(galap))", "\n", "#' summary(fit)","\n", "#' plot(fit)\n"))
   } else{
     cat1(paste0("#' @examples", "\n", "#' data(galap)", "\n",
                 "#' fit <- ", funName,

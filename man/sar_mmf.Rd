@@ -62,7 +62,7 @@ A list of class 'sars' with the following components:
   the model fit results, and the \code{\link{plot.sars}} plots the model fit.
 }
 \description{
-Fit the MMF model to SAR data.
+Fit the MMF model to SAR data. This function has been deprecated.
 }
 \details{
 The model is fitted using non-linear regression. The model parameters are estimated
@@ -83,7 +83,7 @@ not work, custom values can be provided (using the \code{start} argument), or a 
 }
 \examples{
 data(galap)
-fit <- sar_mmf(galap)
+fit <- suppressWarnings(sar_mmf(galap))
 summary(fit)
 plot(fit)
 }
