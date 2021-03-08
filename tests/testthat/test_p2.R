@@ -1,6 +1,7 @@
 context("sar_p2")
 
 test_that("sar_p2 returns correct results", {
+  skip_on_cran()
   fit <- sar_p2(galap)
   expect_equal(round(fit$AICc, 2), 191.71)
   expect_equal(as.vector(round(fit$par[2], 2)), 0.01)

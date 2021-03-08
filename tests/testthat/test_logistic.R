@@ -2,6 +2,7 @@ context("sar_logistic")
 library(sars)
 
 test_that("sar_logistic returns correct results", {
+  skip_on_cran()
   fit <- sar_logistic(galap)
   expect_equal(round(fit$AICc, 2), 189.21)
   expect_equal(as.vector(round(fit$par[2], 2)), 0.02)

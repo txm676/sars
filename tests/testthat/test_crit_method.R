@@ -2,6 +2,7 @@ context("new_information_criteria")
 library(sars)
 
 test_that("new ICs works for individual models", {
+  skip_on_cran()
   #loga
   s2 <- sar_loga(galap)
   l <- c(s2$AIC, s2$BIC, s2$AICc)
