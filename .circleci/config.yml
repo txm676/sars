@@ -16,9 +16,9 @@ jobs:
           name: Build package
           command: R CMD build .
       - run:
-          name: Check package
-          command: R CMD check *tar.gz --no-manual
-      - run:
           name: Devtools check package
           command: R -e 'devtools::check()'
+      - run:
+          name: Check package
+          command: R CMD check *tar.gz --no-manual
           
