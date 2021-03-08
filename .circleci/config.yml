@@ -14,7 +14,7 @@ jobs:
       - run:
           name: Check package
           command: R CMD check *tar.gz
-       - run:
+      - run:
           name: Devtools check package
           command: R -e 'devtools::check()'
           
