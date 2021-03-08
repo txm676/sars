@@ -2,7 +2,7 @@
 ##Version 1.3.3
   *It was realised that the mmf and heleg models are (basically) identical and 
    almost always provide exactly the same fit. As such, the mmf model has been
-   deprecated and replaced with the sar_logistic() model, i.e. the standard logistic
+   deprecated and replaced with the sar_logistic() model, i.e., the standard logistic
    model given in Tjorve (2003).
 
 ##version 1.3.2

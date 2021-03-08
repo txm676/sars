@@ -8,7 +8,8 @@
 #'   model fits, and to construct a multimodel SAR curve using information
 #'   criterion weights. A number of additional SAR functions are provided, e.g.
 #'   to fit the log-log power model, the general dynamic model of island
-#'   biogeography (GDM), and Coleman's Random Placement model.
+#'   biogeography (GDM), Coleman's Random Placement model, and piecewise ISAR
+#'   models (i.e. models with thresholds in the ISAR).
 #' @details Functions are provided to fit 20 individual SAR models. Nineteen are
 #'   fitted using non-linear regression, whilst a single model (the linear
 #'   model) is fitted using linear regression. Each model has its own function
@@ -31,11 +32,12 @@
 #'   Other SAR related functions include: (i) \code{\link{lin_pow}}, which fits
 #'   the log-log power model and enables comparison of the model parameters with
 #'   those calculated using the non-linear power model, (ii) \code{\link{gdm}},
-#'   which fits the general dynamic model of island biogeography (Whittaker et al.
-#'   2008) using several different functions, and (iii) \code{\link{coleman}},
-#'   which fits Coleman's  (1981) random placement model to a species-site
-#'   abundance matrix. Version 1.3.0 has added functions for fitting, evaluating
-#'   and plotting a range of commonly used piecewise SAR models.
+#'   which fits the general dynamic model of island biogeography (Whittaker et
+#'   al. 2008) using several different functions, and (iii)
+#'   \code{\link{coleman}}, which fits Coleman's  (1981) random placement model
+#'   to a species-site abundance matrix. Version 1.3.0 has added functions for
+#'   fitting, evaluating and plotting a range of commonly used piecewise SAR
+#'   models (\code{\link{sar_threshold}}).
 #' @author Thomas J. Matthews and Francois Guilhaumon
 #' @references Coleman, B. D. (1981). On random placement and species-area
 #'   relations. Mathematical Biosciences, 54, 191-215.
