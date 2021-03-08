@@ -8,10 +8,11 @@
 [![CRAN
 Downloads](http://cranlogs.r-pkg.org/badges/grand-total/sars)](https://cran.r-project.org/package=sars)
 [![CRAN](https://www.r-pkg.org/badges/version/sars)](https://cran.r-project.org/package=sars)
-[![codecov.io](https://codecov.io/github/txm676/sars/coverage.svg?branch=master)](https://codecov.io/github/txm676/sars?branch=master)
 [![DOI](https://zenodo.org/badge/95295704.svg)](https://zenodo.org/badge/latestdoi/95295704)
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPLv3-yellow.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Codecov test
+coverage](https://codecov.io/gh/txm676/sars/branch/master/graph/badge.svg)](https://codecov.io/gh/txm676/sars?branch=master)
 
 > *fit and compare **Species-Area Relationship (SAR)** models using
 > multi-model inference*

@@ -1,3 +1,4 @@
+#https://blog.jdblischak.com/posts/circleci-for-r-1/
 version: 2
 jobs:
   build:
@@ -16,9 +17,6 @@ jobs:
           name: Build package
           command: R CMD build .
       - run:
-          name: Devtools check package
-          command: R -e 'devtools::check()'
-      - run:
-          name: Check package
-          command: R CMD check *tar.gz --no-manual
+          name: Calculate code coverage
+          command: Rscript -e 'covr::codecov()'
           
