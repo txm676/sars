@@ -190,26 +190,27 @@ test_that("news ICs works for multi models", {
   expect_equal(round(ff4,3), round(nl,3))
 }) 
   
-  
-test_that("news ICs works for betap", { 
-  skip_on_cran()
-  #betap model - using sars without grid_start gives suboptimal
-  #parameter estimates so have to use it with that turned on for it
-  #to match with nls
-  y <- galap$s
-  x <- galap$a
-  fit6 <- sar_betap(galap, grid_start = "exhaustive", grid_n = 100)
-  ff4 <- c(fit6$AIC, fit6$BIC, 
-           fit6$AICc)
-  n4 <- suppressWarnings(nls(y ~ d * (1 - (1 + (x/c)^z)^-f), 
-            start = list("d" = 207.993, "c" = 3455203.376, 
-                         "z" = 0.832, "f" = 8109.855),
-            control = list("warnOnly" = T), algorithm = "port"))
-  nl <- c(stats::AIC(n4), stats::BIC(n4))
-  LL <- logLik(n4)
-  K <- 4 + 1 #for variance
-  n <- nrow(galap)
-  AICcm <- -2*LL+2*K*(n/(n-K-1))#- function taken directly from AICcmodavg
-  nl <- c(nl, AICcm)
-  expect_equal(round(ff4,3), round(nl,3))
-})
+#hashed out for speed
+
+# test_that("news ICs works for betap", { 
+#   skip_on_cran()
+#   #betap model - using sars without grid_start gives suboptimal
+#   #parameter estimates so have to use it with that turned on for it
+#   #to match with nls
+#   y <- galap$s
+#   x <- galap$a
+#   fit6 <- sar_betap(galap, grid_start = "exhaustive", grid_n = 100)
+#   ff4 <- c(fit6$AIC, fit6$BIC, 
+#            fit6$AICc)
+#   n4 <- suppressWarnings(nls(y ~ d * (1 - (1 + (x/c)^z)^-f), 
+#             start = list("d" = 207.993, "c" = 3455203.376, 
+#                          "z" = 0.832, "f" = 8109.855),
+#             control = list("warnOnly" = T), algorithm = "port"))
+#   nl <- c(stats::AIC(n4), stats::BIC(n4))
+#   LL <- logLik(n4)
+#   K <- 4 + 1 #for variance
+#   n <- nrow(galap)
+#   AICcm <- -2*LL+2*K*(n/(n-K-1))#- function taken directly from AICcmodavg
+#   nl <- c(nl, AICcm)
+#   expect_equal(round(ff4,3), round(nl,3))
+# })

@@ -17,32 +17,31 @@ test_that("sar_threshold returns correct results", {
                "Incorrect model names provided; see help for 'mod' argument")
   expect_error(sar_threshold(aegean2, interval = 30000), 
                "interval must be smaller than max area")
-  a2 <- aegean2[1:169,]
+  a2 <- aegean
   fit2 <- sar_threshold(a2, mod = c("ContTwo", "DiscTwo", "ZslopeTwo"),
-                        non_th_models = TRUE, interval = 1, logAxes = "area")
+                        non_th_models = TRUE, interval = 2, logAxes = "area")
   s2 <- summary(fit2)
   expect_equal(s2$`Axes transformation`, "area")
-  expect_equal(s2$Model_table$AIC, c(1974.90, 1974.87, 1977.10, 2195.69,
-                                     2426.60))
+  expect_equal(s2$Model_table$AIC, c(394.27, 414.90, 412.91, 485.69, 633.25))
   expect_equal(length(s2$Model_table$Th2[!is.na(s2$Model_table$Th2)]), 3)
   
-  #table 1 in paper
-  fit4 <- sar_threshold(data = aegean2, mod = "All", interval = 0.1, 
-                        non_th_models = TRUE, logAxes = "area", 
-                        logT = log10, parallel = TRUE, cores = 2)
-  s4 <- summary(fit4)
-  expect_equal(c(s4$Model_table$AIC), c(2020.25, 2019.48, 2022.42,
-                                        2045.94, 2047.78, 2061.70,
-                                        2305.05, 2535.84))
-  #repeat but without parallel processing
-  fit5 <- sar_threshold(data = aegean2, mod = "All", interval = 0.1,
-                        non_th_models = TRUE, logAxes = "area",
-                        logT = log10, parallel = F)
-
-  s5 <- summary(fit5)
-  expect_equal(c(s5$Model_table$AIC), c(2020.25, 2019.48, 2022.42,
-                                        2045.94, 2047.78, 2061.70,
-                                        2305.05, 2535.84))
+  #table 1 in paper (hashed for speed)
+  # fit4 <- sar_threshold(data = aegean2, mod = "All", interval = 0.1,
+  #                       non_th_models = TRUE, logAxes = "area",
+  #                       logT = log10, parallel = TRUE, cores = 2)
+  # s4 <- summary(fit4)
+  # expect_equal(c(s4$Model_table$AIC), c(2020.25, 2019.48, 2022.42,
+  #                                       2045.94, 2047.78, 2061.70,
+  #                                       2305.05, 2535.84))
+  # #repeat but without parallel processing
+  # fit5 <- sar_threshold(data = aegean2, mod = "All", interval = 0.1,
+  #                       non_th_models = TRUE, logAxes = "area",
+  #                       logT = log10, parallel = F)
+  # 
+  # s5 <- summary(fit5)
+  # expect_equal(c(s5$Model_table$AIC), c(2020.25, 2019.48, 2022.42,
+  #                                       2045.94, 2047.78, 2061.70,
+  #                                       2305.05, 2535.84))
   
   #check AIC and BIC returns same as normal AIC/BIC functions
   data(aegean)
@@ -74,8 +73,9 @@ test_that("nisl argument returns correct results", {
   data(aegean2)
   a2 <- aegean2[1:168,]
   fitT <- sar_threshold(data = a2, mod = "All",
-                        interval = 0.1, nisl = 75, non_th_models = TRUE, 
-                        logAxes = "both", logT = log2)
+                        interval = 2, nisl = 75, non_th_models = TRUE, 
+                        logAxes = "both", logT = log2,
+                        parallel = TRUE, cores = 4)
   
   s <- summary(fitT)
   expect_false(any(na.omit(s$Model_table$seg1) < 75))
@@ -134,7 +134,8 @@ test_that("get_coef returns correct results", {
   data(aegean2)
   a2 <- aegean2[1:168,]
   fitT <- sar_threshold(data = a2, mod = c("ContOne", "DiscOne", "ZslopeOne"),
-                        interval = 0.1, non_th_models = TRUE, logAxes = "area", logT = log10)
+                        interval = 0.1, non_th_models = TRUE, 
+                        logAxes = "area", logT = log10)
   coefs <- get_coef(fitT)
   expect_equal(coefs[[1]], c(134.13,  54.31, 125.28))
   expect_equal(coefs[[3]], c(NA, NA, -208.65))
@@ -144,11 +145,14 @@ test_that("get_coef returns correct results", {
                          interval = 1, non_th_models = FALSE, logAxes = "area")
   ContTwo <- fitT2[[1]][[1]]
   coefs2 <- get_coef(fitT2)
-  p1 <- (predict(ContTwo, data.frame("x" = -2)) - predict(ContTwo, data.frame("x" = -4)))/2
+  p1 <- (predict(ContTwo, 
+                 data.frame("x" = -2)) - predict(ContTwo, data.frame("x" = -4)))/2
   expect_equal(as.vector(round(p1,2)), coefs2[[2]])
-  p2 <- (predict(ContTwo, data.frame("x" = 2)) - predict(ContTwo, data.frame("x" = 0)))/2
+  p2 <- (predict(ContTwo, 
+                 data.frame("x" = 2)) - predict(ContTwo, data.frame("x" = 0)))/2
   expect_equal(as.vector(round(p2,2)), coefs2[[4]])
-  p3 <- (predict(ContTwo, data.frame("x" = 6)) - predict(ContTwo, data.frame("x" = 4)))/2
+  p3 <- (predict(ContTwo, 
+                 data.frame("x" = 6)) - predict(ContTwo, data.frame("x" = 4)))/2
   expect_equal(as.vector(round(p3,2)), coefs2[[6]])
 })
 
