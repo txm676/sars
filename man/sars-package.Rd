@@ -10,7 +10,8 @@ This package provides functions to fit twenty models to
   model fits, and to construct a multimodel SAR curve using information
   criterion weights. A number of additional SAR functions are provided, e.g.
   to fit the log-log power model, the general dynamic model of island
-  biogeography (GDM), and Coleman's Random Placement model.
+  biogeography (GDM), Coleman's Random Placement model, and piecewise ISAR
+  models (i.e. models with thresholds in the ISAR).
 }
 \details{
 Functions are provided to fit 20 individual SAR models. Nineteen are
@@ -35,11 +36,12 @@ Functions are provided to fit 20 individual SAR models. Nineteen are
   Other SAR related functions include: (i) \code{\link{lin_pow}}, which fits
   the log-log power model and enables comparison of the model parameters with
   those calculated using the non-linear power model, (ii) \code{\link{gdm}},
-  which fits the general dynamic model of island biogeography (Whittaker et al.
-  2008) using several different functions, and (iii) \code{\link{coleman}},
-  which fits Coleman's  (1981) random placement model to a species-site
-  abundance matrix. Version 1.3.0 has added functions for fitting, evaluating
-  and plotting a range of commonly used piecewise SAR models.
+  which fits the general dynamic model of island biogeography (Whittaker et
+  al. 2008) using several different functions, and (iii)
+  \code{\link{coleman}}, which fits Coleman's  (1981) random placement model
+  to a species-site abundance matrix. Version 1.3.0 has added functions for
+  fitting, evaluating and plotting a range of commonly used piecewise SAR
+  models (\code{\link{sar_threshold}}).
 }
 \examples{
 data(galap, package = "sars")
