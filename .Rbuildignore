@@ -10,3 +10,4 @@
 ^README-.*\.png$
 
 ^CRAN-RELEASE$
+^\.circleci$
