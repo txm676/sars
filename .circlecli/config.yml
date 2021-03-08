@@ -17,3 +17,4 @@ jobs:
        - run:
           name: Devtools check package
           command: R -e 'devtools::check()'
+          
