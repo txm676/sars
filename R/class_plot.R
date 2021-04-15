@@ -834,7 +834,7 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL,
     ylab <- switch(x[[5]][[1]], 
                    none = "Species richness", 
                    area = "Species richness", 
-                   both = "Log(Species richnes)")
+                   both = "Log(Species richness)")
   }
   if (is.null(ModTitle)) {
     ModTitle <- sapply(names, function(x) {
