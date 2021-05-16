@@ -2,7 +2,7 @@
 
 ######################################## optimization function
 
-#' @importFrom stats formula optim shapiro.test ks.test cor.test pt
+#' @importFrom stats formula optim shapiro.test ks.test cor.test pt confint coef
 #' @importFrom nortest lillie.test
 
 rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
@@ -148,10 +148,12 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
 
   res <- c(res1,list(verge=verge),res2,res3)
 
-  #estimates significance and confidence interval (95%)
+  #estimates significance and confidence interval (95%) using nls;
+  #but using our fitted parameter estimates rather than re-fitting a new
+  #model using nls (i.e. the par estimates are identical), we are simply
+  #using the nls framework to get se, t-values, p-values etc
 
   #constructing a nlsModel object
-
   formul <- formula(paste("S ~",as.character(model$exp)))
   env <- environment(formul)
   if (is.null(env)){
@@ -162,7 +164,7 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   nMod <- tryCatch(stats_nlsModel(formul,data,res1$par),
                    error = function(e)NA)
 
-  if(class(nMod) != "nlsModel"){
+  if (class(nMod) != "nlsModel"){
     warning(model$name,": singular gradient at parameter estimates:
    no parameters significance and conf. intervals.", call. = FALSE)
     res$sigConf <- NA
@@ -189,18 +191,38 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
                                               lower.tail = FALSE))
     dimnames(param) <- list(model$paramnames, c("Estimate", "Std. Error",
                                                 "t value", "Pr(>|t|)"))
-
-    #95% confidence interval
+    
+    #95% confidence interval, simply 2 * the SE: method used
+    #in mmSAR
     conf <- matrix(c(param[,"Estimate"] - 2 * param[,"Std. Error"],
                      param[,"Estimate"] + 2 * param[,"Std. Error"]),p,2)
     colnames(conf) <- c("2.5%","97.5%")
 
-    sigConf <- cbind(param,conf)
-
+    sigConf <- cbind(param, conf)
+    
+    #If power model is fitted, properly fit the model using nls and get the par
+    #estimates & confidence intervals using their approach. Sometimes the model
+    #will fit with nls and converge, but the confint function will not work with
+    #the resultant object (e.g. states singular gradient), so if this happens we
+    #return nothing for the nls CIs
+    if (model$name == "Power"){
+      yobs <- data$S
+      xobs <- data$A
+      nls_pow <- tryCatch(nls(yobs ~ c * xobs^z,
+                     start = list("c" = res1$par[1], "z" = res1$par[2])),
+      error = function(e)NA)
+      if (!anyNA(nls_pow)) {
+        coef_nls_pow <- as.vector(coef(nls_pow))
+        CI_nls_pow <- tryCatch(suppressMessages(confint(nls_pow)),
+                               error = function(e)NA)
+        if (!anyNA(CI_nls_pow)){
+          sigConf <- cbind(sigConf, "nls.Est." = coef_nls_pow, CI_nls_pow)
+          colnames(sigConf)[8:9] <- c("nls.2.5%", "nls.97.5%")
+        }
+      }
+    }#eo if power
     res$sigConf <- sigConf
-
   }#eo if else is.na(nMod)
-
 
   res$normaTest <- normaTest
   res$homoTest <- homoTest

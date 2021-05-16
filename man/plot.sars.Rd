@@ -106,6 +106,7 @@ fit <- sar_power(galap)
 plot(fit, ModTitle = "A)", lcol = "blue")
 
 #fit and plot a sars object of Type fit_collection.
-fc <- sar_multi(data = galap, obj = c("power", "loga", "epm1"))
+fc <- sar_multi(data = galap, obj = c("power", "loga", "epm1"), 
+grid_start = "none")
 plot(fc, ModTitle = letters[1:3], xlab = "Size of island")
 }

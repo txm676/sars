@@ -37,6 +37,8 @@
 #'   
 #'   As grid_start has a random component, when \code{grid_start != 'none'} in your model fitting, you can
 #'    get slightly different results each time you fit a model
+#'   
+#'    The parameter confidence intervals returned in sigConf are just simple confidence intervals, calculated as 2 * standard error.
 #' @importFrom stats lm quantile
 #' @return A list of class 'sars' with the following components: 
 #'   \itemize{

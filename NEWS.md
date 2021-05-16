@@ -1,4 +1,11 @@
 
+##Version 1.3.4
+  * For the power model only we now return (in the sigConf object) the parameter
+    estimates from a nls fit (using as starting par estimates the par values from
+    our fitting process). Using the nls fit, we also return the confidence intervals
+    around the par estimates generated using the confint function - these should be
+    more accurate than the default sars CIs (2 * standard error)
+
 ##Version 1.3.3
   *It was realised that the mmf and heleg models are (basically) identical and 
    almost always provide exactly the same fit. As such, the mmf model has been

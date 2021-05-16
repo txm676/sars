@@ -59,7 +59,8 @@ fit <- sar_power(data = galap)
 p <- sar_pred(fit, area = 5000)
 
 #fit three SAR models and predict richness on islands of area = 5000 & 10000
-fit2 <- sar_multi(galap, obj = c("power", "loga", "koba"))
+#using no grid_start for speed
+fit2 <- sar_multi(galap, obj = c("power", "loga", "koba"), grid_start = "none")
 p2 <- sar_pred(fit2, area = c(5000, 10000))
 
 #calculate a multi-model curve and predict richness on islands of area = 5000 & 10000

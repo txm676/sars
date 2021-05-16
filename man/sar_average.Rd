@@ -242,7 +242,7 @@ Burnham, K. P., & Anderson, D. R. (2002). Model selection and
   Guilhaumon, F., Mouillot, D., & Gimenez, O. (2010). mmSAR: an R-package for
   multimodel species-area relationship inference. Ecography, 33, 420-424.
   
-  Matthews, T. J., K. A. Triantis, R. J. Whittaker, & F. Guilhaumon. (2019_.
+  Matthews, T. J., K. A. Triantis, R. J. Whittaker, & F. Guilhaumon. (2019).
   sars: an R package for fitting, evaluating and comparing species–area
   relationship models. Ecography, 42, 1446–55.
 }

@@ -414,7 +414,7 @@ sar_multi <- function(data,
 #'   Guilhaumon, F., Mouillot, D., & Gimenez, O. (2010). mmSAR: an R-package for
 #'   multimodel species-area relationship inference. Ecography, 33, 420-424.
 #'   
-#'   Matthews, T. J., K. A. Triantis, R. J. Whittaker, & F. Guilhaumon. (2019_.
+#'   Matthews, T. J., K. A. Triantis, R. J. Whittaker, & F. Guilhaumon. (2019).
 #'   sars: an R package for fitting, evaluating and comparing species–area
 #'   relationship models. Ecography, 42, 1446–55.
 #' @examples
@@ -814,7 +814,8 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
 #' p <- sar_pred(fit, area = 5000)
 #' 
 #' #fit three SAR models and predict richness on islands of area = 5000 & 10000
-#' fit2 <- sar_multi(galap, obj = c("power", "loga", "koba"))
+#' #using no grid_start for speed
+#' fit2 <- sar_multi(galap, obj = c("power", "loga", "koba"), grid_start = "none")
 #' p2 <- sar_pred(fit2, area = c(5000, 10000))
 #' 
 #' #calculate a multi-model curve and predict richness on islands of area = 5000 & 10000

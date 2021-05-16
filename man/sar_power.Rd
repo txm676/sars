@@ -80,6 +80,12 @@ not work, custom values can be provided (using the \code{start} argument), or a 
   
   As grid_start has a random component, when \code{grid_start != 'none'} in your model fitting, you can
    get slightly different results each time you fit a model
+  
+   The parameter confidence intervals returned in sigConf are just simple confidence intervals, calculated as 2 * standard error.
+  For the power model (and only this model) the returned object (sigConf) and model summary also includes the parameter estimates
+generated from fitting the model using \code{\link{nls}} and using as starting parameter estimates the parameter values
+from our model fitting. This also returns the confidence intervals generated with \code{\link{confint}} (which
+calls MASS:::confint.nls), which should be more accurate than the default \code{sars} CIs.
 }
 \examples{
 data(galap)

@@ -75,7 +75,7 @@ test_that("nisl argument returns correct results", {
   fitT <- sar_threshold(data = a2, mod = "All",
                         interval = 2, nisl = 75, non_th_models = TRUE, 
                         logAxes = "both", logT = log2,
-                        parallel = TRUE, cores = 4)
+                        parallel = TRUE, cores = 2)
   
   s <- summary(fitT)
   expect_false(any(na.omit(s$Model_table$seg1) < 75))

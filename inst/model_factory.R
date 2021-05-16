@@ -104,6 +104,22 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#'   As grid_start has a random component, when",
               " \\code{grid_start != 'none'} in your model fitting, you can\n")) 
   cat1(paste0("#'    get slightly different results each time you fit a model\n")) 
+  cat1(paste0("#'   \n")) 
+  
+  cat1(paste0("#'    The parameter confidence intervals returned in sigConf are just",
+              " simple confidence intervals, calculated as 2 * standard error.\n"))
+  
+  if (funName == "sar_power"){
+    cat1(paste0("#'   For the power model (and only this model) the returned object ",
+                "(sigConf) and model summary also includes the parameter estimates\n",
+                "#' generated from fitting the model using \\code{\\link{nls}} and",
+                " using as starting parameter estimates the parameter values\n",
+                "#' from our model fitting. This also returns the confidence",
+                " intervals generated with \\code{\\link{confint}} (which\n",
+                "#' calls MASS:::confint.nls), which should be more accurate",
+                " than the default \\code{sars} CIs.\n"))
+  }
+  
   cat1(paste0("#' @importFrom ", "stats lm quantile\n")) 
   
   cat1(paste0("#' @return ", "A list of class 'sars' with the following", 
