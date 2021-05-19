@@ -16,13 +16,17 @@ find_one_threshold_cont <- function(x, y, fct, interval, nisl = NULL){
     sequence <- seq(min(sort(x)[-(1:n)]), max(rev(sort(x))[-(1:n)]), interval)
   }
   s1 <- lapply(sequence, fct, x = x, y = y)
+  #if multiple identical min values, which.min just returns the first one,
+  #so need to check manually for equal cases
   w <- which.min(s1)
-  if (length(w) == 1){
+  min_val <- s1[[w]]
+  w_mult <- which(s1 == min_val)
+  if (length(w_mult) == 1){
     threshold <- sequence[w]
   } else{
     warning("Multiple threshold values returned same minimum rss;", 
             " one value / pair has been randomly selected")
-    w2 <- w[sample(1:length(w), 1)]
+    w2 <- w_mult[sample(1:length(w_mult), 1)]
     threshold <- sequence[w2]
   }
   return(threshold)
@@ -43,13 +47,17 @@ find_one_threshold_disc <- function(x, y, fct, nisl = NULL){
   for (i in 1:length(x1)){
     rss[i] <- fct(x[i], x, y)
   }
+  #if multiple identical min values, which.min just returns the first one,
+  #so need to check manually for equal cases
   w <- which.min(rss)
-  if (length(w) == 1){
+  min_val <- rss[w]
+  w_mult <- which(rss == min_val)
+  if (length(w_mult) == 1){
     threshold <- x1[w]
   } else{
     warning("Multiple threshold values returned same minimum rss;", 
             " one value / pair has been randomly selected")
-    w2 <- w[sample(1:length(w), 1)]
+    w2 <- w_mult[sample(1:length(w_mult), 1)]
     threshold <- x1[w2]
   }
   return(threshold)
@@ -99,6 +107,8 @@ find_two_thresholds_cont <- function(x, y, fct, interval, nisl = NULL, parallel,
       ssr_t1[[i]] <- ssr_t2
     }
   }
+  #this approach automatically choose all min par values as not using
+  #which.min
   l2 <- do.call(rbind, lapply(ssr_t1, function(x) do.call(rbind, x)))
   thb <- l2[which(l2[,1] == min(l2[,1])), , drop = FALSE]
   

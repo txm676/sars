@@ -5,6 +5,8 @@
     our fitting process). Using the nls fit, we also return the confidence intervals
     around the par estimates generated using the confint function - these should be
     more accurate than the default sars CIs (2 * standard error)
+  * Corrected bug in find_one_threshold_cont and find_one_threshold_disc which didn't
+    properly report warning that multiple par estimates returned same minimum RSS
 
 ##Version 1.3.3
   *It was realised that the mmf and heleg models are (basically) identical and 

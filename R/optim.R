@@ -233,6 +233,15 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
 
 ######################################## Multiple starting values optimization function
 
+#function to work out if all values in a vector are the same
+vec.equal <- function (x, tol = .Machine$double.eps^0.5) 
+{
+  if (length(x) == 1) 
+    return(TRUE)
+  x <- range(x)/mean(x)
+  isTRUE(all.equal(x[1], x[2], tolerance = tol))
+}
+
 #' @importFrom stats runif
 
 grid_start_fit <- function(model, data, n, type, algo = "Nelder-Mead",
@@ -355,14 +364,32 @@ if (model$name == "Gompertz"){
   
   values <- unlist(lapply(fit.list,function(x){x$value}))
   
-  #note this just returns one value even if there are multiple values with
-  #the same lowest rss - and there almost always will be as lots of starting
-  #par estimates will converge on same final pars, so this is fine.
-  min <- which.min(values)
+  # note this just returns one value even if there are multiple values with
+  # the same lowest rss - and there almost always will be as lots of starting
+  # par estimates will converge on same final pars, so this is fine.
   
-  if(length(min) != 0) {
+  #This finds the min RSS, then checks if multiple par estimates return the same
+  #rss. If so, it throws a warning and randomly selects a set. If not,
+  #it just returns the min set
+  min_val <- min(values, na.rm = TRUE)
+  w_mult <- as.vector(which(values == min_val))
+  if (length(w_mult) > 1){
+    mult_pars <- vapply(fit.list[w_mult], function(x) x$par, 
+         FUN.VALUE = numeric(length(model$parNames)))
+    mult_pars <- round(mult_pars, 2)
+    mult_equal <- apply(mult_pars, 2, function(x) vec.equal(x))
+    if (any(!mult_equal)){
+      warning("Multiple parameter estimates returned same minimum rss;", 
+              " one set have been randomly selected")
+    }
+    min <- sample(w_mult, 1)
+  } else{
+    min <- which.min(values)
+  }
+  
+  if (length(min) != 0) {
     fit.list[[min]]
-  }else{
+  } else{
     list(value = NA)
   }
   
