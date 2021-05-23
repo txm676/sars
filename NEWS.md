@@ -9,6 +9,8 @@
     properly report warning that multiple par estimates returned same minimum RSS
   * Added same 'multiple par estimates returned same minimum RSS' warning and random
     selection to main grid_start function
+  * Adding verb argument to all individual model fits
+  * Adding display argument to sar_average and sar_multi
 
 ##Version 1.3.3
   *It was realised that the mmf and heleg models are (basically) identical and 

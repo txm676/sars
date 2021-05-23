@@ -9,7 +9,7 @@ sar_multi(data, obj = c("power",
   "monod","negexpo","chapman","weibull3","asymp",
   "ratio","gompertz","weibull4","betap","logistic","heleg","linear"),
   normaTest = "none", homoTest = "none", homoCor = "spearman", grid_start =
-  "partial", grid_n = NULL, verb = TRUE)
+  "partial", grid_n = NULL, verb = TRUE, display = TRUE)
 }
 \arguments{
 \item{data}{A dataset in the form of a dataframe with two columns: the first
@@ -39,7 +39,11 @@ multiple starting parameter values. Can be one of 'none', 'partial' or
 \item{grid_n}{If \code{grid_start = exhaustive}, the number of points sampled
 in the starting parameter space (see details).}
 
-\item{verb}{verbose (default: \code{verb == TRUE}).}
+\item{verb}{verbose - Whether or not to print certain warnings 
+(default: \code{verb == TRUE}).}
+
+\item{display}{Show the model fitting output and related messages.
+(default: \code{display == TRUE}).}
 }
 \value{
 A list of class 'sars' with n elements, corresponding to the n

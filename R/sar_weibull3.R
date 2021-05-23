@@ -3,7 +3,7 @@
 #' @description Fit the Cumulative Weibull 3 par. model to SAR data.
 #' @usage sar_weibull3(data, start = NULL, grid_start = 'partial',
 #'   grid_n = NULL, normaTest = 'none',
-#'   homoTest = 'none', homoCor = 'spearman')
+#'   homoTest = 'none', homoCor = 'spearman', verb = TRUE)
 #' @param data A dataset in the form of a dataframe with two columns: 
 #'   the first with island/site areas, and the second with the species richness
 #'   of each island/site.
@@ -20,6 +20,7 @@
 #'   residuals with the area values), or 'none' (no residuals homogeneity test is undertaken; the default).
 #' @param homoCor The correlation test to be used when \code{homoTest !='none'}. Can be any of 'spearman'
 #'   (the default), 'pearson', or 'kendall'.
+#' @param verb Whether or not to print certain warnings (default = TRUE)
 #' @details The model is fitted using non-linear regression. The model parameters are estimated
 #'   by minimizing the residual sum of squares with an unconstrained Nelder-Mead optimization algorithm
 #'   and the \code{\link{optim}} function. To avoid numerical problems and speed up the convergence process,
@@ -80,7 +81,7 @@
 sar_weibull3 <- function(data, start = NULL, 
 grid_start = "partial", grid_n = NULL, 
 normaTest =  "none", homoTest = 
-"none", homoCor = "spearman"){
+"none", homoCor = "spearman", verb = TRUE){
 if (!(is.matrix(data) | is.data.frame(data)))  
 stop('data must be a matrix or dataframe')
 if (is.matrix(data)) data <- as.data.frame(data)
@@ -100,6 +101,9 @@ if (grid_start == 'exhaustive'){
   if (!is.numeric(grid_n))
   stop('grid_n should be numeric if grid_start == exhaustive')
   }
+if (!is.logical(verb)){
+stop('verb should be logical')
+}
 data <- data[order(data[,1]),]
 colnames(data) <- c('A','S')
 #check for all equal richness values (particuarly zeros)
@@ -140,11 +144,11 @@ model <- compmod(model)
 fit <- get_fit(model = model, data = data, start = start,  
 grid_start = grid_start, grid_n = grid_n, algo = 'Nelder-Mead', 
        normaTest =  normaTest, homoTest = homoTest, 
-       homoCor = homoCor)
+       homoCor = homoCor, verb = verb)
 if(is.na(fit$value)){
   return(list(value = NA))
 }else{ 
-  obs <- obs_shape(fit)
+  obs <- obs_shape(fit, verb = verb)
   fit$observed_shape <- obs$fitShape
   fit$asymptote <- obs$asymp
   fit$neg_check <- any(fit$calculated < 0)

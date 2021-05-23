@@ -11,7 +11,7 @@ sar_average(obj = c("power",
   NULL, crit = "Info", normaTest = "none", homoTest = "none", homoCor =
   "spearman", neg_check = FALSE, alpha_normtest = 0.05, alpha_homotest =
   0.05, grid_start = "partial", grid_n = NULL, confInt = FALSE, ciN = 100,
-  verb = TRUE)
+  verb = TRUE, display = TRUE)
 }
 \arguments{
 \item{obj}{Either a vector of model names or a fit_collection object created
@@ -68,7 +68,11 @@ should be calculated for the multimodel curve using bootstrapping.}
 \item{ciN}{The number of bootstrap samples to be drawn to calculate the
 confidence intervals (if \code{confInt == TRUE}).}
 
-\item{verb}{verbose (default: \code{verb == TRUE}).}
+\item{verb}{verbose - Whether or not to print certain warnings 
+(default: \code{verb == TRUE})}
+
+\item{display}{Show the model fitting output and related messages.
+(default: \code{display == TRUE}).}
 }
 \value{
 A list of class "multi" and class "sars" with two elements. The first

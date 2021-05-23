@@ -7,7 +7,7 @@
 
 rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
                      normaTest = "none", homoTest = "none",
-                     homoCor = "spearman"){
+                     homoCor = "spearman", verb = TRUE){
 
   #initial parameters
   if (is.null(start)) {
@@ -103,12 +103,14 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   #Homogeneity of variance
 
   if (homoTest == "cor.area"){
-    homoTest  <- list("test" = "cor.area", tryCatch(cor.test(sq_residu,data$A, 
-                      method = homoCor), 
+    homoTest  <- list("test" = "cor.area", 
+                      tryCatch(suppressWarnings(cor.test(sq_residu,data$A, 
+                      method = homoCor)), 
                       error = function(e)list(estimate=NA,p.value=NA)))
   } else if (homoTest == "cor.fitted"){
-    homoTest  <- list("test" = "cor.fitted", tryCatch(cor.test(sq_residu,S.calc,
-                      method = homoCor),
+    homoTest  <- list("test" = "cor.fitted", 
+                      tryCatch(suppressWarnings(cor.test(sq_residu,S.calc,
+                      method = homoCor)),
                     error = function(e)list(estimate=NA,p.value=NA)))
   } else {
     homoTest <- list("test" = "none", "none")
@@ -165,8 +167,10 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
                    error = function(e)NA)
 
   if (class(nMod) != "nlsModel"){
+    if (verb){
     warning(model$name,": singular gradient at parameter estimates:
-   no parameters significance and conf. intervals.", call. = FALSE)
+             no parameters significance and conf. intervals.", call. = FALSE)
+    }
     res$sigConf <- NA
   }else{
     #number of parameters
@@ -378,9 +382,9 @@ if (model$name == "Gompertz"){
          FUN.VALUE = numeric(length(model$parNames)))
     mult_pars <- round(mult_pars, 2)
     mult_equal <- apply(mult_pars, 2, function(x) vec.equal(x))
-    if (any(!mult_equal)){
-      warning("Multiple parameter estimates returned same minimum rss;", 
-              " one set have been randomly selected")
+    if (any(!mult_equal) & verb){
+      warning(paste0(model$name, ": Multiple parameter estimates returned the ", 
+                     "same minimum rss; one set have been randomly selected"))
     }
     min <- sample(w_mult, 1)
   } else{
@@ -425,23 +429,23 @@ get_fit <- function(model = model, data = data, start = NULL,
     } else{
       fit <- tryCatch(rssoptim(model = model, data = data, algo = algo,
                                normaTest = normaTest, homoTest = homoTest,
-                               homoCor = homoCor),
+                               homoCor = homoCor, verb = verb),
                       error=function(e) list(value = NA))
     }
   } else if (!is.null(start)){#or provided start values
     fit <- tryCatch(rssoptim(model = model, data = data,
                              start = start, algo = algo,
                              normaTest = normaTest, homoTest = homoTest,
-                             homoCor = homoCor),
+                             homoCor = homoCor, verb = verb),
                     error = function(e) list(value = NA))
   } else { #or if neither selected, use default start values from within sars
     fit <- tryCatch(rssoptim(model = model, data = data, algo = algo,
                              normaTest = normaTest, homoTest = homoTest,
-                             homoCor = homoCor),
+                             homoCor = homoCor, verb = verb),
                     error=function(e) list(value = NA))
   }
   
-  if(is.na(fit$value)){
+  if(is.na(fit$value) & verb){
     warning("The model could not be fitted :(\n")
     return(list(value = NA))
   }else{

@@ -8,7 +8,8 @@ test_that("sar_monod returns correct results", {
   expect_equal(as.vector(round(fit$par[2], 2)), 0.04)
   expect_is(fit, "sars")
   expect_match(fit$normaTest[[1]], "none")
-  expect_error(sar_linear(5), "data must be a matrix or dataframe")
+  expect_error(sar_monod(5), "data must be a matrix or dataframe")
+  expect_error(sar_monod(niering, verb = 3), "verb should be logical")
   #checking homoCor argument
   expect_error(sar_monod(niering, homoTest = "cor.fitted",
                          homoCor = "4"))

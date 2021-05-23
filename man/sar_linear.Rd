@@ -5,7 +5,7 @@
 \title{Fit the linear model}
 \usage{
 sar_linear(data, normaTest =  'none', homoTest = 'none', homoCor =
-  'spearman')
+  'spearman', verb = TRUE)
 }
 \arguments{
 \item{data}{A dataset in the form of a dataframe with two columns: the
@@ -25,6 +25,8 @@ the default).}
 
 \item{homoCor}{The correlation test to be used when \code{homoTest !=
 "none"}. Can be any of "spearman" (the default), "pearson", or "kendall".}
+
+\item{verb}{Whether or not to print certain warnings (default = TRUE).}
 }
 \value{
 A list of class 'sars' with the following components: \itemize{

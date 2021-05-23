@@ -24,10 +24,10 @@ test_that("grid_start is working correctly", {
                "grid_start should be one of 'none', 'partial' or 'exhaustive'")
   expect_error(sar_average(data = df, obj, grid_start = "exhaustive", grid_n = NULL), 
                "grid_n should be numeric if grid_start == exhaustive")
-  
-  expect_length(sar_average(data = df, obj, grid_start = "none"), 2)
-  expect_length(sar_average(data = df, obj, grid_start = "partial"), 2)
+  #verb = FALSE as Gompertz & Chapman throw RSS warning
+  expect_length(sar_average(data = df, obj, grid_start = "none", verb = FALSE), 2)
+  expect_length(sar_average(data = df, obj, grid_start = "partial", verb = FALSE), 2)
   expect_length(sar_average(data = df, obj, 
-                            grid_start = "exhaustive", grid_n = 200), 2)
+                            grid_start = "exhaustive", grid_n = 200, verb = FALSE), 2)
   
 })

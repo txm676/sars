@@ -23,7 +23,8 @@ test_that("various functions return correct convergence info", {
   test <- data.frame("a" =  c(0.52,  2.33,  2.59,  4.66,  4.84, 11.40, 18.39),
                      "s" = c(7.458806, 15.904833, 66.768317, 44.708306,
                              82.288296, 57.104797, 29.598247))
-  s3 <- sar_average(data = test, grid_start = "none")
+  #set verb to FALSE, as it produces warnings of convergence etc
+  s3 <- sar_average(data = test, grid_start = "none", verb = FALSE)
   expect_false(all(s3$details$convergence))
   expect_false(all(summary(s3)$Convergence))
   expect_false(s3$details$fits$chapman$verge)

@@ -4,7 +4,7 @@
 
 #' @importFrom stats uniroot
 
-obs_shape <- function(x){
+obs_shape <- function(x, verb = TRUE){
 
     minMaxVal <- NA
     asymp <- FALSE
@@ -14,7 +14,7 @@ obs_shape <- function(x){
     Areas <- seq(range(data$A)[1], range(data$A)[2], length.out = 9999)
 
     #function to detect sign changes and provide roots
-    getRoots <- function(fun, d1 = TRUE, Areas, pars) {
+    getRoots <- function(fun, d1 = TRUE, Areas, pars, mod_name, verb = TRUE) {
         #values and sign of the function evaluated
         values <- fun(Areas, pars)
         signs <- sign(values)
@@ -32,9 +32,11 @@ obs_shape <- function(x){
            # if (as.character(dc$fun)[3] == "d1.fun") {
             if (d1) {
               if (nMinMax > 1){
-             warning("more than one minimum and/or maximum in the derivative,
-                      check the model plot to asses whether the model fit
-                      looks sensible")
+              if (verb){
+             warning(paste0(mod_name, ": more than one minimum and/or maximum in", 
+                    " the derivative, check the model plot to assess whether the", 
+                      " model fit looks sensible"))
+              }
                 for (i in 1:nMinMax) {
                   sigBef <- signs[sigCh[i]]
                   sigAft <- signs[sigCh[i] + 1]
@@ -116,11 +118,13 @@ obs_shape <- function(x){
           asymp <- TRUE
       }#eo if
 
-      roots.d1 <- tryCatch(getRoots(model$d1.fun, d1 = TRUE, Areas, pars),
+      roots.d1 <- tryCatch(getRoots(model$d1.fun, d1 = TRUE, Areas, 
+                                    pars, mod_name = x$model$name, verb = verb),
                            error = function(e) list(sigCh = NA, roots = NA,
                                                     minMax = NA))
       if (model$shape %in% c("sigmoid", "convex/sigmoid")) {
-        roots.d2 <- tryCatch(getRoots(model$d2.fun, d1 = FALSE, Areas, pars),
+        roots.d2 <- tryCatch(getRoots(model$d2.fun, d1 = FALSE, Areas, 
+                                      pars, mod_name = x$model$name, verb = verb),
                              error = function(e) list(sigCh = NA,
                                                     roots = NA, minMax = NA))
       } else {

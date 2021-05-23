@@ -2,7 +2,7 @@
 
 #' @description Fit the linear model to SAR data.
 #' @usage sar_linear(data, normaTest =  'none', homoTest = 'none', homoCor =
-#'   'spearman')
+#'   'spearman', verb = TRUE)
 #' @param data A dataset in the form of a dataframe with two columns: the
 #'   first with island/site areas, and the second with the species richness
 #'   of each island/site.
@@ -17,6 +17,8 @@
 #'   the default).
 #' @param homoCor The correlation test to be used when \code{homoTest !=
 #'   "none"}. Can be any of "spearman" (the default), "pearson", or "kendall".
+#' @param verb Whether or not to print certain warnings (default = TRUE).
+
 #' @details The model is fitted using linear regression and the
 #'   \code{\link{lm}} function. Model validation can be undertaken by assessing
 #'   the normality (\code{normaTest}) and homogeneity (\code{homoTest}) of
@@ -54,11 +56,12 @@
 #' @export 
 
 sar_linear <- function(data, normaTest =  "none", homoTest = "none",
-                       homoCor = "spearman"){
+                       homoCor = "spearman", verb = TRUE){
   if (!(is.matrix(data) | is.data.frame(data))) 
     stop('data must be a matrix or dataframe') 
   if (is.matrix(data)) data <- as.data.frame(data) 
   if (anyNA(data)) stop('NAs present in data') 
+  if (!is.logical(verb)) stop('verb should be logical')
   data <- data[order(data[,1]),] 
   colnames(data) <- c('A','S') 
   #standard linear regression
@@ -124,12 +127,14 @@ sar_linear <- function(data, normaTest =  "none", homoTest = "none",
   #Homogeneity of variance
   if (homoTest == "cor.area"){
     homoTest  <- list("test" = "cor.area", 
-                      tryCatch(cor.test(squ_res,data$A, method = homoCor), 
+                      tryCatch(suppressWarnings(cor.test(squ_res,data$A, 
+                                                         method = homoCor)), 
                           error = function(e)list(estimate=NA,p.value=NA)))
   } else if (homoTest == "cor.fitted"){
     homoTest  <- list("test" = "cor.fitted", 
-                      tryCatch(cor.test(squ_res,as.vector(mod$fitted.values),
-                                        method = homoCor), 
+                      tryCatch(suppressWarnings(cor.test(squ_res, 
+                                                  as.vector(mod$fitted.values),
+                                        method = homoCor)), 
                           error = function(e)list(estimate=NA,p.value=NA)))
   } else {
     homoTest <- list("test" = "none", "none")

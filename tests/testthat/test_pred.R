@@ -29,16 +29,19 @@ test_that("sar_pred on multi-model curve returns correct results", {
   #as it can produce different sar_pred values each time it is run. So here
   #I have used grid_start = none except for the last.
   data(niering)
-  fit3 <- sar_average(data = niering, grid_start = "none")
+  #verb = FALSE as heleg has singular gradient warning
+  fit3 <- sar_average(data = niering, grid_start = "none", verb = FALSE)
   p3 <- sar_pred(fit3, area = c(50, 500))
   expect_equal(nrow(p3), 2)
   expect_equal(round(p3$Prediction[2], 2), 53.14)
   expect_match(as.character(p3$Model[1]), "Multi")
+  #verb = FALSE as heleg has singular gradient warning
   fit4 <- sar_average(data = niering, normaTest = "lillie",
-                      homoTest = "cor.fitted", grid_start = "none")
+                      homoTest = "cor.fitted", grid_start = "none", verb = FALSE)
   p4 <- sar_pred(fit4, area = c(50, 500))
   expect_equal(round(p4$Prediction[2], 2), 116.58)
-  fit5 <- sar_average(data = niering, normaTest = "lillie", grid_start = "none")
+  fit5 <- sar_average(data = niering, normaTest = "lillie", 
+                      grid_start = "none", verb = FALSE)
   p5 <- sar_pred(fit5, area = c(50, 500))
   expect_equal(round(p5$Prediction[2], 2), 47.3)
   #test it using grid_start = exhaustive, which for this always seems to give the

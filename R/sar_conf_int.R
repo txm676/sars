@@ -12,7 +12,8 @@ sar_conf_int <- function(fit, n, crit, obj_all, normaTest,
                          alpha_homotest, 
                          grid_start,
                          grid_n,
-                         verb){
+                         verb,
+                         display){
   
   if (!"multi" %in% class(fit)) stop ("class of 'fit' should be 'multi'")
   if (length(fit$details$mod_names) < 2) 
@@ -136,7 +137,7 @@ sar_conf_int <- function(fit, n, crit, obj_all, normaTest,
   
   #run the bootstrapping (based on code in mmSAR)
   
-  if (verb) {
+  if (display) {
     pb <- txtProgressBar(min = 0, max = n, style = 3)
     z <- 1
   }
@@ -206,7 +207,8 @@ sar_conf_int <- function(fit, n, crit, obj_all, normaTest,
                                                       alpha_homotest = alpha_homotest, 
                                                       grid_start = grid_start,
                                                       grid_n = grid_n,
-                                                      verb = FALSE)), 
+                                                      verb = FALSE,
+                                                      display = FALSE)), 
                          error = function(e) NA)
     
     #Nov 2020: replaced lots of code that was just calculating the mmi curve,
@@ -216,7 +218,7 @@ sar_conf_int <- function(fit, n, crit, obj_all, normaTest,
       next
     } else {
       #progress bar
-      if (verb) {
+      if (display) {
         setTxtProgressBar(pb, z)
         z <- z + 1
       }
@@ -226,7 +228,7 @@ sar_conf_int <- function(fit, n, crit, obj_all, normaTest,
     } 
   }#eo while
   
-  if (verb) cat("\n")#needed to drop warnings below progress bar
+  if (display) cat("\n")#needed to drop warnings below progress bar
   
   #sort and return the CIs
   bootSort <- apply(bootHat, 2, sort)
