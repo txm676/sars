@@ -646,7 +646,7 @@ plot.multi <- function(x, type = "multi", allCurves = TRUE,
 #'@importFrom graphics par plot lines title
 #'@noRd
 
-discOnePlot <- function (xx, yy, xypred.disc, data, th, xlab = xlab, 
+discOnePlot <- function (xx, yy, multPlot, xypred.disc, data, th, xlab = xlab, 
                          ylab = ylab, pch = pch, 
                          pcol = pcol, cex = cex, cex.lab = cex.lab, 
                          cex.axis = cex.axis, 
@@ -656,11 +656,13 @@ discOnePlot <- function (xx, yy, xypred.disc, data, th, xlab = xlab,
 {
   disc1 <- xypred.disc[xypred.disc$x <= th["DiscOne"][1], ]
   disc2 <- xypred.disc[xypred.disc$x > th["DiscOne"][1], ]
-  plot(xx, yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+  if (multPlot){
+    plot(xx, yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
        cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange, 
        ...)
-  title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, 
+    title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, 
         ...)
+  }
   lines(disc1$x, disc1$DiscOne, lwd = lwd, col = lcol, ...)
   lines(disc2$x, disc2$DiscOne, lwd = lwd, col = lcol, ...)
 }
@@ -670,7 +672,7 @@ discOnePlot <- function (xx, yy, xypred.disc, data, th, xlab = xlab,
 #'@importFrom graphics par plot lines title
 #'@noRd
 
-discTwoPlot <- function (xx, yy, xypred.disc, data, th, xlab = xlab, 
+discTwoPlot <- function (xx, yy, multPlot, xypred.disc, data, th, xlab = xlab, 
                          ylab = ylab, pch = pch, 
                          pcol = pcol, cex = cex, cex.lab = cex.lab, 
                          cex.axis = cex.axis, 
@@ -682,11 +684,13 @@ discTwoPlot <- function (xx, yy, xypred.disc, data, th, xlab = xlab,
   disc2 <- xypred.disc[xypred.disc$x > th["DiscTwo"][[1]][1] & 
                          xypred.disc$x <= th["DiscTwo"][[1]][2], ]
   disc3 <- xypred.disc[xypred.disc$x > th["DiscTwo"][[1]][2], ]
-  plot(xx, yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+  if (multPlot){
+    plot(xx, yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
        cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange, 
        ...)
-  title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, 
+    title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, 
         ...)
+  }
   lines(disc1$x, disc1$DiscTwo, lwd = lwd, col = lcol, ...)
   lines(disc2$x, disc2$DiscTwo, lwd = lwd, col = lcol, ...)
   lines(disc3$x, disc3$DiscTwo, lwd = lwd, col = lcol, ...)
@@ -697,7 +701,7 @@ discTwoPlot <- function (xx, yy, xypred.disc, data, th, xlab = xlab,
 #'@importFrom graphics par plot lines title
 #'@noRd
 
-contsPlot <- function (xx, yy, xypred.cont, data, column, xlab = xlab, 
+contsPlot <- function (xx, yy, multPlot, xypred.cont, data, column, xlab = xlab, 
                        ylab = ylab, pch = pch, 
                        pcol = pcol, cex = cex, cex.lab = cex.lab,
                        cex.axis = cex.axis, 
@@ -705,11 +709,13 @@ contsPlot <- function (xx, yy, xypred.cont, data, column, xlab = xlab,
                        TiLine = TiLine, 
                        cex.main = cex.main, lwd = lwd, lcol = lcol, ...) 
 {
-  plot(xx, yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+  if (multPlot){
+    plot(xx, yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
        cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange, 
        ...)
-  title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, 
+    title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, 
         ...)
+  }
   lines(xypred.cont$x, xypred.cont[column][, 1], lwd = lwd, col = lcol, ...)
 }
 
@@ -724,6 +730,9 @@ contsPlot <- function (xx, yy, xypred.cont, data, column, xlab = xlab,
 #'  log-transformations.
 #'@param ylab Title for the y-axis.Defaults will depend on any axes
 #'  log-transformations.
+#'@param multPlot Whether separate plots should be built for each model fit
+#'  (default = TRUE) or all model fits should be printed on the same plot
+#'  (FALSE)
 #'@param pch Plotting character (for points).
 #'@param cex A numerical vector giving the amount by which plotting symbols
 #'  (points) should be scaled relative to the default.
@@ -742,7 +751,9 @@ contsPlot <- function (xx, yy, xypred.cont, data, column, xlab = xlab,
 #'@param yRange The range of the y-axis. Default taken as the largest value
 #'  bacross the observed and fitted values.
 #'@param lwd Line width.
-#'@param lcol Line colour.
+#'@param lcol Line colour. If \code{multPlot = TRUE}, just a single colour
+#'  should be given, If  \code{multPlot = FALSE}, either a single colour, or a
+#'  vector of colours the same length as the number of model fits in \code{x}.
 #'@param di Dimensions to be passed to \code{par(mfrow=())} to specify the size
 #'  of the plotting window, when plotting multiple plots. For example, \code{di
 #'  = c(1, 3)} creates a plotting window with 1 row and 3 columns. The default
@@ -775,18 +786,30 @@ contsPlot <- function (xx, yy, xypred.cont, data, column, xlab = xlab,
 #'par(mai = c(0.7,0.7, 0.4, 0.3))
 #'plot(fct, pcol = "blue", pch = 18, lcol = "green",
 #'     ModTitle = c("A", "B", "C", "D"), TiAdj = 0.5, xlab = "Yorke")
+#'     
+#'#Plot multiple model fits in the same plot, with different colour for each 
+#'#model fit
+#'plot(fct, multPlot = FALSE, lcol = c("black", "red", "green", "purple"))
 #'@rdname plot.threshold
 #'@importFrom stats predict
 #'@importFrom graphics par
 #'@export
 
 
-plot.threshold <- function(x, xlab = NULL, ylab = NULL,
+plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
                            pch = 16, cex = 1.2,
                            pcol = 'black', ModTitle = NULL, TiAdj = 0,
                            TiLine = 0.5, cex.main = 1.5,
                            cex.lab = 1.3, cex.axis = 1, yRange = NULL,
                            lwd = 2, lcol = 'red', di = NULL, ...) {
+  
+  if (length(lcol) > 1){
+    if (length(lcol) != length(x[[1]])){
+      stop("lcol should be a single colour or a vector equal to no. of models")
+    }
+  }
+  
+  if (!is.logical(multPlot)) stop("multPlot should be logical")
   
   data <- x[[4]]#nb. this will already be log-transformed if user has selected
   colnames(data) <- c("A", "S")
@@ -854,16 +877,19 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL,
   ##if only one model in object##################
   #################################################
   if (length(x[[1]]) == 1) {
+    if (!multPlot) multPlot <- TRUE #no sense being FALSE if only one model
     if (any(c("DiscOne", "DiscTwo") %in% names)) {
       if (names == "DiscOne") {
-        discOnePlot(xx, yy, xypred.disc, data, th, xlab = xlab, ylab = ylab, 
+        discOnePlot(xx, yy, multPlot = multPlot,
+                    xypred.disc, data, th, xlab = xlab, ylab = ylab, 
                     pch = pch, pcol = pcol, cex = cex, cex.lab = cex.lab, 
                     cex.axis = cex.axis, yRange = yRange, ModTitle = ModTitle, 
                     TiAdj = TiAdj, TiLine = TiLine, cex.main = cex.main, 
                     lwd = lwd, lcol = lcol, ...)
       }
       else {
-        discTwoPlot(xx, yy, xypred.disc, data, th, xlab = xlab, ylab = ylab, 
+        discTwoPlot(xx, yy, multPlot = multPlot,
+                    xypred.disc, data, th, xlab = xlab, ylab = ylab, 
                     pch = pch, pcol = pcol, cex = cex, cex.lab = cex.lab, 
                     cex.axis = cex.axis, yRange = yRange, ModTitle = ModTitle, 
                     TiAdj = TiAdj, TiLine = TiLine, cex.main = cex.main, 
@@ -871,7 +897,8 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL,
       }
     }
     else {
-      contsPlot(xx, yy, xypred.cont, data, column = names, xlab = xlab, 
+      contsPlot(xx, yy, multPlot = multPlot,
+                xypred.cont, data, column = names, xlab = xlab, 
                 ylab = ylab, pch = pch, pcol = pcol, cex = cex, 
                 cex.lab = cex.lab, cex.axis = cex.axis, yRange = yRange, 
                 ModTitle = ModTitle, TiAdj = TiAdj, TiLine = TiLine, 
@@ -879,6 +906,7 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL,
                 ...)
     }
   } else {
+    if (multPlot){
     ##############################################################
     ##if more than one model###################################
     #######################################################
@@ -904,7 +932,8 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL,
     for (i in 1:length(mods)) {
       if (any(c("DiscOne", "DiscTwo") %in% names[[i]])) {
         if (names[[i]] == "DiscOne") {
-          discOnePlot(xx, yy, xypred.disc, data, th[i], xlab = xlab, 
+          discOnePlot(xx, yy, multPlot = multPlot,
+                      xypred.disc, data, th[i], xlab = xlab, 
                       ylab = ylab, pch = pch, pcol = pcol, cex = cex, 
                       cex.lab = cex.lab, cex.axis = cex.axis, yRange = yRange, 
                       ModTitle = ModTitle[i], TiAdj = TiAdj, TiLine = TiLine, 
@@ -912,7 +941,8 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL,
                       ...)
         }
         else {
-          discTwoPlot(xx, yy, xypred.disc, data, th[i], xlab = xlab, 
+          discTwoPlot(xx, yy, multPlot = multPlot,
+                      xypred.disc, data, th[i], xlab = xlab, 
                       ylab = ylab, pch = pch, pcol = pcol, cex = cex, 
                       cex.lab = cex.lab, cex.axis = cex.axis, yRange = yRange, 
                       ModTitle = ModTitle[i], TiAdj = TiAdj, TiLine = TiLine, 
@@ -921,7 +951,8 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL,
         }
       }
       else {
-        contsPlot(xx, yy, xypred.cont, data, column = names[[i]], 
+        contsPlot(xx, yy, multPlot = multPlot, 
+                  xypred.cont, data, column = names[[i]], 
                   xlab = xlab, ylab = ylab, pch = pch, pcol = pcol, 
                   cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, 
                   yRange = yRange, ModTitle = ModTitle[i], TiAdj = TiAdj, 
@@ -930,9 +961,50 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL,
       }
     }
     par(mfrow = c(1, 1))#change par back to default
-  }
-}#eo function
+    } else { #plot all model fits on the same plot
+      
+      plot(xx, yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
+           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange, 
+           ...)
 
+      lcol2 <- lcol
+
+      for (i in 1:length(mods)) {
+        if (length(lcol2) > 1) lcol <- lcol2[i] #if lcol is a vector of colours
+        if (any(c("DiscOne", "DiscTwo") %in% names[[i]])) {
+          if (names[[i]] == "DiscOne") {
+            discOnePlot(xx, yy, multPlot = multPlot, xypred.disc, data, 
+                        th[i], xlab = xlab, 
+                        ylab = ylab, pch = pch, pcol = pcol, cex = cex, 
+                        cex.lab = cex.lab, cex.axis = cex.axis, yRange = yRange, 
+                        ModTitle = ModTitle[i], TiAdj = TiAdj, TiLine = TiLine, 
+                        cex.main = cex.main, lwd = lwd, lcol = lcol, 
+                        ...)
+          }
+          else {
+            discTwoPlot(xx, yy, multPlot = multPlot, xypred.disc, 
+                        data, th[i], xlab = xlab, 
+                        ylab = ylab, pch = pch, pcol = pcol, cex = cex, 
+                        cex.lab = cex.lab, cex.axis = cex.axis, yRange = yRange, 
+                        ModTitle = ModTitle[i], TiAdj = TiAdj, TiLine = TiLine, 
+                        cex.main = cex.main, lwd = lwd, lcol = lcol, 
+                        ...)
+          }
+        }
+        else {
+          contsPlot(xx, yy, multPlot = multPlot, 
+                    xypred.cont, data, column = names[[i]], 
+                    xlab = xlab, ylab = ylab, pch = pch, pcol = pcol, 
+                    cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, 
+                    yRange = yRange, ModTitle = ModTitle[i], TiAdj = TiAdj, 
+                    TiLine = TiLine, cex.main = cex.main, lwd = lwd, 
+                    lcol = lcol, 
+                    ...)
+        }#eo if DiscOne / DiscTwon
+      }# eo for i
+    }# eo if multPlot
+  }#eo if one plot
+}#eo function
 
 #function to convert vector of model
 #names into abbreviated versions depending on which models are provided

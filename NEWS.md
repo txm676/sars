@@ -1,4 +1,8 @@
 
+##Version 1.3.5
+  * Added multPlot argument to plot.threshold to allow multiple threshold model
+    fits to be plotted on the same plot
+
 ##Version 1.3.4
   * For the power model only we now return (in the sigConf object) the parameter
     estimates from a nls fit (using as starting par estimates the par values from

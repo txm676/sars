@@ -1,6 +1,6 @@
 
 ##This is a new submission
-*version 1.3.3 of sars package
+*version 1.3.4 of sars package
 
 ##Test environments
 *local Windows 10 install, R 4.0.1

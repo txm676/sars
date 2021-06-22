@@ -8,6 +8,7 @@
   x,
   xlab = NULL,
   ylab = NULL,
+  multPlot = TRUE,
   pch = 16,
   cex = 1.2,
   pcol = "black",
@@ -32,6 +33,10 @@ log-transformations.}
 
 \item{ylab}{Title for the y-axis.Defaults will depend on any axes
 log-transformations.}
+
+\item{multPlot}{Whether separate plots should be built for each model fit
+(default = TRUE) or all model fits should be printed on the same plot
+(FALSE)}
 
 \item{pch}{Plotting character (for points).}
 
@@ -62,7 +67,9 @@ bacross the observed and fitted values.}
 
 \item{lwd}{Line width.}
 
-\item{lcol}{Line colour.}
+\item{lcol}{Line colour. If \code{multPlot = TRUE}, just a single colour
+should be given, If  \code{multPlot = FALSE}, either a single colour, or a
+vector of colours the same length as the number of model fits in \code{x}.}
 
 \item{di}{Dimensions to be passed to \code{par(mfrow=())} to specify the size
 of the plotting window, when plotting multiple plots. For example, \code{di
@@ -105,4 +112,8 @@ plot(fct)
 par(mai = c(0.7,0.7, 0.4, 0.3))
 plot(fct, pcol = "blue", pch = 18, lcol = "green",
     ModTitle = c("A", "B", "C", "D"), TiAdj = 0.5, xlab = "Yorke")
+    
+#Plot multiple model fits in the same plot, with different colour for each 
+#model fit
+plot(fct, multPlot = FALSE, lcol = c("black", "red", "green", "purple"))
 }
