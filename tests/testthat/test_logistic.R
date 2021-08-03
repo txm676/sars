@@ -25,5 +25,5 @@ test_that("sar_mmf returns correct results", {
                  "'sar_mmf' is deprecated.")
   s1 <- suppressWarnings(sar_mmf(niering))#deprecation warning
   s2 <- sar_heleg(niering)
-  expect_equal(s1$AICc, s2$AICc)
+  expect_equal(round(s1$AICc, 3), round(s2$AICc, 3))
 })

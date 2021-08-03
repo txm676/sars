@@ -2,6 +2,8 @@
 ##Version 1.3.5
   * Added multPlot argument to plot.threshold to allow multiple threshold model
     fits to be plotted on the same plot
+  * Added some new starting par values to Chapman Richards model in grid_start =
+    "exhaustive", and corrected bug which errored grid_start when n was too large.
 
 ##Version 1.3.4
   * For the power model only we now return (in the sigConf object) the parameter

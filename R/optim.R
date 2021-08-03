@@ -246,7 +246,7 @@ vec.equal <- function (x, tol = .Machine$double.eps^0.5)
   isTRUE(all.equal(x[1], x[2], tolerance = tol))
 }
 
-#' @importFrom stats runif
+#' @importFrom stats runif sd
 
 grid_start_fit <- function(model, data, n, type, algo = "Nelder-Mead",
                            normaTest = "none", homoTest = "none",
@@ -276,6 +276,12 @@ grid_start_fit <- function(model, data, n, type, algo = "Nelder-Mead",
   names(start.list) <- model$parNames
   
   grid.start <- expand.grid(start.list)
+  
+  if (n > nrow(grid.start)){
+    n <- nrow(grid.start)
+    warning(paste0("grid_n larger than possible combinations for ", model$name,
+                   ": setting grid_n to max possible\n"))
+  }
   
   grid.start <- grid.start[sample.int(dim(grid.start)[1],n),]
   
@@ -332,13 +338,21 @@ if (any(model$parLim == "Rplus")){
   grid.start <- rbind(grid.start, lar_grid)
 }#eo if Rplus
 
-#some more specific values for Chapman and Gompertz models
-if(model$name == "Chapman Richards"){
+#some more specific z values for Chapman and Gompertz models
+if (model$name == "Chapman Richards"){
   zseq <- c(0.00001, 0.00005, 0.0001, 0.0005, 0.001, 0.005,
             0.01, 0.05, 0.1, 0.5)
   gs2 <- data.frame(rep(def.start[1], 10), zseq, rep(def.start[3], 10))
   colnames(gs2) <- colnames(grid.start)
   grid.start <- rbind(grid.start, gs2)
+  #Some extra c values, based on holding z and d constant
+  z1 <-  1 / sd(data$A)#stack forum presents this as useful z start
+  c1 <- seq(0.01, 25, 0.001)
+  c1 <- c(c1, seq(25, 100, 0.01))
+  gs3 <- data.frame(rep(def.start[1], length(c1)), 
+                    rep(z1, length(c1)), c1)
+  colnames(gs3) <- colnames(grid.start)
+  grid.start <- rbind(grid.start, gs3)
 }
 if (model$name == "Gompertz"){
   d2 <- sort(data$S, decreasing = TRUE)[1:3]
@@ -358,10 +372,10 @@ if (model$name == "Gompertz"){
   
   fit.list <- suppressWarnings(apply(grid.start, 1, function(x){
     #  if (verb) cat(".")
-    tryCatch(rssoptim(model, data , start = x, algo = algo,
+    tryCatch(rssoptim(model, data, start = x, algo = algo,
                       normaTest = normaTest, homoTest = homoTest,
-                      homoCor = homoCor)
-             , error = function(e) list(value = NA))
+                      homoCor = homoCor), 
+             error = function(e) list(value = NA))
   }))
   
   fit.list <- as.list(fit.list)
