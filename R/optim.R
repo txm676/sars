@@ -153,7 +153,7 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   #estimates significance and confidence interval (95%) using nls;
   #but using our fitted parameter estimates rather than re-fitting a new
   #model using nls (i.e. the par estimates are identical), we are simply
-  #using the nls framework to get se, t-values, p-values etc
+  #using the nls framework to get se, t-values, p-values etc.
 
   #constructing a nlsModel object
   formul <- formula(paste("S ~",as.character(model$exp)))
