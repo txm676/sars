@@ -861,6 +861,7 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
                    both = "Log(Species richness)")
   }
   if (is.null(ModTitle)) {
+    if (multPlot){
     ModTitle <- sapply(names, function(x) {
       switch(x, ContOne = "Continuous one-threshold", 
              ZslopeOne = "Left-horizontal one-threshold", 
@@ -871,6 +872,7 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
              Linear = "Linear", 
              Intercept = "Intercept only")
     })
+    }
   }
   
   ###############################################
@@ -964,8 +966,12 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
     } else { #plot all model fits on the same plot
       
       plot(xx, yy, xlab = xlab, ylab = ylab, pch = pch, col = pcol, 
-           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange, 
+           cex = cex, cex.lab = cex.lab, cex.axis = cex.axis, ylim = yRange,
            ...)
+      if (!is.null(ModTitle) & length(ModTitle) == 1){
+        title(main = ModTitle, adj = TiAdj, line = TiLine, cex.main = cex.main, 
+            ...)
+      }
 
       lcol2 <- lcol
 
