@@ -28,10 +28,10 @@ biogeography, fitting the random placement model to a species
 abundance-site matrix, and extrapolating fitted SAR models to predict
 richness on larger islands / sample areas. Version 1.3.0 has added
 functions for fitting, evaluating and plotting a range of commonly used
-piecewise SAR models (see Matthews and Rigal (n.d.) for details on these
-functions).
+piecewise SAR models (see Matthews and Rigal (in press) for details on
+these functions).
 
-As this is version 1.3.4 of the package, it is possible that there are
+As this is version 1.3.5 of the package, it is possible that there are
 some bugs in places. Please report any issues to us via GitHub.
 
 The package has an associated vignette that provides examples of how to
@@ -45,9 +45,9 @@ data repository (DOI: 10.5281/zenodo.2573067).
 
 ## Table of Contents
 
-  - [Installation](#installation)
-  - [Example](#example-usage)
-  - [References](#references)
+-   [Installation](#installation)
+-   [Example](#example-usage)
+-   [References](#references)
 
 ## Installation
 
@@ -121,7 +121,7 @@ mm_galap <- sar_average(data = galap)
 #> 
 #> No model validation checks selected
 #> 
-#> 20 remaining models used to construct the multi  SAR:
+#> 20 remaining models used to construct the multi SAR:
 #>  Power, PowerR, Extended Power model 1, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Asymptotic regression, Rational function, Gompertz, Cumulative Weibull 4 par., Beta-P cumulative, Logistic(Standard), Heleg(Logistic), Linear model 
 #> --------------------------------------------------------------------------------
 ```
@@ -144,6 +144,38 @@ To fit a multimodel SAR curve to the ‘galapagos’ data set and plot it
 
 ``` r
 mm_galap <- suppressMessages(sar_average(data = galap, verb = FALSE))
+#> 
+#> Models to be fitted using a grid start approach: 
+#> 
+#>  Now attempting to fit the 20 SAR models: 
+#> 
+#> --  multi_sars ---------------------------------------------- multi-model SAR --
+#> > power    : v
+#> > powerR   : v
+#> > epm1     : v
+#> > epm2     : v
+#> > p1       : v
+#> > p2       : v
+#> > loga     : v
+#> > koba     : v
+#> > monod    : v
+#> > negexpo  : v
+#> > chapman  : v
+#> > weibull3 : v
+#> > asymp    : v
+#> > ratio    : v
+#> > gompertz : v
+#> > weibull4 : v
+#> > betap    : v
+#> > logistic : v
+#> > heleg    : v
+#> > linear   : v
+#> 
+#> No model validation checks selected
+#> 
+#> 20 remaining models used to construct the multi SAR:
+#>  Power, PowerR, Extended Power model 1, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Asymptotic regression, Rational function, Gompertz, Cumulative Weibull 4 par., Beta-P cumulative, Logistic(Standard), Heleg(Logistic), Linear model 
+#> --------------------------------------------------------------------------------
 mm_galap 
 #> 
 #> This is a sar_average fit object:
@@ -171,44 +203,45 @@ plot(fit, cex = 0.8, cex.main = 1.1, cex.lab = 1.1, pcol = "grey") #Figure 1
 
 ## References
 
-<div id="refs" class="references">
+<div id="refs" class="references csl-bib-body hanging-indent">
 
-<div id="ref-Arrhenius1921">
+<div id="ref-Arrhenius1921" class="csl-entry">
 
-Arrhenius, O. 1921. “Species and Area.” *The Journal of Ecology* 9 (1):
-95. <https://doi.org/10.2307/2255763>.
-
-</div>
-
-<div id="ref-Gleason1922">
-
-Gleason, H. A. 1922. “On the Relation Between Species and Area.”
-*Ecology* 3 (2): 158–62. <https://doi.org/10.2307/1929150>.
+Arrhenius, O. 1921. “<span class="nocase">Species and Area</span>.” *The
+Journal of Ecology* 9 (1): 95. <https://doi.org/10.2307/2255763>.
 
 </div>
 
-<div id="ref-Matthews2020">
+<div id="ref-Gleason1922" class="csl-entry">
 
-Matthews, T. J., and F. Rigal. n.d. “Thresholds and the species–area
-relationship: a set of functions for fitting, evaluating and plotting a
-range of commonly used piecewise models in R.” *Frontiers of
-Biogeography*.
+Gleason, H. A. 1922. “<span class="nocase">On the Relation Between
+Species and Area</span>.” *Ecology* 3 (2): 158–62.
+<https://doi.org/10.2307/1929150>.
 
 </div>
 
-<div id="ref-Matthews2019">
+<div id="ref-Matthews2020" class="csl-entry">
+
+Matthews, T. J., and F. Rigal. in press. “<span
+class="nocase">Thresholds and the species–area relationship: a set of
+functions for fitting, evaluating and plotting a range of commonly used
+piecewise models in R</span>.” *Frontiers of Biogeography*, in press.
+
+</div>
+
+<div id="ref-Matthews2019" class="csl-entry">
 
 Matthews, T. J., K. A. Triantis, R. J. Whittaker, and F. Guilhaumon.
-2019. “sars: an R package for fitting, evaluating and comparing
-species–area relationship models.” *Ecography* 42: 1446–55.
-<https://doi.org/10.1111/ecog.04271>.
+2019. “<span class="nocase">sars: an R package for fitting, evaluating
+and comparing species–area relationship models</span>.” *Ecography* 42:
+1446–55. <https://doi.org/10.1111/ecog.04271>.
 
 </div>
 
-<div id="ref-Preston1962">
+<div id="ref-Preston1962" class="csl-entry">
 
-Preston, F. W. 1962. “The Canonical Distribution of Commonness and
-Rarity: Part I.” *Ecology* 43 (2): 185.
+Preston, F. W. 1962. “<span class="nocase">The Canonical Distribution of
+Commonness and Rarity: Part I</span>.” *Ecology* 43 (2): 185.
 <https://doi.org/10.2307/1931976>.
 
 </div>
