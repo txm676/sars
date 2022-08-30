@@ -8,7 +8,7 @@
 [![CRAN
 Downloads](http://cranlogs.r-pkg.org/badges/grand-total/sars)](https://cran.r-project.org/package=sars)
 [![CRAN](https://www.r-pkg.org/badges/version/sars)](https://cran.r-project.org/package=sars)
-[![DOI](https://zenodo.org/badge/95295704.svg)](https://zenodo.org/badge/latestdoi/95295704)
+[![DOI](https://doi.org/10.5281/zenodo.2573067)](https://doi.org/10.5281/zenodo.2573067)
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPLv3-yellow.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Codecov test
