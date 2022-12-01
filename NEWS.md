@@ -1,11 +1,11 @@
 
-##Version 1.3.5
+## Version 1.3.5
   * Added multPlot argument to plot.threshold to allow multiple threshold model
     fits to be plotted on the same plot
   * Added some new starting par values to Chapman Richards model in grid_start =
     "exhaustive", and corrected bug which errored grid_start when n was too large.
 
-##Version 1.3.4
+## Version 1.3.4
   * For the power model only we now return (in the sigConf object) the parameter
     estimates from a nls fit (using as starting par estimates the par values from
     our fitting process). Using the nls fit, we also return the confidence intervals
@@ -18,13 +18,13 @@
   * Adding verb argument to all individual model fits
   * Adding display argument to sar_average and sar_multi
 
-##Version 1.3.3
+## Version 1.3.3
   *It was realised that the mmf and heleg models are (basically) identical and 
    almost always provide exactly the same fit. As such, the mmf model has been
    deprecated and replaced with the sar_logistic() model, i.e., the standard logistic
    model given in Tjorve (2003).
 
-##version 1.3.2
+## Version 1.3.2
   * Changed mmi confidence interval function to fit all the models the user
     originally selects to the boostrapped samples. Also so it takes all of the original           arguments (e.g.        normatest, IC crit etc)  provided by the user.
   * Now return residuals from the non-linear models as observed - fitted rather than vice        versa, to match lm and nls etc. 
@@ -34,7 +34,7 @@
   * Now return optim model convergence info for all models in a sar_average() fit (and its       summary             function).
   * Changed grid_start to have three options: none, partial (default) and exhaustive - key       change to           previous versions as now grid_start is implemented as default.
 
-##version 1.3.1
+## Version 1.3.1
   * Corrected bug in obs_shape function which meant it was not recognising sigmoid fits
   * this was linked to a bug in the function used to calculate 1st and 2nd derivatives (also     corrected)
   * Added new model shape category (convex/sigmoid) for epm1, asymp
@@ -50,11 +50,11 @@
   * Correcting number of parameters for DiscTwo in sar_threshold (from 8 to 9)
   * Corrected bug in Chapman model function - the ^c term was in the wrong place.
 
-##version 1.3.0
+## Version 1.3.0
   * Added a set of functions for fitting, evaluating and plotting a range of commonly 
     used piecewise SAR models (see help page and accompanying paper)
 
-##version 1.2.3
+## Version 1.2.3
   * return shape algorithm fail info to model summary table
   * added grid_start argument option to sar_average and sar_multi
   * edited grid_start to ensure very small starting par values are always included
