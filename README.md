@@ -3,7 +3,6 @@
 
 # The **‘sars’** R Package <img src="man/figures/sars_logo.png" align="right" width="10%"/>
 
-[![CircleCI](https://circleci.com/gh/txm676/sars/tree/master.svg?style=svg)](https://circleci.com/gh/txm676/sars/tree/master)
 [![Downloads](https://cranlogs.r-pkg.org/badges/sars?color=brightgreen)](https://cran.r-project.org/package=sars)
 [![CRAN
 Downloads](http://cranlogs.r-pkg.org/badges/grand-total/sars)](https://cran.r-project.org/package=sars)
