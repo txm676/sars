@@ -108,7 +108,7 @@ sar_multi <- function(data,
     warning("mmf has been deprecated, see News")
   }
   
-  if (!((is.character(obj))  | (class(obj) == "sars")) )
+  if (!((is.character(obj))  | (inherits(obj, "sars"))))
     stop("obj must be of class character or sars")
   
   if (nrow(data) < 4)
@@ -475,7 +475,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
     warning("mmf has been deprecated, see News")
   }
   
-  if (!((is.character(obj))  | (class(obj) == "sars")) )
+  if (!((is.character(obj))  | (inherits(obj, "sars"))))
     stop("obj must be of class character or sars")
   
   if (is.character(obj) & is.null(data))

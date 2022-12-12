@@ -166,7 +166,7 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
   nMod <- tryCatch(stats_nlsModel(formul,data,res1$par),
                    error = function(e)NA)
 
-  if (class(nMod) != "nlsModel"){
+  if (!inherits(nMod, "nlsModel")){
     if (verb){
     warning(model$name,": singular gradient at parameter estimates:
              no parameters significance and conf. intervals.", call. = FALSE)
