@@ -11,3 +11,4 @@
 ^CRAN-RELEASE$
 ^\.circleci$
 ^codecov\.yml$
+^CRAN-SUBMISSION$
