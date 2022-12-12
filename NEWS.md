@@ -1,4 +1,8 @@
 
+## Version 1.3.6
+  *update the vignette with discussion regarding potential issues in the use
+  of information criteria for comparing non-linear regression models
+
 ## Version 1.3.5
   * Added multPlot argument to plot.threshold to allow multiple threshold model
     fits to be plotted on the same plot

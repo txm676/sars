@@ -121,40 +121,41 @@ starting values for the parameter estimates used as defaults in the package are
 carefully chosen to avoid numerical problems and to speed up the convergence
 process. Custom starting values can be provided for any of the 20 models using
 the ‘start’ argument in the model fit functions. In addition, we also use a grid
-search process. ‘grid_start’ creates 100 starting values for each parameter
-within sensible bounds and then creates a large matrix storing all possible
-combinations of starting values across the n parameters in the model. For
-example, for a three parameter model this matrix contains one million rows. A
-random number of these rows are then selected and used as starting parameter
-values. There are three options for the grid_start argument to control this
-process. The default (grid_start = "partial") randomly samples 500 different
-sets of starting parameter values for each model, adds these to the model's
-default starting values and tests all of these. A more comprehensive set of
-starting parameter estimates can be used (grid_start = "exhaustive") - this
-option allows the user to choose the number of starting parameter sets to be
-tested (using the grid_n argument) and includes a range of additional starting
-parameter estimates, e.g. very small values and particular values we have found
-to be useful for individual models. A large ‘grid_n’ will ensure a more
-extensive search of starting parameter value space, but will increase the time
-taken to fit the model. More generally, using grid_start = "exhaustive" in
-combination with a large grid_n can be very time consuming; however, we would
-recommend it as it makes it more likely that the optimal model fit will be
-found, particularly for the more complex models. This is particularly true if
-any of the model fits does not converge, returns a singular gradient at
-parameter estimates, or the plot of the model fit does not look optimum. The
-grid start procedure can also be turned off (grid_start = "none"), meaning just
-the default starting parameter estimates are used. It should be noted that for
-certain models (e.g. Weibull 3 par.) 'grid_start' has been found to occasionally
-push model fits into strange parameter space (e.g. step curves) and so for these
-models 'grid_start' just reverts back to our provided parameter starting values.
-However, for these models the 'start' argument can still be used. For certain
-models, there are also checks to ensure that the returned parameters are
-logical. For example, the optimisation procedure can sometimes return a negative
-z-value for the asymptotic model, meaning in the term z^A, the base is negative.
-Thus, if a fitting process returns a negative z-value we return that the model
-could not be fitted. Remember that, as grid_start has a random component, when
-grid_start != "none", you can get slightly different results each time you fit a
-model or run sar_average().
+search / brute force process (see Archontoulis & Miguez, 2014). ‘grid_start’
+creates 100 starting values for each parameter within sensible bounds and then
+creates a large matrix storing all possible combinations of starting values
+across the n parameters in the model. For example, for a three parameter model
+this matrix contains one million rows. A random number of these rows are then
+selected and used as starting parameter values. There are three options for the
+grid_start argument to control this process. The default (grid_start =
+"partial") randomly samples 500 different sets of starting parameter values for
+each model, adds these to the model's default starting values and tests all of
+these. A more comprehensive set of starting parameter estimates can be used
+(grid_start = "exhaustive") - this option allows the user to choose the number
+of starting parameter sets to be tested (using the grid_n argument) and includes
+a range of additional starting parameter estimates, e.g. very small values and
+particular values we have found to be useful for individual models. A large
+‘grid_n’ will ensure a more extensive search of starting parameter value space,
+but will increase the time taken to fit the model. More generally, using
+grid_start = "exhaustive" in combination with a large grid_n can be very time
+consuming; however, we would recommend it as it makes it more likely that the
+optimal model fit will be found, particularly for the more complex models. This
+is particularly true if any of the model fits does not converge, returns a
+singular gradient at parameter estimates, or the plot of the model fit does not
+look optimum. The grid start procedure can also be turned off (grid_start =
+"none"), meaning just the default starting parameter estimates are used. It
+should be noted that for certain models (e.g. Weibull 3 par.) 'grid_start' has
+been found to occasionally push model fits into strange parameter space (e.g.
+step curves) and so for these models 'grid_start' just reverts back to our
+provided parameter starting values. However, for these models the 'start'
+argument can still be used. For certain models, there are also checks to ensure
+that the returned parameters are logical. For example, the optimisation
+procedure can sometimes return a negative z-value for the asymptotic model,
+meaning in the term z^A, the base is negative. Thus, if a fitting process
+returns a negative z-value we return that the model could not be fitted.
+Remember that, as grid_start has a random component, when grid_start != "none",
+you can get slightly different results each time you fit a model or run
+sar_average().
 
 Each individual model fit returns an object of class ‘sars’, which is a list
 of 22 elements containing relevant model fit information, such as the model
@@ -197,8 +198,11 @@ plot(fitC) #see Fig.1
 
 ### Model fit validation 
 Model fits can be evaluated through tests of the normality and homoscedasticity
-of the residuals. Any of three tests can be selected to test the normality of
-the residuals: 1) the Lilliefors extension of the Kolmogorov normality test
+of the residuals. In certain cases this is advised, given that the maximum
+likelihood parameter estimates and least-squares estimates are equivalent only
+under the assumption of normal errors with constant variance (see the Potential
+issues section, below). Any of three tests can be selected to test the normality
+of the residuals: 1) the Lilliefors extension of the Kolmogorov normality test
 (normaTest = “lillie”), 2) the Shapiro-Wilk test of normality (to be preferred
 when sample size is small; “shapiro”), and 3) the Kolmogorov-Smirnov test
 (“kolmo”). As a default, the option to omit a residuals normality test (“none”)
@@ -493,24 +497,79 @@ formulas. For example, in the nls (the main function for non-linear regression
 in R) and lm functions in the stats R package, a ll approach is used, meaning IC
 values from models fitted using nls could not be compared with IC values from
 sars models. To re-iterate, the parameter estimates are comparable, it is simply
-that the IC values will differ. In the most recent version of ‘sars’ (version
-1.2.2) we have changed our IC formulas to match those in nls and lm. Thus, if
-users have built their own models using nls (or lm) and wish to compare IC
-values with models fitted in ‘sars’, this is now straightforward. To re-create
-IC values from previous studies (i.e. those using a version of sars pre 1.2.2),
-it will be necessary to download sars Version 1.2.1 or earlier (either from CRAN
-or GitHub; version 1.1.1 was published as a release on GitHub). It is important
-to note that these are not the only two ways of calculating ICs for regression
-models, and other formulas exits. Thus, if building models using other functions
-and packages (i.e. other than nls or lm), users should make sure to check how
-these packages calculate IC values before comparing with models fitted in sars.
-In sars, as in nls, we include an additional parameter for estimation of the
-variance. For example, the power model is considered to have three parameters
-when calculating IC values. Finally, if users are comparing models fitted in
-sars with their own models fitted using other packages, it is essential that IC
+that the IC values will differ. In version of ‘sars’ (version 1.2.2) we changed
+our IC formulas to match those in nls and lm. Thus, if users have built their
+own models using nls (or lm) and wish to compare IC values with models fitted in
+‘sars’, this is now straightforward. To re-create IC values from previous
+studies (i.e. those using a version of sars pre 1.2.2), it will be necessary to
+download sars Version 1.2.1 or earlier (either from CRAN or GitHub; version
+1.1.1 was published as a release on GitHub). It is important to note that these
+are not the only two ways of calculating ICs for regression models, and other
+formulas exits. Thus, if building models using other functions and packages
+(i.e. other than nls or lm), users should make sure to check how these packages
+calculate IC values before comparing with models fitted in sars. In sars, as in
+nls and lm, we include an additional parameter for estimation of the variance.
+For example, the power model is considered to have three parameters when
+calculating IC values. Finally, if users are comparing models fitted in sars
+with their own models fitted using other packages, it is essential that IC
 values are all calculated using the same dependent variable (i.e.
 non-transformed richness values and not logged richness, as sars only uses the
 former currently).
+
+
+## Potential issues with using information criteria in conjunction with
+## non-linear regression models
+Before starting this section, it is worth pointing out that we are not
+statisticians and the following discussion should be interpreted with this point
+in mind. We have however reviewed a lot of the literature (including a number of
+statistics forums) on the use of information criteria (e.g. AIC) in the context
+of comparing non-linear regression models. Based on this review, we have
+concluded that there are three potential issues with this approach. 
+
+First, many information criteria (including AIC) are theoretically applicable
+only when a model is fitted through the approach of maximum likelihood. In the
+case of linear and non-linear regression (e.g. the nls function in R, and the
+approach we use in ‘sars’), a least-squares estimator (minimising the residual
+sum of squares) is generally used rather than likelihood maximisation, for
+various reasons, such as analytical tractability. This is not necessarily a
+problem, as the least-squares parameter estimates and the maximum likelihood
+parameter estimates are equivalent in the case of normal and independent errors
+with a mean of zero and constant variance (@Bates1988). This holds for both
+linear and non-linear regression models (@Bates1988; @Forum1). However, if these
+assumptions are not met this equivalence may break down and thus the use of AIC
+etc would not necessarily be appropriate. The use of the normality and
+homogeneity of variance checks within the package may be useful in this regard,
+but note that it is now up to the user to manually turn these checks on.
+
+Second, most of the commonly used information criteria (e.g. AIC) include a term
+that penalises for the number of parameters. In the case of linear regression
+models, counting the number of parameters is straight forward. However,
+non-linear models are so called because they are non-linear in regard to their
+parameters (e.g. a quadratic model is a linear model but with a non-linear
+shaped curve). As such, it is not always as straight forward to count parameters
+in the same way, particularly in the case of very complex non-linear and machine
+learning type models (i.e. not those used in ‘sars’). “That is, a single
+parameter in the model may count as more or less than one parameter, in some
+sense” (@Forum2). However, in the absence of any other information, or indeed
+alternative model comparison approaches, all one can do is use the number of
+estimable parameters (sensu Burnham & Anderson) in a model, which is what we
+follow in the ‘sars’ package, and is what a large number of studies do (and
+advise) in the ecological and wider literature (e.g. @Archontoulis2015;
+@Banks2017; see also @Forum3’s response to @Forum2).
+
+Finally, some have argued that you should only use AIC etc to compare models
+within the same ‘model complex’, and even only in the case of nested models
+(e.g. @Ripley). From this it could be concluded that we should not compare the
+suite of 19 non-linear models with the linear model. However,
+@BurnhamAnderson2002 and @Anderson2006 have argued that this is not the case and
+  AIC for example can be used to compare non-nested models. In addition, again
+  many studies use AIC to compare non-nested models from different ‘complexes’.
+  We have worked on the assumption that, as long as the response variable is the
+  same and models are comparable in terms of parameter number calculation (e.g.
+  all include or not a parameter for the variance), it is appropriate to compare
+  different types of model (at least within the limited selection used in the
+  package).
+
 
 ## CONCLUSIONS 
 The SAR has been a cornerstone of ecological and biogeographical science for
