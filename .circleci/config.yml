@@ -2,6 +2,12 @@
 #NOT_CRAN true should mean all tests run, including skip on cran
 version: 2
 jobs:
+  deploy-job:
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "15:d8:a8:2a:1c:4e:f0:52:1d:c7:28:24:e9:c9:c6:6a"
+        
   build:
     docker:
       - image: rocker/verse:latest
