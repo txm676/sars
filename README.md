@@ -3,11 +3,12 @@
 
 # The **‘sars’** R Package <img src="man/figures/sars_logo.png" align="right" width="10%"/>
 
+[![CircleCI](https://circleci.com/gh/txm676/sars/tree/master.svg?style=svg)](https://circleci.com/gh/txm676/sars/tree/master)
 [![Downloads](https://cranlogs.r-pkg.org/badges/sars?color=brightgreen)](https://cran.r-project.org/package=sars)
 [![CRAN
 Downloads](http://cranlogs.r-pkg.org/badges/grand-total/sars)](https://cran.r-project.org/package=sars)
 [![CRAN](https://www.r-pkg.org/badges/version/sars)](https://cran.r-project.org/package=sars)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2573067.svg)](https://zenodo.org/badge/DOI/10.5281/zenodo.2573067.svg)
+[![DOI](https://zenodo.org/badge/95295704.svg)](https://zenodo.org/badge/latestdoi/95295704)
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPLv3-yellow.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Codecov test
@@ -30,7 +31,7 @@ functions for fitting, evaluating and plotting a range of commonly used
 piecewise SAR models (see Matthews and Rigal (in press) for details on
 these functions).
 
-As this is version 1.3.5 of the package, it is possible that there are
+As this is version 1.3.6 of the package, it is possible that there are
 some bugs in places. Please report any issues to us via GitHub.
 
 The package has an associated vignette that provides examples of how to
@@ -83,7 +84,7 @@ fit_pow
 #> 
 #> Coefficients:
 #>          c          z 
-#> 33.1791553  0.2831868
+#> 33.1772482  0.2831881
 ```
 
 Attempting to fit all 20 sar models to the ‘galapagos’ (Preston 1962)
