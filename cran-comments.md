@@ -1,8 +1,8 @@
 
 ##This is a re-submission
 *version 1.3.6 of sars package
-*I have change all if() conditions comparing class to string to inherits()
-*I checked all the URLs and they all seem to work?
+*I have removed the double braces from the two affected URLs,
+*I have changed the two URLs to the moved content addresses (thanks for the advice)
 
 ##Test environments
 *local Windows 10 install, R 4.2.0

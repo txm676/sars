@@ -3,7 +3,7 @@
 
 # The **‘sars’** R Package <img src="man/figures/sars_logo.png" align="right" width="10%"/>
 
-[![CircleCI](https://circleci.com/gh/txm676/sars/tree/master.svg?style=svg)](https://circleci.com/gh/txm676/sars/tree/master)
+[![CircleCI](https://circleci.com/gh/txm676/sars/tree/master.svg?style=svg)](https://app.circleci.com/pipelines/github/txm676/sars?branch=master)
 [![Downloads](https://cranlogs.r-pkg.org/badges/sars?color=brightgreen)](https://cran.r-project.org/package=sars)
 [![CRAN
 Downloads](http://cranlogs.r-pkg.org/badges/grand-total/sars)](https://cran.r-project.org/package=sars)
@@ -12,7 +12,7 @@ Downloads](http://cranlogs.r-pkg.org/badges/grand-total/sars)](https://cran.r-pr
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPLv3-yellow.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Codecov test
-coverage](https://codecov.io/gh/txm676/sars/branch/master/graph/badge.svg)](https://codecov.io/gh/txm676/sars?branch=master)
+coverage](https://codecov.io/gh/txm676/sars/branch/master/graph/badge.svg)](https://app.codecov.io/gh/txm676/sars?branch=master)
 
 > *fit and compare **Species-Area Relationship (SAR)** models using
 > multi-model inference*
@@ -84,7 +84,7 @@ fit_pow
 #> 
 #> Coefficients:
 #>          c          z 
-#> 33.1772482  0.2831881
+#> 33.1791553  0.2831868
 ```
 
 Attempting to fit all 20 sar models to the ‘galapagos’ (Preston 1962)
