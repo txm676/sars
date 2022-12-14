@@ -1,8 +1,7 @@
 
 ##This is a re-submission
 *version 1.3.6 of sars package
-*I have removed the double braces from the two affected URLs,
-*I have changed the two URLs to the moved content addresses (thanks for the advice)
+*I made sure the URLs do not have line breaks
 
 ##Test environments
 *local Windows 10 install, R 4.2.0
