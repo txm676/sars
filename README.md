@@ -28,8 +28,8 @@ biogeography, fitting the random placement model to a species
 abundance-site matrix, and extrapolating fitted SAR models to predict
 richness on larger islands / sample areas. Version 1.3.0 has added
 functions for fitting, evaluating and plotting a range of commonly used
-piecewise SAR models (see Matthews and Rigal (in press) for details on
-these functions).
+piecewise SAR models (see Matthews and Rigal (2021) for details on these
+functions).
 
 As this is version 1.3.6 of the package, it is possible that there are
 some bugs in places. Please report any issues to us via GitHub.
@@ -45,9 +45,9 @@ data repository (DOI: 10.5281/zenodo.2573067).
 
 ## Table of Contents
 
--   [Installation](#installation)
--   [Example](#example-usage)
--   [References](#references)
+- [Installation](#installation)
+- [Example](#example-usage)
+- [References](#references)
 
 ## Installation
 
@@ -222,10 +222,10 @@ Species and Area</span>.” *Ecology* 3 (2): 158–62.
 
 <div id="ref-Matthews2020" class="csl-entry">
 
-Matthews, T. J., and F. Rigal. in press. “<span
-class="nocase">Thresholds and the species–area relationship: a set of
-functions for fitting, evaluating and plotting a range of commonly used
-piecewise models in R</span>.” *Frontiers of Biogeography*, in press.
+Matthews, T. J., and F. Rigal. 2021. “<span class="nocase">Thresholds
+and the species–area relationship: a set of functions for fitting,
+evaluating and plotting a range of commonly used piecewise models in
+R</span>.” *Frontiers of Biogeography* 13: e49404.
 
 </div>
 

@@ -1,3 +1,8 @@
+##Version 2.0.0
+*Added habitat SAR models
+*Updated the plot.threshold and sar_threshold examples to
+show how to include a legend when plotting multiple model
+fits on the same plot (i.e., multPlot = FALSE)
 
 ## Version 1.3.6
   *update the vignette with discussion regarding potential issues in the use

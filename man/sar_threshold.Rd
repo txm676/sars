@@ -135,6 +135,15 @@ plot(fitT)
 #diagnostic plots for the ContOne model
 par(mfrow=c(2, 2))
 plot(fitT[[1]][[1]])
+#Plot multiple model fits in the same plot, with different colour for each 
+#model fit
+plot(fitT, multPlot = FALSE, lcol = c("yellow", "red", "green", "purple"))
+#Making a legend. First extract the model orders
+fitT[[2]]
+#Then use the legend function - note you may need to play around with the 
+#plotting window size to get the legend to fit.
+legend(-3, 1000, legend=c("ContOne", "DiscOne","Linear", "Intercept"), fill =
+c("yellow", "red", "green", "purple"))
 }
 \references{
 Lomolino, M.V. & Weiser, M.D. (2001) Towards a more general
@@ -147,9 +156,10 @@ Lomolino, M.V. & Weiser, M.D. (2001) Towards a more general
   Matthews, T.J. et al. (2020) Unravelling the small-island effect
   through phylogenetic community ecology. Journal of Biogeography.
   
-  Matthews, T.J. & Rigal, F. (In Review) Thresholds and the species–area
+  Matthews, T.J. & Rigal, F. (2021) Thresholds and the species–area
   relationship: a set of functions for fitting, evaluating and plotting a
-  range of commonly used piecewise models. Frontiers of Biogeography.
+  range of commonly used piecewise models. Frontiers of Biogeography, 13,
+  e49404.
 }
 \author{
 Francois Rigal and Thomas J. Matthews
