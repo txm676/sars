@@ -75,9 +75,14 @@ confidence intervals (if \code{confInt == TRUE}).}
 (default: \code{display == TRUE}).}
 }
 \value{
-A list of class "multi" and class "sars" with two elements. The first
-  element ('mmi') contains the fitted values of the multimodel sar curve. The
-  second element ('details') is a list with the following components:
+If no models have been successfully fitted and passed the model
+  checks, an error is returned. If only a single model is successfully
+  fitted, this individual model fit object (of class 'sars') is returned,
+  given no model averaging can be undertaken. If more than two models have
+  been successfully fitted and passed the model checks, a list of class
+  "multi" and class "sars" with two elements. The first element ('mmi')
+  contains the fitted values of the multimodel sar curve. The second element
+  ('details') is a list with the following components:
   \itemize{ \item{mod_names} { Names of the models that were successfully
   fitted and passed any model check} \item{fits} { A fit_collection object
   containing the successful model fits} \item{ic} { The information criterion

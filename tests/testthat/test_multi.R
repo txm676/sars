@@ -41,6 +41,37 @@ test_that("sar_average using fit_collection object works", {
   expect_error(sar_multi(5), "argument is of length zero")
 })
 
+test_that("sar_average correctly deals with only 1 or 2 good fits", {
+  skip_on_cran()
+  expect_message(sar_average(obj = c("power", "powerR"),
+                             data = galap, grid_start = "none",
+                             normaTest = "shapiro",
+                             homoTest = "cor.fitted",
+                             homoCor = "spearman",
+                             verb = FALSE,
+                             display = FALSE))
+  uusr <- sar_average(obj = c("power", "powerR"),
+              data = galap, grid_start = "none",
+              normaTest = "shapiro",
+              homoTest = "cor.fitted",
+              homoCor = "spearman",
+              verb = FALSE,
+              display = FALSE)
+  expect_is(uusr, "sars")
+  expect_equal(length(uusr), 23)
+  expect_error(sar_average(obj = c("power", "linear"),
+                             data = galap, grid_start = "none",
+                             normaTest = "shapiro",
+                             homoTest = "cor.fitted",
+                             homoCor = "spearman",
+                             verb = FALSE,
+                             display = FALSE))
+})
+
+
+
+
+
 test_that("confidence intervals are correct", {
   skip_on_cran()
   fit3 <- expect_warning(sar_average(data = galap, grid_start = "none",

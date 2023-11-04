@@ -359,9 +359,14 @@ sar_multi <- function(data,
 #'   model names. \code{display_sars_models()} generates a table of the 20
 #'   models with model information.
 #'
-#' @return A list of class "multi" and class "sars" with two elements. The first
-#'   element ('mmi') contains the fitted values of the multimodel sar curve. The
-#'   second element ('details') is a list with the following components:
+#' @return If no models have been successfully fitted and passed the model
+#'   checks, an error is returned. If only a single model is successfully
+#'   fitted, this individual model fit object (of class 'sars') is returned,
+#'   given no model averaging can be undertaken. If more than two models have
+#'   been successfully fitted and passed the model checks, a list of class
+#'   "multi" and class "sars" with two elements. The first element ('mmi')
+#'   contains the fitted values of the multimodel sar curve. The second element
+#'   ('details') is a list with the following components:
 #'   \itemize{ \item{mod_names} { Names of the models that were successfully
 #'   fitted and passed any model check} \item{fits} { A fit_collection object
 #'   containing the successful model fits} \item{ic} { The information criterion
@@ -596,15 +601,15 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
     if (is.character(obj)){
       if (any(is.na(f_nas))){
         cat("\nModel fitting completed. Now undertaking model validation",
-            " checks. Additional models will be excluded if necessary:\n")
+            " checks. Additional models will be excluded if necessary:\n\n")
       } else {
         cat("\nModel fitting completed - all models succesfully fitted.",
             "Now undertaking model validation checks. Additional models",
-            " will be excluded if necessary:\n")
+            " will be excluded if necessary:\n\n")
       }
     } else {
       cat("\nNow undertaking model validation checks. Additional models",
-          " will\nbe excluded if necessary\n")
+          " will\nbe excluded if necessary\n\n")
     }
   }
 
@@ -631,7 +636,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
       np <- np[!wnn]
     }
     whp <- np < alpha_normtest
-    if (any(whp)) {
+    if (any(whp)){
       mn2 <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))
       if (verb){
       message("\n", paste(sum(np < alpha_normtest),
@@ -692,7 +697,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
     }
   }
 
-  if (length(badMods) == bml & display) {
+  if (length(badMods) == bml & display){
     if((normaTest == "none" & homoTest == "none" & !(neg_check))){
       cat("\nNo model validation checks selected\n\n")
     } else{
@@ -702,9 +707,16 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   }
 
   if (length(badMods) == 0) badMods <- 0
-  if (length(fits) < 2) stop("Fewer than two models could be fitted and /",
+  
+  if (length(fits) == 1){
+    message("Only one model could be fitted and / or passed the",
+        " model checks and thus no model averaging can be done",
+        " - returning this individual model fit object of class 'sars'\n")
+    return(fits[[1]])
+  }
+  
+  if (length(fits) == 0) stop("No models could be fitted and /",
                              " or passed the model checks")
-
 
   sf <- vapply(fits, function(x) x$model$name, FUN.VALUE = character(1))
   if (display) cat(length(sf), "remaining models used to construct the multi",
@@ -722,7 +734,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
 
   #choosing an IC criterion (AIC or AICc or BIC)
   IC <- switch(crit,
-               Info= if ( (nPoints / 3) < 40 ) { "AICc" } else { "AIC" },
+               Info= if ((nPoints / 3) < 40 ) { "AICc" } else { "AIC" },
                AIC = "AIC",
                AICc = "AICc",
                Bayes = "BIC")
@@ -734,7 +746,7 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   delta_ICs <- ICs - min(ICs)
 
   #get akaike weights
-  akaikesum <- sum(exp( -0.5*(delta_ICs)))
+  akaikesum <- sum(exp(-0.5*(delta_ICs)))
   weights_ICs <- exp(-0.5*delta_ICs) / akaikesum
 
   #ERROR: produce weight averaged diversity measures

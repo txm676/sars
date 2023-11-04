@@ -138,11 +138,11 @@ plot(fitT[[1]][[1]])
 #Plot multiple model fits in the same plot, with different colour for each 
 #model fit
 plot(fitT, multPlot = FALSE, lcol = c("yellow", "red", "green", "purple"))
-#Making a legend. First extract the model orders
+#Making a legend. First extract the model order:
 fitT[[2]]
 #Then use the legend function - note you may need to play around with the 
-#plotting window size to get the legend to fit.
-legend(-3, 1000, legend=c("ContOne", "DiscOne","Linear", "Intercept"), fill =
+#legend location depending on your data.
+legend("topleft", legend=c("ContOne", "DiscOne","Linear", "Intercept"), fill =
 c("yellow", "red", "green", "purple"))
 }
 \references{

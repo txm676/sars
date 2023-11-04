@@ -116,10 +116,10 @@ plot(fct, pcol = "blue", pch = 18, lcol = "green",
 #Plot multiple model fits in the same plot, with different colour for each 
 #model fit
 plot(fct, multPlot = FALSE, lcol = c("yellow", "red", "green", "purple"))
-#Making a legend. First extract the model orders
+#Making a legend. First extract the model order:
 fitT[[2]]
-#Then use the legend function - note you may need to play around with the 
-#plotting window size to get the legend to fit.
-legend(-5, 30, legend=c("ContOne", "DiscOne","Linear", "Intercept"), fill =
+#Then use the legend function -  note you may need to play around with the 
+#legend location depending on your data.
+legend("topleft", legend=c("ContOne", "DiscOne","Linear", "Intercept"), fill =
 c("yellow", "red", "green", "purple"))
 }
