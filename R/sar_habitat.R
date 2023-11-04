@@ -83,14 +83,14 @@ sar_habitat <- function(data, logAxes = "both",
 
   if (logAxes == "area"){
     # Fit nlsLM for each of the four tested models in semi-log space
-    choros<-nlsLM(Species~c+z*log(Choros),start=list(c=1,z=0.3),
-                  control=nls.lm.control(maxiter=1000,maxfev=100000),data=all)
-    jigsaw<-nlsLM(Species~(Het^d)*log(c*(Area/Het)^z),
-                  start=list(d=1,c=1,z=0.3),control=nls.lm.control(maxiter=1000, maxfev=100000),data=all)
-    Kallimanis<-nlsLM(Species~c+(z+d*Het)*log(Area),
-                      start=list(c=1,z=0.3,d=0.1),control=nls.lm.control(maxiter=1000, maxfev=100000),data=all)
-    classical<-nlsLM(Species~c+z*log(Area),
-                     start=list(c=1,z=0.3),control=nls.lm.control(maxiter=1000, maxfev=100000),data=all)
+    # choros<-nlsLM(Species~c+z*log(Choros),start=list(c=1,z=0.3),
+    #               control=nls.lm.control(maxiter=1000,maxfev=100000),data=all)
+    # jigsaw<-nlsLM(Species~(Het^d)*log(c*(Area/Het)^z),
+    #               start=list(d=1,c=1,z=0.3),control=nls.lm.control(maxiter=1000, maxfev=100000),data=all)
+    # Kallimanis<-nlsLM(Species~c+(z+d*Het)*log(Area),
+    #                   start=list(c=1,z=0.3,d=0.1),control=nls.lm.control(maxiter=1000, maxfev=100000),data=all)
+    # classical<-nlsLM(Species~c+z*log(Area),
+    #                  start=list(c=1,z=0.3),control=nls.lm.control(maxiter=1000, maxfev=100000),data=all)
 
   } else if (logAxes == "both"){
     # Fit four models in log-log space

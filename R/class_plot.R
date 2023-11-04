@@ -791,7 +791,7 @@ contsPlot <- function (xx, yy, multPlot, xypred.cont, data, column, xlab = xlab,
 #'#model fit
 #'plot(fct, multPlot = FALSE, lcol = c("yellow", "red", "green", "purple"))
 #' #Making a legend. First extract the model order:
-#' fitT[[2]]
+#' fct[[2]]
 #' #Then use the legend function -  note you may need to play around with the 
 #' #legend location depending on your data.
 #' legend("topleft", legend=c("ContOne", "DiscOne","Linear", "Intercept"), fill =
