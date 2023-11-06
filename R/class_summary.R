@@ -54,6 +54,12 @@
 #'   seg3 provide the number of datapoints within each segment (for the
 #'   threshold models); one-threshold models have two segements, and
 #'   two-threshold models have three segments.
+#'   
+#'   For a 'sars' object of Type 'habitat', a list with two elements is
+#'   returned: (i) a model summary table (models are ranked using AICc), and
+#'   (ii) the value of the \code{modType} argument used in the
+#'   \code{sar_habitat} function call.
+#'   
 #' @examples
 #' data(galap)
 #' #fit a multimodel SAR and get the model table
@@ -254,6 +260,72 @@ summary.sars <- function(object, ...){
     res <- list("order" = "BIC", "Model_table" = mt, 
                 "Axes transformation" = object[[5]][[1]])
   }
+  
+  if (attributes(object)$type == "habitat"){
+    
+    info_crit <- function(obj){
+      val <- logLik(obj)
+      P <- attr(logLik(obj), "df")
+      n <- length(obj$residuals)
+      lAIC <- (2 * P) - (2 * val)
+      #if denominator of AICc is 0 or negative, return Inf
+      den <- n - P - 1
+      if (den < 1){
+        lAICc <- Inf
+      } else {
+        lAICc <- -2 * val + 2 * P * (n / (n - P - 1))
+      }
+      lBIC <- (-2 * val) + (P * log(n))
+      return(c(lAIC, lBIC, lAICc))
+    }
+    
+    extr_fit <- function(obj){
+      sobj <- summary(obj)
+      r2 <- sobj$r.squared
+      adjr2 <- sobj$adj.r.squared
+      IC <- info_crit(obj)
+      return(c(r2, adjr2, IC))
+    }
+    
+    #log-log results
+    if (inherits(object[[1]], "lm")){
+      modType <- "power_log"
+      mod_tab <- matrix(NA, nrow = length(object),
+                        ncol = 9)
+      colnames(mod_tab) <- c("Model", "z", "d", "d-z",
+                             "R2", "adjR2", "AIC",
+                             "BIC", "AICc")
+      mod_tab <- as.data.frame(mod_tab)
+      mod_tab$Model <- names(object)
+      mod_tab[,5:9] <- t(round(vapply(object, extr_fit, 
+             FUN.VALUE = numeric(5)),3))
+      for (i in 1:length(object)){
+        if (names(object[i]) == "choros"){
+          mod_tab[which(mod_tab$Model == "choros"),
+                  "z"] <- round(object$choros$coefficients[2],
+                                3)
+        } else if (names(object[i]) == "jigsaw"){
+          mod_tab[which(mod_tab$Model == "jigsaw"),
+                  c("z", "d", "d-z")] <- round(c(object$jigsaw$coefficients[2],
+                            object$jigsaw$coefficients[3] +
+                              object$jigsaw$coefficients[2],
+                            object$jigsaw$coefficients[3]),3)
+      } else if (names(object[i]) == "Kallimanis"){
+        mod_tab[which(mod_tab$Model == "Kallimanis"),
+                c("z", "d")] <- round(c(object$Kallimanis$coefficients[2],
+                                               object$jigsaw$coefficients[3]),3)
+      
+      } else if (names(object[i]) == "power"){
+        mod_tab[which(mod_tab$Model == "power"),
+                c("z")] <- round(c(object$power$coefficients[2]),3)
+        
+      } 
+  }#eo for
+  }#eo if lm
+    mod_tab <- mod_tab[order(mod_tab$AICc),]
+    res <- list("Model_table" = mod_tab, "modType" = modType)
+  }#eo if habitat
+  
   class(res) <- "summary.sars"
   attr(res, "type") <- attr(object, "type")
   res

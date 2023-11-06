@@ -56,6 +56,11 @@ The \code{summary.sars} function returns an object of class
   seg3 provide the number of datapoints within each segment (for the
   threshold models); one-threshold models have two segements, and
   two-threshold models have three segments.
+  
+  For a 'sars' object of Type 'habitat', a list with two elements is
+  returned: (i) a model summary table (models are ranked using AICc), and
+  (ii) the value of the \code{modType} argument used in the
+  \code{sar_habitat} function call.
 }
 \description{
 S3 method for class 'sars'. \code{summary.sars} creates

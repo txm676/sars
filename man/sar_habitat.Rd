@@ -4,66 +4,80 @@
 \alias{sar_habitat}
 \title{Fit habitat SAR models}
 \usage{
-sar_habitat(data, logAxes = "both", con = 1, logT = log)
+sar_habitat(data, modType = "power_log", con = 1, logT = log)
 }
 \arguments{
-\item{data}{A dataset in the form of a dataframe with at least ** columns:
-the first with island/site areas, and the second with the species richness
-of each island/site.}
+\item{data}{A dataset in the form of a dataframe with at least three columns:
+the first with island/site areas, the second with island / site habitat
+diversity, and the third with the species richness of each island/site.}
 
-\item{logAxes}{What log-transformation should be applied to the area and
-richness values. Should be one of  "area" (only area is log-transformed;
-default) or "both" (both area and richness log-transformed).}
+\item{modType}{What underlying SAR model form should be used. Should be one
+of "power" (non-linear power), "logarithmic" (logarithmic SAR), or
+"power_log" (log-log power; default).}
 
 \item{con}{The constant to add to the species richness values in cases where
-one of the islands has zero species.}
+at least one of the islands has zero species.}
 
 \item{logT}{The log-transformation to apply to the area and richness values.
 Can be any of \code{log}(default), \code{log2} or \code{log10}.}
 }
 \value{
-A list of class "threshold" and "sars" with five elements. The first
-  element contains the different model fits (lm objects). The second element
-  contains the names of the fitted models, the third  contains the threshold
-  values, the fourth element the dataset (i.e. a dataframe with area and
-  richness values), and the fifth contains details of any axes
-  log-transformations undertaken. \code{\link{summary.sars}} provides a more
-  user-friendly ouput (including a model summary table) and
-  \code{\link{plot.threshold}} plots the model fits.
+A list of class "habitat" and "sars" with four elements, each holding
+  one of the individual model fit objects (either ** or lm objects).
+  \code{\link{summary.sars}} provides a more user-friendly ouput (including a
+  model summary table ranked by AICc and presenting the model coefficients,
+  and R2 and information criteria values etc.) and \code{\link{plot.habitat}}
+  provides a simple bar of information criteria weights.
 }
 \description{
-Fit three SAR regression models including habitat divesity data.
+Fit three SAR regression models that include habitat diversity:
+the choros model, the Kallimanis model, and the jigsaw model.
 }
 \details{
-This function is described in more detail in the accompanying paper
-  (Matthews & Rigal, 2020).
-
-  Fitting the continuous and left-horizontal piecewise models (particularly
-  the two-threshold models) can be time consuming if the range in area is
-  large and/or the \code{interval} argument is small. For the two-threshold
-  continuous slope and left-horizontal models, the use of parallel processing
-  (using the \code{parallel} argument) is recommended. The number of cores
-  (\code{cores}) must be provided.
+These functions are described in more detail in the accompanying paper
+  (Furness et al., 2023). The code to fit the models was also taken from this
+  paper.
+  
+  Three habitat SAR models are available:
+  \itemize{ \item{choros model:} { Proposes that species richness is better 
+  predicted by the product of habitat heterogeneity and area (S = c(AH)^z) } 
+  \item{Kallimanis model:} { 
+  Proposes that increasing habitat heterogeneity increases species richness 
+  by increasing the slope (on a log-log plot) of the Arrhenius model } 
+  \item{jigsaw model:} {
+  Models species richness in an area as the sum of the species richness 
+  values of several smaller component subareas, which can be visualised as 
+  pieces of a jigsaw puzzle, i.e., it partitions the species–area and 
+  species–heterogeneity scaling relationships }}
+  
+  In addition to these three models, a simple 'non-habitat' SAR model is also
+  fit, which varies depending on \code{modType}: the non-linear power, the
+  logarithmic or the log-log power model.
 }
 \note{
-Due to the
+The jigsaw model is equivalent to the trivariate power-law model of 
+Tjørve (2009), see Furness et al. (2023).
+
+The jigsaw model (power-law form) cannot have a poorer fit than the choros or
+power model based on RSS and thus R2. Comparing models using information
+criteria is thus advised.
 }
 \examples{
 data(aegean2)
-a2 <- aegean2[1:168,]
-fitT <- sar_threshold(data = a2, mod = c("ContOne", "DiscOne"), 
-interval = 0.1, non_th_models = TRUE, logAxes = "area", logT = log10)
-summary(fitT)
-plot(fitT)
-#diagnostic plots for the ContOne model
-par(mfrow=c(2, 2))
-plot(fitT[[1]][[1]])
 }
 \references{
 Furness, E.N., Saupe, E.E., Garwood, R.J., Mannion, P.D. &
   Sutton, M.D. (2023) The jigsaw model: a biogeographic model that partitions
   habitat heterogeneity from area. Frontiers of Biogeography, 15, e58477.
-
+  
+  Kallimanis, A.S., Mazaris, A.D., Tzanopoulos, J., Halley, J.M., Pantis,
+  J.D., & Sgardelis, S.P. (2008) How does habitat diversity affect the
+  species–area relationship? Global Ecology and Biogeography, 17, 532-538
+  
+  Tjørve, E. (2009) Shapes and functions of species– area curves (II): a
+  review of new models and parameterizations. Journal of Biogeography, 36,
+  1435-1445.
+  
   Triantis, K.A., Mylonas, M., Lika, K. & Vardinoyannis, K. (2003) A model
   for the species-area-habitat relationship. Journal of Biogeography, 30,
   19–27.

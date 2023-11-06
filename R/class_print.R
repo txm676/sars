@@ -145,8 +145,12 @@ print.summary.sars <- function(x, ...){
         "\n\n" ,sep = "")
     print(object[[2]])
   }
+  
+  if (attributes(object)$type == "habitat"){
+    cat("\nsar_habitat model fit summary. Models ranked by AICc:\n\n", sep = "")
+    print(object$Model_table)
+  }
 }
-
 
 
 #' @export
@@ -233,6 +237,15 @@ print.sars <- function(x, ...){
     cat("\nSlopes and intercepts of fitted breakpoint models: \n\n", sep = "")
     print.data.frame(object)
   }
+  
+  if (attributes(object)$type == "habitat"){
+    object2 <- object
+    cat("\nThe individual model fit objects from sar_habitat,",
+    " use summary() for the model comparison results\n\n", sep = "")
+    class(object2) <- "list"
+    print(object2)
+  }
+  
 }
 
 

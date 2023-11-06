@@ -1018,6 +1018,43 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
   }#eo if one plot
 }#eo function
 
+
+
+
+#'Barplot of information criteria weights for a 'habitat' Object
+#'
+#'@description S3 method for class 'habitat'. \code{plot.habitat} creates
+#'  a simple barplot of information criteria weights for the different model fits
+#'@param x An object of class 'habitat'.
+#'@param IC The information criterion weights to present (must be one of 'AIC',
+#''BIC' or 'AICc')
+#'@param \dots Further graphical parameters may be supplied as arguments.
+#' @examples
+#' #data(habitat)
+#' ###TO FILL IN
+#'@importFrom graphics barplot
+#'@export
+
+plot.habitat <- function(x, IC = "AICc", ...){
+  
+  if (attributes(x)$type == "habitat"){
+    if (!IC %in% c("AIC", "BIC", "AICc")){
+      stop("IC must be one of 'AIC', 'BIC', 'AICc'")
+    }
+    x2 <- summary(x)$Model_table
+    #get delta ICs
+    delta_ICs <- x2[,IC] - min(x2[,IC])
+    #get akaike weights
+    akaikesum <- sum(exp(-0.5*(delta_ICs)))
+    x2$Weights <- exp(-0.5*delta_ICs) / akaikesum
+    IC_nam <- paste0(IC, " weight")
+    barplot(x2$Weights, names.arg = x2$Model,
+            xlab = "Model", ylab = IC_nam, ...)
+  }#eo if habitat
+  
+}
+
+
 #function to convert vector of model
 #names into abbreviated versions depending on which models are provided
 mod_abbrev <- function(nams){
