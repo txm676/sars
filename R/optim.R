@@ -35,9 +35,8 @@ rssoptim <- function(model, data, start = NULL, algo = "Nelder-Mead",
 
   #optimization (first result)
   res1 <- tryCatch(optim(startMod, rssfun, hessian = TRUE, data = data,
-                         method = algo, control = list(maxit = 50000) ),
-                   error = function(e){e}
-                   )
+                         method = algo, control = list(maxit = 50000)),
+                   error = function(e){e})
 
   #Backtransformation of parameter values; the rssfun backtransforms
   #the values tried by optim for Rplus parameters before calculating rss

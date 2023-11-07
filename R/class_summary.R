@@ -1,3 +1,37 @@
+########################################################################
+##     internal functions for use within summary for sar_habitat     #######
+########################################################################
+
+#' function to return AIC etc as calculated inside sar_average
+#' @importFrom stats logLik 
+#' @noRd
+info_crit <- function(obj){
+  val <- logLik(obj)
+  P <- attr(logLik(obj), "df")
+  n <- length(obj$residuals)
+  lAIC <- (2 * P) - (2 * val)
+  #if denominator of AICc is 0 or negative, return Inf
+  den <- n - P - 1
+  if (den < 1){
+    lAICc <- Inf
+  } else {
+    lAICc <- -2 * val + 2 * P * (n / (n - P - 1))
+  }
+  lBIC <- (-2 * val) + (P * log(n))
+  return(c(lAIC, lBIC, lAICc))
+}
+
+#' function to generate R2 and AIC etc for the model summary table
+#' @noRd
+extr_fit <- function(obj){
+  sobj <- summary(obj)
+  r2 <- sobj$r.squared
+  adjr2 <- sobj$adj.r.squared
+  IC <- info_crit(obj)
+  return(c(r2, adjr2, IC))
+}
+##############################################################################
+
 #' Summarising the results of the model fitting functions
 #'
 #' @description S3 method for class 'sars'. \code{summary.sars} creates
@@ -262,43 +296,27 @@ summary.sars <- function(object, ...){
   }
   
   if (attributes(object)$type == "habitat"){
+
+    modType <- attributes(object)$modType
+    mod_tab <- matrix(NA, nrow = length(object),
+                      ncol = 9)
+    colnames(mod_tab) <- c("Model", "z", "d", "d-z",
+                           "R2", "adjR2", "AIC",
+                           "BIC", "AICc")
+    mod_tab <- as.data.frame(mod_tab)
+    mod_tab$Model <- names(object)
+    mod_tab[,5:9] <- t(round(vapply(object, extr_fit, 
+                                    FUN.VALUE = numeric(5)),3))
     
-    info_crit <- function(obj){
-      val <- logLik(obj)
-      P <- attr(logLik(obj), "df")
-      n <- length(obj$residuals)
-      lAIC <- (2 * P) - (2 * val)
-      #if denominator of AICc is 0 or negative, return Inf
-      den <- n - P - 1
-      if (den < 1){
-        lAICc <- Inf
-      } else {
-        lAICc <- -2 * val + 2 * P * (n / (n - P - 1))
-      }
-      lBIC <- (-2 * val) + (P * log(n))
-      return(c(lAIC, lBIC, lAICc))
-    }
-    
-    extr_fit <- function(obj){
-      sobj <- summary(obj)
-      r2 <- sobj$r.squared
-      adjr2 <- sobj$adj.r.squared
-      IC <- info_crit(obj)
-      return(c(r2, adjr2, IC))
-    }
+    #logarithmic results
+    if (attributes(object)$modType == "logarithmic"){
+      
+      
+
     
     #log-log results
-    if (inherits(object[[1]], "lm")){
-      modType <- "power_log"
-      mod_tab <- matrix(NA, nrow = length(object),
-                        ncol = 9)
-      colnames(mod_tab) <- c("Model", "z", "d", "d-z",
-                             "R2", "adjR2", "AIC",
-                             "BIC", "AICc")
-      mod_tab <- as.data.frame(mod_tab)
-      mod_tab$Model <- names(object)
-      mod_tab[,5:9] <- t(round(vapply(object, extr_fit, 
-             FUN.VALUE = numeric(5)),3))
+    } else if (attributes(object)$modType == "power_log"){
+
       for (i in 1:length(object)){
         if (names(object[i]) == "choros"){
           mod_tab[which(mod_tab$Model == "choros"),
@@ -319,7 +337,7 @@ summary.sars <- function(object, ...){
         mod_tab[which(mod_tab$Model == "power"),
                 c("z")] <- round(c(object$power$coefficients[2]),3)
         
-      } 
+      }#eo if
   }#eo for
   }#eo if lm
     mod_tab <- mod_tab[order(mod_tab$AICc),]

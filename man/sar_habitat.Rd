@@ -63,7 +63,15 @@ power model based on RSS and thus R2. Comparing models using information
 criteria is thus advised.
 }
 \examples{
-data(aegean2)
+data(habitat)
+#Fit the models in log-log space
+s <- sar_habitat(data = habitat, modType = "power_log", 
+con = 1, logT = log)
+#Look at the model comparison summary
+s2 <- summary(s)
+s2
+#Make a simple plot of AICc weights
+plot(s, IC = "AICc", col = "darkred")
 }
 \references{
 Furness, E.N., Saupe, E.E., Garwood, R.J., Mannion, P.D. &
