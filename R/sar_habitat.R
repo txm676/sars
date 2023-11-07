@@ -109,6 +109,8 @@ sar_habitat <- function(data, modType = "power_log",
     }
   }
 
+  ##NEED TO ADD CODE TO DEAL WITH NAs, both in the ouput
+  #and summary and plot functions (perhaps just delete)
   if (modType == "logarithmic"){
     # Fit nls for each of the four tested models in semi-log space
     choros <- tryCatch(nls(S ~ c1 + z*choros_log,
