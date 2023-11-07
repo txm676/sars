@@ -38,7 +38,10 @@
 #'   \code{\link{summary.sars}} provides a more user-friendly ouput (including a
 #'   model summary table ranked by AICc and presenting the model coefficients,
 #'   and R2 and information criteria values etc.) and \code{\link{plot.habitat}}
-#'   provides a simple bar of information criteria weights.
+#'   provides a simple bar of information criteria weights. For the models
+#'   fitted using non-linear regression, the R2 and adjusted R2 are 'pseudo R2'
+#'   values and are calculated using the same approach as in the
+#'   \code{\link{sar_average}} function.
 #' @note The jigsaw model is equivalent to the trivariate power-law model of 
 #' Tjørve (2009), see Furness et al. (2023).
 #' 
@@ -109,8 +112,7 @@ sar_habitat <- function(data, modType = "power_log",
     }
   }
 
-  ##NEED TO ADD CODE TO DEAL WITH NAs, both in the ouput
-  #and summary and plot functions (perhaps just delete)
+  ##NEED TO ADD the modType to the summary print text
   if (modType == "logarithmic"){
     # Fit nls for each of the four tested models in semi-log space
     choros <- tryCatch(nls(S ~ c1 + z*choros_log,
@@ -121,20 +123,20 @@ sar_habitat <- function(data, modType = "power_log",
     
     jigsaw <- tryCatch(nls(S ~ (H^d) * logT(c1 * (A / H)^z),
                            start = list("d" = 0.6,
-                                        "c1" = 5, 
+                                        "c1" = 5,
                                         "z" = 1),
                            data = data),
                        error = function(e) NA)
-    
+
     Kallimanis <- tryCatch(nls(S ~ c1 + (z + d * H) * logT(A),
                            start = list("c1" = 5,
-                                        "z" = 1, 
+                                        "z" = 1,
                                         "d" = 0.6),
                            data = data),
                        error = function(e) NA)
 
     classical <- tryCatch(nls(S ~ c1 + z * logT(A),
-                             start = list("c1" = 5, 
+                             start = list("c1" = 5,
                                           "z" = 0.25),
                              data = data),
                          error = function(e) NA)
@@ -155,6 +157,22 @@ sar_habitat <- function(data, modType = "power_log",
                 "power" = classical)
   }
   
+  attr(res, "failedMods") <- "none"
+  
+  #check for any NAs in the nls models
+  res_len <- vapply(res, length, FUN.VALUE = numeric(1))
+  if (all(res_len == 1)){
+    stop("No nls model could be fitted given the starting parameters")
+  }
+  if (any(res_len == 1)){
+    wNA <- which(res_len == 1)
+    message("The following models could not be fitted",
+            " given the starting parameters and have been excluded: ",
+            paste(names(res_len)[wNA], collapse = ", "))
+    res <- res[-wNA]
+    attr(res, "failedMods") <- names(res_len)[wNA]
+  }
+
   class(res) <- c("habitat", "sars", "list")
   attr(res, "type") <- "habitat"
   attr(res, "modType") <- modType
@@ -162,5 +180,4 @@ sar_habitat <- function(data, modType = "power_log",
   
   #other habitat models: countryside BG model, matrix and edge-calibrated
   #models, two-habitat SAR, lost-habitat SAR, any in Carey et al.
-  
 }

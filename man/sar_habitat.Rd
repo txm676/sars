@@ -27,7 +27,10 @@ A list of class "habitat" and "sars" with four elements, each holding
   \code{\link{summary.sars}} provides a more user-friendly ouput (including a
   model summary table ranked by AICc and presenting the model coefficients,
   and R2 and information criteria values etc.) and \code{\link{plot.habitat}}
-  provides a simple bar of information criteria weights.
+  provides a simple bar of information criteria weights. For the models
+  fitted using non-linear regression, the R2 and adjusted R2 are 'pseudo R2'
+  values and are calculated using the same approach as in the
+  \code{\link{sar_average}} function.
 }
 \description{
 Fit three SAR regression models that include habitat diversity:

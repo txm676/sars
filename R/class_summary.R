@@ -8,7 +8,11 @@
 info_crit <- function(obj){
   val <- logLik(obj)
   P <- attr(logLik(obj), "df")
+  if (inherits(obj, "lm")){
   n <- length(obj$residuals)
+  } else if (inherits(obj, "nls")){
+    n <- length(obj$m$getEnv()$S)
+  }
   lAIC <- (2 * P) - (2 * val)
   #if denominator of AICc is 0 or negative, return Inf
   den <- n - P - 1
@@ -25,8 +29,21 @@ info_crit <- function(obj){
 #' @noRd
 extr_fit <- function(obj){
   sobj <- summary(obj)
+  if (inherits(obj, "lm")){
   r2 <- sobj$r.squared
   adjr2 <- sobj$adj.r.squared
+  } else if (inherits(obj, "nls")){
+    SR <- obj$m$getEnv()$S
+    P <- length(obj$m$getPars()) + 1 #1 for variance
+    n <- length(SR)
+    value <- sum(obj$m$resid()^2)#RSS
+    #R2 (Kvaleth, 1985, Am. Statistician);
+    #gives same as aomisc::R2nls()
+    r2 <-  1 - ((value) /  sum((SR - mean(SR))^2))
+    #R2a (He & Legendre 1996, p724)
+    adjr2 <-  1 - (((n-1)*(value)) /
+                   ((n-P)*sum((data$S - mean(data$S))^2)))
+  }
   IC <- info_crit(obj)
   return(c(r2, adjr2, IC))
 }
@@ -312,7 +329,6 @@ summary.sars <- function(object, ...){
     if (attributes(object)$modType == "logarithmic"){
       
       
-
     
     #log-log results
     } else if (attributes(object)$modType == "power_log"){
