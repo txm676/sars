@@ -147,7 +147,19 @@ print.summary.sars <- function(x, ...){
   }
   
   if (attributes(object)$type == "habitat"){
-    cat("\nsar_habitat model fit summary. Models ranked by AICc:\n\n", sep = "")
+    
+    if ("none" %in% attr(object, "failedMods")){
+      PNN <- " All models could be fitted."
+    } else {
+      PNN <- paste0("The following models could not be fitted: ",
+                    paste(attr(object, "failedMods"), 
+                          collapse = ", "),".")
+    }
+    
+    cat("\nsar_habitat model fit summary (modType = ", 
+        paste0(attributes(object)$modType),").",
+        PNN,
+        " Models ranked by AICc:\n\n", sep = "")
     print(object$Model_table)
   }
 }

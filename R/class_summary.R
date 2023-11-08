@@ -42,7 +42,7 @@ extr_fit <- function(obj){
     r2 <-  1 - ((value) /  sum((SR - mean(SR))^2))
     #R2a (He & Legendre 1996, p724)
     adjr2 <-  1 - (((n-1)*(value)) /
-                   ((n-P)*sum((data$S - mean(data$S))^2)))
+                   ((n-P)*sum((SR - mean(SR))^2)))
   }
   IC <- info_crit(obj)
   return(c(r2, adjr2, IC))
@@ -324,12 +324,36 @@ summary.sars <- function(object, ...){
     mod_tab$Model <- names(object)
     mod_tab[,5:9] <- t(round(vapply(object, extr_fit, 
                                     FUN.VALUE = numeric(5)),3))
-    
-    #logarithmic results
-    if (attributes(object)$modType == "logarithmic"){
-      
-      
-    
+    #power or logarithmic results
+    if (attributes(object)$modType %in% c("power",
+                                          "logarithmic")){
+      #if not log-log, no d-z column needed
+      mod_tab <- mod_tab[,-which(colnames(mod_tab) == "d-z")]
+  
+      for (i in 1:length(object)){
+        if (names(object[i]) == "choros"){
+          mod_tab[which(mod_tab$Model == "choros"),
+                  "z"] <- round(object$choros$m$getAllPars()[2],
+                                3)
+        } else if (names(object[i]) == "jigsaw"){
+          mod_tab[which(mod_tab$Model == "jigsaw"),
+                  c("z", "d")] <- round(object$jigsaw$m$getAllPars()[2:3],
+                                        3)
+        } else if (names(object[i]) == "Kallimanis"){
+          mod_tab[which(mod_tab$Model == "Kallimanis"),
+                  c("z", "d")] <- round(object$Kallimanis$m$getAllPars()[2:3],
+                                        3)
+          
+        } else if (names(object[i]) == "power"){
+          mod_tab[which(mod_tab$Model == "power"),
+                  c("z")] <- round(object$power$m$getAllPars()[2],3)
+          
+        } else if (names(object[i]) == "logarithmic"){
+          mod_tab[which(mod_tab$Model == "logarithmic"),
+                  c("z")] <- round(object$logarithmic$m$getAllPars()[2],3)
+          
+        } #eo if
+      }#eo for
     #log-log results
     } else if (attributes(object)$modType == "power_log"){
 
@@ -357,10 +381,13 @@ summary.sars <- function(object, ...){
   }#eo for
   }#eo if lm
     mod_tab <- mod_tab[order(mod_tab$AICc),]
-    res <- list("Model_table" = mod_tab, "modType" = modType)
+    res <- list("Model_table" = mod_tab, 
+                "modType" = modType)
   }#eo if habitat
   
   class(res) <- "summary.sars"
   attr(res, "type") <- attr(object, "type")
+  attr(res, "failedMods") <- attr(object, "failedMods")
+  attr(res, "modType") <- attr(object, "modType")
   res
 }
