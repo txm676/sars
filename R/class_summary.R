@@ -371,7 +371,7 @@ summary.sars <- function(object, ...){
       } else if (names(object[i]) == "Kallimanis"){
         mod_tab[which(mod_tab$Model == "Kallimanis"),
                 c("z", "d")] <- round(c(object$Kallimanis$coefficients[2],
-                                               object$jigsaw$coefficients[3]),3)
+                                               object$Kallimanis$coefficients[3]),3)
       
       } else if (names(object[i]) == "power"){
         mod_tab[which(mod_tab$Model == "power"),

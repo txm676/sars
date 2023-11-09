@@ -234,10 +234,13 @@ sar_habitat <- function(data, modType = "power_log",
     # Fit four models in log-log space
     choros <- lm(S ~ choros_log, data = data)
     jigsaw <- lm(S ~ A + H, data = data)
+    #I've checked and this log-log form of Kallimanis
+    #matches if you take the log of both sides of the
+    #untransformed model
     Kallimanis <- lm(S ~ A + HlogA, data = data)
     classical <- lm(S ~ A, data = data)
   }
-  
+
   res <- list("choros" = choros, "jigsaw" = jigsaw,
               "Kallimanis" = Kallimanis, 
               "power" = classical)
