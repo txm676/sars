@@ -4,7 +4,8 @@
 ########################################################################
 
 #' function for using grid search of nls parameter space
-#' @importFrom stats nls AIC
+#' @importFrom stats AIC
+#' @importFrom minpack.lm nlsLM
 #' @noRd
 habitat_optim <- function(mod_nam, data){
   
@@ -23,7 +24,7 @@ habitat_optim <- function(mod_nam, data){
                      "jigsaw" = formula(S ~ (c1 * H^d) * ((A / H)^z)))
   
   fit.list <- suppressWarnings(apply(grid.start, 1, function(x){
-    tryCatch(nls(mod_nam2,
+    tryCatch(minpack.lm::nlsLM(mod_nam2,
                  start = x,
                  data = data),
              error = function(e) NA)
@@ -48,7 +49,7 @@ habitat_optim <- function(mod_nam, data){
 #'
 #' @description Fit three SAR regression models that include habitat diversity:
 #' the choros model, the Kallimanis model, and the jigsaw model.
-#' @usage sar_habitat(data, modType = "power_log", con = 1, logT = log)
+#' @usage sar_habitat(data, modType = "power_log", con = NULL, logT = log)
 #' @param data A dataset in the form of a dataframe with at least three columns:
 #'   the first with island/site areas (A), the second with island / site habitat
 #'   diversity (H), and the third with the species richness of each island/site
@@ -83,37 +84,55 @@ habitat_optim <- function(mod_nam, data){
 #'   
 #'   The untransformed (\code{modType = "power"}) and logarithmic (\code{modType
 #'   = "logarithmic"}) models are fitted using non-linear regression and the
-#'   \code{\link{nls}} function. For the jigsaw and Kallimanis models in
-#'   untransformed space, a grid search process is used to test multiple
-#'   starting parameter values for the \code{\link{nls}} function - see details
-#'   in the documentation for \code{\link{sar_average}} - if multiple model fits
-#'   are returned, the fit with the lowest \code{AIC} is returned. Providing
-#'   starting parameter estimates for multiple datasets is tricky, and thus you
-#'   may find the jigsaw and Kallimanis models cannot be fitted in untransformed
-#'   space. If this is the case, please let the package maintainer know and we
-#'   can edit the starting parameter values. The log-log models 
-#'   (\code{modType = "power_log"}) are all fitted using linear regression (
-#'   \code{\link{lm}} function).
-#'
+#'   \code{\link{nlsLM}} function. For the jigsaw and Kallimanis
+#'   models in untransformed space, a grid search process is used to test
+#'   multiple starting parameter values for the \code{\link{nlsLM}} function - see
+#'   details in the documentation for \code{\link{sar_average}} - if multiple
+#'   model fits are returned, the fit with the lowest \code{AIC} is returned.
+#'   Providing starting parameter estimates for multiple datasets is tricky, and
+#'   thus you may find the jigsaw and Kallimanis models cannot be fitted in
+#'   untransformed space or with the logarithmic models. If this is the case,
+#'   please let the package maintainer know and we can edit the starting
+#'   parameter values. The log-log models (\code{modType = "power_log"}) are all
+#'   fitted using linear regression ( \code{\link{lm}} function).
+#'   
+#'   \code{sar_habitat()} uses the \code{\link{nlsLM}} from the
+#'   \code{minpack.lm} package rather than \code{\link{nls}} as elsewhere in the
+#'   package as we found that this resulted in better searches of the parameter
+#'   space for the habitat models (and less convergence errors), particularly
+#'   for the logarithmic models. \code{\link{nlsLM}} is a modified version of
+#'   \code{\link{nls}} that uses the Levenberg-Marquardt fitting algorithm, but
+#'   returns a standard \code{\link{nls}} object and thus all the normal
+#'   subsequent \code{\link{nls}} functions can be used. Note also that
+#'   occasionally a warning is returned of NaNs being present, normally relating
+#'   to the jigsaw model (logarithmic version). We believe this mostly relates
+#'   to models fitted during the optimisation process rather than the final
+#'   returned model. Nonetheless, users are still recommended to check the
+#'   convergence information of the returned model fits.
+#'   
 #' @return A list of class "habitat" and "sars" with up to four elements, each
 #'   holding one of the individual model fit objects (either \code{\link{nls}}
-#'   or \code{\link{lm}} objects). \code{\link{summary.sars}} provides a more
-#'   user-friendly ouput (including a model summary table ranked by AICc and
-#'   presenting the model coefficients, and R2 and information criteria values
-#'   etc.) and \code{\link{plot.habitat}} provides a simple bar of information
-#'   criteria weights. For the models fitted using non-linear regression, the R2
-#'   and adjusted R2 are 'pseudo R2' values and are calculated using the same
-#'   approach as in the rest of the package (e.g., \code{\link{sar_power}}.
+#'   or \code{\link{lm}} class objects). \code{\link{summary.sars}} provides a
+#'   more user-friendly ouput (including a model summary table ranked by AICc
+#'   and presenting the model coefficients, and R2 and information criteria
+#'   values etc.) and \code{\link{plot.habitat}} provides a simple bar of
+#'   information criteria weights. For the models fitted using non-linear
+#'   regression, the R2 and adjusted R2 are 'pseudo R2' values and are
+#'   calculated using the same approach as in the rest of the package (e.g.,
+#'   \code{\link{sar_power}}.
 #'   
-#'   Note that if any of the models cannot be fitted - this is particularly the 
-#'   case when fitting the untransformed or logarithmic models which use non-linear
-#'   regression (see above) - they are removed from the returned object.
+#'   Note that if any of the models cannot be fitted - this is particularly the
+#'   case when fitting the untransformed or logarithmic models which use
+#'   non-linear regression (see above) - they are removed from the returned
+#'   object.
 #' @note The jigsaw model is equivalent to the trivariate power-law model of 
 #' Tjørve (2009), see Furness et al. (2023).
 #' 
 #' The jigsaw model (power-law form) cannot have a poorer fit than the choros or
 #' power model based on RSS and thus R2. Comparing models using information
 #' criteria is thus advised.
+#' @importFrom minpack.lm nlsLM
+#' @importFrom stats lm
 #' @references Furness, E.N., Saupe, E.E., Garwood, R.J., Mannion, P.D. &
 #'   Sutton, M.D. (2023) The jigsaw model: a biogeographic model that partitions
 #'   habitat heterogeneity from area. Frontiers of Biogeography, 15, e58477.
@@ -134,7 +153,7 @@ habitat_optim <- function(mod_nam, data){
 #' data(habitat)
 #' #Fit the models in log-log space
 #' s <- sar_habitat(data = habitat, modType = "power_log", 
-#' con = 1, logT = log)
+#' con = NULL, logT = log)
 #' #Look at the model comparison summary
 #' s2 <- summary(s)
 #' s2
@@ -142,14 +161,14 @@ habitat_optim <- function(mod_nam, data){
 #' plot(s, IC = "AICc", col = "darkred")
 #' 
 #' #Fit the logarithmic version of the models
-#' s3 <- sar_habitat(data = habitat, modType = "logarithmic", 
-#' con = 1, logT = log)
-#' summary(s3)
-#' plot(s, IC = "BIC", col = "darkblue")
+# s3 <- sar_habitat(data = habitat, modType = "logarithmic",
+# con = NULL, logT = log)
+# summary(s3)
+# plot(s, IC = "BIC", col = "darkblue")
 #' @export
 
 sar_habitat <- function(data, modType = "power_log", 
-                          con = 1, logT = log){
+                          con = NULL, logT = log){
   
   if (!(is.matrix(data) | is.data.frame(data)))
     stop('data must be a matrix or dataframe')
@@ -161,9 +180,7 @@ sar_habitat <- function(data, modType = "power_log",
   }
   if (!is.primitive(logT)) stop("logT should be a (primitive) function,
                                 specifically: log, log2 or log10")
-  if (any(length(con) > 1 | !(is.numeric(con)))) 
-    stop("con should be a numeric vector of length 1")
-  
+
   data <- data[,1:3]
   data <- data[order(data[,1]),]
   colnames(data) <- c('A','H', 'S')
@@ -178,6 +195,12 @@ sar_habitat <- function(data, modType = "power_log",
     data$A <- logT(data$A)
     data$H <- logT(data$H)
     if (any(data$S == 0)){
+      if (any(length(con) > 1 | !(is.numeric(con)))){
+        stop("The dataset has richness values of zero, ",
+        "con should be a numeric vector of length 1")
+      }
+      message("\nThe dataset has zero richness values, ", con,
+              " has been added to all richness values.\n\n")
       data$S <- logT(data$S + con)
     } else{
       data$S <- logT(data$S)
@@ -186,7 +209,7 @@ sar_habitat <- function(data, modType = "power_log",
   
   if (modType == "power"){
   #Fit nls for each of the four tested models in untransformed space
-    choros <- tryCatch(nls(S ~ c1 * choros^z,
+    choros <- tryCatch(minpack.lm::nlsLM(S ~ c1 * choros^z,
                            start = list("c1" = 5, 
                                         "z" = 0.25),
                            data = data),
@@ -196,7 +219,7 @@ sar_habitat <- function(data, modType = "power_log",
 
     Kallimanis <- habitat_optim("Kallimanis", data)
 
-    classical <- tryCatch(nls(S ~ c1 * A^z,
+    classical <- tryCatch(minpack.lm::nlsLM(S ~ c1 * A^z,
                               start = list("c1" = 5,
                                            "z" = 0.25),
                               data = data),
@@ -204,27 +227,27 @@ sar_habitat <- function(data, modType = "power_log",
 
   } else if (modType == "logarithmic"){
     # Fit nls for each of the four tested models in semi-log space
-    choros <- tryCatch(nls(S ~ c1 + z*choros_log,
+    choros <- tryCatch(minpack.lm::nlsLM(S ~ c1 + z*choros_log,
                               start = list("c1" = 5, 
                                            "z" = 0.25),
                               data = data),
                           error = function(e) NA)
     
-    jigsaw <- tryCatch(nls(S ~ (H^d) * logT(c1 * (A / H)^z),
+    jigsaw <- tryCatch(minpack.lm::nlsLM(S ~ (H^d) * logT(c1 * (A / H)^z),
                            start = list("c1" = 5,
                                         "z" = 1,
                                         "d" = 0.6),
                            data = data),
                        error = function(e) NA)
 
-    Kallimanis <- tryCatch(nls(S ~ c1 + (z + d * H) * logT(A),
+    Kallimanis <- tryCatch(minpack.lm::nlsLM(S ~ c1 + (z + d * H) * logT(A),
                            start = list("c1" = 5,
                                         "z" = 1,
                                         "d" = 0.6),
                            data = data),
                        error = function(e) NA)
 
-    classical <- tryCatch(nls(S ~ c1 + z * logT(A),
+    classical <- tryCatch(minpack.lm::nlsLM(S ~ c1 + z * logT(A),
                              start = list("c1" = 5,
                                           "z" = 0.25),
                              data = data),
