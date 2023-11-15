@@ -5,7 +5,7 @@
 
 #' function for using grid search of nls parameter space
 #' @importFrom stats AIC
-#' @importFrom minpack.lm nlsLM
+#' @importFrom minpack.lm nlsLM nls.lm.control 
 #' @noRd
 habitat_optim <- function(mod_nam, data){
   
@@ -26,6 +26,8 @@ habitat_optim <- function(mod_nam, data){
   fit.list <- suppressWarnings(apply(grid.start, 1, function(x){
     tryCatch(minpack.lm::nlsLM(mod_nam2,
                  start = x,
+                 control = minpack.lm::nls.lm.control(maxiter = 1000, 
+                                          maxfev = 100000),
                  data = data),
              error = function(e) NA)
   }))
@@ -131,7 +133,7 @@ habitat_optim <- function(mod_nam, data){
 #' The jigsaw model (power-law form) cannot have a poorer fit than the choros or
 #' power model based on RSS and thus R2. Comparing models using information
 #' criteria is thus advised.
-#' @importFrom minpack.lm nlsLM
+#' @importFrom minpack.lm nlsLM nls.lm.control
 #' @importFrom stats lm
 #' @references Furness, E.N., Saupe, E.E., Garwood, R.J., Mannion, P.D. &
 #'   Sutton, M.D. (2023) The jigsaw model: a biogeographic model that partitions
@@ -212,6 +214,8 @@ sar_habitat <- function(data, modType = "power_log",
     choros <- tryCatch(minpack.lm::nlsLM(S ~ c1 * choros^z,
                            start = list("c1" = 5, 
                                         "z" = 0.25),
+                           control = minpack.lm::nls.lm.control(maxiter = 1000, 
+                                                    maxfev = 100000),
                            data = data),
                        error = function(e) NA)
     
@@ -222,6 +226,8 @@ sar_habitat <- function(data, modType = "power_log",
     classical <- tryCatch(minpack.lm::nlsLM(S ~ c1 * A^z,
                               start = list("c1" = 5,
                                            "z" = 0.25),
+                              control = minpack.lm::nls.lm.control(maxiter = 1000, 
+                                                     maxfev = 100000),
                               data = data),
                           error = function(e) NA)
 
@@ -230,6 +236,8 @@ sar_habitat <- function(data, modType = "power_log",
     choros <- tryCatch(minpack.lm::nlsLM(S ~ c1 + z*choros_log,
                               start = list("c1" = 5, 
                                            "z" = 0.25),
+                              control = minpack.lm::nls.lm.control(maxiter = 1000, 
+                                                       maxfev = 100000),
                               data = data),
                           error = function(e) NA)
     
@@ -237,6 +245,8 @@ sar_habitat <- function(data, modType = "power_log",
                            start = list("c1" = 5,
                                         "z" = 1,
                                         "d" = 0.6),
+                           control = minpack.lm::nls.lm.control(maxiter = 1000, 
+                                                    maxfev = 100000),
                            data = data),
                        error = function(e) NA)
 
@@ -244,12 +254,16 @@ sar_habitat <- function(data, modType = "power_log",
                            start = list("c1" = 5,
                                         "z" = 1,
                                         "d" = 0.6),
+                           control = minpack.lm::nls.lm.control(maxiter = 1000, 
+                                                    maxfev = 100000),
                            data = data),
                        error = function(e) NA)
 
     classical <- tryCatch(minpack.lm::nlsLM(S ~ c1 + z * logT(A),
                              start = list("c1" = 5,
                                           "z" = 0.25),
+                             control = minpack.lm::nls.lm.control(maxiter = 1000, 
+                                                      maxfev = 100000),
                              data = data),
                          error = function(e) NA)
 
