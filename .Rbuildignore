@@ -12,3 +12,4 @@
 ^\.circleci$
 ^codecov\.yml$
 ^CRAN-SUBMISSION$
+^R//sar_countryside$
