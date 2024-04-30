@@ -162,6 +162,37 @@ print.summary.sars <- function(x, ...){
         " Models ranked by AICc:\n\n", sep = "")
     print(object$Model_table)
   }
+  
+  if (attributes(object)$type == "countryside"){
+    
+    
+    if ("All" %in% attr(object, "failedMods")){
+      cat("\nNo models could be fitted, try different starting parameters\n\n")
+    } else {
+
+    if ("None" %in% attr(object, "failedMods")){
+      PNN <- "All models could be fitted."
+    } else {
+      PNN <- paste0("The following models could not be fitted — ",
+                    paste(attr(object, "failedMods"), 
+                          collapse = ", "), " (try different starting parameters)")
+    }
+    
+    cat("\nsar_countryside model fit summary: \n\n", 
+        paste(PNN))
+
+    ##PRINT THE MODEL OBJECTS or summaries??
+    #in help file need to explain how to extract raw nls fit objects
+    
+    
+    
+    
+    }
+    
+    
+  }#eo if All
+    
+    
 }
 
 
