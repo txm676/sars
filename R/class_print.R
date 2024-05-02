@@ -1,6 +1,126 @@
-#' @importFrom stats quantile printCoefmat AIC
+
 #' @export
 
+print.sars <- function(x, ...){
+  object <- x
+  if (attributes(object)$type == "lin_pow"){
+    cat("Model = Log-log power\n")
+    cat("\nCall:\nlogS = logc + z.logA\n", sep = "")
+    cat("\nLog-transformation function used: ", object$logT,"\n", sep = "")
+    cat("\nCoefficients:\n", sep = "")
+    logc <- object$Model$coefficients[1, 1]
+    names(logc) <- "logc"
+    z <- object$Model$coefficients[2, 1]
+    names(z) <- "z"
+    print(c(logc, z))
+    cat("\n")
+  }
+  
+  if (attributes(object)$type == "fit"){
+    cat("\nModel:\n", object$model$name, "\n", sep = "")
+    cat("\nCall:\n", as.character(object$model$formula), "\n", sep = "")
+    cat("\nCoefficients:\n", sep = "")
+    print(object$par)
+    cat("\n")
+  }
+  
+  if (attributes(object)$type == "fit_collection"){
+    cat("\nThis is a fit collection\n", sep = "")
+    cat("\n", length(object),
+        " models contained in the fit collection\n", sep = "")
+    cat( "\n", paste(unlist(lapply(object, function(x) x$model$name)),
+                     collapse = ", "), "\n\n")
+  }
+  
+  if (attributes(object)$type == "multi"){
+    cat("\nThis is a sar_average fit object:\n", sep = "")
+    cat("\n", paste(length(object$details$mod_names),
+                    "models successfully fitted"), "\n", sep = "")
+    if (length(object$details$no_fit) > 1) {
+      cat("\n", paste(length(object$details$no_fit),
+                      "models were unable to be fitted or were removed due to model checks"),
+          "\n", sep = "")
+    } else if (object$details$no_fit != 0){
+      cat("\n", paste(length(object$details$no_fit),
+                      "model was unable to be fitted or was removed due to model checks"),
+          "\n", sep = "")
+    }
+    cat("\n", paste(object$details$ic, "used to rank models"),
+        "\n", sep = "")
+  }
+  
+  if (attributes(object)$type == "pred"){
+    cat("\nThis is a sar_pred object:\n\n", sep = "")
+    print.data.frame(object)
+  }
+  if (attributes(object)$type == "threshold"){
+    object2 <- object
+    class(object2) <- "list"
+    print(object2)
+  }
+  if (attributes(object)$type == "threshold_ci"){
+    m <- object$Method
+    cat("\nThreshold confidence interval summary\n", sep = "")
+    cat("\nMethod: ", m, "\n", sep = "")
+    #cat("\n", "Confidence intervals generated for:", names(object[[1]]),
+    #   "\n", sep = " ")
+    if (m == "boot"){
+      for (i in 1:length(object[[2]])){
+        CI <- round(object[[2]][[i]], 2)
+        cat("\nModel: ", names(object[[1]][i]),"\n", sep = "")
+        cat("Confidence interval of the breakpoint:", CI[1],"-", CI[2], "\n")
+      }
+    } else{
+      for (i in 1:(length(object) - 1)){
+        CI <- round(object[[i]], 2)
+        cat("\nModel: ", names(object)[i],"\n", sep = "")
+        cat("Confidence interval of the breakpoint:", CI[1],"-", CI[2], "\n")
+      }
+    }
+  }
+  if (attributes(object)$type == "threshold_coef"){
+    cat("\nSlopes and intercepts of fitted breakpoint models: \n\n", sep = "")
+    print.data.frame(object)
+  }
+  
+  if (attributes(object)$type == "habitat"){
+    object2 <- object
+    cat("\nThe individual model fit objects from sar_habitat,",
+        " use summary() for the model comparison results\n\n", sep = "")
+    class(object2) <- "list"
+    print(object2)
+  }
+  
+  if (attributes(object)$type == "countryside"){
+    
+    if ("All" %in% attr(object, "failedMods")){
+      cat("\nNo models could be fitted, try different starting parameters\n\n")
+    } else {
+      
+      if ("None" %in% attr(object, "failedMods")){
+        PNN <- "All models could be fitted."
+      } else {
+        PNN <- paste0("The following models could not be fitted — ",
+                      paste(names(attr(object, "failedMods")), 
+                            collapse = ", "), "\n\nTry different starting parameter values")
+      }
+      
+      cat("\nsar_countryside model fits \n\n", 
+          paste0(PNN),"\n\nModel fits:\n\n")
+      print.listof(object[[1]])
+      
+      cat("\n\nHabitat affinity values:\n\n")
+      print.listof(object[[2]])
+      
+      cat("\n\nc-values:\n\n")
+      print(object[[3]])
+      
+    }
+  }
+}
+
+#' @importFrom stats quantile printCoefmat AIC
+#' @export
 
 print.summary.sars <- function(x, ...){
   object <- x
@@ -162,135 +282,7 @@ print.summary.sars <- function(x, ...){
         " Models ranked by AICc:\n\n", sep = "")
     print(object$Model_table)
   }
-  
-  if (attributes(object)$type == "countryside"){
-    
-    
-    if ("All" %in% attr(object, "failedMods")){
-      cat("\nNo models could be fitted, try different starting parameters\n\n")
-    } else {
-
-    if ("None" %in% attr(object, "failedMods")){
-      PNN <- "All models could be fitted."
-    } else {
-      PNN <- paste0("The following models could not be fitted — ",
-                    paste(attr(object, "failedMods"), 
-                          collapse = ", "), " (try different starting parameters)")
-    }
-    
-    cat("\nsar_countryside model fit summary: \n\n", 
-        paste(PNN))
-
-    ##PRINT THE MODEL OBJECTS or summaries??
-    #in help file need to explain how to extract raw nls fit objects
-    
-    
-    
-    
-    }
-    
-    
-  }#eo if All
-    
-    
 }
-
-
-#' @export
-
-
-print.sars <- function(x, ...){
-  object <- x
-  if (attributes(object)$type == "lin_pow"){
-    cat("Model = Log-log power\n")
-    cat("\nCall:\nlogS = logc + z.logA\n", sep = "")
-    cat("\nLog-transformation function used: ", object$logT,"\n", sep = "")
-    cat("\nCoefficients:\n", sep = "")
-    logc <- object$Model$coefficients[1, 1]
-    names(logc) <- "logc"
-    z <- object$Model$coefficients[2, 1]
-    names(z) <- "z"
-    print(c(logc, z))
-    cat("\n")
-  }
-
-  if (attributes(object)$type == "fit"){
-    cat("\nModel:\n", object$model$name, "\n", sep = "")
-    cat("\nCall:\n", as.character(object$model$formula), "\n", sep = "")
-    cat("\nCoefficients:\n", sep = "")
-    print(object$par)
-    cat("\n")
-  }
-
-  if (attributes(object)$type == "fit_collection"){
-    cat("\nThis is a fit collection\n", sep = "")
-    cat("\n", length(object),
-        " models contained in the fit collection\n", sep = "")
-    cat( "\n", paste(unlist(lapply(object, function(x) x$model$name)),
-                     collapse = ", "), "\n\n")
-  }
-
-  if (attributes(object)$type == "multi"){
-    cat("\nThis is a sar_average fit object:\n", sep = "")
-    cat("\n", paste(length(object$details$mod_names),
-                    "models successfully fitted"), "\n", sep = "")
-    if (length(object$details$no_fit) > 1) {
-      cat("\n", paste(length(object$details$no_fit),
-      "models were unable to be fitted or were removed due to model checks"),
-          "\n", sep = "")
-    } else if (object$details$no_fit != 0){
-      cat("\n", paste(length(object$details$no_fit),
-        "model was unable to be fitted or was removed due to model checks"),
-          "\n", sep = "")
-    }
-     cat("\n", paste(object$details$ic, "used to rank models"),
-         "\n", sep = "")
-  }
-  
-  if (attributes(object)$type == "pred"){
-    cat("\nThis is a sar_pred object:\n\n", sep = "")
-    print.data.frame(object)
-  }
-  if (attributes(object)$type == "threshold"){
-    object2 <- object
-    class(object2) <- "list"
-    print(object2)
-  }
-  if (attributes(object)$type == "threshold_ci"){
-    m <- object$Method
-    cat("\nThreshold confidence interval summary\n", sep = "")
-    cat("\nMethod: ", m, "\n", sep = "")
-    #cat("\n", "Confidence intervals generated for:", names(object[[1]]),
-    #   "\n", sep = " ")
-    if (m == "boot"){
-      for (i in 1:length(object[[2]])){
-        CI <- round(object[[2]][[i]], 2)
-        cat("\nModel: ", names(object[[1]][i]),"\n", sep = "")
-        cat("Confidence interval of the breakpoint:", CI[1],"-", CI[2], "\n")
-      }
-    } else{
-      for (i in 1:(length(object) - 1)){
-        CI <- round(object[[i]], 2)
-        cat("\nModel: ", names(object)[i],"\n", sep = "")
-        cat("Confidence interval of the breakpoint:", CI[1],"-", CI[2], "\n")
-      }
-    }
-  }
-  if (attributes(object)$type == "threshold_coef"){
-    cat("\nSlopes and intercepts of fitted breakpoint models: \n\n", sep = "")
-    print.data.frame(object)
-  }
-  
-  if (attributes(object)$type == "habitat"){
-    object2 <- object
-    cat("\nThe individual model fit objects from sar_habitat,",
-    " use summary() for the model comparison results\n\n", sep = "")
-    class(object2) <- "list"
-    print(object2)
-  }
-  
-}
-
 
 ##internal function to calculate R2 for GDM models (same as in optim)
 #' @importFrom stats fitted resid
