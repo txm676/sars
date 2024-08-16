@@ -51,7 +51,8 @@ habitat_optim <- function(mod_nam, data){
 #'
 #' @description Fit three SAR regression models that include habitat diversity:
 #' the choros model, the Kallimanis model, and the jigsaw model.
-#' @usage sar_habitat(data, modType = "power_log", con = NULL, logT = log)
+#' @usage sar_habitat(data, modType = "power_log", con = NULL,
+#'   logT = log, startPar = NULL)
 #' @param data A dataset in the form of a dataframe with at least three columns:
 #'   the first with island/site areas (A), the second with island / site habitat
 #'   diversity (H), and the third with the species richness of each island/site
@@ -63,6 +64,14 @@ habitat_optim <- function(mod_nam, data){
 #'   at least one of the islands has zero species.
 #' @param logT The log-transformation to apply to the area and richness values.
 #'   Can be any of \code{log}(default), \code{log2} or \code{log10}.
+#' @param startPar Optional starting parameter values (default =
+#'   NULL) for the jigsaw and Kallimanis models. Needs to be a
+#'   matrix of dimension [2,3], where the first row corresponds
+#'   to the jigsaw model, and the second to the Kallimanis model.
+#'   The columns correspond to the c, z, and d parameters,
+#'   respectively. Only used if
+#'   \code{modType = "power"} or \code{modType =
+#'   "logarithmic"}.
 #' @details These functions are described in more detail in the accompanying paper
 #'   (Furness et al., 2023). The code to fit the models was also taken from this
 #'   paper.
@@ -87,16 +96,19 @@ habitat_optim <- function(mod_nam, data){
 #'   The untransformed (\code{modType = "power"}) and logarithmic (\code{modType
 #'   = "logarithmic"}) models are fitted using non-linear regression and the
 #'   \code{\link{nlsLM}} function. For the jigsaw and Kallimanis
-#'   models in untransformed space, a grid search process is used to test
-#'   multiple starting parameter values for the \code{\link{nlsLM}} function - see
-#'   details in the documentation for \code{\link{sar_average}} - if multiple
-#'   model fits are returned, the fit with the lowest \code{AIC} is returned.
-#'   Providing starting parameter estimates for multiple datasets is tricky, and
-#'   thus you may find the jigsaw and Kallimanis models cannot be fitted in
-#'   untransformed space or with the logarithmic models. If this is the case,
-#'   please let the package maintainer know and we can edit the starting
-#'   parameter values. The log-log models (\code{modType = "power_log"}) are all
-#'   fitted using linear regression ( \code{\link{lm}} function).
+#'   models in untransformed space, a grid search process is used
+#'   to test multiple starting parameter values for the
+#'   \code{\link{nlsLM}} function - see details in the
+#'   documentation for \code{\link{sar_average}} - if multiple
+#'   model fits are returned, the fit with the lowest \code{AIC}
+#'   is returned. Providing starting parameter estimates for
+#'   multiple datasets is tricky, and thus you may find the
+#'   jigsaw and Kallimanis models cannot be fitted in
+#'   untransformed space or with the logarithmic models. If this
+#'   is the case, the \code{startPar} argument can be used to
+#'   manually provide starting parameter values. The log-log
+#'   models (\code{modType = "power_log"}) are all fitted using
+#'   linear regression ( \code{\link{lm}} function).
 #'   
 #'   \code{sar_habitat()} uses the \code{\link{nlsLM}} from the
 #'   \code{minpack.lm} package rather than \code{\link{nls}} as elsewhere in the
@@ -121,7 +133,7 @@ habitat_optim <- function(mod_nam, data){
 #'   information criteria weights. For the models fitted using non-linear
 #'   regression, the R2 and adjusted R2 are 'pseudo R2' values and are
 #'   calculated using the same approach as in the rest of the package (e.g.,
-#'   \code{\link{sar_power}}.
+#'   \code{\link{sar_power}}).
 #'   
 #'   Note that if any of the models cannot be fitted - this is particularly the
 #'   case when fitting the untransformed or logarithmic models which use
@@ -163,14 +175,21 @@ habitat_optim <- function(mod_nam, data){
 #' plot(s, IC = "AICc", col = "darkred")
 #' 
 #' #Fit the logarithmic version of the models
-# s3 <- sar_habitat(data = habitat, modType = "logarithmic",
-# con = NULL, logT = log)
-# summary(s3)
-# plot(s, IC = "BIC", col = "darkblue")
+#' s3 <- sar_habitat(data = habitat, modType = "logarithmic",
+#' con = NULL, logT = log)
+#' summary(s3)
+#' plot(s, IC = "BIC", col = "darkblue")
+#'
+#' #Provide starting parameter values for the jigsaw and
+#' #Kallimanis models
+#' SP2 <- t(matrix(rep(c(5, 1, 0.5),2), ncol = 2))
+#' s <- sar_habitat(data = habitat, modType = "power",
+#'                 con = NULL, logT = log, startPar = SP2)
 #' @export
 
 sar_habitat <- function(data, modType = "power_log", 
-                          con = NULL, logT = log){
+                          con = NULL, logT = log,
+                        startPar = NULL){
   
   if (!(is.matrix(data) | is.data.frame(data)))
     stop('data must be a matrix or dataframe')
@@ -182,7 +201,22 @@ sar_habitat <- function(data, modType = "power_log",
   }
   if (!is.primitive(logT)) stop("logT should be a (primitive) function,
                                 specifically: log, log2 or log10")
-
+  
+  if (!is.null(startPar)){
+    ###needs to be a matrix, with two rows corresponding to
+    #jigsaw and kallimanis models, respecitively
+    if (!is.matrix(startPar)){
+      stop("startPar should be a matrix")
+    } else { #+1 is for z
+      if (!all(dim(startPar) == c(2, 3))){
+        stop("Dimensions of startPar are incorrect")
+      }
+      if (!is.numeric(startPar) | anyNA(startPar)){
+        stop("startPar should contain only numbers and no NAs")
+      }
+    }
+  }
+  
   data <- data[,1:3]
   data <- data[order(data[,1]),]
   colnames(data) <- c('A','H', 'S')
@@ -219,10 +253,32 @@ sar_habitat <- function(data, modType = "power_log",
                            data = data),
                        error = function(e) NA)
     
-    jigsaw <- habitat_optim("jigsaw", data)
-
-    Kallimanis <- habitat_optim("Kallimanis", data)
-
+    if (is.null(startPar)){
+      jigsaw <- habitat_optim("jigsaw", data)
+    } else {
+      startJig <- startPar[1,]
+      names(startJig) <- c("c1", "z", "d")
+      jigsaw <- tryCatch(minpack.lm::nlsLM(S ~ (c1 * H^d) * ((A / H)^z),
+                                           start = startJig,
+                                           control = minpack.lm::nls.lm.control(maxiter = 1000, 
+                                                                                maxfev = 100000),
+                                           data = data),
+                         error = function(e) NA)
+    }
+    
+    if (is.null(startPar)){
+      Kallimanis <- habitat_optim("Kallimanis", data)
+    } else {
+      startKalli <- startPar[2,]
+      names(startKalli) <- c("c1", "z", "d")
+      Kallimanis<- tryCatch(minpack.lm::nlsLM(S ~ c1 * A^(z + d * H),
+                                           start = startKalli,
+                                           control = minpack.lm::nls.lm.control(maxiter = 1000, 
+                                                                                maxfev = 100000),
+                                           data = data),
+                         error = function(e) NA)
+    }
+ 
     classical <- tryCatch(minpack.lm::nlsLM(S ~ c1 * A^z,
                               start = list("c1" = 5,
                                            "z" = 0.25),
@@ -241,19 +297,33 @@ sar_habitat <- function(data, modType = "power_log",
                               data = data),
                           error = function(e) NA)
     
+    if (is.null(startPar)){
+    startJig <- list("c1" = 5,
+                     "z" = 1,
+                     "d" = 0.6)
+    } else {
+      startJig <- startPar[1,]
+      names(startJig) <- c("c1", "z", "d")
+    }
+    
     jigsaw <- tryCatch(minpack.lm::nlsLM(S ~ (H^d) * logT(c1 * (A / H)^z),
-                           start = list("c1" = 5,
-                                        "z" = 1,
-                                        "d" = 0.6),
+                           start = startJig,
                            control = minpack.lm::nls.lm.control(maxiter = 1000, 
                                                     maxfev = 100000),
                            data = data),
                        error = function(e) NA)
+    
+    if (is.null(startPar)){
+      startKalli <- list("c1" = 5,
+                       "z" = 1,
+                       "d" = 0.6)
+    } else {
+      startKalli <- startPar[2,]
+      names(startKalli) <- c("c1", "z", "d")
+    }
 
     Kallimanis <- tryCatch(minpack.lm::nlsLM(S ~ c1 + (z + d * H) * logT(A),
-                           start = list("c1" = 5,
-                                        "z" = 1,
-                                        "d" = 0.6),
+                           start = startKalli,
                            control = minpack.lm::nls.lm.control(maxiter = 1000, 
                                                     maxfev = 100000),
                            data = data),

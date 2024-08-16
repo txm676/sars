@@ -4,7 +4,8 @@
 \alias{sar_habitat}
 \title{Fit habitat SAR models}
 \usage{
-sar_habitat(data, modType = "power_log", con = NULL, logT = log)
+sar_habitat(data, modType = "power_log", con = NULL,
+  logT = log, startPar = NULL)
 }
 \arguments{
 \item{data}{A dataset in the form of a dataframe with at least three columns:
@@ -21,6 +22,15 @@ at least one of the islands has zero species.}
 
 \item{logT}{The log-transformation to apply to the area and richness values.
 Can be any of \code{log}(default), \code{log2} or \code{log10}.}
+
+\item{startPar}{Optional starting parameter values (default =
+NULL) for the jigsaw and Kallimanis models. Needs to be a
+matrix of dimension [2,3], where the first row corresponds
+to the jigsaw model, and the second to the Kallimanis model.
+The columns correspond to the c, z, and d parameters,
+respectively. Only used if
+\code{modType = "power"} or \code{modType =
+"logarithmic"}.}
 }
 \value{
 A list of class "habitat" and "sars" with up to four elements, each
@@ -68,16 +78,19 @@ These functions are described in more detail in the accompanying paper
   The untransformed (\code{modType = "power"}) and logarithmic (\code{modType
   = "logarithmic"}) models are fitted using non-linear regression and the
   \code{\link{nlsLM}} function. For the jigsaw and Kallimanis
-  models in untransformed space, a grid search process is used to test
-  multiple starting parameter values for the \code{\link{nlsLM}} function - see
-  details in the documentation for \code{\link{sar_average}} - if multiple
-  model fits are returned, the fit with the lowest \code{AIC} is returned.
-  Providing starting parameter estimates for multiple datasets is tricky, and
-  thus you may find the jigsaw and Kallimanis models cannot be fitted in
-  untransformed space or with the logarithmic models. If this is the case,
-  please let the package maintainer know and we can edit the starting
-  parameter values. The log-log models (\code{modType = "power_log"}) are all
-  fitted using linear regression ( \code{\link{lm}} function).
+  models in untransformed space, a grid search process is used
+  to test multiple starting parameter values for the
+  \code{\link{nlsLM}} function - see details in the
+  documentation for \code{\link{sar_average}} - if multiple
+  model fits are returned, the fit with the lowest \code{AIC}
+  is returned. Providing starting parameter estimates for
+  multiple datasets is tricky, and thus you may find the
+  jigsaw and Kallimanis models cannot be fitted in
+  untransformed space or with the logarithmic models. If this
+  is the case, the \code{startPar} argument can be used to
+  manually provide starting parameter values. The log-log
+  models (\code{modType = "power_log"}) are all fitted using
+  linear regression ( \code{\link{lm}} function).
   
   \code{sar_habitat()} uses the \code{\link{nlsLM}} from the
   \code{minpack.lm} package rather than \code{\link{nls}} as elsewhere in the
@@ -113,6 +126,16 @@ s2
 plot(s, IC = "AICc", col = "darkred")
 
 #Fit the logarithmic version of the models
+s3 <- sar_habitat(data = habitat, modType = "logarithmic",
+con = NULL, logT = log)
+summary(s3)
+plot(s, IC = "BIC", col = "darkblue")
+
+#Provide starting parameter values for the jigsaw and
+#Kallimanis models
+SP2 <- t(matrix(rep(c(5, 1, 0.5),2), ncol = 2))
+s <- sar_habitat(data = habitat, modType = "power",
+                con = NULL, logT = log, startPar = SP2)
 }
 \references{
 Furness, E.N., Saupe, E.E., Garwood, R.J., Mannion, P.D. &

@@ -2,7 +2,7 @@
 #'
 #' A sample dataset in the correct sar_habitat format: contains the areas of a
 #' number of islands in the Skyros Archipelago (km2), the number of habitats,
-#' and the number of species recorded on each island.
+#' and the number of land snail species recorded on each island.
 #'
 #' @usage data(habitat)
 #' @format A data frame with 3 columns and 12 rows. Each row contains the area
