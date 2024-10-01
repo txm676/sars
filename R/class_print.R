@@ -100,7 +100,7 @@ print.sars <- function(x, ...){
       if ("None" %in% attr(object, "failedMods")){
         PNN <- "All models could be fitted."
       } else {
-        PNN <- paste0("The following models could not be fitted — ",
+        PNN <- paste0("The following models could not be fitted - ",
                       paste(names(attr(object, "failedMods")), 
                             collapse = ", "), "\n\nTry different starting parameter values")
       }

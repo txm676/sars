@@ -1,7 +1,7 @@
+"_PACKAGE"
 #' sars: Fit and compare species-area relationship models using multimodel inference
 #'
 #' @name sars-package
-#' @docType package
 #'
 #' @description This package provides functions to fit twenty models to
 #'   species-area relationship (SAR) data (see Triantis et al. 2012), plot the

@@ -42,7 +42,7 @@ A list of class "habitat" and "sars" with up to four elements, each
   information criteria weights. For the models fitted using non-linear
   regression, the R2 and adjusted R2 are 'pseudo R2' values and are
   calculated using the same approach as in the rest of the package (e.g.,
-  \code{\link{sar_power}}.
+  \code{\link{sar_power}}).
   
   Note that if any of the models cannot be fitted - this is particularly the
   case when fitting the untransformed or logarithmic models which use
