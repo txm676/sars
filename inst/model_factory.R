@@ -127,42 +127,42 @@ cat_roxygen <- function(model, funName, fileName){
   cat1(paste0("#' @return ", "A list of class 'sars' with the following", 
               " components: \n"))
   cat1(paste0("#'   \\itemize{\n"))
-  cat1(paste0("#'     \\item{par} { The model parameters}\n"))
-  cat1(paste0("#'     \\item{value} { Residual sum of squares}\n"))
-  cat1(paste0("#'     \\item{counts} {  The number of iterations for the", 
-              " convergence of the fitting algorithm}\n"))
-  cat1(paste0("#'     \\item{convergence} { Numeric code returned from optim", 
-              " indicating model convergence (0 = converged)}\n"))
-  cat1(paste0("#'     \\item{message} { Any message from the model fit", 
-              " algorithm}\n"))
-  cat1(paste0("#'     \\item{hessian} { A symmetric matrix giving an", 
-              " estimate of the Hessian at the solution found}\n"))
-  cat1(paste0("#'     \\item{verge} { Logical code indicating that optim model", 
-              " convergence value is zero}\n"))
-  cat1(paste0("#'     \\item{startValues} { The start values for the model", 
-              " parameters used in the optimisation}\n"))
-  cat1(paste0("#'     \\item{data} { Observed data}\n"))
-  cat1(paste0("#'     \\item{model} { A list of model information (e.g. the", 
-              " model name and formula)}\n"))
-  cat1(paste0("#'     \\item{calculated} {  The fitted values of the model}",
+  cat1(paste0("#'     \\item \\strong{par}  The model parameters\n"))
+  cat1(paste0("#'     \\item \\strong{value}  Residual sum of squares\n"))
+  cat1(paste0("#'     \\item \\strong{counts}   The number of iterations for the", 
+              " convergence of the fitting algorithm\n"))
+  cat1(paste0("#'     \\item \\strong{convergence}  Numeric code returned from optim", 
+              " indicating model convergence (0 = converged)\n"))
+  cat1(paste0("#'     \\item \\strong{message}  Any message from the model fit", 
+              " algorithm\n"))
+  cat1(paste0("#'     \\item \\strong{hessian}  A symmetric matrix giving an", 
+              " estimate of the Hessian at the solution found\n"))
+  cat1(paste0("#'     \\item \\strong{verge}  Logical code indicating that optim model", 
+              " convergence value is zero\n"))
+  cat1(paste0("#'     \\item \\strong{startValues}  The start values for the model", 
+              " parameters used in the optimisation\n"))
+  cat1(paste0("#'     \\item \\strong{data}  Observed data\n"))
+  cat1(paste0("#'     \\item \\strong{model}  A list of model information (e.g. the", 
+              " model name and formula)\n"))
+  cat1(paste0("#'     \\item \\strong{calculated}   The fitted values of the model",
               "\n"))
-  cat1(paste0("#'     \\item{residuals} { The model residuals}\n"))
-  cat1(paste0("#'     \\item{AIC} { The AIC value of the model}\n"))
-  cat1(paste0("#'     \\item{AICc} { The AICc value of the model}\n"))
-  cat1(paste0("#'     \\item{BIC} { The BIC value of the model}\n"))
-  cat1(paste0("#'     \\item{R2} { The R2 value of the model}\n"))
-  cat1(paste0("#'     \\item{R2a} { The adjusted R2 value of the model}\n"))
-  cat1(paste0("#'     \\item{sigConf} { The model coefficients table}\n"))
-  cat1(paste0("#'     \\item{normaTest} { The results of the residuals", 
-              " normality test}", "\n"))
-  cat1(paste0("#'     \\item{homoTest} { The results of the residuals", 
-              " homogeneity test}\n"))
-  cat1(paste0("#'     \\item{observed_shape} { The observed shape of the", 
-              " model fit}\n"))
-  cat1(paste0("#'     \\item{asymptote} { A logical value indicating whether", 
-              " the observed fit is asymptotic}\n"))
-  cat1(paste0("#'     \\item{neg_check} { A logical value indicating whether",
-              " negative fitted values have been returned}}\n\n"))
+  cat1(paste0("#'     \\item \\strong{residuals}  The model residuals\n"))
+  cat1(paste0("#'     \\item \\strong{AIC}  The AIC value of the model\n"))
+  cat1(paste0("#'     \\item \\strong{AICc}  The AICc value of the model\n"))
+  cat1(paste0("#'     \\item \\strong{BIC}  The BIC value of the model\n"))
+  cat1(paste0("#'     \\item \\strong{R2}  The R2 value of the model\n"))
+  cat1(paste0("#'     \\item \\strong{R2a}  The adjusted R2 value of the model\n"))
+  cat1(paste0("#'     \\item \\strong{sigConf}  The model coefficients table\n"))
+  cat1(paste0("#'     \\item \\strong{normaTest}  The results of the residuals", 
+              " normality test", "\n"))
+  cat1(paste0("#'     \\item \\strong{homoTest}  The results of the residuals", 
+              " homogeneity test\n"))
+  cat1(paste0("#'     \\item \\strong{observed_shape}  The observed shape of the", 
+              " model fit\n"))
+  cat1(paste0("#'     \\item \\strong{asymptote}  A logical value indicating whether", 
+              " the observed fit is asymptotic\n"))
+  cat1(paste0("#'     \\item \\strong{neg_check}  A logical value indicating whether",
+              " negative fitted values have been returned}\n\n"))
   cat1(paste0("#'   The \\code{\\link{summary.sars}} function returns a more", 
               " useful summary of\n"))
   cat1(paste0("#'   the model fit results, and the \\code{\\link{plot.sars}}", 

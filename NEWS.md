@@ -4,6 +4,9 @@
 show how to include a legend when plotting multiple model
 fits on the same plot (i.e., multPlot = FALSE)
 
+## Version 1.3.7
+  *small roxygen updates to pass new CRAN checks
+
 ## Version 1.3.6
   *update the vignette with discussion regarding potential issues in the use
   of information criteria for comparing non-linear regression models

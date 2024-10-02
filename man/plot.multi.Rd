@@ -141,18 +141,28 @@ In some versions of R and R studio, when plotting all model fits on the
   models. To plot fewer bars, use the \code{subset_weights} argument to
   filter out models with lower weights than a threshold value. To provide
   a different set of names use the \code{modNames} argument. The model
-  abbreviations used as the default are: \itemize{ \item{Pow = } { Power}
-  \item{PowR = } { PowerR} \item{E1 = } { Extended_Power_model_1} \item{E2
-  = } { Extended_Power_model_2} \item{P1 = } { Persistence_function_1}
-  \item{P2 = } { Persistence_function_2} \item{Loga = } { Logarithmic}
-  \item{Kob = } { Kobayashi} \item{MMF = } { MMF} \item{Mon = } { Monod}
-  \item{NegE = } { Negative_exponential} \item{CR = } { Chapman_Richards}
-  \item{CW3 = } { Cumulative_Weibull_3_par.} \item{AR = } {
-  Asymptotic_regression} \item{RF = } { Rational_function} \item{Gom = } {
-  Gompertz} \item{CW4 = } { Cumulative_Weibull_4_par.} \item{BP = } {
-  Beta-P_cumulative} \item{Logi = } { Logistic(Standard)}
-  \item{Hel = } { Heleg(Logistic)} \item{Lin = } {
-  Linear_model}}
+  abbreviations used as the default are: \itemize{ 
+  \item \strong{Pow} =   Power
+  \item \strong{PowR} =   PowerR 
+  \item \strong{E1} =   Extended_Power_model_1 
+  \item \strong{E2} =   Extended_Power_model_2 
+  \item \strong{P1} =   Persistence_function_1
+  \item \strong{P2} =   Persistence_function_2 
+  \item \strong{Loga} =   Logarithmic
+  \item \strong{Kob} =   Kobayashi 
+  \item \strong{MMF} =   MMF 
+  \item \strong{Mon} =   Monod
+  \item \strong{NegE} =   Negative_exponential 
+  \item \strong{CR} =   Chapman_Richards
+  \item \strong{CW3} =   Cumulative_Weibull_3_par. 
+  \item \strong{AR} =  Asymptotic_regression 
+  \item \strong{RF} =   Rational_function 
+  \item \strong{Gom} =  Gompertz 
+  \item \strong{CW4} =   Cumulative_Weibull_4_par. 
+  \item \strong{BP} =  Beta-P_cumulative 
+  \item \strong{Logi} =   Logistic(Standard)
+  \item \strong{Hel} =   Heleg(Logistic) 
+  \item \strong{Lin} =   Linear_model}
 }
 \examples{
 data(galap)

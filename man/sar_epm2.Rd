@@ -37,29 +37,29 @@ residuals with the area values), or 'none' (no residuals homogeneity test is und
 \value{
 A list of class 'sars' with the following components: 
   \itemize{
-    \item{par} { The model parameters}
-    \item{value} { Residual sum of squares}
-    \item{counts} {  The number of iterations for the convergence of the fitting algorithm}
-    \item{convergence} { Numeric code returned from optim indicating model convergence (0 = converged)}
-    \item{message} { Any message from the model fit algorithm}
-    \item{hessian} { A symmetric matrix giving an estimate of the Hessian at the solution found}
-    \item{verge} { Logical code indicating that optim model convergence value is zero}
-    \item{startValues} { The start values for the model parameters used in the optimisation}
-    \item{data} { Observed data}
-    \item{model} { A list of model information (e.g. the model name and formula)}
-    \item{calculated} {  The fitted values of the model}
-    \item{residuals} { The model residuals}
-    \item{AIC} { The AIC value of the model}
-    \item{AICc} { The AICc value of the model}
-    \item{BIC} { The BIC value of the model}
-    \item{R2} { The R2 value of the model}
-    \item{R2a} { The adjusted R2 value of the model}
-    \item{sigConf} { The model coefficients table}
-    \item{normaTest} { The results of the residuals normality test}
-    \item{homoTest} { The results of the residuals homogeneity test}
-    \item{observed_shape} { The observed shape of the model fit}
-    \item{asymptote} { A logical value indicating whether the observed fit is asymptotic}
-    \item{neg_check} { A logical value indicating whether negative fitted values have been returned}}
+    \item \strong{par}  The model parameters
+    \item \strong{value}  Residual sum of squares
+    \item \strong{counts}   The number of iterations for the convergence of the fitting algorithm
+    \item \strong{convergence}  Numeric code returned from optim indicating model convergence (0 = converged)
+    \item \strong{message}  Any message from the model fit algorithm
+    \item \strong{hessian}  A symmetric matrix giving an estimate of the Hessian at the solution found
+    \item \strong{verge}  Logical code indicating that optim model convergence value is zero
+    \item \strong{startValues}  The start values for the model parameters used in the optimisation
+    \item \strong{data}  Observed data
+    \item \strong{model}  A list of model information (e.g. the model name and formula)
+    \item \strong{calculated}   The fitted values of the model
+    \item \strong{residuals}  The model residuals
+    \item \strong{AIC}  The AIC value of the model
+    \item \strong{AICc}  The AICc value of the model
+    \item \strong{BIC}  The BIC value of the model
+    \item \strong{R2}  The R2 value of the model
+    \item \strong{R2a}  The adjusted R2 value of the model
+    \item \strong{sigConf}  The model coefficients table
+    \item \strong{normaTest}  The results of the residuals normality test
+    \item \strong{homoTest}  The results of the residuals homogeneity test
+    \item \strong{observed_shape}  The observed shape of the model fit
+    \item \strong{asymptote}  A logical value indicating whether the observed fit is asymptotic
+    \item \strong{neg_check}  A logical value indicating whether negative fitted values have been returned}
   The \code{\link{summary.sars}} function returns a more useful summary of
   the model fit results, and the \code{\link{plot.sars}} plots the model fit.
 }

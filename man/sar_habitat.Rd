@@ -59,17 +59,19 @@ These functions are described in more detail in the accompanying paper
   paper.
   
   Three habitat SAR models are available:
-  \itemize{ \item{choros model:} { Proposes that species richness is better
-  predicted by the product of habitat heterogeneity and area (S = c.(A.H)^z) }
-  \item{Kallimanis model:} {
+  \itemize{ 
+  \item \strong{choros model}:  
+  Proposes that species richness is better
+  predicted by the product of habitat heterogeneity and area (S = c.(A.H)^z) 
+  \item \strong{Kallimanis model}:  
   Proposes that increasing habitat heterogeneity increases species richness
   by increasing the slope (on a log-log plot) of the Arrhenius power model
-  (S = c1.A^(z + d.H)) }
-  \item{jigsaw model:} {
+  (S = c1.A^(z + d.H)) 
+  \item \strong{jigsaw model}: 
   Models species richness in an area as the sum of the species richness
   values of several smaller component subareas, which can be visualised as
   pieces of a jigsaw puzzle, i.e., it partitions the species–area and
-  species–heterogeneity scaling relationships (S = (c1.H^d).((A / H)^z)) }}
+  species–heterogeneity scaling relationships (S = (c1.H^d).((A / H)^z)) }
   
   In addition to these three models, a simple 'non-habitat' SAR model is also
   fit, which varies depending on \code{modType}: the non-linear power, the
@@ -77,10 +79,10 @@ These functions are described in more detail in the accompanying paper
   
   The untransformed (\code{modType = "power"}) and logarithmic (\code{modType
   = "logarithmic"}) models are fitted using non-linear regression and the
-  \code{\link{nlsLM}} function. For the jigsaw and Kallimanis
+  \code{\link[minpack.lm]{nlsLM}} function. For the jigsaw and Kallimanis
   models in untransformed space, a grid search process is used
   to test multiple starting parameter values for the
-  \code{\link{nlsLM}} function - see details in the
+  \code{\link[minpack.lm]{nlsLM}} function - see details in the
   documentation for \code{\link{sar_average}} - if multiple
   model fits are returned, the fit with the lowest \code{AIC}
   is returned. Providing starting parameter estimates for
@@ -92,19 +94,23 @@ These functions are described in more detail in the accompanying paper
   models (\code{modType = "power_log"}) are all fitted using
   linear regression ( \code{\link{lm}} function).
   
-  \code{sar_habitat()} uses the \code{\link{nlsLM}} from the
-  \code{minpack.lm} package rather than \code{\link{nls}} as elsewhere in the
-  package as we found that this resulted in better searches of the parameter
-  space for the habitat models (and less convergence errors), particularly
-  for the logarithmic models. \code{\link{nlsLM}} is a modified version of
-  \code{\link{nls}} that uses the Levenberg-Marquardt fitting algorithm, but
-  returns a standard \code{\link{nls}} object and thus all the normal
-  subsequent \code{\link{nls}} functions can be used. Note also that
-  occasionally a warning is returned of NaNs being present, normally relating
-  to the jigsaw model (logarithmic version). We believe this mostly relates
-  to models fitted during the optimisation process rather than the final
-  returned model. Nonetheless, users are still recommended to check the
-  convergence information of the returned model fits.
+  \code{sar_habitat()} uses the \code{\link[minpack.lm]{nlsLM}} from the
+  \code{minpack.lm} package rather than \code{\link{nls}} as
+  elsewhere in the package as we found that this resulted in
+  better searches of the parameter space for the habitat
+  models (and less convergence errors), particularly for the
+  logarithmic models. \code{\link[minpack.lm]{nlsLM}} is a
+  modified version of \code{\link{nls}} that uses the
+  Levenberg-Marquardt fitting algorithm, but returns a
+  standard \code{\link{nls}} object and thus all the normal
+  subsequent \code{\link{nls}} functions can be used. Note
+  also that occasionally a warning is returned of NaNs being
+  present, normally relating to the jigsaw model (logarithmic
+  version). We believe this mostly relates to models fitted
+  during the optimisation process rather than the final
+  returned model. Nonetheless, users are still recommended to
+  check the convergence information of the returned model
+  fits.
 }
 \note{
 The jigsaw model is equivalent to the trivariate power-law model of 

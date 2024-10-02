@@ -83,21 +83,23 @@ If no models have been successfully fitted and passed the model
   "multi" and class "sars" with two elements. The first element ('mmi')
   contains the fitted values of the multimodel sar curve. The second element
   ('details') is a list with the following components:
-  \itemize{ \item{mod_names} { Names of the models that were successfully
-  fitted and passed any model check} \item{fits} { A fit_collection object
-  containing the successful model fits} \item{ic} { The information criterion
-  selected} \item{norm_test} { The residual normality test selected}
-  \item{homo_test} { The residual homogeneity test selected}
-  \item{alpha_norm_test} { The alpha value used in the residual normality
-  test} \item{alpha_homo_test} { The alpha value used in the residual
-  homogeneity test} \item{ics} { The information criterion values (e.g. AIC
-  values) of the model fits} \item{delta_ics} { The delta information
-  criterion values} \item{weights_ics} { The information criterion weights of
-  each model fit} \item{n_points} {  Number of data points} \item{n_mods} {
-  The number of successfully fitted models} \item{no_fit} { Names of the
-  models which could not be fitted or did not pass model checks}
-  \item{convergence} { Logical value indicating whether \code{\link{optim}}
-  model convergence code = 0, for each model} }
+  \itemize{ 
+   \item \strong{mod_names}   Names of the models that were successfully
+  fitted and passed any model check 
+  \item \strong{fits}   A fit_collection object containing the successful model fits 
+  \item \strong{ic}   The information criterion selected 
+  \item \strong{norm_test}   The residual normality test selected
+  \item \strong{homo_test}   The residual homogeneity test selected
+  \item \strong{alpha_norm_test}   The alpha value used in the residual normality test 
+  \item \strong{alpha_homo_test}  The alpha value used in the residual homogeneity test 
+  \item \strong{ics}   The information criterion values (e.g. AIC values) of the model fits 
+  \item \strong{delta_ics}   The delta information criterion values 
+  \item \strong{weights_ics}   The information criterion weights of each model fit 
+  \item \strong{n_points}   Number of data points 
+  \item \strong{n_mods}   The number of successfully fitted models 
+  \item \strong{no_fit}   Names of the models which could not be fitted or did not pass model checks
+  \item \strong{convergence}   Logical value indicating whether \code{\link{optim}}
+  model convergence code = 0, for each model}
   
   The \code{\link{summary.sars}} function returns a more useful summary of
   the model fit results, and the \code{\link{plot.multi}} plots the

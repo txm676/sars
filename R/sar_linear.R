@@ -29,21 +29,26 @@
 #'   be used to compare models (see also \code{\link{sar_average}}).
 #' @importFrom stats lm confint shapiro.test ks.test cor.test
 #' @importFrom nortest lillie.test
-#' @return A list of class 'sars' with the following components: \itemize{
-#'   \item{par} { The model parameters} \item{value} { Residual sum of
-#'   squares} \item{verge} { Logical code indicating model convergence}
-#'   \item{data} { Observed data} \item{model} { A list of model information
-#'   (e.g. the model name and formula)} \item{calculated} {  The fitted
-#'   values of the model} \item{residuals} { The model residuals} \item{AIC}
-#'   { The AIC value of the model} \item{AICc} { The AICc value of the model}
-#'   \item{BIC} { The BIC value of the model} \item{R2} { The R2 value of the
-#'   model} \item{R2a} { The adjusted R2 value of the model} \item{sigConf} {
-#'   The model coefficients table} \item{observed_shape} { The observed shape
-#'   of the model fit} \item{asymptote} { A logical value indicating whether
-#'   the observed fit is asymptotic} \item{normaTest} { The results of the
-#'   residuals normality test} \item{homoTest} { The results of the residuals
-#'   homogeneity test} \item{neg_check} { A logical value indicating whether
-#'   negative fitted values have been returned}}
+#' @return A list of class 'sars' with the following components: 
+#' \itemize{
+#'   \item \strong{par}  The model parameters
+#'   \item \strong{value}  Residual sum of squares
+#'   \item \strong{verge}  Logical code indicating model convergence
+#'   \item \strong{data}  Observed data
+#'   \item \strong{model}  A list of model information (e.g. the model name and formula)
+#'   \item \strong{calculated}   The fitted values of the model
+#'   \item \strong{residuals}  The model residuals
+#'   \item \strong{AIC} The AIC value of the model
+#'   \item \strong{AICc}  The AICc value of the model
+#'   \item \strong{BIC}  The BIC value of the model
+#'   \item \strong{R2}  The R2 value of the model
+#'   \item \strong{R2a} The adjusted R2 value of the model
+#'   \item \strong{sigConf} The model coefficients table
+#'   \item \strong{observed_shape}  The observed shape of the model fit
+#'   \item \strong{asymptote}  A logical value indicating whether the observed fit is asymptotic
+#'   \item \strong{normaTest}  The results of the residuals normality test 
+#'   \item \strong{homoTest}  The results of the residuals homogeneity test
+#'   \item \strong{neg_check}  A logical value indicating whether negative fitted values have been returned}
 
 #'   The \code{\link{summary.sars}} function returns a more useful summary of
 #'   the model fit results, and the \code{\link{plot.sars}} plots the model
