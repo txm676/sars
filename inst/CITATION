@@ -1,10 +1,12 @@
 citHeader("To cite sars in a publication:")
 
-citEntry(entry="Article",
-	title = "sars: an R package for fitting, evaluating and comparing species–area relationship models",
-        author = personList(as.person("T.J. Matthews"), as.person("K. Triantis"), as.person("R.J. Whittaker"),                               as.person("F. Guilhaumon")),
-	journal = "Ecography",
-    volume="42",
-    pages="1446-1455",
-    year="2019",
-	textVersion = "Matthews, T.J., Triantis, K., Whittaker, R.J. and Guilhaumon, F. (2019) sars: an R package for fitting, evaluating and comparing species–area relationship models. Ecography, 42, 1446-1455.")
+	bibentry(,
+  bibtype      = "Article",
+  author       = "Thomas J. Matthews, Kostas Triantis, Robert J. Whittaker, Francois Guilhaumon",
+  title        = "sars: an R package for fitting, evaluating and comparing species–area relationship models",
+  journal      = "Ecography",
+  year         = "2019",
+  volume       = "42",
+  pages        = "1446-1455",
+  doi          = "10.1111/ecog.04271",
+  url          = "https://nsojournals.onlinelibrary.wiley.com/doi/full/10.1111/ecog.04271")

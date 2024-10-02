@@ -7,7 +7,7 @@ options(cli.unicode = FALSE)
 ## ----include = FALSE----------------------------------------------------------
 library(sars)
 
-## ---- fig.width=6, fig.height=6-----------------------------------------------
+## ----fig.width=6, fig.height=6------------------------------------------------
 #load an example dataset (Preston, 1962), fit the logarithmic SAR model using
 #the grid_start method of selecting starting parameter values, return a model 
 #fit summary and plot the model fit. 
@@ -16,7 +16,7 @@ fit <- sar_loga(data = galap, grid_start = "partial")
 summary(fit) 
 plot(fit)
 
-## ---- fig.width=16, fig.height=12---------------------------------------------
+## ----fig.width=16, fig.height=12----------------------------------------------
 #Create a fit_collection object containing multiple SAR model fits, and 
 #plot all fits. 
 fitC <- sar_multi(data = galap, obj = c("power", "loga", "monod"))
@@ -31,7 +31,7 @@ fit <- sar_linear(data = galap, normaTest ="lillie", homoTest = "cor.fitted")
 summary(fit) #a warning is provided  indicating the normality test failed 
 fit$normaTest
 
-## ---- fig.width=7, fig.height=19----------------------------------------------
+## ----fig.width=7, fig.height=19-----------------------------------------------
 #load an example dataset (Niering, 1963), run the ‘sar_average’ function
 #using a vector of model names and with no model validation tests, and
 #produce the plots in Figure 2 of the paper 
@@ -56,7 +56,7 @@ plot(fit, allCurves = FALSE, ModTitle =
 #Barplot of the information criterion weights of each model 
 plot(fit, type = "bar", ModTitle = "b) Model weights", cex.lab = 1.3)
 
-## ---- fig.width=6, fig.height=6-----------------------------------------------
+## ----fig.width=6, fig.height=6------------------------------------------------
 #load an example dataset, fit the log-log power model, return a model fit
 #summary and plot the model fit. When ‘compare’ == TRUE, the non-linear
 #power model is also fitted and the resultant parameter values compared. 
@@ -97,7 +97,7 @@ sar_pred(p2, area = c(5000, 10000))
 p3 <- sar_average(data = galap, grid_start = "none")
 sar_pred(p3, area = c(5000, 10000))
 
-## ---- fig.width=6, fig.height=6-----------------------------------------------
+## ----fig.width=6, fig.height=6------------------------------------------------
 
 #load an example dataset, and fit the continuous two-threshold model 
 #to the data (with area transformed using log to the base 10), using an 
