@@ -12,4 +12,3 @@
 ^\.circleci$
 ^codecov\.yml$
 ^CRAN-SUBMISSION$
-^R\countryside_workings.R$

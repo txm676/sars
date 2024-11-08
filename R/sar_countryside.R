@@ -1,10 +1,74 @@
 
 
+countryside_startPars <- function(dat, sp_grp,
+                                  grid_start){
+  
+  A2 <- rowSums(dat[,1:(ncol(dat) - 1)])
+  d2 <- data.frame("A" = A2, "S" = dat[,ncol(dat)])
+  
+  sp2 <- tryCatch(sar_power(d2),
+                  error = function(e) NA)
+  
+  if (length(sp2) == 1){
+    c1 <- 5
+    z1 <- 0.25
+  } else {
+    if (length(sp2$par) != 2){
+      c1 <- 5
+      z1 <- 0.25
+    } else {
+      c1 <- sp2$par[1]
+      z1 <- sp2$par[2]
+    }
+  }
+  
+  hmax <- c1 ^ (1/z1)
+  
+  if (grid_start == "partial"){
+    start.vec <- c(0.0000000001,
+                   0.000001,0.1,
+                   5000,100000,
+                   10000000, 100000000, 999)
+  } else if (grid_start == "exhaustive"){
+    start.vec <- c(0.0000000001,0.00000001,
+                   0.000001,0.0001,0.01,
+                   1,1000, 10000,100000,1000000,
+                   10000000, 100000000, 
+                   10000000000, 999)
+  }
+  start.list <- rep(list(start.vec), Nhab)
+  #add in the calculated value
+  if (!is.null(sp_grp)){
+  start.list[[sp_grp]][length(start.vec)] <- hmax 
+  } else {
+    #for ubiquitous, we don't know which group is
+    #hmax, so add it to each element.
+    start.list <- lapply(start.list, function(x){
+      x[length(start.vec)] <- hmax 
+      x
+    })
+  }
+  #include the calculated value
+  if (grid_start == "partial"){
+    start.list$z <- c(0.01, 0.1, 0.7, z1)
+  } else if (grid_start == "exhaustive"){
+    start.list$z <- c(0.001, 0.01, 0.1, 0.25,
+                      0.5, 1, z1)  
+  }
+  
+  LNs <- sapply(1:Nhab, function(x) paste0("h", x))
+  names(start.list) <- c(LNs, "z")
+  
+  grid.start <- expand.grid(start.list)
+  
+  return(grid.start)
+}
+
 countryside_optim <- function(dat, mod_nam = NULL, 
                               grid_start = "partial",
-                              startPar){
+                              startPar, z_lower = 0,
+                              sp_grp){
   
-
   #to be generic it needs to build based on number of habitats
   #provided by the user
   CNs <- colnames(dat)
@@ -12,23 +76,11 @@ countryside_optim <- function(dat, mod_nam = NULL,
   
   if (is.null(startPar)){
   
-  if (grid_start == "partial"){
-    start.vec <- c(0.005,0.05, 1,5,100)
-  } else if (grid_start == "exhaustive"){
-    start.vec <- c(0.00005,0.005,0.05,0.5,1,5,100, 
-                   1000, 10000, 100000)
-  }
-  start.list <- rep(list(start.vec), Nhab)
-  start.list$z <- c(0.001, 0.01, 0.1, 0.5, 1)
-  
-  LNs <- sapply(1:Nhab, function(x) paste0("h", x))
-  names(start.list) <- c(LNs, "z")
-
-  grid.start <- expand.grid(start.list)
+    grid.start <- countryside_startPars(dat, sp_grp,
+                                        grid_start)
   
   #random for testing
-  grid.start <-  grid.start[sample(1:nrow(grid.start), 150),]
-  
+ # grid.start <-  grid.start[sample(1:nrow(grid.start), 150),]
   
   } else { #user provided start values
     
@@ -53,12 +105,12 @@ countryside_optim <- function(dat, mod_nam = NULL,
          #            "Country_power" = formula(y),
             #         "jigsaw" = formula(S ~ (c1 * H^d) * ((A / H)^z)))
   
- #lower bounds (0 for hab variables; -Inf[default] for z;
- #but checking whether z should be zero also)
+ #lower bounds (0 for hab variables and z
  x <- grid.start[1,]
- xl <- rep(0, (length(x) - 1))
- names(xl) <- names(x)[1:length(x)-1]
- xl["z"] <- -Inf
+ xl <- rep(0, length(x))
+ names(xl) <- names(x)
+ #can set to -Inf for full search of par space
+ if (z_lower != 0) xl["z"] <- z_lower
  
   fit.list <- suppressWarnings(apply(grid.start, 1, function(x){
     tryCatch(minpack.lm::nlsLM(mod_nam2,
@@ -114,6 +166,11 @@ countryside_affinity <- function(mods, habNam){
 #groups (including ubiquitous sp, if provided). Row and column
 #order needs to match the column order of data (i.e., )
 
+#z_lower = the lower bound to be used for the z-parameter in the
+#minpack.lm::nlsLM function. Default is set to zero, but can be 
+#changed to any numeric value (e.g., -Inf to allow for a full
+#search of parameter space)
+
 #@return #in help file need to explain how to 
 #extract raw nls fit objects:
 #(i) a list of the non-linear regression model fits for each of
@@ -128,19 +185,21 @@ countryside_affinity <- function(mods, habNam){
 #user-provided starting pars: 1st row = Spcs_AG; and
 #columns relate to h paramters for AG, SH, and QF, and
 #then z.
-# SP <- matrix(rep(c(3.061161e+08, 2.104536e-01,
-#                    1.074748e+00, 1.223700e-01),4),
-#              ncol = 4) %>% t()
+
+# data <- read.table("D:\\documents\\Work\\On-going projects\\Habitat SAR Models\\Countryside files\\Vania\\MatrixMHUb.txt")
+# data <- data[,c(2:4, 6:9)]
+# 
 # f <- sar_countryside(data, ubiSp = TRUE,
-#                      habNam = c("AG", "SH", "F"),
-#                      startPar  = SP)
+#                      habNam = c("AG", "SH", "F"))
 
 
 #ubiSp = T
 
+
 sar_countryside <- function(data, modType = NULL,
                             grid_start = "partial",
-                            startPar = NULL, 
+                            startPar = NULL,
+                            z_lower = 0,
                             ubiSp = FALSE,
                             spNam = NULL,
                             habNam = NULL){
@@ -156,11 +215,14 @@ sar_countryside <- function(data, modType = NULL,
       stop("If ubiSp == TRUE, there should be an odd number of columns")
     } 
   }
+  if (length(z_lower) != 1 | !is.numeric(z_lower)){
+    stop("z_lower should be a numeric vector of length 1")
+  }
   
   ##Rename columns
   cnD <- colnames(data)
   CN <- floor((ncol(data)) / 2)#if ubiSp, it will be 0.5 over (hence floor) 
-  colnames(data)[1:3] <- sapply(1:CN, function(x) paste0("Area", x))
+  colnames(data)[1:CN] <- sapply(1:CN, function(x) paste0("Area", x))
   colnames(data)[(CN + 1):(CN + CN)] <- sapply(1:CN, 
                                        function(x) paste0("SR", x))
   if (ubiSp) colnames(data)[ncol(data)] <- "SR_UB"
@@ -222,9 +284,13 @@ sar_countryside <- function(data, modType = NULL,
     } else {
       startPar2 <- startPar
     }
+    #Sp.group number
+    sgn <- x - CN
     CO <- countryside_optim(dat = dum,
                       grid_start = grid_start,
-                      startPar = startPar2)
+                      startPar = startPar2,
+                      z_lower = z_lower,
+                      sp_grp = sgn)
     k <<- k + 1
     CO
   })
@@ -239,7 +305,9 @@ sar_countryside <- function(data, modType = NULL,
       startPar2 <- startPar
     }
     res$UB <- countryside_optim(dat = dum, 
-                                startPar = startPar2)
+                                startPar = startPar2,
+                                z_lower = z_lower,
+                                sp_grp = NULL)
   }
   
   names(res) <- spNam
