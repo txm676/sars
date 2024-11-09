@@ -1,0 +1,37 @@
+#' A sar_countryside dataset describing vascular plants in a multi-habitat
+#' landscape in Portugal
+#'
+#' A sample dataset in the correct sar_countryside format: for a set of sites,
+#' contains the areas of different habitat types, and the numbers of species in
+#' different habitat affinity groups. Data are nested.
+#'
+#' @usage data(countryside)
+#' @format A data frame with 7 columns and 425 rows. Each row contains the area
+#'   of three habitats in a site (first three columns: agricultural land - AG;
+#'   shrubland - SH; oak forest - QF), and the number of species in the site in
+#'   each of four habitat affinity groups (columns 4-7; names match habitats,
+#'   except for UB which stands for ubiquitous species). Note that the area and
+#'   species richness columns are in the same order (e.g., AG is first for
+#'   both), with the UB richness column last.
+#' @details Data are from Proença & Pereira (2013). The sampling design involved
+#'   selecting five 512m×512m habitat mosaics with different land-cover
+#'   composition. 64 sampling plots of 1m2 (1m×1m) were then set in each mosaic,
+#'   and presence and percentage cover data of understory plant species
+#'   (excluding adult trees) recorded. The disposition of sampling plots
+#'   followed a nested design: 1m2 sampling plots were aggregated in groups of
+#'   four, each plot placed on a corner of a 8m×8m square (64m2), then 8m×8m
+#'   squares were aggregated in a similar way to form 64m×64m squares (4096m2)
+#'   and these were finally aggregated in one square (habitat mosaic) measuring
+#'   512m×512m (26.2 ha). Species–area relationships were then fitted to these
+#'   data at the landscape level using nested species–area data at 1m2, 64m2,
+#'   4096m2 and 26.2 ha. Fitted curves were thus similar to a Type IIIA curve
+#'   (Scheiner, 2003).
+#' @source Proença, V. & Pereira, H.M. (2013) Species–area models to assess
+#'   biodiversity change in multi-habitat landscapes: the importance of species
+#'   habitat affinity. Basic and Applied Ecology, 14, 102–114.
+#'
+#'   Scheiner, S.M. (2003) Six types of species-area curves. Global Ecology and
+#'   Biogeography, 12, 441–447.
+#' @examples
+#' data(countryside)
+"countryside"

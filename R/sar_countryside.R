@@ -1,7 +1,7 @@
 
 
 countryside_startPars <- function(dat, sp_grp,
-                                  grid_start){
+                                  grid_start, Nhab){
   
   A2 <- rowSums(dat[,1:(ncol(dat) - 1)])
   d2 <- data.frame("A" = A2, "S" = dat[,ncol(dat)])
@@ -77,7 +77,7 @@ countryside_optim <- function(dat, mod_nam = NULL,
   if (is.null(startPar)){
   
     grid.start <- countryside_startPars(dat, sp_grp,
-                                        grid_start)
+                                        grid_start, Nhab)
   
   #random for testing
  # grid.start <-  grid.start[sample(1:nrow(grid.start), 150),]
@@ -185,16 +185,11 @@ countryside_affinity <- function(mods, habNam){
 #user-provided starting pars: 1st row = Spcs_AG; and
 #columns relate to h paramters for AG, SH, and QF, and
 #then z.
-
-# data <- read.table("D:\\documents\\Work\\On-going projects\\Habitat SAR Models\\Countryside files\\Vania\\MatrixMHUb.txt")
-# data <- data[,c(2:4, 6:9)]
 # 
-# f <- sar_countryside(data, ubiSp = TRUE,
+
+# data(countryside)
+# f <- sar_countryside(countryside, ubiSp = TRUE,
 #                      habNam = c("AG", "SH", "F"))
-
-
-#ubiSp = T
-
 
 sar_countryside <- function(data, modType = NULL,
                             grid_start = "partial",
