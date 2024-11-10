@@ -115,6 +115,20 @@ print.sars <- function(x, ...){
       cat("\n\nc-values:\n\n")
       print(object[[3]])
       
+      cat("\n\nPredicted total richness values:\n\n")
+      if (length(object[[4]]) < 5){
+      print(object[[4]])
+      } else {
+        print(object[[4]][1:5])
+        cat("\n...Remaining values cut-off ...\n\n")
+      }
+      
+      cat("\nResidual sum of squares [based on total richness]:\n\n")
+      if (length(object[[4]]) == 1 | length(object[[5]]) == 1){
+        cat("No RSS values as some models could not be fitted\n\n")
+      } else {
+        print(object[[5]])
+      }
     }
   }
 }

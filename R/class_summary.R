@@ -385,6 +385,9 @@ summary.sars <- function(object, ...){
                 "modType" = modType)
   }#eo if habitat
   
+  if (attributes(object)$type == "countryside"){
+    return(cat("\nNo summary method for sar_countryside\n", sep = ""))
+  }
   class(res) <- "summary.sars"
   attr(res, "type") <- attr(object, "type")
   attr(res, "failedMods") <- attr(object, "failedMods")

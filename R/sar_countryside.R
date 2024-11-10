@@ -186,10 +186,105 @@ countryside_affinity <- function(mods, habNam){
 #columns relate to h paramters for AG, SH, and QF, and
 #then z.
 # 
-
+# 
 # data(countryside)
 # f <- sar_countryside(countryside, ubiSp = TRUE,
 #                      habNam = c("AG", "SH", "F"))
+# 
+# dd <- f[[5]]
+# 
+# dd_Area <- length(which(grepl("Area", colnames(dd))))
+# dd_SR <- ncol(dd) - dd_Area
+# 
+# dd_Ran <- range(dd[,1:dd_Area])
+# 
+# dd2_Area <- dd[,1:dd_Area]
+# dd2_SR <- dd[,(dd_Area + 1):ncol(dd)]
+# 
+# #if predicted richness values returned
+# if (length(f[[4]]) > 1){
+# 
+# ##total predicted richness for the actual
+# #add total area and totR columns in
+# dd3_Area <- as.data.frame(dd2_Area)
+# dd3_Area$totA <- rowSums(dd3_Area)
+# dd3_Area$totR <-  f[[4]]
+# #same for main dataframe
+# ddTot <- dd
+# ddTot$totA <- rowSums(dd2_Area)
+# ddTot$totR <- rowSums(dd2_SR)
+# 
+# if(!identical(ddTot$totA, dd3_Area$totA)){
+#   stop("rownames mismatch in plot.countryside,",
+#        " contact the package author")
+# }
+# 
+# plot(ddTot$totR, dd3_Area$totR,
+#      xlab = "Observed total richness",
+#      ylab = "Predicted total richness",
+#      ...)
+# abline(0,1)
+# 
+# #extract power model values
+# if (length(f[[7]]) > 1){
+# points(f[[7]]$data$S, f[[7]]$calculated,
+#        col = "red")
+# } else {
+#   cat("\n\nPower model could not be fitted\n\n")
+#   }#eo if f7
+# } else {
+#   cat("\nNo predicted total richness values as some models could not be fitted\n\n")
+# }
+# 
+# ##predicted curves for each land-use
+# Ar_seq <- seq(dd_Ran[1], dd_Ran[2], 
+#               length.out = 1000)
+# #convert in N tables, where in each you can N columns,
+# #where N = number of land-use types. In each all columns,
+# #except the focal habitat are zeros
+# ar_ls <- vector("list", length = dd_Area)
+# totR_i <- matrix(ncol = dd_Area, nrow = length(Ar_sq))
+# for (i in 1:dd_Area){
+#   m_ls <- matrix(0, ncol = dd_Area,
+#                        nrow = length(Ar_seq))
+#   colnames(m_ls) <- names(f[[2]][[1]])
+#   m_ls[,i] <- Ar_seq 
+#   totR_i <- apply(m_ls[,1:dd_Area],1,function(x){
+#     v <- as.vector(x)
+#     vc <- countryside_extrap(f, area = v)
+#     vc$Total
+#   })
+#   
+# }
+# 
+# #cant plot empirical totals vs model preds,
+# #as different landscapes can have same total
+# #but different proportions of habitats, and thus
+# #predicted richness differs
+# 
+# #check inside main function in the affininty bit,
+# #as if some models not fitted does habNam then work?
+# 
+# for (i in 1:dd_Area){
+#   d3 <- dd[,i]
+#   u3 <- unique(d3)
+#   m3 <- matrix(nrow = length(u3), ncol = dd_SR)
+#   rownames(m3) <- u3
+#   colnames(m3) <- colnames(dd)[(dd_Area + 1):ncol(dd)]
+#   for (j in 1:length(u3)){
+#     d4 <- subset(dd, dd[,i] == u3[j])
+#     m3[j,] <- as.vector(colMeans(d4)[(dd_Area + 1):ncol(dd)])
+#   }
+# }
+# 
+# if(!all.equal(as.numeric(rownames(m3)), u3)){
+#   stop("rownames mismatch in plot.countryside,",
+#        " contact the package author")
+# }
+# 
+# m4 <- m3[order(u3),]
+# 
+# plot(sort(u3), m4[,1], type = "l")
 
 sar_countryside <- function(data, modType = NULL,
                             grid_start = "partial",
@@ -330,9 +425,41 @@ sar_countryside <- function(data, modType = NULL,
     
     res <- list(res, aff_H, aff_C)
   } else {
-    res <- list(res, "All models NA - no affinity values")
+    res <- list(res, "All models NA - no affinity values", NA)
   }
   
+  #Calculate total richness for each site: only do
+  #if all models have fit
+  if (("None" %in% FM)){
+    TR <- apply(data[,1:CN],1, function(x){
+    v <- as.vector(x)
+    vc <- countryside_extrap(f, area = v)
+    vc$Total
+    })
+    totA1 <- rowSums(data[,1:CN])
+    totR1 <- rowSums(data[(CN + 1): (ncol(data))])
+    dd_pow1 <- tryCatch(sar_power(data.frame("A" = totA1, 
+                                   "R" = totR1)),
+                        error = function(e) NA)
+    if (length(dd_pow1) == 1){
+      rss <- NA
+    } else {
+    ##Calculate RSS
+      cs_rss <- sum((TR - totR1)^2)
+      pow_rss <- dd_pow1$value
+      rss <- c("Countryside_RSS" = cs_rss, 
+               "Power_RSS" = pow_rss)
+    }#eo length dd pow
+  } else {
+    TR <- "No predicted total richness values as some models could not be fitted"
+    rss <- NA
+    dd_pow1 <- NA
+  }
+  
+  res[[4]] <- TR
+  res[[5]] <- rss
+  res[[6]] <- data
+  res[[7]] <- dd_pow1
   class(res) <- c("habitat", "sars", "list")
   attr(res, "type") <- "countryside"
   attr(res, "failedMods") <- FM
@@ -399,3 +526,4 @@ countryside_extrap <- function(fits, area,
                "Failed_mods" = mes)
   return(resP)
 }
+
