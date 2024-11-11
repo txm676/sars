@@ -1045,7 +1045,14 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
 #'@importFrom graphics barplot
 #'@export
 
-plot.habitat <- function(x, IC = "AICc", ...){
+plot.habitat <- function(x,  
+                        IC = "AICc",
+                        type = 1,
+                        powFit = TRUE,
+                        lcol = NULL,
+                        pLeg = TRUE,
+                        legPos = "bottomright",
+                        ...){
   
   if (attributes(x)$type == "habitat"){
     if (!IC %in% c("AIC", "BIC", "AICc")){
@@ -1060,8 +1067,131 @@ plot.habitat <- function(x, IC = "AICc", ...){
     IC_nam <- paste0(IC, " weight")
     barplot(x2$Weights, names.arg = x2$Model,
             xlab = "Model", ylab = IC_nam, ...)
-  }#eo if habitat
-  
+  } else if (attributes(x)$type == "countryside"){#eo if habitat
+    
+    if (length(x[[4]]) == 1){
+      return("Plot not generated as some models could not be fitted")
+    }
+    
+    dd <- x[[6]]
+    
+    dd_Area <- length(which(grepl("Area", colnames(dd))))
+    dd_SR <- ncol(dd) - dd_Area
+    
+    dd2_Area <- dd[,1:dd_Area]
+    dd2_SR <- dd[,(dd_Area + 1):ncol(dd)]
+    
+    dd_Ran <- range(dd[,1:dd_Area])
+    
+    if (type == 1){
+    
+      ##total predicted richness for the actual
+      #add total area and totR columns in
+      dd3_Area <- as.data.frame(dd2_Area)
+      dd3_Area$totA <- rowSums(dd3_Area)
+      dd3_Area$totR <-  f[[4]]
+      #same for main dataframe
+      ddTot <- dd
+      ddTot$totA <- rowSums(dd2_Area)
+      ddTot$totR <- rowSums(dd2_SR)
+      
+      if(!identical(ddTot$totA, dd3_Area$totA)){
+        stop("rownames mismatch in plot.countryside,",
+             " contact the package author")
+      }
+      
+      plot(ddTot$totR, dd3_Area$totR,
+           xlab = "Observed total richness",
+           ylab = "Predicted total richness",
+           ...)
+      abline(0,1)
+      
+      #extract power model values
+      if (powFit){
+      if (length(x[[7]]) > 1){
+        points(x[[7]]$data$S, x[[7]]$calculated,
+               col = "red")
+      } else {
+        cat("\n\nPower model could not be fitted\n\n")
+      }#eo if f7
+      }#ep if powFit
+
+    } else if (type == 2) {
+    #check if ubiquitous sp included
+    UB <- ifelse(ncol(x[[6]])%%2==0, FALSE, TRUE)
+      
+    ##predicted curves for each land-use
+    Ar_seq <- seq(dd_Ran[1], dd_Ran[2],
+                  length.out = 1000)
+    #convert in N tables, where in each you can N columns,
+    #where N = number of land-use types. In each all columns,
+    #except the focal habitat are zeros
+    ar_ls <- vector("list", length = dd_Area)
+    totR_i <- matrix(ncol = dd_Area, nrow = length(Ar_seq))
+    UB_i <- matrix(ncol = dd_Area, nrow = length(Ar_seq))
+    colnames(totR_i) <- names(f[[2]][[1]])
+    for (i in 1:dd_Area){
+      m_ls <- matrix(0, ncol = dd_Area,
+                     nrow = length(Ar_seq))
+      m_ls[,i] <- Ar_seq
+      totR_R <- apply(m_ls[,1:dd_Area],1,function(y){
+        v <- as.vector(y)
+        vc <- countryside_extrap(x, area = v)
+        vc1 <- vc$Indiv_mods[i]
+        if (UB){
+          vc2 <- vc$Indiv_mods[length(vc$Indiv_mods)]
+        } else{
+          vc2 <- 0
+        }
+        c(vc1, vc2)
+      })
+      totR_i[,i] <- totR_R[1,]
+      UB_i[,i] <- totR_R[2,]#ubiquitous species vals
+    }#eo for i
+    
+    totR_i <- as.data.frame(totR_i)
+    #take row means for ubiquitous species
+    UB_i2 <- data.frame("Ub" = rowMeans(UB_i))
+    
+    COLs <- c("black", "red", "darkgreen", "blueviolet",
+              "brown", "cornflowerblue","darkorange4",
+              "deeppink4", "gold4", "gray16", "lightgreen")
+    
+    if (length(lcol) > 1){
+      spC <- ifelse(UB == TRUE, ncol(totR_i) + 1, ncol(totR_i))
+      if (length(lcol) != spC){
+        warning("Length of lcol does not match number of habitat",
+                " types - using randomly selected colours")
+        lcol <- COLs[1:spC]
+      }
+    } else {
+      lcol <- COLs[1:spC]
+    }
+    
+    plot(Ar_seq, totR_i[,1], type = "l", 
+         col = lcol[1],
+         xlab = "Area", ylab = "Total richness",
+         ylim = c(min(totR_i), max(totR_i)),
+         ...)
+    k <- 1
+    apply(totR_i[,2:ncol(totR_i), drop = FALSE],
+          2, function(y){
+            k <<- k + 1
+            lines(Ar_seq, y, col = lcol[k], ...)
+          })
+    k <- k + 1
+    lines(Ar_seq, UB_i2[,1], col = lcol[k], ...)
+    if (pLeg){
+      CNz <- colnames(totR_i)
+      if (UB) {CNz <- c(CNz, "UB")}
+      legend(legPos, 
+             legend = CNz,
+             col = lcol, lty = 1)
+    }
+  } else {
+      stop("Type should be either 1 or 2")
+  }#eo if type 1
+}#eo if countryside
 }
 
 

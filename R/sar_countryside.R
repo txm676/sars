@@ -1,7 +1,7 @@
 
 
 countryside_startPars <- function(dat, sp_grp,
-                                  grid_start, Nhab){
+                                  gridStart, Nhab){
   
   A2 <- rowSums(dat[,1:(ncol(dat) - 1)])
   d2 <- data.frame("A" = A2, "S" = dat[,ncol(dat)])
@@ -24,12 +24,12 @@ countryside_startPars <- function(dat, sp_grp,
   
   hmax <- c1 ^ (1/z1)
   
-  if (grid_start == "partial"){
+  if (gridStart == "partial"){
     start.vec <- c(0.0000000001,
                    0.000001,0.1,
                    5000,100000,
                    10000000, 100000000, 999)
-  } else if (grid_start == "exhaustive"){
+  } else if (gridStart == "exhaustive"){
     start.vec <- c(0.0000000001,0.00000001,
                    0.000001,0.0001,0.01,
                    1,1000, 10000,100000,1000000,
@@ -49,9 +49,9 @@ countryside_startPars <- function(dat, sp_grp,
     })
   }
   #include the calculated value
-  if (grid_start == "partial"){
+  if (gridStart == "partial"){
     start.list$z <- c(0.01, 0.1, 0.7, z1)
-  } else if (grid_start == "exhaustive"){
+  } else if (gridStart == "exhaustive"){
     start.list$z <- c(0.001, 0.01, 0.1, 0.25,
                       0.5, 1, z1)  
   }
@@ -65,8 +65,8 @@ countryside_startPars <- function(dat, sp_grp,
 }
 
 countryside_optim <- function(dat, mod_nam = NULL, 
-                              grid_start = "partial",
-                              startPar, z_lower = 0,
+                              gridStart = "partial",
+                              startPar, zLower = 0,
                               sp_grp){
   
   #to be generic it needs to build based on number of habitats
@@ -77,7 +77,7 @@ countryside_optim <- function(dat, mod_nam = NULL,
   if (is.null(startPar)){
   
     grid.start <- countryside_startPars(dat, sp_grp,
-                                        grid_start, Nhab)
+                                        gridStart, Nhab)
   
   #random for testing
  # grid.start <-  grid.start[sample(1:nrow(grid.start), 150),]
@@ -110,7 +110,7 @@ countryside_optim <- function(dat, mod_nam = NULL,
  xl <- rep(0, length(x))
  names(xl) <- names(x)
  #can set to -Inf for full search of par space
- if (z_lower != 0) xl["z"] <- z_lower
+ if (zLower != 0) xl["z"] <- zLower
  
   fit.list <- suppressWarnings(apply(grid.start, 1, function(x){
     tryCatch(minpack.lm::nlsLM(mod_nam2,
@@ -152,7 +152,7 @@ countryside_affinity <- function(mods, habNam){
   return(r3)
 }
 
-#grid_start = if startPar not NULL, this is ignored.
+#gridStart = if startPar not NULL, this is ignored.
 #Warning that exhaustive can take a while.
 
 #spNam = optional vector of species-group names (matching 
@@ -166,7 +166,7 @@ countryside_affinity <- function(mods, habNam){
 #groups (including ubiquitous sp, if provided). Row and column
 #order needs to match the column order of data (i.e., )
 
-#z_lower = the lower bound to be used for the z-parameter in the
+#zLower = the lower bound to be used for the z-parameter in the
 #minpack.lm::nlsLM function. Default is set to zero, but can be 
 #changed to any numeric value (e.g., -Inf to allow for a full
 #search of parameter space)
@@ -187,109 +187,11 @@ countryside_affinity <- function(mods, habNam){
 #then z.
 # 
 # 
-# data(countryside)
-# f <- sar_countryside(countryside, ubiSp = TRUE,
-#                      habNam = c("AG", "SH", "F"))
-# 
-# dd <- f[[5]]
-# 
-# dd_Area <- length(which(grepl("Area", colnames(dd))))
-# dd_SR <- ncol(dd) - dd_Area
-# 
-# dd_Ran <- range(dd[,1:dd_Area])
-# 
-# dd2_Area <- dd[,1:dd_Area]
-# dd2_SR <- dd[,(dd_Area + 1):ncol(dd)]
-# 
-# #if predicted richness values returned
-# if (length(f[[4]]) > 1){
-# 
-# ##total predicted richness for the actual
-# #add total area and totR columns in
-# dd3_Area <- as.data.frame(dd2_Area)
-# dd3_Area$totA <- rowSums(dd3_Area)
-# dd3_Area$totR <-  f[[4]]
-# #same for main dataframe
-# ddTot <- dd
-# ddTot$totA <- rowSums(dd2_Area)
-# ddTot$totR <- rowSums(dd2_SR)
-# 
-# if(!identical(ddTot$totA, dd3_Area$totA)){
-#   stop("rownames mismatch in plot.countryside,",
-#        " contact the package author")
-# }
-# 
-# plot(ddTot$totR, dd3_Area$totR,
-#      xlab = "Observed total richness",
-#      ylab = "Predicted total richness",
-#      ...)
-# abline(0,1)
-# 
-# #extract power model values
-# if (length(f[[7]]) > 1){
-# points(f[[7]]$data$S, f[[7]]$calculated,
-#        col = "red")
-# } else {
-#   cat("\n\nPower model could not be fitted\n\n")
-#   }#eo if f7
-# } else {
-#   cat("\nNo predicted total richness values as some models could not be fitted\n\n")
-# }
-# 
-# ##predicted curves for each land-use
-# Ar_seq <- seq(dd_Ran[1], dd_Ran[2], 
-#               length.out = 1000)
-# #convert in N tables, where in each you can N columns,
-# #where N = number of land-use types. In each all columns,
-# #except the focal habitat are zeros
-# ar_ls <- vector("list", length = dd_Area)
-# totR_i <- matrix(ncol = dd_Area, nrow = length(Ar_sq))
-# for (i in 1:dd_Area){
-#   m_ls <- matrix(0, ncol = dd_Area,
-#                        nrow = length(Ar_seq))
-#   colnames(m_ls) <- names(f[[2]][[1]])
-#   m_ls[,i] <- Ar_seq 
-#   totR_i <- apply(m_ls[,1:dd_Area],1,function(x){
-#     v <- as.vector(x)
-#     vc <- countryside_extrap(f, area = v)
-#     vc$Total
-#   })
-#   
-# }
-# 
-# #cant plot empirical totals vs model preds,
-# #as different landscapes can have same total
-# #but different proportions of habitats, and thus
-# #predicted richness differs
-# 
-# #check inside main function in the affininty bit,
-# #as if some models not fitted does habNam then work?
-# 
-# for (i in 1:dd_Area){
-#   d3 <- dd[,i]
-#   u3 <- unique(d3)
-#   m3 <- matrix(nrow = length(u3), ncol = dd_SR)
-#   rownames(m3) <- u3
-#   colnames(m3) <- colnames(dd)[(dd_Area + 1):ncol(dd)]
-#   for (j in 1:length(u3)){
-#     d4 <- subset(dd, dd[,i] == u3[j])
-#     m3[j,] <- as.vector(colMeans(d4)[(dd_Area + 1):ncol(dd)])
-#   }
-# }
-# 
-# if(!all.equal(as.numeric(rownames(m3)), u3)){
-#   stop("rownames mismatch in plot.countryside,",
-#        " contact the package author")
-# }
-# 
-# m4 <- m3[order(u3),]
-# 
-# plot(sort(u3), m4[,1], type = "l")
 
-sar_countryside <- function(data, modType = NULL,
-                            grid_start = "partial",
+sar_countryside <- function(data, 
+                            gridStart = "partial",
                             startPar = NULL,
-                            z_lower = 0,
+                            zLower = 0,
                             ubiSp = FALSE,
                             spNam = NULL,
                             habNam = NULL){
@@ -305,8 +207,8 @@ sar_countryside <- function(data, modType = NULL,
       stop("If ubiSp == TRUE, there should be an odd number of columns")
     } 
   }
-  if (length(z_lower) != 1 | !is.numeric(z_lower)){
-    stop("z_lower should be a numeric vector of length 1")
+  if (length(zLower) != 1 | !is.numeric(zLower)){
+    stop("zLower should be a numeric vector of length 1")
   }
   
   ##Rename columns
@@ -324,6 +226,7 @@ sar_countryside <- function(data, modType = NULL,
   } else{
     CN2 <- CN
   }
+  
   if (!is.null(spNam)){
     if (!is.vector(spNam) |
         !is.character(spNam) | (length(spNam)!= CN2)){
@@ -357,8 +260,8 @@ sar_countryside <- function(data, modType = NULL,
       }
     }
   } else {
-    if (!any(c("partial", "exhaustive") %in% grid_start)){
-      stop("grid_start should be either 'partial' or 'exhaustive")
+    if (!any(c("partial", "exhaustive") %in% gridStart)){
+      stop("gridStart should be either 'partial' or 'exhaustive")
     }
   }#eo is.null(startPar)
   
@@ -377,9 +280,9 @@ sar_countryside <- function(data, modType = NULL,
     #Sp.group number
     sgn <- x - CN
     CO <- countryside_optim(dat = dum,
-                      grid_start = grid_start,
+                      gridStart = gridStart,
                       startPar = startPar2,
-                      z_lower = z_lower,
+                      zLower = zLower,
                       sp_grp = sgn)
     k <<- k + 1
     CO
@@ -396,7 +299,7 @@ sar_countryside <- function(data, modType = NULL,
     }
     res$UB <- countryside_optim(dat = dum, 
                                 startPar = startPar2,
-                                z_lower = z_lower,
+                                zLower = zLower,
                                 sp_grp = NULL)
   }
   
@@ -431,9 +334,12 @@ sar_countryside <- function(data, modType = NULL,
   #Calculate total richness for each site: only do
   #if all models have fit
   if (("None" %in% FM)){
+    res2 <- res
+    class(res2) <- c("habitat", "sars", "list")
+    attr(res2, "type") <- "countryside"
     TR <- apply(data[,1:CN],1, function(x){
     v <- as.vector(x)
-    vc <- countryside_extrap(f, area = v)
+    vc <- countryside_extrap(res2, area = v)
     vc$Total
     })
     totA1 <- rowSums(data[,1:CN])
@@ -476,8 +382,7 @@ sar_countryside <- function(data, modType = NULL,
 #habitat cols in the original data matrix provided to
 #sar_countryside
 
-countryside_extrap <- function(fits, area, 
-                               modType = NULL){
+countryside_extrap <- function(fits, area){
   
   #order of area values needs to match the order of 
   #the model fits in 'fits'
@@ -515,6 +420,11 @@ countryside_extrap <- function(fits, area,
   area <- as.list(area)
   
   #run predict() for each model in fits
+  #For each component model, this predicts the 
+  #total number of species in that group in the landscape,
+  #i.e., across all habitats in the landscape. In the plot
+  #function we set the other habitats to zero, but here they
+  #can be non-zero.
   Pred <- vapply(fits, function(x){
     predict(x, area)
   }, FUN.VALUE = numeric(1))

@@ -4,7 +4,16 @@
 \alias{plot.habitat}
 \title{Barplot of information criteria weights for a 'habitat' Object}
 \usage{
-\method{plot}{habitat}(x, IC = "AICc", ...)
+\method{plot}{habitat}(
+  x,
+  IC = "AICc",
+  type = 1,
+  powFit = TRUE,
+  lcol = NULL,
+  pLeg = TRUE,
+  legPos = "bottomright",
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class 'habitat'.}
