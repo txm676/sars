@@ -12,6 +12,7 @@
   lcol = NULL,
   pLeg = TRUE,
   legPos = "bottomright",
+  legInset = 0,
   ...
 )
 }
@@ -30,4 +31,10 @@ S3 method for class 'habitat'. \code{plot.habitat} creates
 \examples{
 #data(habitat)
 ###TO FILL IN
+##legPos = can either be position (e.g., "bottomright"), 
+##or the x and y co-ordinates to be used to position the legend,
+##(eg., c(0,5))
+##legInset = the inset argument in graphics::legend - lets you
+##plot the legend outside the plotting window (needs the user to
+##to manually change their graphics pars)
 }

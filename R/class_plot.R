@@ -1042,6 +1042,12 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
 #' @examples
 #' #data(habitat)
 #' ###TO FILL IN
+#' ##legPos = can either be position (e.g., "bottomright"), 
+#' ##or the x and y co-ordinates to be used to position the legend,
+#' ##(eg., c(0,5))
+#' ##legInset = the inset argument in graphics::legend - lets you
+#' ##plot the legend outside the plotting window (needs the user to
+#' ##to manually change their graphics pars)
 #'@importFrom graphics barplot
 #'@export
 
@@ -1052,6 +1058,7 @@ plot.habitat <- function(x,
                         lcol = NULL,
                         pLeg = TRUE,
                         legPos = "bottomright",
+                        legInset = 0,
                         ...){
   
   if (attributes(x)$type == "habitat"){
@@ -1089,7 +1096,7 @@ plot.habitat <- function(x,
       #add total area and totR columns in
       dd3_Area <- as.data.frame(dd2_Area)
       dd3_Area$totA <- rowSums(dd3_Area)
-      dd3_Area$totR <-  f[[4]]
+      dd3_Area$totR <-  x[[4]]
       #same for main dataframe
       ddTot <- dd
       ddTot$totA <- rowSums(dd2_Area)
@@ -1118,7 +1125,7 @@ plot.habitat <- function(x,
 
     } else if (type == 2) {
     #check if ubiquitous sp included
-    UB <- ifelse(ncol(x[[6]])%%2==0, FALSE, TRUE)
+    UB <- x[[8]]
       
     ##predicted curves for each land-use
     Ar_seq <- seq(dd_Ran[1], dd_Ran[2],
@@ -1129,7 +1136,13 @@ plot.habitat <- function(x,
     ar_ls <- vector("list", length = dd_Area)
     totR_i <- matrix(ncol = dd_Area, nrow = length(Ar_seq))
     UB_i <- matrix(ncol = dd_Area, nrow = length(Ar_seq))
-    colnames(totR_i) <- names(f[[2]][[1]])
+    nn <- gsub(".c", "", names(x[[3]]))
+    if (length(nn) > dd_Area){
+      colnames(totR_i) <- nn[1:(length(nn)-1)]
+      UB_name <- nn[length(nn)]
+    } else {
+      colnames(totR_i) <- nn
+    }
     for (i in 1:dd_Area){
       m_ls <- matrix(0, ncol = dd_Area,
                      nrow = length(Ar_seq))
@@ -1157,8 +1170,9 @@ plot.habitat <- function(x,
               "brown", "cornflowerblue","darkorange4",
               "deeppink4", "gold4", "gray16", "lightgreen")
     
+    spC <- ifelse(UB == TRUE, ncol(totR_i) + 1, ncol(totR_i))
+    
     if (length(lcol) > 1){
-      spC <- ifelse(UB == TRUE, ncol(totR_i) + 1, ncol(totR_i))
       if (length(lcol) != spC){
         warning("Length of lcol does not match number of habitat",
                 " types - using randomly selected colours")
@@ -1183,10 +1197,11 @@ plot.habitat <- function(x,
     lines(Ar_seq, UB_i2[,1], col = lcol[k], ...)
     if (pLeg){
       CNz <- colnames(totR_i)
-      if (UB) {CNz <- c(CNz, "UB")}
+      if (UB) {CNz <- c(CNz, UB_name)}
       legend(legPos, 
              legend = CNz,
-             col = lcol, lty = 1)
+             col = lcol, lty = 1, 
+             inset = legInset)
     }
   } else {
       stop("Type should be either 1 or 2")

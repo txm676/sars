@@ -366,6 +366,7 @@ sar_countryside <- function(data,
   res[[5]] <- rss
   res[[6]] <- data
   res[[7]] <- dd_pow1
+  res[[8]] <- ubiSp
   class(res) <- c("habitat", "sars", "list")
   attr(res, "type") <- "countryside"
   attr(res, "failedMods") <- FM
