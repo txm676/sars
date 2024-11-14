@@ -341,8 +341,8 @@ summary.sars <- function(object, ...){
                                         3)
         } else if (names(object[i]) == "Kallimanis"){
           mod_tab[which(mod_tab$Model == "Kallimanis"),
-                  c("z", "d")] <- round(object$Kallimanis$m$getAllPars()[2:3],
-                                        3)
+                  c("z", "d")] <- c(round(object$Kallimanis$m$getAllPars()[2],3),
+            round(object$Kallimanis$m$getAllPars()[3],5))
           
         } else if (names(object[i]) == "power"){
           mod_tab[which(mod_tab$Model == "power"),
@@ -370,8 +370,8 @@ summary.sars <- function(object, ...){
                             object$jigsaw$coefficients[3]),3)
       } else if (names(object[i]) == "Kallimanis"){
         mod_tab[which(mod_tab$Model == "Kallimanis"),
-                c("z", "d")] <- round(c(object$Kallimanis$coefficients[2],
-                                               object$Kallimanis$coefficients[3]),3)
+                c("z", "d")] <- c(round(object$Kallimanis$coefficients[2],3),
+                                               round(object$Kallimanis$coefficients[3],5))
       
       } else if (names(object[i]) == "power"){
         mod_tab[which(mod_tab$Model == "power"),
