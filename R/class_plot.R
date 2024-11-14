@@ -1133,7 +1133,7 @@ plot.habitat <- function(x,
       
     ##predicted curves for each land-use
     #loga model can't work with 0 area vals
-    if (attributes(fits)$modType == "logarithmic" &
+    if (attributes(x)$modType == "logarithmic" &
         dd_Ran[1] == 0){
       dr1 <- 0.01
     } else {

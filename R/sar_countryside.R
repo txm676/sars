@@ -397,6 +397,8 @@ sar_countryside <- function(data,
   res[[6]] <- data
   res[[7]] <- dd_pow1
   res[[8]] <- ubiSp
+  names(res) <- c("fits", "affinity", "c", "Pred.Tot.Rich",
+                  "rss", "data", "pow.model", "ubiSp")
   class(res) <- c("habitat", "sars", "list")
   attr(res, "type") <- "countryside"
   attr(res, "modType") <- modType
