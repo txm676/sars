@@ -1048,6 +1048,9 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
 #' ##legInset = the inset argument in graphics::legend - lets you
 #' ##plot the legend outside the plotting window (needs the user to
 #' ##to manually change their graphics pars)
+#' ##Note - loga model doesnt work with zero area,
+#' ##so the area seq in type 2 starts at 0.01 if this
+#' ##is the case
 #'@importFrom graphics barplot
 #'@export
 
@@ -1082,7 +1085,8 @@ plot.habitat <- function(x,
     
     dd <- x[[6]]
     
-    dd_Area <- length(which(grepl("Area", colnames(dd))))
+    dd_Area <- length(which(grepl("Area", 
+                                  colnames(dd))))
     dd_SR <- ncol(dd) - dd_Area
     
     dd2_Area <- dd[,1:dd_Area]
@@ -1119,7 +1123,7 @@ plot.habitat <- function(x,
         points(x[[7]]$data$S, x[[7]]$calculated,
                col = "red")
       } else {
-        cat("\n\nPower model could not be fitted\n\n")
+        cat("\n\nPower (or logarithmic) model could not be fitted\n\n")
       }#eo if f7
       }#ep if powFit
 
@@ -1128,7 +1132,14 @@ plot.habitat <- function(x,
     UB <- x[[8]]
       
     ##predicted curves for each land-use
-    Ar_seq <- seq(dd_Ran[1], dd_Ran[2],
+    #loga model can't work with 0 area vals
+    if (attributes(fits)$modType == "logarithmic" &
+        dd_Ran[1] == 0){
+      dr1 <- 0.01
+    } else {
+      dr1 <- dd_Ran[1]
+    }
+    Ar_seq <- seq(dr1, dd_Ran[2],
                   length.out = 1000)
     #convert in N tables, where in each you can N columns,
     #where N = number of land-use types. In each all columns,

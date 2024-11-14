@@ -105,8 +105,10 @@ print.sars <- function(x, ...){
                             collapse = ", "), "\n\nTry different starting parameter values")
       }
       
-      cat("\nsar_countryside model fits \n\n", 
-          paste0(PNN),"\n\nModel fits:\n\n")
+      cat("\nsar_countryside model fits (",
+          paste0(attributes(object)$modType),
+          " form) \n\n", 
+          paste0(PNN),"\n\nModel fits:\n\n", sep = "")
       print.listof(object[[1]])
       
       cat("\n\nHabitat affinity values:\n\n")

@@ -1,13 +1,19 @@
 
 
-countryside_startPars <- function(dat, sp_grp,
+countryside_startPars <- function(dat, modType,
+                                  sp_grp,
                                   gridStart, Nhab){
   
   A2 <- rowSums(dat[,1:(ncol(dat) - 1)])
   d2 <- data.frame("A" = A2, "S" = dat[,ncol(dat)])
   
-  sp2 <- tryCatch(sar_power(d2),
+  if (modType == "logarithmic"){
+    sp2 <- tryCatch(sar_loga(d2),
                   error = function(e) NA)
+  } else {
+    sp2 <- tryCatch(sar_power(d2),
+                    error = function(e) NA)
+  }
   
   if (length(sp2) == 1){
     c1 <- 5
@@ -22,7 +28,11 @@ countryside_startPars <- function(dat, sp_grp,
     }
   }
   
-  hmax <- c1 ^ (1/z1)
+  if (modType == "logarithmic"){
+    hmax <- exp(c1/z1)
+  } else {
+    hmax <- c1 ^ (1/z1)
+  }
   
   if (gridStart == "partial"){
     start.vec <- c(0.0000000001,
@@ -64,7 +74,7 @@ countryside_startPars <- function(dat, sp_grp,
   return(grid.start)
 }
 
-countryside_optim <- function(dat, mod_nam = NULL, 
+countryside_optim <- function(dat, modType, 
                               gridStart = "partial",
                               startPar, zLower = 0,
                               sp_grp){
@@ -76,7 +86,8 @@ countryside_optim <- function(dat, mod_nam = NULL,
   
   if (is.null(startPar)){
   
-    grid.start <- countryside_startPars(dat, sp_grp,
+    grid.start <- countryside_startPars(dat, modType = modType,
+                                        sp_grp,
                                         gridStart, Nhab)
   
   #random for testing
@@ -93,18 +104,11 @@ countryside_optim <- function(dat, mod_nam = NULL,
  y <- sapply(1:Nhab, function(x) paste0("h", x, "*", "Area", x))
  y <- toString(y)
  y <- gsub(", ", " + ", y)
- y <- paste0("S ~ (", y, ")", "^z")
+ y <- switch(modType,
+          "logarithmic" = paste0("S ~ z * log(", y, ")"),
+          "power" = paste0("S ~ (", y, ")", "^z"))
  mod_nam2 <- formula(y)
  
- #  
- # mod_nam2 <- formula("S ~ c*(h1 * Area1 + h2 * Area2 + 
- #                     h3 * Area3)^z")  
- 
- 
-#  mod_nam2 <- switch(mod_nam,
-         #            "Country_power" = formula(y),
-            #         "jigsaw" = formula(S ~ (c1 * H^d) * ((A / H)^z)))
-  
  #lower bounds (0 for hab variables and z
  x <- grid.start[1,]
  xl <- rep(0, length(x))
@@ -136,7 +140,8 @@ countryside_optim <- function(dat, mod_nam = NULL,
   return(best.fit)
 }
 
-countryside_affinity <- function(mods, habNam){
+countryside_affinity <- function(mods, modType,
+                                 habNam){
   
   MN <- names(mods)
   r3 <- lapply(mods, function(x){
@@ -145,7 +150,11 @@ countryside_affinity <- function(mods, habNam){
   modP2 <- modP[-wZ]
   scP <- modP2 / max(modP2)
   names(scP) <- habNam
-  scP <- c(scP, (max(modP2)^modP[wZ]))
+  if (modType == "logarithmic"){
+    scP <- c(scP, (log(max(modP2))*modP[wZ]))
+  } else {
+    scP <- c(scP, (max(modP2)^modP[wZ]))
+  }
   names(scP)[length(scP)] <- "c"
   scP
   })
@@ -187,8 +196,9 @@ countryside_affinity <- function(mods, habNam){
 #then z.
 # 
 # 
-
-sar_countryside <- function(data, 
+#' @export
+sar_countryside <- function(data,
+                            modType = "power",
                             gridStart = "partial",
                             startPar = NULL,
                             zLower = 0,
@@ -210,6 +220,9 @@ sar_countryside <- function(data,
   if (length(zLower) != 1 | !is.numeric(zLower)){
     stop("zLower should be a numeric vector of length 1")
   }
+  if (!modType %in% c("power", "logarithmic")){
+    stop("modType should be one of power or logarithmic")
+  }
   
   ##Rename columns
   cnD <- colnames(data)
@@ -219,6 +232,15 @@ sar_countryside <- function(data,
                                        function(x) paste0("SR", x))
   if (ubiSp) colnames(data)[ncol(data)] <- "SR_UB"
 
+  if (any(rowSums(data[,1:CN]) == 0)){
+    if (modType == "logarithmic"){
+    stop("Some sites have total area equal to zero - this is ",
+         "not possible with the logarithmic model")
+    } else {
+      warning("Some sites have total area equal to zero")
+    }
+  }
+  
   #if habNam & spNam provided, check in correct format, otherwise take
   #area / species column names
   if (ubiSp){
@@ -280,6 +302,7 @@ sar_countryside <- function(data,
     #Sp.group number
     sgn <- x - CN
     CO <- countryside_optim(dat = dum,
+                      modType = modType,
                       gridStart = gridStart,
                       startPar = startPar2,
                       zLower = zLower,
@@ -298,6 +321,7 @@ sar_countryside <- function(data,
       startPar2 <- startPar
     }
     res$UB <- countryside_optim(dat = dum, 
+                                modType = modType,
                                 startPar = startPar2,
                                 zLower = zLower,
                                 sp_grp = NULL)
@@ -322,7 +346,8 @@ sar_countryside <- function(data,
     if (!("None" %in% FM)){
       res2[w1] <- NULL
     }
-    aff <- countryside_affinity(res2, habNam = habNam)
+    aff <- countryside_affinity(res2, modType = modType,
+                                habNam = habNam)
     aff_H <- lapply(aff, function(x) x[1:(length(x) - 1)])
     aff_C <- sapply(aff, function(x) x[length(x)])
     
@@ -337,6 +362,7 @@ sar_countryside <- function(data,
     res2 <- res
     class(res2) <- c("habitat", "sars", "list")
     attr(res2, "type") <- "countryside"
+    attr(res2, "modType") <- modType
     TR <- apply(data[,1:CN],1, function(x){
     v <- as.vector(x)
     vc <- countryside_extrap(res2, area = v)
@@ -344,7 +370,9 @@ sar_countryside <- function(data,
     })
     totA1 <- rowSums(data[,1:CN])
     totR1 <- rowSums(data[(CN + 1): (ncol(data))])
-    dd_pow1 <- tryCatch(sar_power(data.frame("A" = totA1, 
+    modF <- ifelse(modType == "logarithmic", sar_loga,
+                   sar_power)
+    dd_pow1 <- tryCatch(modF(data.frame("A" = totA1, 
                                    "R" = totR1)),
                         error = function(e) NA)
     if (length(dd_pow1) == 1){
@@ -354,7 +382,9 @@ sar_countryside <- function(data,
       cs_rss <- sum((TR - totR1)^2)
       pow_rss <- dd_pow1$value
       rss <- c("Countryside_RSS" = cs_rss, 
-               "Power_RSS" = pow_rss)
+               pow_rss)
+      names(rss)[2] <- ifelse(modType == "logarithmic",
+                              "Logarithmic_RSS", "Power_RSS")
     }#eo length dd pow
   } else {
     TR <- "No predicted total richness values as some models could not be fitted"
@@ -369,6 +399,7 @@ sar_countryside <- function(data,
   res[[8]] <- ubiSp
   class(res) <- c("habitat", "sars", "list")
   attr(res, "type") <- "countryside"
+  attr(res, "modType") <- modType
   attr(res, "failedMods") <- FM
   return(res)
 }
@@ -382,7 +413,7 @@ sar_countryside <- function(data,
 #the order of values in 'area' must match the order of
 #habitat cols in the original data matrix provided to
 #sar_countryside
-
+#' @export
 countryside_extrap <- function(fits, area){
   
   #order of area values needs to match the order of 
@@ -395,6 +426,12 @@ countryside_extrap <- function(fits, area){
   if (attributes(fits)$type != "countryside"){
     stop("fits should be an object generated by sar_countryside()")
   }
+  
+  if (sum(area) == 0 & 
+      attributes(fits)$modType == "logarithmic"){
+      stop("Provided areas sum to zero - this is ",
+           "not possible with the logarithmic model")
+    } 
   
   fits <- fits[[1]]
   

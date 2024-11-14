@@ -37,4 +37,7 @@ S3 method for class 'habitat'. \code{plot.habitat} creates
 ##legInset = the inset argument in graphics::legend - lets you
 ##plot the legend outside the plotting window (needs the user to
 ##to manually change their graphics pars)
+##Note - loga model doesnt work with zero area,
+##so the area seq in type 2 starts at 0.01 if this
+##is the case
 }
