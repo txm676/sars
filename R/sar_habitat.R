@@ -97,28 +97,29 @@ habitat_optim <- function(mod_nam, data){
 #'   
 #'   The untransformed (\code{modType = "power"}) and logarithmic (\code{modType
 #'   = "logarithmic"}) models are fitted using non-linear regression and the
-#'   \code{\link[minpack.lm]{nlsLM}} function. For the jigsaw and Kallimanis
-#'   models in untransformed space, a grid search process is used
-#'   to test multiple starting parameter values for the
-#'   \code{\link[minpack.lm]{nlsLM}} function - see details in the
-#'   documentation for \code{\link{sar_average}} - if multiple
-#'   model fits are returned, the fit with the lowest \code{AIC}
-#'   is returned. Providing starting parameter estimates for
-#'   multiple datasets is tricky, and thus you may find the
-#'   jigsaw and Kallimanis models cannot be fitted in
+#'   \code{\link[minpack.lm]{nlsLM}} function. For the jigsaw and
+#'   Kallimanis models in untransformed space, a grid search
+#'   process is used to test multiple starting parameter values
+#'   for the \code{\link[minpack.lm]{nlsLM}} function - see
+#'   details in the documentation for \code{\link{sar_average}} -
+#'   if multiple model fits are returned, the fit with the lowest
+#'   \code{AIC} is returned. Providing starting parameter
+#'   estimates for multiple datasets is tricky, and thus you may
+#'   find the jigsaw and Kallimanis models cannot be fitted in
 #'   untransformed space or with the logarithmic models. If this
 #'   is the case, the \code{startPar} argument can be used to
 #'   manually provide starting parameter values. The log-log
 #'   models (\code{modType = "power_log"}) are all fitted using
 #'   linear regression ( \code{\link{lm}} function).
 #'   
-#'   \code{sar_habitat()} uses the \code{\link[minpack.lm]{nlsLM}} from the
-#'   \code{minpack.lm} package rather than \code{\link{nls}} as
-#'   elsewhere in the package as we found that this resulted in
-#'   better searches of the parameter space for the habitat
-#'   models (and less convergence errors), particularly for the
-#'   logarithmic models. \code{\link[minpack.lm]{nlsLM}} is a
-#'   modified version of \code{\link{nls}} that uses the
+#'   \code{sar_habitat()} uses the
+#'   \code{\link[minpack.lm]{nlsLM}} from the \code{minpack.lm}
+#'   package rather than \code{\link{nls}} as elsewhere in the
+#'   package as we found that this resulted in better searches of
+#'   the parameter space for the habitat models (and less
+#'   convergence errors), particularly for the logarithmic
+#'   models. \code{\link[minpack.lm]{nlsLM}} is a modified
+#'   version of \code{\link{nls}} that uses the
 #'   Levenberg-Marquardt fitting algorithm, but returns a
 #'   standard \code{\link{nls}} object and thus all the normal
 #'   subsequent \code{\link{nls}} functions can be used. Note
@@ -130,21 +131,23 @@ habitat_optim <- function(mod_nam, data){
 #'   check the convergence information of the returned model
 #'   fits.
 #'   
-#' @return A list of class "habitat" and "sars" with up to four elements, each
-#'   holding one of the individual model fit objects (either \code{\link{nls}}
-#'   or \code{\link{lm}} class objects). \code{\link{summary.sars}} provides a
-#'   more user-friendly ouput (including a model summary table ranked by AICc
-#'   and presenting the model coefficients, and R2 and information criteria
-#'   values etc.) and \code{\link{plot.habitat}} provides a simple bar of
-#'   information criteria weights. For the models fitted using non-linear
-#'   regression, the R2 and adjusted R2 are 'pseudo R2' values and are
-#'   calculated using the same approach as in the rest of the package (e.g.,
-#'   \code{\link{sar_power}}).
-#'   
-#'   Note that if any of the models cannot be fitted - this is particularly the
-#'   case when fitting the untransformed or logarithmic models which use
-#'   non-linear regression (see above) - they are removed from the returned
-#'   object.
+#' @return A list of class "habitat" and "sars" with up to four
+#'   elements, each holding one of the individual model fit
+#'   objects (either \code{\link{nls}} or \code{\link{lm}} class
+#'   objects). \code{\link{summary.sars}} provides a more
+#'   user-friendly ouput (including a model summary table ranked
+#'   by AICc and presenting the model coefficients, and R2 and
+#'   information criteria values etc.) and
+#'   \code{\link{plot.habitat}} provides a simple bar of
+#'   information criteria weights. For the models fitted using
+#'   non-linear regression, the R2 and adjusted R2 are 'pseudo
+#'   R2' values and are calculated using the same approach as in
+#'   the rest of the package (e.g., \code{\link{sar_power}}).
+#'
+#'   Note that if any of the models cannot be fitted - this is
+#'   particularly the case when fitting the untransformed or
+#'   logarithmic models which use non-linear regression (see
+#'   above) - they are removed from the returned object.
 #' @note The jigsaw model is equivalent to the trivariate power-law model of 
 #' Tjørve (2009), see Furness et al. (2023).
 #' 

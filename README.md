@@ -31,8 +31,7 @@ functions for fitting, evaluating and plotting a range of commonly used
 piecewise SAR models (see Matthews and Rigal (2021) for details on these
 functions).
 
-As this is version 1.3.7 of the package, it is possible that there are
-some bugs in places. Please report any issues to us via GitHub.
+Please report any bugs or issues to us via GitHub.
 
 The package has an associated vignette that provides examples of how to
 use the package, and an accompanying paper (Matthews et al. 2019).

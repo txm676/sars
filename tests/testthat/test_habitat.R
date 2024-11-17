@@ -127,6 +127,7 @@ test_that("sar_habitat untransformed returns correct values", {
   s6 <- sar_habitat(data = habitat, 
                     modType = "power", 
                     con = NULL, logT = log)
+  expect_no_error(plot(s6))
   expect_equal(length(s6), 4)
   expect_equal(class(s6), c("habitat", "sars","list"))
   expect_equal(attributes(s6)$modType, "power")

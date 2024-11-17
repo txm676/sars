@@ -1029,30 +1029,111 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
 }#eo function
 
 
-
-
-#'Barplot of information criteria weights for a 'habitat' Object
+#' Plot Options For a 'habitat' Object
 #'
-#'@description S3 method for class 'habitat'. \code{plot.habitat} creates
-#'  a simple barplot of information criteria weights for the different model fits
-#'@param x An object of class 'habitat'.
-#'@param IC The information criterion weights to present (must be one of 'AIC',
-#''BIC' or 'AICc')
-#'@param \dots Further graphical parameters may be supplied as arguments.
+#' @description S3 method for class 'habitat'.
+#'   \code{plot.habitat} creates plots for objects of class
+#'   habitat, using the R base plotting framework. The exact plot
+#'   generated depends on whether the input data comes from
+#'   \code{\link{sar_habitat}} or \code{\link{sar_countryside}}.
+#' @param x An object of class 'habitat'.
+#' @param IC The information criterion weights to present (must
+#'   be one of 'AIC', 'BIC' or 'AICc'), if plotting a
+#'   \code{\link{sar_habitat}} object.
+#' @param type Whether a Type 1 or Type 2 plot should be
+#'   generated, if plotting a \code{\link{sar_countryside}}
+#'   object (see details).
+#' @param powFit For Type 1 plots, should the predicted total
+#'   richness values of the power (or logarithmic) model be
+#'   included as red points (logical argument).
+#' @param lcol For Type 2 plots: the colours of the fitted lines,
+#'   for each component model. Should be a vector, the length
+#'   (and order) of which should match the number of species
+#'   groups in \code{x}. If not included, randomly selected
+#'   colours are used.
+#' @param pLeg For Type 2 plots: should a legend be included
+#'   (logical argument), showing the line colours and
+#'   corresponding species groups.
+#' @param legPos For Type 2 plots: the location of the legend.
+#'   Can either be a position (e.g., "bottomright"), or the x and
+#'   y co-ordinates to be used to position the legend (e.g.,
+#'   c(0,5)).
+#' @param legInset For Type 2 plots: the inset argument in
+#'   \code{\link[graphics]{legend}}. Enables the legend to be
+#'   plotted outside the plotting window (it still needs the user
+#' to manually change their graphical margin parameters).
+#' @param \dots Further graphical parameters may be supplied as
+#'   arguments.
+#' @details
+#'  The exact plot that is generated depends on the input data. If 
+#'  \code{x} is the fit object from \code{\link{sar_habitat}},
+#'  a simple barplot of information criterion (IC) weights for the
+#'  different model fits is produced. The particular IC metric to 
+#'  use is chosen using the \code{IC} argument.
+#'  
+#'  If \code{x} is the fit object from
+#'  \code{\link{sar_countryside}}, two plot types can be produced
+#'  (selected using the \code{type} argument). A Type 1 plot
+#'  plots the predicted total richness values (from both
+#'  countryside and Arrhenius power (or logarithmic) SAR models)
+#'  against the observed total richness values, with a regression
+#'  line (intercept = 0, slope = 1) included to aid
+#'  interpretation.
+#'  
+#'  A Type 2 plot uses \code{\link{countryside_extrap}}
+#'  internally to generate separate fitted SAR curves for each of
+#'  the modelled species groups, using a set of hypothetical
+#'  sites (with area values ranging from the minimum to the
+#'  maximum observed habitat area values across all sites) in
+#'  which the proportion of the focal habitat relative to a
+#'  specific species group (e.g., forest for forest species) is
+#'  always 100 percent. For ubiquitous species, the mean number of
+#'  species across each of the component models is calculated and
+#'  used for plotting. See Matthews et al. (2025) for further
+#'  details.
+#'  
+#' Note that the logarithmic SAR model doesn't work with zero
+#' area values, so if any habitat area values are zero, the minimum 
+#' area value of the 'hypothetical' sites used to generate the fitted
+#' curves in a Type 2 plot is set to 0.01 if this model is used.
+#' @references Matthews et al. (2025) An R package for fitting
+#'   multi-habitat species–area relationship models. In prep.
 #' @examples
-#' #data(habitat)
-#' ###TO FILL IN
-#' ##legPos = can either be position (e.g., "bottomright"), 
-#' ##or the x and y co-ordinates to be used to position the legend,
-#' ##(eg., c(0,5))
-#' ##legInset = the inset argument in graphics::legend - lets you
-#' ##plot the legend outside the plotting window (needs the user to
-#' ##to manually change their graphics pars)
-#' ##Note - loga model doesnt work with zero area,
-#' ##so the area seq in type 2 starts at 0.01 if this
-#' ##is the case
-#'@importFrom graphics barplot
-#'@export
+#' #Run the sar_habitat function and generate a barplot of the AICc
+#' #values
+#' data(habitat)
+#' 
+#' s <- sar_habitat(data = habitat, modType = "power_log",
+#' con = NULL, logT = log)
+#' 
+#' plot(s, IC = "AICc", col = "darkred")
+#' 
+#' \dontrun{
+#' #Run the sar_countryside function and generate a Type 1 plot,
+#' #including the predicted values of the standard power model
+#' data(countryside)
+#' 
+#' s3 <- sar_countryside(data = countryside, modType = "power",
+#' gridStart = "partial", ubiSp = TRUE, habNam = c("AG", "SH",
+#' "F"), spNam = c("AG_Sp", "SH_Sp", "F_Sp", "UB_Sp"))
+#' 
+#' plot(s3, type = 1, powFit = TRUE)
+#'
+#' #Generate a Type 2 plot providing set line colours, including
+#' #a legend and positioning it outside the main plotting window,
+#' #and modifying other aspects of the plot using the standard
+#' #base R plotting commands.
+#' #Note this will change the graphical margins of your plotting
+#' #window.
+#' par(mar=c(5.1, 4.1, 4.1, 7.5), xpd=TRUE)
+#' 
+#' plot(s3, type = 2, lcol = c("black", "aquamarine4",
+#' "#CC661AB3" , "darkblue"), pLeg = TRUE,  legPos ="topright",
+#' legInset = c(-0.2,0.3), lwd = 1.5)
+#' 
+#' }
+#' @importFrom graphics barplot abline
+#' @export
 
 plot.habitat <- function(x,  
                         IC = "AICc",

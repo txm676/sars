@@ -34,8 +34,7 @@ the general dynamic model of island biogeography, fitting the random placement m
 has added functions for fitting, evaluating and plotting a range of commonly used piecewise SAR models (see 
 @Matthews2020 for details on these functions).
 
-As this is version 1.3.7 of the package, it is possible that there are some bugs in places. Please report any
-issues to us via GitHub.
+Please report any bugs or issues to us via GitHub.
 
 The package has an associated vignette that provides examples of how to use the package, and an accompanying 
 paper [@Matthews2019].

@@ -194,8 +194,19 @@ countryside_affinity <- function(mods, modType,
 #user-provided starting pars: 1st row = Spcs_AG; and
 #columns relate to h paramters for AG, SH, and QF, and
 #then z.
-# 
-# 
+
+
+#' Fit the countryside SAR model
+#'
+#' @description A short description...
+#' @param data An object of class 'habitat'.
+#' @param modType The information criterion weights to present (must be one of 'AIC',
+#' @param gridStart description
+#' @param startPar description
+#' @param zLower de
+#' @param ubiSp description
+#' @param spNam description
+#' @param habNam description
 #' @export
 sar_countryside <- function(data,
                             modType = "power",
@@ -415,7 +426,57 @@ sar_countryside <- function(data,
 #the order of values in 'area' must match the order of
 #habitat cols in the original data matrix provided to
 #sar_countryside
+
+#' Use a sar_countryside() model object to predict richness
+#'
+#' @description Use a fitted model object from sar_countryside() 
+#' to predict richness, given a set of habitat area values.
+#' @usage countryside_extrap <- function(fits, area)
+#' @param fits A fitted model object from \code{\link{sar_countryside}}.
+#' @param area A vector of area values - the number (and order)
+#'   of area values (i.e., the length of the vector) should match
+#'   the number (and order) of habitats in the dataset used in
+#'   the \code{\link{sar_countryside}} fit.
+#' @details Takes a model fit generated using
+#'   \code{\link{sar_countryside}} and uses it to predict
+#'   richness values for a set of user-provided habitat
+#'   \code{area} values. Note this can either be interpolated or
+#'   extrapolated predictions, depending on the range of area
+#'   values used in the original model fits. A ubiquitous model
+#'   prediction is included if a ubiquitous component model is
+#'   included in \code{fits}.
+#'
+#'   The habitat area values provided through \code{area} need to
+#'   be in the same order as the habitat columns in the original
+#'   dataset used in \code{\link{sar_countryside}}.
+#'   
+#'   The function does work with failed component model fits, as
+#'   long as at least one component model was successfully
+#'   fitted. However, arguably it does not make sense to predict
+#'   richness values unless all component models were
+#'   successfully fitted.
+#'
+#' @return A list with three elements. The first contains the
+#'   predicted richness values from the individual component
+#'   models. The second contains the predicted total richness of
+#'   the site (i.e., the summed component model predictions), and
+#'   the third is a logical value highlighting whether there were
+#'   any failed models in \code{fits}, i.e., component models
+#'   that could not be fitted in \code{\link{sar_countryside}}.
+#' @author Thomas J. Matthews
+#' @examples
+#' \dontrun{
+#' data(countryside)
+#' #Fit the sar_countryside model (power version)
+#' s3 <- sar_countryside(data = countryside, modType = "power",
+#' gridStart = "partial", ubiSp = TRUE, habNam = c("AG", "SH",
+#' "F"), spNam = c("AG_Sp", "SH_Sp", "F_Sp", “UB_Sp”))
+#' #Predict the richness of a site which comprises 1000 area units
+#' #of agricultural land, 1000 of shrubland and 1000 of forest.
+#' countryside_extrap(s3, area = c(1000, 1000, 1000))
+#' }
 #' @export
+
 countryside_extrap <- function(fits, area){
   
   #order of area values needs to match the order of 
