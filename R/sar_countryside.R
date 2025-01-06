@@ -1,5 +1,7 @@
 
 
+##Internal function to generate starting parameter estimates
+##for countryside models
 countryside_startPars <- function(dat, modType,
                                   sp_grp,
                                   gridStart, Nhab){
@@ -74,6 +76,9 @@ countryside_startPars <- function(dat, modType,
   return(grid.start)
 }
 
+
+##Internal function to fit countryside models using all
+#starting parameter estimates and return the best fit
 countryside_optim <- function(dat, modType, 
                               gridStart = "partial",
                               startPar, zLower = 0,
@@ -418,14 +423,6 @@ sar_countryside <- function(data,
 }
 
 
-#If any model fits are NA, these are removed along
-#with the corresponding area values provided by
-#the user (arguably if this is the case, the extrapolations
-#are not of use)
-
-#the order of values in 'area' must match the order of
-#habitat cols in the original data matrix provided to
-#sar_countryside
 
 #' Use a sar_countryside() model object to predict richness
 #'
@@ -434,7 +431,7 @@ sar_countryside <- function(data,
 #' @usage countryside_extrap <- function(fits, area)
 #' @param fits A fitted model object from \code{\link{sar_countryside}}.
 #' @param area A vector of area values - the number (and order)
-#'   of area values (i.e., the length of the vector) should match
+#'   of area values (i.e., the length of the vector) must match
 #'   the number (and order) of habitats in the dataset used in
 #'   the \code{\link{sar_countryside}} fit.
 #' @details Takes a model fit generated using
@@ -450,11 +447,11 @@ sar_countryside <- function(data,
 #'   be in the same order as the habitat columns in the original
 #'   dataset used in \code{\link{sar_countryside}}.
 #'   
-#'   The function does work with failed component model fits, as
-#'   long as at least one component model was successfully
-#'   fitted. However, arguably it does not make sense to predict
-#'   richness values unless all component models were
-#'   successfully fitted.
+#'   The function does work with failed component model fits (any model fit that
+#'   is NA is removed along with the corresponding area values provided by the
+#'   user), as long as at least one component model was successfully fitted.
+#'   However, arguably it does not make sense to predict richness values unless
+#'   all component models were successfully fitted.
 #'
 #' @return A list with three elements. The first contains the
 #'   predicted richness values from the individual component
