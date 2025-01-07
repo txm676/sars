@@ -59,6 +59,12 @@ test_that("sar_countryside power returns correct values", {
   b <- countryside_extrap(s, area = 1:3)
   expect_equal(round(b$Total,2), 23.64)
   expect_false(b$Failed_mods)
+  
+  #check plots
+  expect_no_error(plot(s))
+  expect_no_error(plot(s, type = 1))
+  expect_no_error(plot(s, type = 2))
+  expect_error(plot(s, type = 3))
 })
 
 test_that("sar_countryside logarithmic returns correct values", {

@@ -15,6 +15,9 @@ test_that("sar_linear returns correct results", {
   expect_equal(as.vector(round(fit2$homoTest[[2]]$p.value, 2)), 0.44)
   expect_match(fit2$homoTest[[2]]$method, 
                "Pearson's product-moment correlation")
+  expect_no_error(plot(fit))
+  expect_no_error(plot(fit, lcol = "black"))
+  expect_error(plot(fit, col = "black"))
 })
 
 

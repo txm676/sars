@@ -61,6 +61,10 @@ test_that("sar_habitat log_log returns correct values", {
   expect_equal(unlist(round(s2$Model_table[wcho,
           c("AIC", "BIC", "AICc")], 3)),
           IC_cho)
+  
+  ##Check plots
+  expect_no_error(plot(s))
+  expect_no_error(plot(s, col = "red"))
   })
 
 test_that("sar_habitat logarithmic returns correct values", {
@@ -119,6 +123,9 @@ test_that("sar_habitat logarithmic returns correct values", {
   # expect_equal(s9_nls$convInfo$stopMessage, 
   #              "converged")
   # expect_true(s9$jigsaw$convInfo$isConv)
+  ##Check plots
+  expect_no_error(plot(s3))
+  expect_no_error(plot(s3, col = "red"))
 }) 
 
 test_that("sar_habitat untransformed returns correct values", {

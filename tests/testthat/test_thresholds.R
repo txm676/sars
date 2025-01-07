@@ -18,6 +18,12 @@ test_that("sar_threshold returns correct results", {
   expect_error(sar_threshold(aegean2, interval = 30000), 
                "interval must be smaller than max area")
   a2 <- aegean
+  #plots
+  expect_no_error(plot(fit))
+  expect_no_error(plot(fit, multPlot = FALSE))
+  expect_no_error(plot(fit, lcol = "black"))
+  expect_error(plot(fit, col = "black"))
+  
   fit2 <- sar_threshold(a2, mod = c("ContTwo", "DiscTwo", "ZslopeTwo"),
                         non_th_models = TRUE, interval = 2, logAxes = "area")
   s2 <- summary(fit2)

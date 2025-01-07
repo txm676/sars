@@ -5,6 +5,22 @@ test_that("sar_average returns correct results", {
 
   fit2 <- sar_average(data = galap, grid_start = "none")
   expect_equal(round(sum(fit2$mmi), 1), 1647.2)
+  expect_no_error(plot(fit2))
+  expect_no_error(plot(fit2, type = "bar"))
+  expect_no_error(plot(fit2, type = "bar", 
+                       subset_weights = 0.1))
+  expect_no_error(plot(fit2, allCurves = FALSE))
+  expect_no_error(plot(fit2, mmSep = TRUE,
+                       col.Sep = "orange", 
+                       lwd.Sep = 4))
+  expect_no_error(plot(fit2, pcol = "red",
+                       ModTitle = "A",
+                       TiAdj = 0,
+                       cex.main = 5,
+                       cex.axis = 4,
+                       pLeg = FALSE,
+                       yRange = c(0,500)))
+  
   fit3 <- sar_average(data = galap)#grid start on so round to 0
   expect_equal(round(sum(fit3$mmi), 0), 1647)
   expect_output(str(fit3), "List of 2")
