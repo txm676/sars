@@ -6,7 +6,8 @@ test_that("sar_threshold returns correct results", {
   data(aegean2)
   fit <- sar_threshold(aegean2, mod = c("ContOne", "DiscOne", "ZslopeOne"),
                        non_th_models = TRUE, interval = 0.01, logAxes = "area")
-  expect_no_error(capture_output_lines(fit))
+  expect_equal(length(capture_output_lines(fit, print = TRUE)),
+               270)
   s <- summary(fit)
   expect_equal(length(capture_output_lines(s, print = TRUE)),
                21)

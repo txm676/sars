@@ -25,7 +25,8 @@ test_that("gompertz summary returns correct results", {
   skip_on_cran()
   fit <- sar_gompertz(galap, normaTest = "lillie")
   fs <- summary(fit)
-  expect_no_error(capture_output_lines(fit))
+  expect_equal(length(capture_output_lines(fit, print = TRUE)),
+               11)
   expect_equal(length(capture_output_lines(fs, print = TRUE)),
                       23)
   expect_equal(round(sum(fs$residuals),1), 2.2)
@@ -35,7 +36,8 @@ test_that("gompertz summary returns correct results", {
   #start pars
   fit3 <- sar_gompertz(galap, start = c(210.88, 0.0168,38.04),
                       grid_start = "none")
-  expect_no_error(capture_output_lines(fit3))
+  expect_equal(length(capture_output_lines(fit3, print = TRUE)),
+               11)
   expect_equal(round(fit$par[1],1), 
                round(fit3$par[1]),1)
   

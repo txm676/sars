@@ -47,6 +47,9 @@ test_that("sar_average returns correct results", {
   expect_error(sar_average(data = galap, homoTest = 4))
   expect_error(sar_average(data = galap, homoTest = "cor.fitted",
                            homoCor = "correlation"))
+  
+  expect_length(sars_models(), 21)
+  expect_length(display_sars_models(), 6)
 })
 
 test_that("sar_average using fit_collection object works", {
