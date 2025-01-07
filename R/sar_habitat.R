@@ -164,6 +164,8 @@ habitat_optim <- function(mod_nam, data){
 #'   J.D., & Sgardelis, S.P. (2008) How does habitat diversity affect the
 #'   species–area relationship? Global Ecology and Biogeography, 17, 532-538
 #'   
+#'   Matthews et al. (2025) In prep.
+#'   
 #'   Tjørve, E. (2009) Shapes and functions of species– area curves (II): a
 #'   review of new models and parameterizations. Journal of Biogeography, 36,
 #'   1435-1445.

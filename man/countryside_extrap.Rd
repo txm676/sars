@@ -4,13 +4,13 @@
 \alias{countryside_extrap}
 \title{Use a sar_countryside() model object to predict richness}
 \usage{
-countryside_extrap <- function(fits, area)
+countryside_extrap(fits, area)
 }
 \arguments{
 \item{fits}{A fitted model object from \code{\link{sar_countryside}}.}
 
 \item{area}{A vector of area values - the number (and order)
-of area values (i.e., the length of the vector) should match
+of area values (i.e., the length of the vector) must match
 the number (and order) of habitats in the dataset used in
 the \code{\link{sar_countryside}} fit.}
 }
@@ -41,11 +41,11 @@ Takes a model fit generated using
   be in the same order as the habitat columns in the original
   dataset used in \code{\link{sar_countryside}}.
   
-  The function does work with failed component model fits, as
-  long as at least one component model was successfully
-  fitted. However, arguably it does not make sense to predict
-  richness values unless all component models were
-  successfully fitted.
+  The function does work with failed component model fits (any model fit that
+  is NA is removed along with the corresponding area values provided by the
+  user), as long as at least one component model was successfully fitted.
+  However, arguably it does not make sense to predict richness values unless
+  all component models were successfully fitted.
 }
 \examples{
 \dontrun{
@@ -53,7 +53,7 @@ data(countryside)
 #Fit the sar_countryside model (power version)
 s3 <- sar_countryside(data = countryside, modType = "power",
 gridStart = "partial", ubiSp = TRUE, habNam = c("AG", "SH",
-"F"), spNam = c("AG_Sp", "SH_Sp", "F_Sp", “UB_Sp”))
+"F"), spNam = c("AG_Sp", "SH_Sp", "F_Sp", "UB_Sp"))
 #Predict the richness of a site which comprises 1000 area units
 #of agricultural land, 1000 of shrubland and 1000 of forest.
 countryside_extrap(s3, area = c(1000, 1000, 1000))

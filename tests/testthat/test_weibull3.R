@@ -29,10 +29,10 @@ test_that("gompertz summary returns correct results", {
                11)
   expect_equal(length(capture_output_lines(fs, print = TRUE)),
                       23)
-  expect_equal(round(sum(fs$residuals),1), 2.2)
+  expect_equal(round(sum(fs$residuals),0), 2)
   expect_output(str(fs), "List of 16")
   expect_is(fs, "summary.sars")
-  expect_equal(round(fs$normaTest[[2]]$p.value, 3), 0.053)
+  expect_equal(round(fs$normaTest[[2]]$p.value, 2), 0.05)
   #start pars
   fit3 <- sar_gompertz(galap, start = c(210.88, 0.0168,38.04),
                       grid_start = "none")

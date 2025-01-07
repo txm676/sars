@@ -178,42 +178,6 @@ countryside_affinity <- function(mods, modType,
 ########Main Function to Fit Countryside Models#############
 ############################################################
 
-#gridStart = if startPar not NULL, this is ignored.
-#Warning that exhaustive can take a while.
-
-#spNam = optional vector of species-group names (matching 
-#the column order, otherwise takes names of sp columns)
-
-#habNam = optional vector of habitat names (matching 
-#the column order, otherwise just uses Habitat1 etc)
-
-#startPar = if not null, needs to be a numeric matrix, where no
-#of rows = number of habitats, and no of cols = no of species
-#groups (including ubiquitous sp, if provided). Row and column
-#order needs to match the column order of data (i.e., )
-
-#zLower = the lower bound to be used for the z-parameter in the
-#minpack.lm::nlsLM function. Default is set to zero, but can be 
-#changed to any numeric value (e.g., -Inf to allow for a full
-#search of parameter space)
-
-#@return #in help file need to explain how to 
-#extract raw nls fit objects:
-#(i) a list of the non-linear regression model fits for each of
-#the i species groups; (ii) the habitat affinity values (see Eq.
-#*) for each of the models in (i); and (iii) the c-parameter
-#values (see Eq.*) for each of the models in (i). The model fits
-#in (i) are objects of class ‘nls’, meaning that all the basic
-#non-linear regression R methods can be applied (e.g., generating
-#model summary tables or plotting the model residuals).
-
-
-#Example:
-#user-provided starting pars: 1st row = Spcs_AG; and
-#columns relate to h paramters for AG, SH, and QF, and
-#then z.
-
-
 #' Fit the countryside SAR model
 #'
 #' @description Fit the countryside biogeography SAR model in
@@ -222,19 +186,18 @@ countryside_affinity <- function(mods, modType,
 #' @usage sar_countryside(data, modType = "power",
 #' gridStart = "partial", startPar = NULL, zLower = 0, 
 #' ubiSp = FALSE, spNam = NULL, habNam = NULL)
-#' @param data An object of class 'habitat'.
+#' @param data A dataset in the form of a dataframe – requires 
+#' a specific column order (see 'Details' below).
 #' @param modType Fit the power (\code{"power"}) or logarithmic
-#'   (\code{"logarithmic"}) forms of the countryside model.
+#'   (\code{"logarithmic"}) form of the countryside model.
 #' @param gridStart The type of grid search procedure to be
 #'   implemented to test multiple starting parameter values: can
-#'   be one of 'partial' (default) or 'exhaustive'. If
-#'   \code{startPar} is provided, this argument is ignored.
+#'   be one of \code{partial} (default) or \code{exhaustive}. If
+#'   \code{startPar} is provided, this argument is ignored. Note 
+#'   that \code{exhaustive} can be quite time consuming to run.
 #' @param startPar Optional (default = NULL) starting parameter
-#'   estimates for the constituent models. If not NULL, needs to
-#'   be a numeric matrix, where no of rows = number of habitats,
-#'   and no of cols = no of species groups (including ubiquitous
-#'   sp., if provided). Row and column order needs to match the
-#'   column order of \code{data}.
+#'   estimates for the constituent models. Must be a numeric
+#'   matrix (see 'Details' below).
 #' @param zLower The lower bound to be used for the z-parameter
 #'   in the \link[minpack.lm]{nlsLM} function. Default is set to
 #'   zero, but can be changed to any numeric value (e.g., -Inf to
@@ -249,9 +212,93 @@ countryside_affinity <- function(mods, modType,
 #' @param habNam Optional vector of habitat names (matching the
 #'   column order in \code{data}, otherwise just uses Habitat1
 #'   etc).
-#' @references Pereira, H.M. & Daily, G.C. (2006) Modelling
-#'   biodiversity dynamics in countryside landscapes. Ecology,
-#'   87, 1877–1885.
+#' @details To work, the countryside SAR model requires that all
+#'   species in the study system have been classified based on
+#'   the habitats present. For example, in a study system with
+#'   two habitats (forest and grassland), all species must a
+#'   priori have been classified as either forest species or
+#'   grassland species; optionally, species can also be
+#'   classified as ubiquitous species (i.e., species that do not
+#'   have strong affinity for a specific habitat – true habitat
+#'   generalists; controlled using the \code{ubiSp} argument).
+#'   The provided input dataset (\code{data}) will typically
+#'   relate to a series of landscapes with differing areas of the
+#'   N habitats (e.g., forest and grassland), and for each
+#'   landscape the number of (for example) forest species and
+#'   grassland species present will be provided as well as
+#'   (optionally) the number of ubiquitous species.
+#' 
+#' It is important that the column orders in \code{data} are
+#' correct. The first set of columns should be the habitat area
+#' columns, followed by the habitat species richness columns
+#' (these should be in the same order as the area columns). An
+#' optional final column of ubiquitous species richness can also
+#' be included. For example, in a
+#' dataset with two habitats (forest and grassland) and setting \code{ubiSp =
+#' TRUE}, the column order in \code{data} could be:
+#' forest-a, grassland-a, forest-s, grassland-s, and Ubi-s, where
+#' a = area, s = species richness, and Ubi-s = the number of
+#' ubiquitous species.
+#' 
+#' The countryside SAR model works by fitting individual
+#' component models of a particular form (e.g., power), one for
+#' each of the habitat types (e.g., one model for forest species,
+#' one for grassland species, and so on). The predictions from
+#' these component models are then combined to generate a total
+#' predicted richness for each site / landscape. The
+#' output of the model fitting includes the individual component
+#' model fits, the total predicted (fitted) richness values for
+#' each site, and the habitat affinity values for each species
+#' group. The latter vary from zero to one, and equal 1 for a
+#' given species group's affinity to its preferred habitat (e.g.,
+#' forest species for forest).
+#'   
+#' For \code{startPar}, if not NULL, it needs to be a numeric
+#' matrix, where number of rows = number of species groups
+#' (including ubiquitous sp., if provided), and number of columns
+#' equals number of habitats + 1. Matrix row order matches the
+#' order of species group columns in \code{data}, and matrix
+#' column order matches the order of habitat columns in
+#' \code{data} + 1 extra final column for the z-parameter
+#' estimate.
+#' 
+#' Two different types of plot can be generated with the output,
+#' using \code{\link{plot.habitat}}. The
+#' \code{\link{countryside_extrap}} function can be used with the
+#' output of \code{sar_countryside} to predict the species
+#' richness of landscapes with varying areas of the analysed
+#' habitats.
+#' 
+#' See Matthews et al. (2025) for further details.
+#' 
+#' @return A list (of class ‘habitat’ and ‘sars’; and with a
+#'   ‘type’ attribute of ‘countryside’) with eight elements: 
+#'   \itemize{ 
+#'    \item \strong{i.}  A list of the non-linear regression model
+#'   fits for each of the species groups.
+#'   \item \strong{ii.}  The habitat affinity values for each of
+#'   the models in (i).
+#'   \item \strong{iii.}   The c-parameter values for each of the
+#'   models in (i).
+#'   \item \strong{iv.}   The predicted total richness values
+#'   (calculated by summing the predictions for each constituent
+#'   countryside model) for each site in the dataset.
+#'   \item \strong{v.}   The residual sum of squares – calculated
+#'   using the predicted and observed total richness values – for
+#'   both the countryside model and the Arrhenius power SAR model
+#'   (or logarithmic model) to enable model comparison.
+#'   \item \strong{vi.}  The dataset used for fitting (i.e., \code{data}).
+#'   \item \strong{vii.}   The power (or logarithmic) model fit object.
+#'   \item \strong{viii.}   The user-provided \code{ubiSp} argument.}
+#'   
+#' @note The model fits in (i) are objects of class ‘nls’,
+#'   meaning that all the basic non-linear regression R methods
+#'   can be applied (e.g., generating model summary tables or
+#'   plotting the model residuals).
+#' @references Matthews et al. (2025) In prep.
+#' 
+#' Pereira, H.M. & Daily, G.C. (2006) Modelling biodiversity
+#' dynamics in countryside landscapes. Ecology, 87, 1877–1885.
 #'   
 #'   Proença, V. & Pereira, H.M. (2013) Species–area models to
 #'   assess biodiversity change in multi-habitat landscapes: the
@@ -261,7 +308,7 @@ countryside_affinity <- function(mods, modType,
 #' and Henrique Pereira
 #' @examples
 #' data(countryside)
-#' #' \dontrun{
+#' \dontrun{
 #' #Fit the countryside SAR model (power form) to the data.
 #' #Include a component model of ubiquitous species, and use the
 #' #function’s starting parameter value selection procedure.
@@ -520,7 +567,7 @@ sar_countryside <- function(data,
 #'
 #' @description Use a fitted model object from sar_countryside() 
 #' to predict richness, given a set of habitat area values.
-#' @usage countryside_extrap <- function(fits, area)
+#' @usage countryside_extrap(fits, area)
 #' @param fits A fitted model object from \code{\link{sar_countryside}}.
 #' @param area A vector of area values - the number (and order)
 #'   of area values (i.e., the length of the vector) must match
