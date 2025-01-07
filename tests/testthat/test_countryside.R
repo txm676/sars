@@ -25,6 +25,7 @@ test_that("sar_countryside power returns correct values", {
                c("Area_AG", "Area_SH", "Area_QF", "Spcs_AG",
                 "Spcs_SH", "Spcs_QF", "Spcs_UB"))
   s <- sar_countryside(data = countryside, ubiSp = TRUE)
+  expect_no_error(capture_output_lines(s))
   expect_equal(length(s), 8)
   expect_equal(class(s), c("habitat", "sars","list"))
   expect_equal(attributes(s)$modType, "power")

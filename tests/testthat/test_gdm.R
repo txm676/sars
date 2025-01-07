@@ -110,6 +110,8 @@ test_that("gdm functions return correct results", {
  #              round(BTP[4,9], 2))
 
   g5b <- sars::gdm(galap, model = "all", mod_sel = TRUE)
+  expect_equal(length(capture_output_lines(g5b, print = TRUE)),
+               8)
   expect_equal(length(g5b), 4)
   expect_equal(length(g5b[[4]]), 4)
   expect_equal(length(g5b[[2]]), 4)

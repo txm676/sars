@@ -37,6 +37,7 @@ test_that("sar_monod summary returns correct results", {
   data(aegean)
   fit <- sar_monod(aegean, grid_start = "none")
   fs <- summary(fit)
+  expect_no_error(capture_output_lines(fs))
   expect_equal(nrow(aegean), 90)
   expect_equal(round(sum(fs$residuals),4), 161.7902)
   expect_output(str(fs), "List of 16")

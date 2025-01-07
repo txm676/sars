@@ -8,4 +8,6 @@ test_that("sar_multi returns correct results", {
   expect_no_error(plot(fitC, mfplot = TRUE))
   expect_no_error(plot(fitC, mfplot = TRUE,
                        pLeg = TRUE))
+  expect_equal(length(capture_output_lines(fitC, print = TRUE)),
+               7)
 })

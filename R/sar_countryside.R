@@ -2,6 +2,7 @@
 
 ##Internal function to generate starting parameter estimates
 ##for countryside models
+#' @noRd
 countryside_startPars <- function(dat, modType,
                                   sp_grp,
                                   gridStart, Nhab){
@@ -79,6 +80,9 @@ countryside_startPars <- function(dat, modType,
 
 ##Internal function to fit countryside models using all
 #starting parameter estimates and return the best fit
+#' @importFrom stats AIC
+#' @importFrom minpack.lm nlsLM nls.lm.control 
+#' @noRd
 countryside_optim <- function(dat, modType, 
                               gridStart = "partial",
                               startPar, zLower = 0,
@@ -145,6 +149,9 @@ countryside_optim <- function(dat, modType,
   return(best.fit)
 }
 
+
+##Internal function to return affinity and c values
+#' @noRd
 countryside_affinity <- function(mods, modType,
                                  habNam){
   
@@ -165,6 +172,11 @@ countryside_affinity <- function(mods, modType,
   })
   return(r3)
 }
+
+
+###############################################################
+########Main Function to Fit Countryside Models#############
+############################################################
 
 #gridStart = if startPar not NULL, this is ignored.
 #Warning that exhaustive can take a while.
@@ -212,6 +224,28 @@ countryside_affinity <- function(mods, modType,
 #' @param ubiSp description
 #' @param spNam description
 #' @param habNam description
+
+#' @references Pereira, H.M. & Daily, G.C. (2006) Modelling
+#'   biodiversity dynamics in countryside landscapes. Ecology,
+#'   87, 1877–1885.
+#'   
+#'   Proença, V. & Pereira, H.M. (2013) Species–area models to
+#'   assess biodiversity change in multi-habitat landscapes: the
+#'   importance of species habitat affinity. Basic and Applied
+#'   Ecology, 14, 102–114.
+#' @author Thomas J. Matthews, Inês Santos Martins, Vânia Proença 
+#' and Henrique Pereira
+#' @examples
+#' #' \dontrun{
+#' data(countryside)
+#' #Fit the sar_countryside model (power version)
+#' s3 <- sar_countryside(data = countryside, modType = "power",
+#' gridStart = "partial", ubiSp = TRUE, habNam = c("AG", "SH",
+#' "F"), spNam = c("AG_Sp", "SH_Sp", "F_Sp", “UB_Sp”))
+#' #Predict the richness of a site which comprises 1000 area units
+#' #of agricultural land, 1000 of shrubland and 1000 of forest.
+#' countryside_extrap(s3, area = c(1000, 1000, 1000))
+#' }
 #' @export
 sar_countryside <- function(data,
                             modType = "power",

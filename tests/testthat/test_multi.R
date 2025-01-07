@@ -4,6 +4,11 @@ test_that("sar_average returns correct results", {
   skip_on_cran()
 
   fit2 <- sar_average(data = galap, grid_start = "none")
+  expect_equal(length(capture_output_lines(fit2, print = TRUE)),
+               6)
+  sfit2 <- summary(fit2)
+  expect_equal(length(capture_output_lines(sfit2, print = T)),
+               30)
   expect_equal(round(sum(fit2$mmi), 1), 1647.2)
   expect_no_error(plot(fit2))
   expect_no_error(plot(fit2, type = "bar"))
@@ -32,6 +37,8 @@ test_that("sar_average returns correct results", {
   fit4 <- sar_average(data = galap, normaTest = "lillie", 
                       homoTest = "cor.fitted",
                       neg_check = FALSE)
+  expect_equal(length(capture_output_lines(fit4, print = TRUE)),
+               8)
   #one run in 100 gave 1638 (due to random nature of grid_start)
   expect_true(round(sum(fit4$mmi), 0) %in% c(1638, 1639))#grid_start on so round to 0
   expect_match(fit4$details$norm_test, "lillie")

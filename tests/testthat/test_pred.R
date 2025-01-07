@@ -5,6 +5,8 @@ test_that("sar_pred on ind model fit returns correct results", {
   data(galap)
   fit <- sar_loga(galap)
   p <- sar_pred(fit, area = 5000)
+  expect_equal(length(capture_output_lines(p, print = TRUE)),
+               5)
   expect_is(p, "sars")
   expect_true(is.data.frame(p))
   expect_equal(p$Area, 5000)

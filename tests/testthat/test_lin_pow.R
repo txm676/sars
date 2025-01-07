@@ -16,6 +16,11 @@ test_that("lin_pow returns correct results", {
    expect_equal(fit2$homoTest[[2]]$p.value, pp$p.value)
    expect_equal(fit2$homoTest[[2]]$p.value, pp2$p.value)
    expect_no_error(plot(fit))
+   expect_equal(length(capture_output_lines(fit, print = TRUE)),
+                11)
+   sfit2 <- summary(fit)
+   expect_equal(length(capture_output_lines(sfit2, print = TRUE)),
+                22)
 })
 
 test_that("lin_pow log-transformation works",{

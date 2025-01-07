@@ -6,7 +6,10 @@ test_that("sar_threshold returns correct results", {
   data(aegean2)
   fit <- sar_threshold(aegean2, mod = c("ContOne", "DiscOne", "ZslopeOne"),
                        non_th_models = TRUE, interval = 0.01, logAxes = "area")
+  expect_no_error(capture_output_lines(fit))
   s <- summary(fit)
+  expect_equal(length(capture_output_lines(s, print = TRUE)),
+               21)
   expect_equal(c(s$Model_table$BIC), c(2061.57, 2066.70, 2074.14, 
                                        2314.51, 2542.14))
   expect_equal(s$Model_table$R2[1], 0.94)
@@ -17,19 +20,21 @@ test_that("sar_threshold returns correct results", {
                "Incorrect model names provided; see help for 'mod' argument")
   expect_error(sar_threshold(aegean2, interval = 30000), 
                "interval must be smaller than max area")
-  a2 <- aegean
   #plots
   expect_no_error(plot(fit))
   expect_no_error(plot(fit, multPlot = FALSE))
   expect_no_error(plot(fit, lcol = "black"))
   expect_error(plot(fit, col = "black"))
   
+  a2 <- aegean
   fit2 <- sar_threshold(a2, mod = c("ContTwo", "DiscTwo", "ZslopeTwo"),
                         non_th_models = TRUE, interval = 2, logAxes = "area")
   s2 <- summary(fit2)
   expect_equal(s2$`Axes transformation`, "area")
   expect_equal(s2$Model_table$AIC, c(394.27, 414.90, 412.91, 485.69, 633.25))
   expect_equal(length(s2$Model_table$Th2[!is.na(s2$Model_table$Th2)]), 3)
+  expect_no_error(plot(fit2))
+  expect_no_error(plot(fit2, multPlot = FALSE))
   
   #table 1 in paper (hashed for speed)
   # fit4 <- sar_threshold(data = aegean2, mod = "All", interval = 0.1,
@@ -52,6 +57,7 @@ test_that("sar_threshold returns correct results", {
   #check AIC and BIC returns same as normal AIC/BIC functions
   data(aegean)
   xd2 <- sar_threshold(aegean, mod = c("DiscTwo"), non_th_models = F)
+  expect_no_error(plot(xd2))
   xs <- summary(xd2)
   obj <- xd2[[1]][[1]]
   n <- length(obj$residuals)
@@ -103,12 +109,15 @@ test_that("threshold_ci returns correct results", {
   #fit with just one model (boot and F methods)
   fitT <- sar_threshold(data = a2, mod = "ContOne", interval = 0.1, 
                         non_th_models = TRUE, logAxes = "area", logT = log10)
+
   CI1 <- threshold_ci(fitT, method = "boot", interval = NULL, Nboot = 3)
-  
+  expect_equal(length(capture_output_lines(CI1, print = TRUE)),
+               7)
   fitT <- sar_threshold(data = a2, mod = "ContOne", interval = 0.1, 
                         non_th_models = TRUE, logAxes = "area", logT = log10)
   CI2 <- threshold_ci(fitT, method = "F", interval = NULL, Nboot = 3)
-  
+  expect_equal(length(capture_output_lines(CI2, print = TRUE)),
+               7)
   #fit with both models (boot and F methods)
   fitT <- sar_threshold(data = a2, mod = c("ContOne","ZslopeOne"),
                         interval = 0.1, non_th_models = TRUE, 
@@ -132,6 +141,16 @@ test_that("threshold_ci returns correct results", {
   expect_error(threshold_ci(fitT, method = "T"), 
                "method should be one of 'boot' or 'F'")
   expect_is(CI4, "sars")
+  
+  #Plot remaining one-fit model objects
+  fitT2 <- sar_threshold(data = a2, mod = "ContOne", interval = 0.1, 
+                         non_th_models = FALSE, logAxes = "area", logT = log10)
+  
+  expect_no_error(plot(fitT2))
+  fitT3 <- sar_threshold(data = a2, mod = "DiscOne", interval = 0.1, 
+                         non_th_models = FALSE, logAxes = "area", logT = log10)
+  
+  expect_no_error(plot(fitT3))
 })
 
 
@@ -143,6 +162,8 @@ test_that("get_coef returns correct results", {
                         interval = 0.1, non_th_models = TRUE, 
                         logAxes = "area", logT = log10)
   coefs <- get_coef(fitT)
+  expect_equal(length(capture_output_lines(coefs, print = TRUE)),
+               7)
   expect_equal(coefs[[1]], c(134.13,  54.31, 125.28))
   expect_equal(coefs[[3]], c(NA, NA, -208.65))
   expect_is(coefs, "sars")

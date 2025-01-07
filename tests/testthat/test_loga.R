@@ -12,7 +12,9 @@ test_that("sar_loga returns correct results", {
   fit2 <- sar_loga(galap, homoTest = "cor.area", homoCor = "kendall")
   expect_equal(round(fit2$homoTest[[2]]$p.value, 2), 0.35)
   expect_match(fit2$homoTest[[2]]$method, "Kendall's rank correlation tau")
-})
+  expect_equal(length(capture_output_lines(fit, print = TRUE)),
+               11)
+  })
 
 
 test_that("sar_loga summary returns correct results", {
