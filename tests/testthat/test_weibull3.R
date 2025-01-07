@@ -26,7 +26,8 @@ test_that("gompertz summary returns correct results", {
   fit <- sar_gompertz(galap, normaTest = "lillie")
   fs <- summary(fit)
   expect_no_error(capture_output_lines(fit))
-  expect_no_error(capture_output_lines(fs))
+  expect_equal(length(capture_output_lines(fs, print = TRUE)),
+                      23)
   expect_equal(round(sum(fs$residuals),1), 2.2)
   expect_output(str(fs), "List of 16")
   expect_is(fs, "summary.sars")

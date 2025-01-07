@@ -66,6 +66,23 @@ test_that("sar_countryside power returns correct values", {
   expect_no_error(plot(s, type = 1))
   expect_no_error(plot(s, type = 2))
   expect_error(plot(s, type = 3))
+  
+  #Check provision of starting pars
+  M2 <- matrix(c(3.061e+08, 2.105e-01, 1.075e+00, 1.224e-01,
+  3.354e-08, 5.770e+05, 1.225e+01, 1.090e-01,
+  6.848e-01, 1.054e-01, 4.628e+05, 1.378e-01,
+  0.20747, 0.05259, 0.49393, 0.18725), nrow = 4,
+  byrow = TRUE)
+  s4 <- sar_countryside(data = countryside,
+                      modType = "power",
+                     startPar = M2, ubiSp = TRUE)
+  expect_equal(as.vector(c(round(s4$affinity$Spcs_AG[1], 1), 
+                           round(s4$affinity$Spcs_SH[3], 7),
+                           round(s4$affinity$Spcs_QF[2], 8),
+                           round(s4$affinity$Spcs_UB[1], 2))),
+               c(1, 2.12e-05, 2.3e-07, 0.42))
+  expect_equal(round(sum(s4$fits$Spcs_AG$m$resid()^2),0),
+               2590)
 })
 
 test_that("sar_countryside logarithmic returns correct values", {

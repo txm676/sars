@@ -28,6 +28,6 @@ jobs:
           command: R CMD check *tar.gz --no-manual
       - run:
           name: Calculate code coverage
-          no_output_timeout: 40m
+          no_output_timeout: 50m
           command: Rscript -e 'covr::codecov()'
           

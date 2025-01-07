@@ -207,6 +207,7 @@ countryside_affinity <- function(mods, modType,
 #non-linear regression R methods can be applied (e.g., generating
 #model summary tables or plotting the model residuals).
 
+
 #Example:
 #user-provided starting pars: 1st row = Spcs_AG; and
 #columns relate to h paramters for AG, SH, and QF, and
@@ -215,16 +216,39 @@ countryside_affinity <- function(mods, modType,
 
 #' Fit the countryside SAR model
 #'
-#' @description A short description...
+#' @description Fit the countryside biogeography SAR model in
+#'   either power or logarithmic form, including an optional
+#'   component model for ubiquitous species.
+#' @usage sar_countryside(data, modType = "power",
+#' gridStart = "partial", startPar = NULL, zLower = 0, 
+#' ubiSp = FALSE, spNam = NULL, habNam = NULL)
 #' @param data An object of class 'habitat'.
-#' @param modType The information criterion weights to present (must be one of 'AIC',
-#' @param gridStart description
-#' @param startPar description
-#' @param zLower de
-#' @param ubiSp description
-#' @param spNam description
-#' @param habNam description
-
+#' @param modType Fit the power (\code{"power"}) or logarithmic
+#'   (\code{"logarithmic"}) forms of the countryside model.
+#' @param gridStart The type of grid search procedure to be
+#'   implemented to test multiple starting parameter values: can
+#'   be one of 'partial' (default) or 'exhaustive'. If
+#'   \code{startPar} is provided, this argument is ignored.
+#' @param startPar Optional (default = NULL) starting parameter
+#'   estimates for the constituent models. If not NULL, needs to
+#'   be a numeric matrix, where no of rows = number of habitats,
+#'   and no of cols = no of species groups (including ubiquitous
+#'   sp., if provided). Row and column order needs to match the
+#'   column order of \code{data}.
+#' @param zLower The lower bound to be used for the z-parameter
+#'   in the \link[minpack.lm]{nlsLM} function. Default is set to
+#'   zero, but can be changed to any numeric value (e.g., -Inf to
+#'   allow for a full search of parameter space).
+#' @param ubiSp A logical argument specifying whether a component
+#'   model should be fitted for ubiquitous species. If set to
+#'   TRUE, a column of ubiquitous species richness must be
+#'   included in \code{data}.
+#' @param spNam Optional vector of species-group names (matching
+#'   the column order in \code{data}, otherwise takes names of
+#'   species columns in \code{data}).
+#' @param habNam Optional vector of habitat names (matching the
+#'   column order in \code{data}, otherwise just uses Habitat1
+#'   etc).
 #' @references Pereira, H.M. & Daily, G.C. (2006) Modelling
 #'   biodiversity dynamics in countryside landscapes. Ecology,
 #'   87, 1877–1885.
@@ -236,15 +260,48 @@ countryside_affinity <- function(mods, modType,
 #' @author Thomas J. Matthews, Inês Santos Martins, Vânia Proença 
 #' and Henrique Pereira
 #' @examples
-#' #' \dontrun{
 #' data(countryside)
-#' #Fit the sar_countryside model (power version)
+#' #' \dontrun{
+#' #Fit the countryside SAR model (power form) to the data.
+#' #Include a component model of ubiquitous species, and use the
+#' #function’s starting parameter value selection procedure.
+#' #Abbreviations: AG = agricultural land, SH = shrubland, F =
+#' #oak forest, UB = ubiquitous species.
 #' s3 <- sar_countryside(data = countryside, modType = "power",
 #' gridStart = "partial", ubiSp = TRUE, habNam = c("AG", "SH",
-#' "F"), spNam = c("AG_Sp", "SH_Sp", "F_Sp", “UB_Sp”))
+#' "F"), spNam = c("AG_Sp", "SH_Sp", "F_Sp", "UB_Sp"))
+#' 
 #' #Predict the richness of a site which comprises 1000 area units
 #' #of agricultural land, 1000 of shrubland and 1000 of forest.
 #' countryside_extrap(s3, area = c(1000, 1000, 1000))
+#' 
+#' #Generate a plot of the countryside model’s predicted total
+#' #richness vs. the observed total richness, and include the
+#' #predictions of the Arrhenius power model
+#' 
+#' plot(s3, type = 1, powFit = TRUE)
+#' 
+#' #Plot the fitted individual SAR curves for each species group,
+#' #providing set line colours, including a legend and
+#' #positioning it outside the main plotting window, and modifying
+#' #other aspects of the plot using the standard base R plotting
+#' #commands
+#' par(mar=c(5.1, 4.1, 4.1, 7.5), xpd=TRUE)
+#' plot(s3, type = 2, lcol = c("black", "aquamarine4",
+#' "#CC661AB3" , "darkblue"), pLeg = TRUE,
+#' legPos ="topright", legInset = c(-0.27,0.3), lwd = 1.5)
+#' 
+#' #Provide starting parameter estimates for the component models
+#' #instead of using gridStart
+#' M2 <- matrix(c(3.061e+08, 2.105e-01, 1.075e+00, 1.224e-01,
+#' 3.354e-08, 5.770e+05, 1.225e+01, 1.090e-01,
+#' 6.848e-01, 1.054e-01, 4.628e+05, 1.378e-01,
+#' 0.20747, 0.05259, 0.49393, 0.18725), nrow = 4,
+#' byrow = TRUE)
+#'
+#' s4 <- sar_countryside(data = countryside,
+#'                     modType = "power",
+#'                    startPar = M2, ubiSp = TRUE)
 #' }
 #' @export
 sar_countryside <- function(data,
@@ -372,6 +429,7 @@ sar_countryside <- function(data,
     }
     res$UB <- countryside_optim(dat = dum, 
                                 modType = modType,
+                                gridStart = gridStart,
                                 startPar = startPar2,
                                 zLower = zLower,
                                 sp_grp = NULL)
@@ -501,7 +559,7 @@ sar_countryside <- function(data,
 #' #Fit the sar_countryside model (power version)
 #' s3 <- sar_countryside(data = countryside, modType = "power",
 #' gridStart = "partial", ubiSp = TRUE, habNam = c("AG", "SH",
-#' "F"), spNam = c("AG_Sp", "SH_Sp", "F_Sp", “UB_Sp”))
+#' "F"), spNam = c("AG_Sp", "SH_Sp", "F_Sp", "UB_Sp"))
 #' #Predict the richness of a site which comprises 1000 area units
 #' #of agricultural land, 1000 of shrubland and 1000 of forest.
 #' countryside_extrap(s3, area = c(1000, 1000, 1000))
