@@ -7,4 +7,5 @@ test_that("coleman main returns correct results", {
   expect_output(str(fit), "List of 4")
   expect_is(fit, "coleman")
   expect_no_error(plot(fit))
+  expect_no_error(plot(fit, ModTitle = "A"))
 })

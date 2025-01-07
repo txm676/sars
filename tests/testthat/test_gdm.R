@@ -7,7 +7,11 @@ test_that("gdm functions return correct results", {
   data(aegean)
   
   ###matches with sar_power_
-  g2 <- sars::gdm(galap, model = "power_area", mod_sel = TRUE)
+  g2 <- sars::gdm(galap, 
+                  model = "power_area", 
+                  mod_sel = TRUE)
+  expect_equal(length(capture_output_lines(g2, print = TRUE)),
+               22)
   pow <- g2[[3]]
   pow_sars <- sar_power(galap)
   
@@ -91,6 +95,8 @@ test_that("gdm functions return correct results", {
   
   ###all model comparison matches with individual model fits
   g5 <- sars::gdm(galap, model = "all", mod_sel = FALSE)
+  expect_equal(length(capture_output_lines(g5, print = TRUE)),
+               8)
   expect_equal(AIC(g4[[1]]), AIC(g5[[2]]))
   expect_equal(AIC(g2[[1]]), AIC(g5[[3]]))
   expect_equal(AICcmodavg::AICc(g3[[1]]), AICcmodavg::AICc(g5[[1]]))
@@ -110,6 +116,8 @@ test_that("gdm functions return correct results", {
   
   ###linear power version
   g6 <- sars::gdm(galap, model = "ATT2", mod_sel = TRUE)
+  expect_equal(length(capture_output_lines(g6, print = TRUE)),
+               19)
   linP <- g6[[3]]
   lin_sars <- sar_loga(galap)
   

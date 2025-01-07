@@ -20,10 +20,14 @@ test_that("sar_habitat log_log returns correct values", {
   data(habitat)
   s <- sar_habitat(data = habitat, modType = "power_log", 
   con = NULL, logT = log)
+  expect_equal(capture_output_lines(s, print = TRUE)[4],
+               "$choros")
   expect_equal(length(s), 4)
   expect_equal(class(s), c("habitat", "sars","list"))
   expect_equal(attributes(s)$modType, "power_log")
   s2 <- summary(s)
+  expect_equal(length(capture_output_lines(s2, print = TRUE)),
+               8)
   expect_equal(s2$modType, "power_log")
   #jigsaw
   wjig <- which(s2$Model_table$Model == "jigsaw")
@@ -156,4 +160,11 @@ test_that("sar_habitat untransformed returns correct values", {
                round(s7$Model_table$AIC[ wpow], 3))
   expect_equal(round(as.vector(s8$par[2]), 3), 
                round(s7$Model_table$z[ wpow], 3))
+  
+  SP2 <- t(matrix(rep(c(5, 1, 0.5),2), ncol = 2))
+  s9 <- sar_habitat(data = habitat, modType = "power",
+  con = NULL, logT = log, startPar = SP2)
+  expect_equal(round(s6$power$m$getPars()[2], 2),
+               round(s9$power$m$getPars()[2], 2))
+  
 }) 

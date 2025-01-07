@@ -15,6 +15,7 @@ test_that("lin_pow returns correct results", {
    pp2 <- cor.test(rs3, log(AO$a), method = "pearson")
    expect_equal(fit2$homoTest[[2]]$p.value, pp$p.value)
    expect_equal(fit2$homoTest[[2]]$p.value, pp2$p.value)
+   expect_no_error(plot(fit))
 })
 
 test_that("lin_pow log-transformation works",{
