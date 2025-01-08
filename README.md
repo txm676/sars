@@ -96,33 +96,33 @@ mm_galap <- sar_average(data = galap)
 #> 
 #>  Now attempting to fit the 20 SAR models: 
 #> 
-#> --  multi_sars ---------------------------------------------- multi-model SAR --
-#> > power    : v
-#> > powerR   : v
-#> > epm1     : v
-#> > epm2     : v
-#> > p1       : v
-#> > p2       : v
-#> > loga     : v
-#> > koba     : v
-#> > monod    : v
-#> > negexpo  : v
-#> > chapman  : v
-#> > weibull3 : v
-#> > asymp    : v
-#> > ratio    : v
-#> > gompertz : v
-#> > weibull4 : v
-#> > betap    : v
-#> > logistic : v
-#> > heleg    : v
-#> > linear   : v
+#> ──  multi_sars ────────────────────────────────────────────── multi-model SAR ──
+#> → power    : ✔
+#> → powerR   : ✔
+#> → epm1     : ✔
+#> → epm2     : ✔
+#> → p1       : ✔
+#> → p2       : ✔
+#> → loga     : ✔
+#> → koba     : ✔
+#> → monod    : ✔
+#> → negexpo  : ✔
+#> → chapman  : ✔
+#> → weibull3 : ✔
+#> → asymp    : ✔
+#> → ratio    : ✔
+#> → gompertz : ✔
+#> → weibull4 : ✔
+#> → betap    : ✔
+#> → logistic : ✔
+#> → heleg    : ✔
+#> → linear   : ✔
 #> 
 #> No model validation checks selected
 #> 
 #> 20 remaining models used to construct the multi SAR:
 #>  Power, PowerR, Extended Power model 1, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Asymptotic regression, Rational function, Gompertz, Cumulative Weibull 4 par., Beta-P cumulative, Logistic(Standard), Heleg(Logistic), Linear model 
-#> --------------------------------------------------------------------------------
+#> ────────────────────────────────────────────────────────────────────────────────
 ```
 
 Each of the ‘fitted’ objects have corresponding plot methods:
@@ -148,33 +148,33 @@ mm_galap <- suppressMessages(sar_average(data = galap, verb = FALSE))
 #> 
 #>  Now attempting to fit the 20 SAR models: 
 #> 
-#> --  multi_sars ---------------------------------------------- multi-model SAR --
-#> > power    : v
-#> > powerR   : v
-#> > epm1     : v
-#> > epm2     : v
-#> > p1       : v
-#> > p2       : v
-#> > loga     : v
-#> > koba     : v
-#> > monod    : v
-#> > negexpo  : v
-#> > chapman  : v
-#> > weibull3 : v
-#> > asymp    : v
-#> > ratio    : v
-#> > gompertz : v
-#> > weibull4 : v
-#> > betap    : v
-#> > logistic : v
-#> > heleg    : v
-#> > linear   : v
+#> ──  multi_sars ────────────────────────────────────────────── multi-model SAR ──
+#> → power    : ✔
+#> → powerR   : ✔
+#> → epm1     : ✔
+#> → epm2     : ✔
+#> → p1       : ✔
+#> → p2       : ✔
+#> → loga     : ✔
+#> → koba     : ✔
+#> → monod    : ✔
+#> → negexpo  : ✔
+#> → chapman  : ✔
+#> → weibull3 : ✔
+#> → asymp    : ✔
+#> → ratio    : ✔
+#> → gompertz : ✔
+#> → weibull4 : ✔
+#> → betap    : ✔
+#> → logistic : ✔
+#> → heleg    : ✔
+#> → linear   : ✔
 #> 
 #> No model validation checks selected
 #> 
 #> 20 remaining models used to construct the multi SAR:
 #>  Power, PowerR, Extended Power model 1, Extended Power model 2, Persistence function 1, Persistence function 2, Logarithmic, Kobayashi, Monod, Negative exponential, Chapman Richards, Cumulative Weibull 3 par., Asymptotic regression, Rational function, Gompertz, Cumulative Weibull 4 par., Beta-P cumulative, Logistic(Standard), Heleg(Logistic), Linear model 
-#> --------------------------------------------------------------------------------
+#> ────────────────────────────────────────────────────────────────────────────────
 mm_galap 
 #> 
 #> This is a sar_average fit object:
