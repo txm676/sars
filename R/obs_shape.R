@@ -95,7 +95,9 @@ obs_shape <- function(x, verb = TRUE){
                            " observed shape set to theoretical shape", " (", model$shape, ")")
           asymptote <- model$asymp(pars)
           if (asymptote){
-            if (asymptote > range(data$S)[1] & asymptote < range(data$S)[2])
+            ej2H <- range(data$S)[2] + (range(data$S)[2] * 0.1)
+            ej2L <- range(data$S)[1] - (range(data$S)[1] * 0.1)
+            if (asymptote > ej2L & asymptote < ej2H)
               asymp <- TRUE
           }#eo if
           res <- list(asymp = asymp, fitShape = fitShape)
@@ -114,8 +116,11 @@ obs_shape <- function(x, verb = TRUE){
       #is the asymptote reached?
       asymptote <- model$asymp(pars)
       if (asymptote){
-        if (asymptote > range(data$S)[1] & asymptote < range(data$S)[2])
+        ej2H <- range(data$S)[2] + (range(data$S)[2] * 0.1)
+        ej2L <- range(data$S)[1] - (range(data$S)[1] * 0.1)
+        if (asymptote > ej2L & asymptote < ej2H){
           asymp <- TRUE
+        }
       }#eo if
 
       roots.d1 <- tryCatch(getRoots(model$d1.fun, d1 = TRUE, Areas, 

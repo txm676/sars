@@ -255,11 +255,24 @@ previous papers (e.g. @Tjorve2009) as being sigmoidal without an upper asymptote
 (@Godeau2020) has argued that sigmoidal models must have an upper asymptote by
 definition; thus, the classification of these models is currently uncertain.
 
-There has also been considerable debate in the SAR literature as to whether or
-not the SAR is asymptotic. In the ‘sars’ package, to determine whether a fit is
-asymptotic, for the relevant models the fitted model parameters are analysed to
-check whether the estimated asymptote is within the range of the sample data
-(@Triantis2012).
+There has also been considerable debate in the SAR literature as
+to whether or not the SAR is asymptotic. In the ‘sars’ package,
+to determine whether a fit is asymptotic, for the relevant models
+the fitted model parameters are analysed to check whether the
+estimated asymptote is within the range of the sample data
+(@Triantis2012). As of January 2025, this procedure has been
+updated slightly, such that an asymptote is recorded as being
+present if the estimated asymptote is within the range of the
+sample data + a small buffer equal to 10% of the max (i.e., the
+max richness value + 10% of its value) and min (i.e., the minimum
+richness value - 10% of its value) species richness values in the
+dataset. This is because we noticed that the estimated asymptotes
+can sometimes be a small amount outside the sample data range
+(e.g., estimated asymptote of 11.2 where the max richness value
+is 11). Alternatively, for a more liberal definition, users can
+just consider any model with an asymptote as providing an
+asymptotic fit.
+
 
 ### Multimodel SAR curve 
 As well as fitting individual models, the package provides a function

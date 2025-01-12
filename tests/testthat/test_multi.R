@@ -121,3 +121,18 @@ test_that("confidence intervals works with AICc", {
   expect_output(str(ci), "data.frame")
   expect_true(all(ci[ ,1] < ci[ ,2]))
 })
+
+test_that("asymptotes are correctly calculated", {
+  skip_on_cran()
+  x <- 1:10
+  y <- 10*x^0.23
+  y <- c(y, rep(17,5))
+  x <- c(x, 11:15)
+  df <- data.frame(x, y)
+  fit5 <- sar_average(data = df)
+  s2 <- summary(fit5)
+  #6 or 7 as gompertz doesn't tend to fit properly in this
+  #use case with partial grid_start
+  expect_true(length(which(s2$Model_table$Asymptote)) %in%
+                c(6,7))
+})

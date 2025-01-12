@@ -4,6 +4,8 @@ SAR models: sar_habitat(), sar_countryside() & countryside_extrap()
 *Updated the plot.threshold and sar_threshold examples to
 show how to include a legend when plotting multiple model
 fits on the same plot (i.e., multPlot = FALSE)
+*Changed how a fitted asymptote is calculated (a slightly more 
+liberal approach)
 
 ## Version 1.3.7
   *small roxygen updates to pass new CRAN checks
