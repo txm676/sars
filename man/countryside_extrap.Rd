@@ -33,9 +33,7 @@ Takes a model fit generated using
   richness values for a set of user-provided habitat
   \code{area} values. Note this can either be interpolated or
   extrapolated predictions, depending on the range of area
-  values used in the original model fits. A ubiquitous model
-  prediction is included if a ubiquitous component model is
-  included in \code{fits}.
+  values used in the original model fits.
 
   The habitat area values provided through \code{area} need to
   be in the same order as the habitat columns in the original
@@ -52,7 +50,7 @@ Takes a model fit generated using
 data(countryside)
 #Fit the sar_countryside model (power version)
 s3 <- sar_countryside(data = countryside, modType = "power",
-gridStart = "partial", ubiSp = TRUE, habNam = c("AG", "SH",
+gridStart = "partial", habNam = c("AG", "SH",
 "F"), spNam = c("AG_Sp", "SH_Sp", "F_Sp", "UB_Sp"))
 #Predict the richness of a site which comprises 1000 area units
 #of agricultural land, 1000 of shrubland and 1000 of forest.

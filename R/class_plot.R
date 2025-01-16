@@ -1062,6 +1062,10 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
 #'   \code{\link[graphics]{legend}}. Enables the legend to be
 #'   plotted outside the plotting window (it still needs the user
 #' to manually change their graphical margin parameters).
+#' @param ModTitle For Type 2 plots: a vector of plot titles, which should have
+#'   the same length as the number of habitats used in the original model fit.
+#'   If NULL (default), the habitat names used in the original model fit are
+#'   used. If no plot titles are wanted, use \code{ModTitle = "none"}.
 #' @param \dots Further graphical parameters may be supplied as
 #'   arguments.
 #' @details
@@ -1132,7 +1136,8 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
 #' legInset = c(-0.2,0.3), lwd = 1.5)
 #' 
 #' }
-#' @importFrom graphics barplot abline
+#' @importFrom graphics barplot abline par
+#' @importFrom grDevices n2mfrow devAskNewPage
 #' @export
 
 plot.habitat <- function(x,  
@@ -1143,6 +1148,7 @@ plot.habitat <- function(x,
                         pLeg = TRUE,
                         legPos = "bottomright",
                         legInset = 0,
+                        ModTitle = NULL,
                         ...){
   
   if (attributes(x)$type == "habitat"){
@@ -1209,9 +1215,7 @@ plot.habitat <- function(x,
       }#ep if powFit
 
     } else if (type == 2) {
-    #check if ubiquitous sp included
-    UB <- x[[8]]
-      
+
     ##predicted curves for each land-use
     #loga model can't work with 0 area vals
     if (attributes(x)$modType == "logarithmic" &
@@ -1226,15 +1230,11 @@ plot.habitat <- function(x,
     #where N = number of land-use types. In each all columns,
     #except the focal habitat are zeros
     ar_ls <- vector("list", length = dd_Area)
-    totR_i <- matrix(ncol = dd_Area, nrow = length(Ar_seq))
-    UB_i <- matrix(ncol = dd_Area, nrow = length(Ar_seq))
+    names(ar_ls) <- colnames(dd2_Area)
+    
     nn <- gsub(".c", "", names(x[[3]]))
-    if (length(nn) > dd_Area){
-      colnames(totR_i) <- nn[1:(length(nn)-1)]
-      UB_name <- nn[length(nn)]
-    } else {
-      colnames(totR_i) <- nn
-    }
+    nna <- names(x$affinity[[1]])
+
     for (i in 1:dd_Area){
       m_ls <- matrix(0, ncol = dd_Area,
                      nrow = length(Ar_seq))
@@ -1242,59 +1242,77 @@ plot.habitat <- function(x,
       totR_R <- apply(m_ls[,1:dd_Area],1,function(y){
         v <- as.vector(y)
         vc <- countryside_extrap(x, area = v)
-        vc1 <- vc$Indiv_mods[i]
-        if (UB){
-          vc2 <- vc$Indiv_mods[length(vc$Indiv_mods)]
-        } else{
-          vc2 <- 0
-        }
-        c(vc1, vc2)
+        vc$Indiv_mods
       })
-      totR_i[,i] <- totR_R[1,]
-      UB_i[,i] <- totR_R[2,]#ubiquitous species vals
+      totR_R <- t(totR_R)
+      if (!identical(colnames(totR_R), 
+                     nn)) stop("Error 4C")
+      totR_R <- cbind("Area" = Ar_seq, totR_R)
+      totR_R <- as.data.frame(totR_R)
+      ar_ls[[i]] <- totR_R
     }#eo for i
-    
-    totR_i <- as.data.frame(totR_i)
-    #take row means for ubiquitous species
-    UB_i2 <- data.frame("Ub" = rowMeans(UB_i))
     
     COLs <- c("black", "red", "darkgreen", "blueviolet",
               "brown", "cornflowerblue","darkorange4",
               "deeppink4", "gold4", "gray16", "lightgreen")
     
-    spC <- ifelse(UB == TRUE, ncol(totR_i) + 1, ncol(totR_i))
+    spC <- dd_SR
     
     if (length(lcol) > 1){
       if (length(lcol) != spC){
-        warning("Length of lcol does not match number of habitat",
-                " types - using randomly selected colours")
+        warning("Length of lcol does not match number of species\n",
+                " groups - using randomly selected colours")
         lcol <- COLs[1:spC]
       }
     } else {
       lcol <- COLs[1:spC]
     }
+
+    if (is.null(ModTitle)){
+      ModTitle2 <- nna
+    } else if ("none" %in% ModTitle){
+      ModTitle2 <- rep("", dd_Area)
+    } else {
+      if (length(ModTitle) != dd_Area){
+        stop("ModTitle should either be NULL, none, or be a vector of\n
+             titles equal in length the the number of habitats")
+      }
+      ModTitle2 <- ModTitle
+    }
     
-    plot(Ar_seq, totR_i[,1], type = "l", 
+    p <- 1
+    
+    devAskNewPage(TRUE)
+    on.exit(devAskNewPage(FALSE))
+    
+    invisible(lapply(ar_ls, function(z){
+    
+    plot(z[,1], z[,2], type = "l", 
          col = lcol[1],
          xlab = "Area", ylab = "Total richness",
-         ylim = c(min(totR_i), max(totR_i)),
+         ylim = c(min(z[,2:ncol(z)]), 
+                  max(z[,2:ncol(z)])),
          ...)
+    
+    title(main = ModTitle2[p], 
+            adj = 0, line = 0.5, 
+          cex.main = 1.0, ...)
+    p <<- p + 1
     k <- 1
-    apply(totR_i[,2:ncol(totR_i), drop = FALSE],
+    apply(z[,3:ncol(z), drop = FALSE],
           2, function(y){
             k <<- k + 1
-            lines(Ar_seq, y, col = lcol[k], ...)
+            lines(z[,1], y, col = lcol[k], ...)
           })
-    k <- k + 1
-    lines(Ar_seq, UB_i2[,1], col = lcol[k], ...)
     if (pLeg){
-      CNz <- colnames(totR_i)
-      if (UB) {CNz <- c(CNz, UB_name)}
+      CNz <- colnames(z[,2:ncol(z)])
       legend(legPos, 
              legend = CNz,
              col = lcol, lty = 1, 
              inset = legInset)
-    }
+    }#eo pLeg
+   }))#eo lapply
+    
   } else {
       stop("Type should be either 1 or 2")
   }#eo if type 1

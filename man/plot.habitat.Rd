@@ -13,6 +13,7 @@
   pLeg = TRUE,
   legPos = "bottomright",
   legInset = 0,
+  ModTitle = NULL,
   ...
 )
 }
@@ -50,6 +51,11 @@ c(0,5)).}
   \code{\link[graphics]{legend}}. Enables the legend to be
   plotted outside the plotting window (it still needs the user
 to manually change their graphical margin parameters).}
+
+\item{ModTitle}{For Type 2 plots: a vector of plot titles, which should have
+the same length as the number of habitats used in the original model fit.
+If NULL (default), the habitat names used in the original model fit are
+used. If no plot titles are wanted, use \code{ModTitle = "none"}.}
 
 \item{\dots}{Further graphical parameters may be supplied as
 arguments.}

@@ -9,12 +9,18 @@ test_that("sar_countryside errors where it should", {
                "modType should be one of power or logarithmic")
   expect_error(sar_countryside(countryside, zLower = 1:4))
   c2 <- countryside[,1:6]
-  expect_error(sar_countryside(c2, ubiSp = TRUE))
-  expect_error(sar_countryside(countryside, habNam = letters[1:5]))
+  expect_error(sar_countryside(c2, habNam = NULL))
+  expect_error(sar_countryside(c2, habNam = 1:3,spNam = NULL))
+  expect_error(sar_countryside(c2, habNam = 1:3, spNam = TRUE))
+  expect_error(sar_countryside(c2, 
+                               habNam = letters[1:5], spNam = 6:7))
+  expect_error(sar_countryside(countryside, 
+                               habNam = letters[1:5], spNam = 1:2))
   c2[1,1:3] <- 0
   expect_error(sar_countryside(c2, modType = "logarithmic"))
   c2 <- c2[1:10,]
-  expect_warning(sar_countryside(c2, modType = "power"),
+  expect_warning(sar_countryside(c2, modType = "power",
+                    habNam = letters[1:3], spNam = 4:6),
                  "Some sites have total area equal to zero")
 })
 
@@ -24,25 +30,26 @@ test_that("sar_countryside power returns correct values", {
   expect_equal(colnames(countryside), 
                c("Area_AG", "Area_SH", "Area_QF", "Spcs_AG",
                 "Spcs_SH", "Spcs_QF", "Spcs_UB"))
-  s <- sar_countryside(data = countryside, ubiSp = TRUE)
+  s <- sar_countryside(data = countryside,
+                       habNam = 1:3, spNam = 4:7)
   expect_equal(length(capture_output_lines(s, print = TRUE)),
                91)
-  expect_equal(length(s), 8)
+  expect_equal(length(s), 7)
   expect_equal(class(s), c("habitat", "sars","list"))
   expect_equal(attributes(s)$modType, "power")
 
   expect_equal(as.vector(round(s$c, 0)),
                c(11, 4, 6, 1))
   
-  expect_equal(as.vector(c(round(s$affinity$Spcs_AG[1], 1), 
-    round(s$affinity$Spcs_SH[3], 7),
-    round(s$affinity$Spcs_QF[2], 8),
-    round(s$affinity$Spcs_UB[1], 2))),
+  expect_equal(as.vector(c(round(s$affinity$Sp_grp1[1], 1), 
+    round(s$affinity$Sp_grp2[3], 7),
+    round(s$affinity$Sp_grp3[2], 8),
+    round(s$affinity$Sp_grp4[1], 2))),
     c(1, 2.12e-05, 2.3e-07, 0.42))
   
   expect_equal(as.vector(round(s$rss, 0)),
                c(5256, 10573))
-  expect_equal(round(sum(s$fits$Spcs_AG$m$resid()^2),0),
+  expect_equal(round(sum(s$fits$Sp_grp1$m$resid()^2),0),
                2590)
   
   expect_no_error(plot(s, type = 1))
@@ -55,18 +62,13 @@ test_that("sar_countryside power returns correct values", {
                        lcol = c("black", "aquamarine4"), 
                        pLeg = TRUE, lwd = 1.5, 
                        legPos = "topright"))
+  expect_error(plot(s, type = 3))
   
   #Check countryside_extrap
   expect_error(countryside_extrap(s, area = 1:5))
   b <- countryside_extrap(s, area = 1:3)
   expect_equal(round(b$Total,2), 23.64)
   expect_false(b$Failed_mods)
-  
-  #check plots
-  expect_no_error(plot(s))
-  expect_no_error(plot(s, type = 1))
-  expect_no_error(plot(s, type = 2))
-  expect_error(plot(s, type = 3))
   
   #Check provision of starting pars
   M2 <- matrix(c(3.061e+08, 2.105e-01, 1.075e+00, 1.224e-01,
@@ -76,23 +78,59 @@ test_that("sar_countryside power returns correct values", {
   byrow = TRUE)
   s4 <- sar_countryside(data = countryside,
                       modType = "power",
-                     startPar = M2, ubiSp = TRUE)
-  expect_equal(as.vector(c(round(s4$affinity$Spcs_AG[1], 1), 
-                           round(s4$affinity$Spcs_SH[3], 7),
-                           round(s4$affinity$Spcs_QF[2], 8),
-                           round(s4$affinity$Spcs_UB[1], 2))),
+                     startPar = M2,
+                     habNam = 1:3, spNam = 4:7)
+  expect_equal(as.vector(c(round(s4$affinity$Sp_grp1[1], 1), 
+                           round(s4$affinity$Sp_grp2[3], 7),
+                           round(s4$affinity$Sp_grp3[2], 8),
+                           round(s4$affinity$Sp_grp4[1], 2))),
                c(1, 2.12e-05, 2.3e-07, 0.42))
-  expect_equal(round(sum(s4$fits$Spcs_AG$m$resid()^2),0),
+  expect_equal(round(sum(s4$fits$Sp_grp1$m$resid()^2),0),
                2590)
+  
+  ##Test output still works if you mix up columns and remove 
+  #a species group
+  c3 <- countryside[c(1,3,2,5,4,6,7)]
+  s5 <- sar_countryside(data = c3, modType = "power",
+                        gridStart = "partial",
+                        habNam = c("AG", "F", "SH"),
+                        spNam = c("SH_Sp","AG_Sp",  "F_Sp",
+                                  "UB_Sp"))
+  expect_equal(as.vector(round(s5$c, 0)),
+               c(4, 11, 6, 1))
+  
+  expect_equal(as.vector(c(round(s5$affinity$AG_Sp[1], 1), 
+                           round(s5$affinity$SH_Sp[2], 7),
+                           round(s5$affinity$F_Sp[3], 8),
+                           round(s5$affinity$UB_Sp[1], 2))),
+               c(1, 2.12e-05, 2.3e-07, 0.42))
+  
+  expect_equal(as.vector(round(s5$rss, 0)),
+               c(5256, 10573))
+  expect_equal(round(sum(s5$fits$AG_Sp$m$resid()^2),0),
+               2590)
+  
+##Test function works with fewer richness cols than area
+  c4 <- countryside[1:50,c(1,2,3,4,5)]
+  s6 <- sar_countryside(data = c4, modType = "power",
+                        gridStart = "partial",
+                        habNam = c("AG", "SH", "F"),
+                        spNam = c("AG_Sp", "SH_Sp"))
+  expect_equal(length(s6), 7)
+  expect_equal(names(s6$fits), c("AG_Sp", "SH_Sp"))
 })
 
 test_that("sar_countryside logarithmic returns correct values", {
   skip_on_cran()
   data(countryside)
   s2 <- sar_countryside(data = countryside, 
-                        ubiSp = TRUE, 
-                        modType = "logarithmic")
-  expect_equal(length(s2), 8)
+                        modType = "logarithmic",
+                        habNam =  c("Area_AG", "Area_SH", 
+                                    "Area_QF"),
+                        spNam = c("Spcs_AG",
+                                  "Spcs_SH", "Spcs_QF", 
+                                  "Spcs_UB"))
+  expect_equal(length(s2), 7)
   expect_equal(class(s2), c("habitat", "sars","list"))
   expect_equal(attributes(s2)$modType, "logarithmic")
   
