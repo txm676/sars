@@ -4,7 +4,7 @@
 ##for countryside models
 #' @noRd
 countryside_startPars <- function(dat, modType,
-                                  sp_grp,
+                                #  sp_grp,
                                   gridStart, Nhab){
   
   A2 <- rowSums(dat[,1:(ncol(dat) - 1)])
@@ -51,16 +51,16 @@ countryside_startPars <- function(dat, modType,
   }
   start.list <- rep(list(start.vec), Nhab)
   #add in the calculated value
-  if (!is.null(sp_grp)){
-  start.list[[sp_grp]][length(start.vec)] <- hmax 
-  } else {
+  # if (!is.null(sp_grp)){
+  # start.list[[sp_grp]][length(start.vec)] <- hmax 
+  # } else {
     #for ubiquitous, we don't know which group is
     #hmax, so add it to each element.
     start.list <- lapply(start.list, function(x){
       x[length(start.vec)] <- hmax 
       x
     })
-  }
+  # }
   #include the calculated value
   if (gridStart == "partial"){
     start.list$z <- c(0.01, 0.1, 0.7, z1)
@@ -85,8 +85,9 @@ countryside_startPars <- function(dat, modType,
 #' @noRd
 countryside_optim <- function(dat, modType, 
                               gridStart = "partial",
-                              startPar, zLower = 0,
-                              sp_grp){
+                              startPar, zLower = 0#,
+                             # sp_grp
+                              ){
   
   #to be generic it needs to build based on number of habitats
   #provided by the user
@@ -96,11 +97,8 @@ countryside_optim <- function(dat, modType,
   if (is.null(startPar)){
   
     grid.start <- countryside_startPars(dat, modType = modType,
-                                        sp_grp,
+                                      #  sp_grp,
                                         gridStart, Nhab)
-  
-  #random for testing
- # grid.start <-  grid.start[sample(1:nrow(grid.start), 150),]
   
   } else { #user provided start values
     
@@ -185,7 +183,7 @@ countryside_affinity <- function(mods, modType,
 #'   component model for ubiquitous species.
 #' @usage sar_countryside(data, modType = "power",
 #' gridStart = "partial", startPar = NULL, zLower = 0, 
-#' ubiSp = FALSE, spNam = NULL, habNam = NULL)
+#' ubiSp = FALSE, habNam = NULL, spNam = NULL)
 #' @param data A dataset in the form of a dataframe – requires 
 #' a specific column order (see 'Details' below).
 #' @param modType Fit the power (\code{"power"}) or logarithmic
@@ -206,12 +204,12 @@ countryside_affinity <- function(mods, modType,
 #'   model should be fitted for ubiquitous species. If set to
 #'   TRUE, a column of ubiquitous species richness must be
 #'   included in \code{data}.
-#' @param spNam Optional vector of species-group names (matching
-#'   the column order in \code{data}, otherwise takes names of
-#'   species columns in \code{data}).
 #' @param habNam Optional vector of habitat names (matching the
 #'   column order in \code{data}, otherwise just uses Habitat1
 #'   etc).
+#' @param spNam Optional vector of species-group names (matching
+#'   the column order in \code{data}, otherwise takes names of
+#'   species columns in \code{data}).
 #' @details To work, the countryside SAR model requires that all
 #'   species in the study system have been classified based on
 #'   the habitats present. For example, in a study system with
@@ -227,6 +225,11 @@ countryside_affinity <- function(mods, modType,
 #'   landscape the number of (for example) forest species and
 #'   grassland species present will be provided as well as
 #'   (optionally) the number of ubiquitous species.
+#' 
+#' 
+#' ##COLUMN ORDER NO LONGER IMPORTANt but habitat cols must be first,
+#' then species columns. In the model output, the h coefficients follow 
+#' the order of the habitat cols in data (e.g., h1 = col 1)
 #' 
 #' It is important that the column orders in \code{data} are
 #' correct. The first set of columns should be the habitat area
@@ -351,14 +354,35 @@ countryside_affinity <- function(mods, modType,
 #'                    startPar = M2, ubiSp = TRUE)
 #' }
 #' @export
+
+# 
+# data(countryside)
+# data = countryside
+# modType = "power"
+# gridStart = "partial"
+# startPar = NULL
+# zLower = 0
+# ubiSp = FALSE
+# habNam = 1:3
+# spNam = 4:7
+
+# c2 <- countryside
+# c2 <- c2[c(1,3,2,5,4,6,7)]
+# s3 <- sar_countryside(data = c2, modType = "power",
+#                       gridStart = "partial", 
+#                       ubiSp = TRUE, 
+#                       habNam = c("AG", "F", "SH"), 
+#                       spNam = c("SH_Sp","AG_Sp",  "F_Sp", 
+#                                 "UB_Sp"))
+
 sar_countryside <- function(data,
                             modType = "power",
                             gridStart = "partial",
                             startPar = NULL,
                             zLower = 0,
                             ubiSp = FALSE,
-                            spNam = NULL,
-                            habNam = NULL){
+                            habNam = NULL,
+                            spNam = NULL){
   
   if (!(is.matrix(data) | is.data.frame(data)))
     stop('data must be a matrix or dataframe')
@@ -378,13 +402,29 @@ sar_countryside <- function(data,
     stop("modType should be one of power or logarithmic")
   }
   
+  if (is.null(habNam) | is.null(spNam) | 
+      length(c(habNam, spNam)) != ncol(data) | 
+      !(is.numeric(habNam) | is.character(habNam)) |
+      !(is.numeric(spNam) | is.character(spNam))){
+    stop("habNam & spNam should be either character vectors",
+         " of habitat / species group names, or numeric vectors",
+         " of column numbers, of correct length")
+  } 
+  if (is.numeric(habNam)){
+    habNam <- sapply(1:length(habNam), function(x) paste0("Habitat", x))
+  }
+  if (is.numeric(spNam)){
+    spNam <- sapply(1:length(spNam), function(x) paste0("Sp_grp", x))
+  }
+  
   ##Rename columns
   cnD <- colnames(data)
-  CN <- floor((ncol(data)) / 2)#if ubiSp, it will be 0.5 over (hence floor) 
+  CN <- length(habNam)
+  CN2 <- length(spNam)
   colnames(data)[1:CN] <- sapply(1:CN, function(x) paste0("Area", x))
-  colnames(data)[(CN + 1):(CN + CN)] <- sapply(1:CN, 
+  colnames(data)[(CN + 1):ncol(data)] <- sapply(1:CN2, 
                                        function(x) paste0("SR", x))
-  if (ubiSp) colnames(data)[ncol(data)] <- "SR_UB"
+#  if (ubiSp) colnames(data)[ncol(data)] <- "SR_UB"
 
   if (any(rowSums(data[,1:CN]) == 0)){
     if (modType == "logarithmic"){
@@ -397,30 +437,11 @@ sar_countryside <- function(data,
   
   #if habNam & spNam provided, check in correct format, otherwise take
   #area / species column names
-  if (ubiSp){
-    CN2 <- CN + 1
-  } else{
-    CN2 <- CN
-  }
-  
-  if (!is.null(spNam)){
-    if (!is.vector(spNam) |
-        !is.character(spNam) | (length(spNam)!= CN2)){
-      stop("spNam should be character vector of\n sp. group names",
-           " of correct length.")
-    }
-  } else{
-    spNam <- cnD[(CN + 1):length(cnD)]
-  }
-  if (!is.null(habNam)){
-    if (!is.vector(habNam) |
-        !is.character(habNam) | (length(habNam)!= CN)){
-      stop("habNam should be character vector of\n habitat names",
-           " of correct length.")
-    }
-  } else{
-    habNam <- sapply(1:CN, function(x) paste0("Habitat", x))
-  }
+  # if (ubiSp){
+  #   CN2 <- CN + 1
+  # } else{
+  #   CN2 <- CN
+  # }
   
   if (!is.null(startPar)){
     ###needs to be a matrix, with each row corresponding to
@@ -444,7 +465,7 @@ sar_countryside <- function(data,
   ##Need to then fit the models for each SR, including for 
   #SR_UB if ubiSp.
   k <- 1
-  res <- lapply(((CN + 1):(CN + CN)), function(x){
+  res <- lapply((CN + 1):ncol(data), function(x){
     dum <- data[,c(1:CN, x)]
     dum <- dum[order(dum[,ncol(dum)]),]
     colnames(dum)[ncol(dum)] <- "S"
@@ -453,34 +474,39 @@ sar_countryside <- function(data,
     } else {
       startPar2 <- startPar
     }
+    
+    #################################
+    
+    
     #Sp.group number
-    sgn <- x - CN
+  #  sgn <- x - CN
     CO <- countryside_optim(dat = dum,
                       modType = modType,
                       gridStart = gridStart,
                       startPar = startPar2,
-                      zLower = zLower,
-                      sp_grp = sgn)
+                      zLower = zLower#,
+                   #   sp_grp = sgn
+                   )
     k <<- k + 1
     CO
   })
   
-  if (ubiSp){
-    dum <- data[,c(1:CN, ncol(data))]
-    dum <- dum[order(dum[,ncol(dum)]),]
-    colnames(dum)[ncol(dum)] <- "S"
-    if (!is.null(startPar)){
-      startPar2 <- startPar[k,]
-    } else {
-      startPar2 <- startPar
-    }
-    res$UB <- countryside_optim(dat = dum, 
-                                modType = modType,
-                                gridStart = gridStart,
-                                startPar = startPar2,
-                                zLower = zLower,
-                                sp_grp = NULL)
-  }
+  # if (ubiSp){
+  #   dum <- data[,c(1:CN, ncol(data))]
+  #   dum <- dum[order(dum[,ncol(dum)]),]
+  #   colnames(dum)[ncol(dum)] <- "S"
+  #   if (!is.null(startPar)){
+  #     startPar2 <- startPar[k,]
+  #   } else {
+  #     startPar2 <- startPar
+  #   }
+  #   res$UB <- countryside_optim(dat = dum, 
+  #                               modType = modType,
+  #                               gridStart = gridStart,
+  #                               startPar = startPar2,
+  #                               zLower = zLower,
+  #                               sp_grp = NULL)
+  # }
   
   names(res) <- spNam
   
@@ -551,9 +577,10 @@ sar_countryside <- function(data,
   res[[5]] <- rss
   res[[6]] <- data
   res[[7]] <- dd_pow1
-  res[[8]] <- ubiSp
+#  res[[8]] <- ubiSp
   names(res) <- c("fits", "affinity", "c", "Pred.Tot.Rich",
-                  "rss", "data", "pow.model", "ubiSp")
+                  "rss", "data", "pow.model"#, "ubiSp"
+                  )
   class(res) <- c("habitat", "sars", "list")
   attr(res, "type") <- "countryside"
   attr(res, "modType") <- modType

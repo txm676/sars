@@ -6,7 +6,7 @@
 \usage{
 sar_countryside(data, modType = "power",
 gridStart = "partial", startPar = NULL, zLower = 0, 
-ubiSp = FALSE, spNam = NULL, habNam = NULL)
+ubiSp = FALSE, habNam = NULL, spNam = NULL)
 }
 \arguments{
 \item{data}{A dataset in the form of a dataframe – requires 
@@ -35,13 +35,13 @@ model should be fitted for ubiquitous species. If set to
 TRUE, a column of ubiquitous species richness must be
 included in \code{data}.}
 
-\item{spNam}{Optional vector of species-group names (matching
-the column order in \code{data}, otherwise takes names of
-species columns in \code{data}).}
-
 \item{habNam}{Optional vector of habitat names (matching the
 column order in \code{data}, otherwise just uses Habitat1
 etc).}
+
+\item{spNam}{Optional vector of species-group names (matching
+the column order in \code{data}, otherwise takes names of
+species columns in \code{data}).}
 }
 \value{
 A list (of class ‘habitat’ and ‘sars’; and with a
@@ -85,6 +85,11 @@ To work, the countryside SAR model requires that all
   landscape the number of (for example) forest species and
   grassland species present will be provided as well as
   (optionally) the number of ubiquitous species.
+
+
+##COLUMN ORDER NO LONGER IMPORTANt but habitat cols must be first,
+then species columns. In the model output, the h coefficients follow 
+the order of the habitat cols in data (e.g., h1 = col 1)
 
 It is important that the column orders in \code{data} are
 correct. The first set of columns should be the habitat area
