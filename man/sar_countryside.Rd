@@ -4,14 +4,14 @@
 \alias{sar_countryside}
 \title{Fit the countryside SAR model}
 \usage{
-sar_countryside(data, modType = "power",
-gridStart = "partial", startPar = NULL, zLower = 0, 
-habNam = NULL, spNam = NULL)
+sar_countryside(data, modType = "power", gridStart =
+  "partial", startPar = NULL, zLower = 0, habNam = NULL, spNam
+  = NULL)
 }
 \arguments{
-\item{data}{A dataset in the form of a dataframe, with columns for habitat
-area values and species richness values – requires a specific column order
-(see 'Details' below).}
+\item{data}{A dataset in the form of a dataframe, with columns
+for habitat area values and species richness values –
+requires a specific column order (see 'Details' below).}
 
 \item{modType}{Fit the power (\code{"power"}) or logarithmic
 (\code{"logarithmic"}) form of the countryside model.}
@@ -19,7 +19,7 @@ area values and species richness values – requires a specific column order
 \item{gridStart}{The type of grid search procedure to be
 implemented to test multiple starting parameter values: can
 be one of \code{partial} (default) or \code{exhaustive}. If
-\code{startPar} is provided, this argument is ignored. Note 
+\code{startPar} is provided, this argument is ignored. Note
 that \code{exhaustive} can be quite time consuming to run.}
 
 \item{startPar}{Optional (default = NULL) starting parameter
@@ -31,23 +31,26 @@ in the \link[minpack.lm]{nlsLM} function. Default is set to
 zero, but can be changed to any numeric value (e.g., -Inf to
 allow for a full search of parameter space).}
 
-\item{habNam}{Either a vector of habitat names (must be the same length as
-the number of habitat area columns in \code{data}), or the habitat area
-column numbers in \code{data}.}
+\item{habNam}{Either a vector of habitat names (must be the
+same length as the number of habitat area columns in
+\code{data}, and in the same order as the area columns), or
+the habitat area column numbers in \code{data}.}
 
-\item{spNam}{Either a vector of species group names (must be the same length
-as the number of species richness columns in \code{data}), or the species
-richness column numbers in \code{data}.}
+\item{spNam}{Either a vector of species group names (must be
+the same length as the number of species richness columns in
+\code{data}, and in the same order as the richness columns),
+or the species richness column numbers in \code{data}.}
 }
 \value{
 A list (of class ‘habitat’ and ‘sars’; and with a
-  ‘type’ attribute of ‘countryside’) with seven elements: 
+  ‘type’ attribute of ‘countryside’) with eight elements: 
   \itemize{ 
-   \item \strong{i.}  A list of the non-linear regression model fits for each
-   of the species groups. In the model output, the h coefficients follow the
-   order of the habitat area columns in \code{data} (e.g., h1 = column 1).
-  \item \strong{ii.}  The habitat affinity values for each of
-  the models in (i).
+  \item \strong{i.}  A list of the non-linear regression model
+  fits for each of the species groups. In the model output,
+  the h coefficients follow the order of the habitat area
+  columns in \code{data} (e.g., h1 = column 1). \item
+  \strong{ii.}  The habitat affinity values for each of the
+  models in (i).
   \item \strong{iii.}   The c-parameter values for each of the
   models in (i).
   \item \strong{iv.}   The predicted total richness values
@@ -58,70 +61,93 @@ A list (of class ‘habitat’ and ‘sars’; and with a
   both the countryside model and the Arrhenius power SAR model
   (or logarithmic model) to enable model comparison.
   \item \strong{vi.}  The dataset used for fitting (i.e., \code{data}).
-  \item \strong{vii.}   The power (or logarithmic) model fit object.}
+  \item \strong{vii.}   The power (or logarithmic) model fit object.
+  \item \strong{viii.}   The \code{habNam} and \code{spNam} vectors.}
 }
 \description{
 Fit the countryside biogeography SAR model in
   either power or logarithmic form.
 }
 \details{
-The provided input dataset (\code{data}) will typically relate to a
-  series of landscapes with differing areas of N habitats (e.g., forest and
-  grassland), and for each landscape the number of species in a priori
+The provided input dataset (\code{data}) will
+  typically relate to a series of landscapes (sites) with
+  differing areas of N habitats (e.g., forest and grassland),
+  and for each landscape the number of species in a priori
   defined groups.
 
-  To work, the countryside SAR model requires that all species in the study
-  system have been classified into groups. This is typically done based on
-  the habitats present in the study system. For example, in a study system
-  with two habitats (forest and grassland), the species can be a priori
-  classified as either forest species or grassland species. Optionally,
-  species can also be classified as ubiquitous species (i.e., species that do
-  not have strong affinity for a specific habitat – true habitat
-  generalists). However, the model is flexible and species can technically be
-  grouped into any groups. For example, in a study system with three habitats
-  (forest, grassland, wetlands), species could be grouped into two groups:
-  forest species and other species.
+  To work, the countryside SAR model requires that all species
+  in the study system have been classified into groups. This
+  is typically done based on the habitats present in the study
+  system. For example, in a study system with two habitats
+  (forest and grassland), the species can be a priori
+  classified as either forest species or grassland species.
+  Optionally, species can also be classified as ubiquitous
+  species (i.e., species that do not have strong affinity for
+  a specific habitat – true habitat generalists). However, the
+  model is flexible and species can technically be grouped
+  into any groups. For example, in a study system with three
+  habitats (forest, grassland, wetlands), species could be
+  grouped into two groups: forest species and other species.
+  Note that species must be classified prior to fitting the
+  model, but the data can still be used to help guide these
+  classifications.
 
-  It is important that the column orders in \code{data} are correct. The
-  first set of columns should be all the habitat area columns, followed by
-  all the group species richness columns. Within these two sets (i.e., area
-  and richness columns), the order of species columns is not important. The
-  user must make clear which columns are the area columns and which the
-  richness columns, using the \code{habNam} and \code{spNam} arguments. These
-  can either provide habitat and species group names (e.g., \code{habNam =
-  c("Forest", "Other")}; note these names do not have to match the column
-  names in \code{data}), or the column numbers in \code{data} (e.g.,
-  \code{spNam = 4:6}). No columns should be present in \code{data} before
-  these columns (i.e., the first column must be an area column) and all
-  columns after the last species richness column are excluded by the
-  function. And do not use the arguments to re-order columns as this will not
-  be undertaken, e.g. use 4:6 or c(4,5,6), and not c(4,6,5). If \code{habNam}
-  and \code{spNam} are numeric (i.e., column numbers), the habitats and
-  species groups are named Habitat1, Habitat2, and Sp_grp1, Sp_grp2, and so
-  on, in the output.
+  It is important that the column orders in \code{data} are
+  correct. The first set of columns should be all the habitat
+  area columns, followed by all the group species richness
+  columns. Within these two sets (i.e., area and richness
+  columns), the order of columns is not important. The
+  user must make clear which columns are the area columns and
+  which the richness columns, using the \code{habNam} and
+  \code{spNam} arguments. These can either provide habitat and
+  species group names (e.g., \code{habNam = c("Forest",
+  "Other"))} or the column numbers in \code{data} (e.g.,
+  \code{spNam = 4:6}). If names are provided, note that these 
+  names can be different to the column names in \code{data},
+  but they need to be in the same order as their respective 
+  columns in \code{data}. 
+  
+  No columns should be present in \code{data} before the area
+  columns (i.e., the first column must be an area column) and
+  all columns after the last species richness column are
+  excluded by the function. And do not use the arguments to
+  re-order columns as this will not be undertaken, e.g. use
+  4:6 or c(4,5,6), and not c(4,6,5). If \code{habNam} and
+  \code{spNam} are numeric (i.e., column numbers), the
+  habitats and species groups are named Habitat1, Habitat2,
+  and Sp_grp1, Sp_grp2, and so on, in the output.
 
-  The countryside SAR model works by fitting individual component models of a
-  particular form (e.g., power), one for each of the species groups (e.g.,
-  one model for forest species, one for grassland species, and so on). The
-  predictions from these component models are then combined to generate a
-  total predicted richness for each site / landscape. The output of the model
-  fitting includes the individual component model fits, the total predicted
-  (fitted) richness values for each site, and the habitat affinity values for
-  each species group. The latter vary from zero to one, and equal 1 for a
-  given species group's affinity to its preferred habitat (e.g., forest
-  species for forest).
+  The countryside SAR model works by fitting individual
+  component models of a particular form (e.g., power), one for
+  each of the species groups (e.g., one model for forest
+  species, one for grassland species, and so on). The
+  predictions from these component models are then combined to
+  generate a total predicted richness for each site /
+  landscape. The output of the model fitting includes the
+  individual component model fits, the total predicted
+  (fitted) richness values for each site, and the habitat
+  affinity values for each species group. The latter vary from
+  zero to one, and equal 1 for a given species group's
+  affinity to its preferred habitat (e.g., forest species for
+  forest).
+  
+  Note that the logarithmic model can generate negative fitted
+  richness values for small areas in some cases.
 
-  For \code{startPar}, if not NULL, it needs to be a numeric matrix, where
-  number of rows = number of species groups, and number of columns equals
-  number of habitats + 1. Matrix row order matches the order of species group
-  columns in \code{data}, and matrix column order matches the order of
-  habitat columns in \code{data} + 1 extra final column for the z-parameter
-  estimate.
+  For \code{startPar}, if not NULL, it needs to be a numeric
+  matrix, where number of rows = number of species groups, and
+  number of columns equals number of habitats + 1. Matrix row
+  order matches the order of species group columns in
+  \code{data}, and matrix column order matches the order of
+  habitat columns in \code{data} + 1 extra final column for
+  the z-parameter estimate.
 
-  Two different types of plot can be generated with the output, using
-  \code{\link{plot.habitat}}. The \code{\link{countryside_extrap}} function
-  can be used with the output of \code{sar_countryside} to predict the
-  species richness of landscapes with varying areas of the analysed habitats.
+  Three different types of plot can be generated with the
+  output, using \code{\link{plot.habitat}}. The
+  \code{\link{countryside_extrap}} function can be used with
+  the output of \code{sar_countryside} to predict the species
+  richness of landscapes with varying areas of the analysed
+  habitats.
 
   See Matthews et al. (2025) for further details.
 }
@@ -153,15 +179,18 @@ countryside_extrap(s3, area = c(1000, 1000, 1000))
 
 plot(s3, type = 1, powFit = TRUE)
 
-#Plot the fitted individual SAR curves for each species group,
-#providing set line colours, including a legend and
-#positioning it outside the main plotting window, and modifying
-#other aspects of the plot using the standard base R plotting
-#commands
-par(mar=c(5.1, 4.1, 4.1, 7.5), xpd=TRUE)
-plot(s3, type = 2, lcol = c("black", "aquamarine4",
-"#CC661AB3" , "darkblue"), pLeg = TRUE,
-legPos ="topright", legInset = c(-0.27,0.3), lwd = 1.5)
+#Generate Type 2 & 3 plots providing set line colours, plot
+#titles, and modifying other aspects of the plot using the
+#standard #ase R plotting commands. See ?plot.habitat for more
+#info
+
+ plot(s3, type = 2, lcol = c("black", "aquamarine4",
+"#CC661AB3" , "darkblue"), pLeg = TRUE, lwd = 1.5, 
+ ModTitle = c("Agricultural land", "Shrubland", "Forest"))
+ 
+ plot(s3, type = 3, lcol = c("black", "aquamarine4",
+"#CC661AB3" , "darkblue"), pLeg = TRUE, lwd = 1.5, 
+ ModTitle = c("Agricultural land", "Shrubland", "Forest"))
 
 #Provide starting parameter estimates for the component models
 #instead of using gridStart
@@ -174,7 +203,7 @@ byrow = TRUE)
 #Provide column numbers rather than names
 s4 <- sar_countryside(data = countryside,
                     modType = "power",
-                   startPar = M2
+                   startPar = M2,
                    habNam = 1:3, spNam = 4:7)
 }
 }

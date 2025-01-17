@@ -9,11 +9,14 @@
   IC = "AICc",
   type = 1,
   powFit = TRUE,
+  xlab = NULL,
+  ylab = NULL,
   lcol = NULL,
   pLeg = TRUE,
-  legPos = "bottomright",
+  legPos = "right",
   legInset = 0,
   ModTitle = NULL,
+  which = NULL,
   ...
 )
 }
@@ -24,7 +27,7 @@
 be one of 'AIC', 'BIC' or 'AICc'), if plotting a
 \code{\link{sar_habitat}} object.}
 
-\item{type}{Whether a Type 1 or Type 2 plot should be
+\item{type}{Whether a Type 1, 2 or 3 plot should be
 generated, if plotting a \code{\link{sar_countryside}}
 object (see details).}
 
@@ -32,30 +35,41 @@ object (see details).}
 richness values of the power (or logarithmic) model be
 included as red points (logical argument).}
 
-\item{lcol}{For Type 2 plots: the colours of the fitted lines,
-for each component model. Should be a vector, the length
-(and order) of which should match the number of species
-groups in \code{x}. If not included, randomly selected
-colours are used.}
+\item{xlab}{Title for x-axis (default titles are used if not provided).}
 
-\item{pLeg}{For Type 2 plots: should a legend be included
+\item{ylab}{Title for y-axis (default titles are used if not provided).}
+
+\item{lcol}{For Type 2 & 3 plots: the colours of the fitted
+lines, for each component model. Should be a vector, the
+length (and order) of which should match the number of
+species groups in \code{x}. If not included, randomly
+selected colours are used.}
+
+\item{pLeg}{For Type 2 & 3 plots: should a legend be included
 (logical argument), showing the line colours and
 corresponding species groups.}
 
-\item{legPos}{For Type 2 plots: the location of the legend.
+\item{legPos}{For Type 2 & 3 plots: the location of the legend.
 Can either be a position (e.g., "bottomright"), or the x and
 y co-ordinates to be used to position the legend (e.g.,
 c(0,5)).}
 
-\item{legInset}{For Type 2 plots: the inset argument in
+\item{legInset}{For Type 2 & 3 plots: the inset argument in
   \code{\link[graphics]{legend}}. Enables the legend to be
   plotted outside the plotting window (it still needs the user
 to manually change their graphical margin parameters).}
 
-\item{ModTitle}{For Type 2 plots: a vector of plot titles, which should have
-the same length as the number of habitats used in the original model fit.
-If NULL (default), the habitat names used in the original model fit are
-used. If no plot titles are wanted, use \code{ModTitle = "none"}.}
+\item{ModTitle}{For Type 2 & 3 plots: a vector of plot titles,
+which should have the same length as the number of habitats
+used in the original model fit. If NULL (default), the
+habitat names used in the original model fit are used. If no
+plot titles are wanted, use \code{ModTitle = "none"}.}
+
+\item{which}{For Type 2 & 3 plots: select an individual plot to
+generate, rather than generating the plots for all habitats.
+If not NULL (the default) should be a numeric vector of
+length 1; the order of plots matches the order of habitats
+in the original data used to fit the model.}
 
 \item{\dots}{Further graphical parameters may be supplied as
 arguments.}
@@ -64,7 +78,7 @@ arguments.}
 S3 method for class 'habitat'.
   \code{plot.habitat} creates plots for objects of class
   habitat, using the R base plotting framework. The exact plot
-  generated depends on whether the input data comes from
+  generated depends on whether the input data come from
   \code{\link{sar_habitat}} or \code{\link{sar_countryside}}.
 }
 \details{
@@ -75,7 +89,7 @@ The exact plot that is generated depends on the input data. If
  use is chosen using the \code{IC} argument.
  
  If \code{x} is the fit object from
- \code{\link{sar_countryside}}, two plot types can be produced
+ \code{\link{sar_countryside}}, three plot types can be produced
  (selected using the \code{type} argument). A Type 1 plot
  plots the predicted total richness values (from both
  countryside and Arrhenius power (or logarithmic) SAR models)
@@ -85,20 +99,30 @@ The exact plot that is generated depends on the input data. If
  
  A Type 2 plot uses \code{\link{countryside_extrap}}
  internally to generate separate fitted SAR curves for each of
- the modelled species groups, using a set of hypothetical
- sites (with area values ranging from the minimum to the
- maximum observed habitat area values across all sites) in
- which the proportion of the focal habitat relative to a
- specific species group (e.g., forest for forest species) is
- always 100 percent. For ubiquitous species, the mean number of
- species across each of the component models is calculated and
- used for plotting. See Matthews et al. (2025) for further
- details.
+ the modelled species groups, for each habitat individually,
+ using a set of hypothetical sites (ranging in area from zero
+ to the maximum observed site area value) in which the
+ proportion of a given habitat is always 100 percent. See
+ Matthews et al. (2025) for further details. A plot for each
+ habitat is generated, unless the \code{which} argument is
+ used to select the plot for a specific habitat. See the
+ Examples section below.
+ 
+ A Type 3 plot follows a similar approach as for Type 2 plots,
+ but instead varies the proportion of a given habitat while
+ fixing site area. The area of the largest site in \code{data}
+ is used, and for a given (focal) habitat, the proportion of
+ the site represented by the focal habitat is varied from zero
+ up to one. As site area is fixed, as the proportion of the
+ focal habitat increases, the proportions of the other
+ habitats decrease at an equal rate. This process is then
+ repeated using the next habitat as the focal habitat, and so
+ on.
  
 Note that the logarithmic SAR model doesn't work with zero
-area values, so if any habitat area values are zero, the minimum 
-area value of the 'hypothetical' sites used to generate the fitted
-curves in a Type 2 plot is set to 0.01 if this model is used.
+area values, so the minimum area value of the 'hypothetical'
+sites used to generate the fitted curves in a Type 2 or 3 plot
+is set to 0.01 if this model is used.
 }
 \examples{
 #Run the sar_habitat function and generate a barplot of the AICc
@@ -116,22 +140,46 @@ plot(s, IC = "AICc", col = "darkred")
 data(countryside)
 
 s3 <- sar_countryside(data = countryside, modType = "power",
-gridStart = "partial", ubiSp = TRUE, habNam = c("AG", "SH",
+gridStart = "partial", habNam = c("AG", "SH",
 "F"), spNam = c("AG_Sp", "SH_Sp", "F_Sp", "UB_Sp"))
 
 plot(s3, type = 1, powFit = TRUE)
 
-#Generate a Type 2 plot providing set line colours, including
-#a legend and positioning it outside the main plotting window,
+#Generate Type 2 plots providing set line colours, plot titles,
 #and modifying other aspects of the plot using the standard
 #base R plotting commands.
+
+ plot(s3, type = 2, lcol = c("black", "aquamarine4",
+"#CC661AB3" , "darkblue"), pLeg = TRUE, lwd = 1.5, 
+ ModTitle = c("Agricultural land", "Shrubland", "Forest"))
+ 
+#Generate the same plots, but all in a single plotting window,
+#using the ask argument
+ par(mfrow = c(2, 2))
+ plot(s3, type = 2, lcol = c("black", "aquamarine4",
+"#CC661AB3" , "darkblue"), pLeg = FALSE, lwd = 1.5, 
+ ModTitle = c("Agricultural land", "Shrubland", "Forest"),
+ ask = FALSE)
+ 
+ dev.off()
+ 
+#Select a single plot to generate, including
+#a legend and positioning it outside the main plotting window.
 #Note this will change the graphical margins of your plotting
 #window.
 par(mar=c(5.1, 4.1, 4.1, 7.5), xpd=TRUE)
 
 plot(s3, type = 2, lcol = c("black", "aquamarine4",
 "#CC661AB3" , "darkblue"), pLeg = TRUE,  legPos ="topright",
-legInset = c(-0.2,0.3), lwd = 1.5)
+legInset = c(-0.2,0.3), lwd = 1.5, ModTitle = "Forest",
+which = 3)
+
+dev.off()
+
+#Generate Type 3 plots (here only displaying the first)
+plot(s3, type = 3, lcol = c("black", "aquamarine4",
+"#CC661AB3" , "darkblue"), pLeg = TRUE, lwd = 1.5, ModTitle =
+c("Agricultural land", "Shrubland", "Forest"), which =1)
 
 }
 }

@@ -34,7 +34,7 @@ test_that("sar_countryside power returns correct values", {
                        habNam = 1:3, spNam = 4:7)
   expect_equal(length(capture_output_lines(s, print = TRUE)),
                91)
-  expect_equal(length(s), 7)
+  expect_equal(length(s), 8)
   expect_equal(class(s), c("habitat", "sars","list"))
   expect_equal(attributes(s)$modType, "power")
 
@@ -58,11 +58,34 @@ test_that("sar_countryside power returns correct values", {
                   "#CC661AB3", "darkblue"), 
                   pLeg = TRUE, lwd = 1.5, 
                   legPos = "topright"))
+  expect_no_error(plot(s, type = 2,
+                       lcol = c("black", "aquamarine4",
+                                "#CC661AB3", "darkblue"), 
+                       pLeg = TRUE, lwd = 1.5, 
+                       legPos = "topright",
+                       which = 2, ModTitle = "S"))
+  expect_no_error(plot(s, type = 2,
+                       lcol = c("black", "aquamarine4",
+                                "#CC661AB3", "darkblue"), 
+                       pLeg = TRUE, lwd = 1.5, 
+                       legPos = "topright",
+                       which = 2, ModTitle = letters[1:3]))
   expect_warning(plot(s, type = 2,
                        lcol = c("black", "aquamarine4"), 
                        pLeg = TRUE, lwd = 1.5, 
                        legPos = "topright"))
-  expect_error(plot(s, type = 3))
+  expect_no_error(plot(s, type = 3,
+                       lcol = c("black", "aquamarine4",
+                                "#CC661AB3", "darkblue"), 
+                       pLeg = TRUE, lwd = 1.5, 
+                       legPos = "topright"))
+  expect_no_error(plot(s, type = 3,
+                       lcol = c("black", "aquamarine4",
+                                "#CC661AB3", "darkblue"), 
+                       pLeg = TRUE, lwd = 1.5, 
+                       legPos = "topright",
+                       which = 3, ModTitle = "S"))
+  expect_error(plot(s, type = 4))
   
   #Check countryside_extrap
   expect_error(countryside_extrap(s, area = 1:5))
@@ -116,7 +139,7 @@ test_that("sar_countryside power returns correct values", {
                         gridStart = "partial",
                         habNam = c("AG", "SH", "F"),
                         spNam = c("AG_Sp", "SH_Sp"))
-  expect_equal(length(s6), 7)
+  expect_equal(length(s6), 8)
   expect_equal(names(s6$fits), c("AG_Sp", "SH_Sp"))
 })
 
@@ -130,7 +153,7 @@ test_that("sar_countryside logarithmic returns correct values", {
                         spNam = c("Spcs_AG",
                                   "Spcs_SH", "Spcs_QF", 
                                   "Spcs_UB"))
-  expect_equal(length(s2), 7)
+  expect_equal(length(s2), 8)
   expect_equal(class(s2), c("habitat", "sars","list"))
   expect_equal(attributes(s2)$modType, "logarithmic")
   
@@ -150,6 +173,11 @@ test_that("sar_countryside logarithmic returns correct values", {
   
   expect_no_error(plot(s2, type = 1))
   expect_no_error(plot(s2, type = 2,
+                       lcol = c("black", "aquamarine4",
+                                "#CC661AB3", "darkblue"), 
+                       pLeg = TRUE, lwd = 1.5, 
+                       legPos = "topright"))
+  expect_no_error(plot(s2, type = 3,
                        lcol = c("black", "aquamarine4",
                                 "#CC661AB3", "darkblue"), 
                        pLeg = TRUE, lwd = 1.5, 

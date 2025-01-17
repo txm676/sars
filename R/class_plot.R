@@ -1034,38 +1034,46 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
 #' @description S3 method for class 'habitat'.
 #'   \code{plot.habitat} creates plots for objects of class
 #'   habitat, using the R base plotting framework. The exact plot
-#'   generated depends on whether the input data comes from
+#'   generated depends on whether the input data come from
 #'   \code{\link{sar_habitat}} or \code{\link{sar_countryside}}.
 #' @param x An object of class 'habitat'.
 #' @param IC The information criterion weights to present (must
 #'   be one of 'AIC', 'BIC' or 'AICc'), if plotting a
 #'   \code{\link{sar_habitat}} object.
-#' @param type Whether a Type 1 or Type 2 plot should be
+#' @param type Whether a Type 1, 2 or 3 plot should be
 #'   generated, if plotting a \code{\link{sar_countryside}}
 #'   object (see details).
 #' @param powFit For Type 1 plots, should the predicted total
 #'   richness values of the power (or logarithmic) model be
 #'   included as red points (logical argument).
-#' @param lcol For Type 2 plots: the colours of the fitted lines,
-#'   for each component model. Should be a vector, the length
-#'   (and order) of which should match the number of species
-#'   groups in \code{x}. If not included, randomly selected
-#'   colours are used.
-#' @param pLeg For Type 2 plots: should a legend be included
+#' @param xlab Title for x-axis (default titles are used if not provided).
+#' @param ylab Title for y-axis (default titles are used if not provided).
+#' @param lcol For Type 2 & 3 plots: the colours of the fitted
+#'   lines, for each component model. Should be a vector, the
+#'   length (and order) of which should match the number of
+#'   species groups in \code{x}. If not included, randomly
+#'   selected colours are used.
+#' @param pLeg For Type 2 & 3 plots: should a legend be included
 #'   (logical argument), showing the line colours and
 #'   corresponding species groups.
-#' @param legPos For Type 2 plots: the location of the legend.
+#' @param legPos For Type 2 & 3 plots: the location of the legend.
 #'   Can either be a position (e.g., "bottomright"), or the x and
 #'   y co-ordinates to be used to position the legend (e.g.,
 #'   c(0,5)).
-#' @param legInset For Type 2 plots: the inset argument in
+#' @param legInset For Type 2 & 3 plots: the inset argument in
 #'   \code{\link[graphics]{legend}}. Enables the legend to be
 #'   plotted outside the plotting window (it still needs the user
 #' to manually change their graphical margin parameters).
-#' @param ModTitle For Type 2 plots: a vector of plot titles, which should have
-#'   the same length as the number of habitats used in the original model fit.
-#'   If NULL (default), the habitat names used in the original model fit are
-#'   used. If no plot titles are wanted, use \code{ModTitle = "none"}.
+#' @param ModTitle For Type 2 & 3 plots: a vector of plot titles,
+#'   which should have the same length as the number of habitats
+#'   used in the original model fit. If NULL (default), the
+#'   habitat names used in the original model fit are used. If no
+#'   plot titles are wanted, use \code{ModTitle = "none"}.
+#' @param which For Type 2 & 3 plots: select an individual plot to
+#'   generate, rather than generating the plots for all habitats.
+#'   If not NULL (the default) should be a numeric vector of
+#'   length 1; the order of plots matches the order of habitats
+#'   in the original data used to fit the model.
 #' @param \dots Further graphical parameters may be supplied as
 #'   arguments.
 #' @details
@@ -1076,7 +1084,7 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
 #'  use is chosen using the \code{IC} argument.
 #'  
 #'  If \code{x} is the fit object from
-#'  \code{\link{sar_countryside}}, two plot types can be produced
+#'  \code{\link{sar_countryside}}, three plot types can be produced
 #'  (selected using the \code{type} argument). A Type 1 plot
 #'  plots the predicted total richness values (from both
 #'  countryside and Arrhenius power (or logarithmic) SAR models)
@@ -1086,20 +1094,30 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
 #'  
 #'  A Type 2 plot uses \code{\link{countryside_extrap}}
 #'  internally to generate separate fitted SAR curves for each of
-#'  the modelled species groups, using a set of hypothetical
-#'  sites (with area values ranging from the minimum to the
-#'  maximum observed habitat area values across all sites) in
-#'  which the proportion of the focal habitat relative to a
-#'  specific species group (e.g., forest for forest species) is
-#'  always 100 percent. For ubiquitous species, the mean number of
-#'  species across each of the component models is calculated and
-#'  used for plotting. See Matthews et al. (2025) for further
-#'  details.
+#'  the modelled species groups, for each habitat individually,
+#'  using a set of hypothetical sites (ranging in area from zero
+#'  to the maximum observed site area value) in which the
+#'  proportion of a given habitat is always 100 percent. See
+#'  Matthews et al. (2025) for further details. A plot for each
+#'  habitat is generated, unless the \code{which} argument is
+#'  used to select the plot for a specific habitat. See the
+#'  Examples section below.
+#'  
+#'  A Type 3 plot follows a similar approach as for Type 2 plots,
+#'  but instead varies the proportion of a given habitat while
+#'  fixing site area. The area of the largest site in \code{data}
+#'  is used, and for a given (focal) habitat, the proportion of
+#'  the site represented by the focal habitat is varied from zero
+#'  up to one. As site area is fixed, as the proportion of the
+#'  focal habitat increases, the proportions of the other
+#'  habitats decrease at an equal rate. This process is then
+#'  repeated using the next habitat as the focal habitat, and so
+#'  on.
 #'  
 #' Note that the logarithmic SAR model doesn't work with zero
-#' area values, so if any habitat area values are zero, the minimum 
-#' area value of the 'hypothetical' sites used to generate the fitted
-#' curves in a Type 2 plot is set to 0.01 if this model is used.
+#' area values, so the minimum area value of the 'hypothetical'
+#' sites used to generate the fitted curves in a Type 2 or 3 plot
+#' is set to 0.01 if this model is used.
 #' @references Matthews et al. (2025) An R package for fitting
 #'   multi-habitat species–area relationship models. In prep.
 #' @examples
@@ -1118,25 +1136,49 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
 #' data(countryside)
 #' 
 #' s3 <- sar_countryside(data = countryside, modType = "power",
-#' gridStart = "partial", ubiSp = TRUE, habNam = c("AG", "SH",
+#' gridStart = "partial", habNam = c("AG", "SH",
 #' "F"), spNam = c("AG_Sp", "SH_Sp", "F_Sp", "UB_Sp"))
 #' 
 #' plot(s3, type = 1, powFit = TRUE)
 #'
-#' #Generate a Type 2 plot providing set line colours, including
-#' #a legend and positioning it outside the main plotting window,
+#' #Generate Type 2 plots providing set line colours, plot titles,
 #' #and modifying other aspects of the plot using the standard
 #' #base R plotting commands.
+#' 
+#'  plot(s3, type = 2, lcol = c("black", "aquamarine4",
+#' "#CC661AB3" , "darkblue"), pLeg = TRUE, lwd = 1.5, 
+#'  ModTitle = c("Agricultural land", "Shrubland", "Forest"))
+#'  
+#' #Generate the same plots, but all in a single plotting window,
+#' #using the ask argument
+#'  par(mfrow = c(2, 2))
+#'  plot(s3, type = 2, lcol = c("black", "aquamarine4",
+#' "#CC661AB3" , "darkblue"), pLeg = FALSE, lwd = 1.5, 
+#'  ModTitle = c("Agricultural land", "Shrubland", "Forest"),
+#'  ask = FALSE)
+#'  
+#'  dev.off()
+#'  
+#' #Select a single plot to generate, including
+#' #a legend and positioning it outside the main plotting window.
 #' #Note this will change the graphical margins of your plotting
 #' #window.
 #' par(mar=c(5.1, 4.1, 4.1, 7.5), xpd=TRUE)
 #' 
 #' plot(s3, type = 2, lcol = c("black", "aquamarine4",
 #' "#CC661AB3" , "darkblue"), pLeg = TRUE,  legPos ="topright",
-#' legInset = c(-0.2,0.3), lwd = 1.5)
+#' legInset = c(-0.2,0.3), lwd = 1.5, ModTitle = "Forest",
+#' which = 3)
+#' 
+#' dev.off()
+#' 
+#' #Generate Type 3 plots (here only displaying the first)
+#' plot(s3, type = 3, lcol = c("black", "aquamarine4",
+#' "#CC661AB3" , "darkblue"), pLeg = TRUE, lwd = 1.5, ModTitle =
+#' c("Agricultural land", "Shrubland", "Forest"), which =1)
 #' 
 #' }
-#' @importFrom graphics barplot abline par
+#' @importFrom graphics barplot abline par axis
 #' @importFrom grDevices n2mfrow devAskNewPage
 #' @export
 
@@ -1144,11 +1186,14 @@ plot.habitat <- function(x,
                         IC = "AICc",
                         type = 1,
                         powFit = TRUE,
+                        xlab = NULL,
+                        ylab = NULL,
                         lcol = NULL,
                         pLeg = TRUE,
-                        legPos = "bottomright",
+                        legPos = "right",
                         legInset = 0,
                         ModTitle = NULL,
+                        which = NULL,
                         ...){
   
   if (attributes(x)$type == "habitat"){
@@ -1179,7 +1224,9 @@ plot.habitat <- function(x,
     dd2_Area <- dd[,1:dd_Area]
     dd2_SR <- dd[,(dd_Area + 1):ncol(dd)]
     
-    dd_Ran <- range(dd[,1:dd_Area])
+    #rowSums to get total site area (i.e., summed 
+    #across habitats)
+    dd_Ran <- range(rowSums(dd[,1:dd_Area]))
     
     if (type == 1){
     
@@ -1198,9 +1245,12 @@ plot.habitat <- function(x,
              " contact the package author")
       }
       
+      if (is.null(xlab)) xlab <- "Observed total richness"
+      if (is.null(ylab)) ylab <- "Predicted total richness"
+      
       plot(ddTot$totR, dd3_Area$totR,
-           xlab = "Observed total richness",
-           ylab = "Predicted total richness",
+           xlab = xlab,
+           ylab = ylab,
            ...)
       abline(0,1)
       
@@ -1214,31 +1264,58 @@ plot.habitat <- function(x,
       }#eo if f7
       }#ep if powFit
 
-    } else if (type == 2) {
+    } else if (type %in% c(2, 3)) {
 
     ##predicted curves for each land-use
     #loga model can't work with 0 area vals
-    if (attributes(x)$modType == "logarithmic" &
-        dd_Ran[1] == 0){
+    if (attributes(x)$modType == "logarithmic"){
       dr1 <- 0.01
     } else {
-      dr1 <- dd_Ran[1]
+      dr1 <- 0
     }
+      
+    if (type == 2){
     Ar_seq <- seq(dr1, dd_Ran[2],
                   length.out = 1000)
+    } else {
+      Ar3 <- dd_Ran[2]
+      vv <- 1:dd_Area
+      Ar_seq <- seq(dr1, 1,
+                    length.out = 1000)
+    }
     #convert in N tables, where in each you can N columns,
     #where N = number of land-use types. In each all columns,
     #except the focal habitat are zeros
     ar_ls <- vector("list", length = dd_Area)
     names(ar_ls) <- colnames(dd2_Area)
     
-    nn <- gsub(".c", "", names(x[[3]]))
+    nn <- x[[8]][[2]]
     nna <- names(x$affinity[[1]])
 
     for (i in 1:dd_Area){
       m_ls <- matrix(0, ncol = dd_Area,
                      nrow = length(Ar_seq))
       m_ls[,i] <- Ar_seq
+      
+      if (type == 3){
+        aj3 <- apply(m_ls, 1, function(y){
+          (1 - y[i]) / 2
+        })
+        
+        vv3 <- vv[-i]
+        m_ls[,vv3] <- aj3
+        if (all(round(rowSums(m_ls), 0) != 1)){
+          stop("Error Type3 A")
+        }
+        
+        #convert the proportion matrix into an area
+        #matrix
+        m_ls <- m_ls * Ar3
+        if (all(round(rowSums(m_ls), 0) != Ar3)){
+          stop("Error Type3 B")
+        }
+      }#eo type 3
+      
       totR_R <- apply(m_ls[,1:dd_Area],1,function(y){
         v <- as.vector(y)
         vc <- countryside_extrap(x, area = v)
@@ -1246,7 +1323,7 @@ plot.habitat <- function(x,
       })
       totR_R <- t(totR_R)
       if (!identical(colnames(totR_R), 
-                     nn)) stop("Error 4C")
+                     nn)) stop("Error Type23 C")
       totR_R <- cbind("Area" = Ar_seq, totR_R)
       totR_R <- as.data.frame(totR_R)
       ar_ls[[i]] <- totR_R
@@ -1268,31 +1345,74 @@ plot.habitat <- function(x,
       lcol <- COLs[1:spC]
     }
 
+    if (length(which) != 1 & !is.null(which)){
+      stop("which should be NULL or of length 1")
+    }
+    
     if (is.null(ModTitle)){
       ModTitle2 <- nna
     } else if ("none" %in% ModTitle){
       ModTitle2 <- rep("", dd_Area)
     } else {
-      if (length(ModTitle) != dd_Area){
-        stop("ModTitle should either be NULL, none, or be a vector of\n
-             titles equal in length the the number of habitats")
-      }
+      if (is.null(which)){
+        if (length(ModTitle) != dd_Area){
+          stop("ModTitle should either be NULL, none, or be a vector of\n",
+              "titles equal in length the the number of habitats")
+        }
+        } else {
+          if (length(ModTitle) != 1 & length(ModTitle) != dd_Area){
+            stop("ModTitle should either be NULL, none, or be a vector of\n",
+              "titles equal in length the the number of habitats")
+          } 
+        }
       ModTitle2 <- ModTitle
     }
-    
     p <- 1
     
-    devAskNewPage(TRUE)
-    on.exit(devAskNewPage(FALSE))
+    #if legInset not changed by user, extend x-axis to
+    #fit the legend in
+    Mxx <- max(Ar_seq)
+    if (sum(legInset) == 0 & pLeg){
+      xlM <- Mxx + (Mxx * 0.35)
+    } else {
+      xlM <- Mxx
+    }
+    
+    #If user selects to plot a single plot, subset ar_ls to
+    #this plot
+    if (!is.null(which)){
+      ar_ls <- ar_ls[which]
+      if (length(ModTitle2) != 1){
+      p <- which
+      }
+    }
+    
+    if (is.null(xlab)) xlab <- ifelse(type == 2, "Area", 
+                                      "Habitat proportion")
+    if (is.null(ylab)) ylab <- "Species richness"
+    
+    xaxt <- ifelse(type == 2, "s", "n")
+    
+    if (is.null(which)){
+      devAskNewPage(TRUE)
+      on.exit(devAskNewPage(FALSE))
+    }
     
     invisible(lapply(ar_ls, function(z){
     
     plot(z[,1], z[,2], type = "l", 
          col = lcol[1],
-         xlab = "Area", ylab = "Total richness",
+         xlab = xlab, ylab = ylab,
+         xlim = c(min(Ar_seq), xlM),
          ylim = c(min(z[,2:ncol(z)]), 
                   max(z[,2:ncol(z)])),
+         xaxt = xaxt,
          ...)
+      
+    if (type == 3){
+      axis(side = 1, 
+           at = c(0, 0.2, 0.4, 0.6, 0.8, 1))
+    }
     
     title(main = ModTitle2[p], 
             adj = 0, line = 0.5, 
@@ -1302,7 +1422,8 @@ plot.habitat <- function(x,
     apply(z[,3:ncol(z), drop = FALSE],
           2, function(y){
             k <<- k + 1
-            lines(z[,1], y, col = lcol[k], ...)
+            lines(z[,1], y, col = lcol[k],
+                  ...)
           })
     if (pLeg){
       CNz <- colnames(z[,2:ncol(z)])
@@ -1312,9 +1433,8 @@ plot.habitat <- function(x,
              inset = legInset)
     }#eo pLeg
    }))#eo lapply
-    
   } else {
-      stop("Type should be either 1 or 2")
+      stop("Type should be either 1, 2 or 3")
   }#eo if type 1
 }#eo if countryside
 }
