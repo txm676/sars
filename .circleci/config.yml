@@ -30,6 +30,4 @@ jobs:
           name: Calculate code coverage
           no_output_timeout: 55m
           command: Rscript -e 'covr::codecov()'
-      - store_test_results:
-          path: test-results  
           
