@@ -1,4 +1,4 @@
-#https://blog.jdblischak.com/posts/circleci-for-r-1/
+#https://blog.jdblischak.com/posts/circleci-for-r-1/ 
 #NOT_CRAN true should mean all tests run, including skip on cran
 version: 2
 jobs:
