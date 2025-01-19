@@ -316,12 +316,12 @@ countryside_affinity <- function(mods, modType,
 #'   Examples, below). However, importantly note that while the
 #'   values returned from \code{\link[stats]{AIC}} and
 #'   \code{\link{sar_power}} are comparable, these values are not
-#'   comparable with the AIC / AICc values presented in Proença,
-#'   V. & Pereira (2013) and related studies, due to the
-#'   different information criteria equations used (although the
-#'   delta values (calculated using a given equation) are
-#'   comparable across equations). For more information, see the
-#'   package vignette.
+#'   comparable with the AIC / AICc values presented in Proença &
+#'   Pereira (2013) and related studies, due to the different
+#'   information criteria equations used (although the delta
+#'   values (calculated using a given equation) are comparable
+#'   across equations). For more information, see the package
+#'   vignette.
 #' @references Matthews et al. (2025) In prep.
 #' 
 #' Pereira, H.M. & Daily, G.C. (2006) Modelling biodiversity
