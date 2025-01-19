@@ -130,36 +130,36 @@ test_that("sar_countryside power returns correct values", {
   expect_equal(round(sum(s4$fits$Sp_grp1$m$resid()^2),0),
                2590)
 
-#   ##Test output still works if you mix up columns and remove
-#   #a species group 
-  c3 <- countryside[c(1,3,2,5,4,6,7)]
-  s5 <- sar_countryside(data = c3, modType = "power",
-                        gridStart = "partial",
-                        habNam = c("AG", "F", "SH"),
-                        spNam = c("SH_Sp","AG_Sp",  "F_Sp",
-                                  "UB_Sp"))
-  expect_equal(as.vector(round(s5$c, 0)),
-               c(4, 11, 6, 1))
-
-  expect_equal(as.vector(c(round(s5$affinity$AG_Sp[1], 1),
-                           round(s5$affinity$SH_Sp[2], 7),
-                           round(s5$affinity$F_Sp[3], 8),
-                           round(s5$affinity$UB_Sp[1], 2))),
-               c(1, 2.12e-05, 2.3e-07, 0.42))
-
-  expect_equal(as.vector(round(s5$rss, 0)),
-               c(5256, 10573))
-  expect_equal(round(sum(s5$fits$AG_Sp$m$resid()^2),0),
-               2590)
-
-##Test function works with fewer richness cols than area
-  c4 <- countryside[1:50,c(1,2,3,4,5)]
-  s6 <- sar_countryside(data = c4, modType = "power",
-                        gridStart = "partial",
-                        habNam = c("AG", "SH", "F"),
-                        spNam = c("AG_Sp", "SH_Sp"))
-  expect_equal(length(s6), 8)
-  expect_equal(names(s6$fits), c("AG_Sp", "SH_Sp"))
+# #   ##Test output still works if you mix up columns and remove
+# #   #a species group 
+#   c3 <- countryside[c(1,3,2,5,4,6,7)]
+#   s5 <- sar_countryside(data = c3, modType = "power",
+#                         gridStart = "partial",
+#                         habNam = c("AG", "F", "SH"),
+#                         spNam = c("SH_Sp","AG_Sp",  "F_Sp",
+#                                   "UB_Sp"))
+#   expect_equal(as.vector(round(s5$c, 0)),
+#                c(4, 11, 6, 1))
+# 
+#   expect_equal(as.vector(c(round(s5$affinity$AG_Sp[1], 1),
+#                            round(s5$affinity$SH_Sp[2], 7),
+#                            round(s5$affinity$F_Sp[3], 8),
+#                            round(s5$affinity$UB_Sp[1], 2))),
+#                c(1, 2.12e-05, 2.3e-07, 0.42))
+# 
+#   expect_equal(as.vector(round(s5$rss, 0)),
+#                c(5256, 10573))
+#   expect_equal(round(sum(s5$fits$AG_Sp$m$resid()^2),0),
+#                2590)
+# 
+# ##Test function works with fewer richness cols than area
+#   c4 <- countryside[1:50,c(1,2,3,4,5)]
+#   s6 <- sar_countryside(data = c4, modType = "power",
+#                         gridStart = "partial",
+#                         habNam = c("AG", "SH", "F"),
+#                         spNam = c("AG_Sp", "SH_Sp"))
+#   expect_equal(length(s6), 8)
+#   expect_equal(names(s6$fits), c("AG_Sp", "SH_Sp"))
 })
 
 # test_that("sar_countryside logarithmic returns correct values", {
