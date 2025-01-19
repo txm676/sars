@@ -133,11 +133,11 @@ test_that("sar_countryside power returns correct values", {
 # #   ##Test output still works if you mix up columns and remove
 # #   #a species group 
   c3 <- countryside[,c(1,3,2,5,4,6,7)]
-  # s5 <- sar_countryside(data = c3, modType = "power",
-  #                       gridStart = "partial",
-  #                       habNam = c("AG", "F", "SH"),
-  #                       spNam = c("SH_Sp","AG_Sp",  "F_Sp",
-  #                                 "UB_Sp"))
+  s999 <- sar_countryside(data = c3, modType = "power",
+                        gridStart = "partial",
+                        habNam = c("AG", "F", "SH"),
+                        spNam = c("SH_Sp","AG_Sp",  "F_Sp",
+                                  "UB_Sp"))
   # expect_equal(as.vector(round(s5$c, 0)),
   #              c(4, 11, 6, 1))
   # 
