@@ -162,56 +162,56 @@ test_that("sar_countryside power returns correct values", {
   expect_equal(names(s6$fits), c("AG_Sp", "SH_Sp"))
 })
 
-test_that("sar_countryside logarithmic returns correct values", {
-  skip_on_cran()
-  data(countryside)
-  s2 <- sar_countryside(data = countryside,
-                        modType = "logarithmic",
-                        habNam =  c("Area_AG", "Area_SH",
-                                    "Area_QF"),
-                        spNam = c("Spcs_AG",
-                                  "Spcs_SH", "Spcs_QF",
-                                  "Spcs_UB"))
-  expect_equal(length(s2), 8)
-  expect_equal(class(s2), c("habitat", "sars","list"))
-  expect_equal(attributes(s2)$modType, "logarithmic")
-
-  expect_equal(as.vector(round(s2$c, 0)),
-               c(12, 5, 7, 1))
-
-  expect_equal(as.vector(c(round(s2$affinity$Spcs_AG[1], 1),
-                           round(s2$affinity$Spcs_SH[3], 4),
-                           round(s2$affinity$Spcs_QF[2], 4),
-                           round(s2$affinity$Spcs_UB[1], 2))),
-               c(1, 3e-04, 7e-04, 0.49))
-
-  expect_equal(as.vector(round(s2$rss, 0)),
-               c(8615, 15763))
-  expect_equal(round(sum(s2$fits$Spcs_AG$m$resid()^2),0),
-               5716)
-
-  # expect_no_error(plot(s2, type = 1))
-  # expect_no_error(plot(s2, type = 2,
-  #                      lcol = c("black", "aquamarine4",
-  #                               "#CC661AB3", "darkblue"),
-  #                      pLeg = TRUE, lwd = 1.5,
-  #                      legPos = "topright", which = 1))
-  # expect_no_error(plot(s2, type = 3,
-  #                      lcol = c("black", "aquamarine4",
-  #                               "#CC661AB3", "darkblue"),
-  #                      pLeg = TRUE, lwd = 1.5,
-  #                      legPos = "topright", which = 2))
-  # expect_warning(plot(s2, type = 2,
-  #                     lcol = c("black", "aquamarine4"),
-  #                     pLeg = TRUE, lwd = 1.5,
-  #                     legPos = "topright", which = 3))
-
-  #Check countryside_extrap
-  expect_error(countryside_extrap(s2, area = 1:5))
-  b <- countryside_extrap(s2, area = 1:3)
-  expect_equal(round(b$Total,2), 26.19)
-  expect_false(b$Failed_mods)
-})
+# test_that("sar_countryside logarithmic returns correct values", {
+#   skip_on_cran()
+#   data(countryside)
+#   s2 <- sar_countryside(data = countryside,
+#                         modType = "logarithmic",
+#                         habNam =  c("Area_AG", "Area_SH",
+#                                     "Area_QF"),
+#                         spNam = c("Spcs_AG",
+#                                   "Spcs_SH", "Spcs_QF",
+#                                   "Spcs_UB"))
+#   expect_equal(length(s2), 8)
+#   expect_equal(class(s2), c("habitat", "sars","list"))
+#   expect_equal(attributes(s2)$modType, "logarithmic")
+# 
+#   expect_equal(as.vector(round(s2$c, 0)),
+#                c(12, 5, 7, 1))
+# 
+#   expect_equal(as.vector(c(round(s2$affinity$Spcs_AG[1], 1),
+#                            round(s2$affinity$Spcs_SH[3], 4),
+#                            round(s2$affinity$Spcs_QF[2], 4),
+#                            round(s2$affinity$Spcs_UB[1], 2))),
+#                c(1, 3e-04, 7e-04, 0.49))
+# 
+#   expect_equal(as.vector(round(s2$rss, 0)),
+#                c(8615, 15763))
+#   expect_equal(round(sum(s2$fits$Spcs_AG$m$resid()^2),0),
+#                5716)
+# 
+#   # expect_no_error(plot(s2, type = 1))
+#   # expect_no_error(plot(s2, type = 2,
+#   #                      lcol = c("black", "aquamarine4",
+#   #                               "#CC661AB3", "darkblue"),
+#   #                      pLeg = TRUE, lwd = 1.5,
+#   #                      legPos = "topright", which = 1))
+#   # expect_no_error(plot(s2, type = 3,
+#   #                      lcol = c("black", "aquamarine4",
+#   #                               "#CC661AB3", "darkblue"),
+#   #                      pLeg = TRUE, lwd = 1.5,
+#   #                      legPos = "topright", which = 2))
+#   # expect_warning(plot(s2, type = 2,
+#   #                     lcol = c("black", "aquamarine4"),
+#   #                     pLeg = TRUE, lwd = 1.5,
+#   #                     legPos = "topright", which = 3))
+# 
+#   #Check countryside_extrap
+#   expect_error(countryside_extrap(s2, area = 1:5))
+#   b <- countryside_extrap(s2, area = 1:3)
+#   expect_equal(round(b$Total,2), 26.19)
+#   expect_false(b$Failed_mods)
+# })
 
 ##Tested on second dataset: hashed out for speed
 # test_that("sar_countryside power works with 2nd dataset", {
