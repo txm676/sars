@@ -131,7 +131,7 @@ test_that("sar_countryside power returns correct values", {
                2590)
 
 #   ##Test output still works if you mix up columns and remove
-#   #a species group
+#   #a species group 
 #   c3 <- countryside[c(1,3,2,5,4,6,7)]
 #   s5 <- sar_countryside(data = c3, modType = "power",
 #                         gridStart = "partial",
