@@ -155,7 +155,20 @@ The provided input dataset (\code{data}) will
 The model fits in (i) are objects of class ‘nls’,
   meaning that all the basic non-linear regression R methods
   can be applied (e.g., generating model summary tables or
-  plotting the model residuals).
+  plotting the model residuals). This also means that
+  information criteria values can be returned for each
+  component model, simply by using, for example,
+  \code{\link[stats]{AIC}}. This can then be compared with
+  equivalent values from, for example, the power model (see
+  Examples, below). However, importantly note that while the
+  values returned from \code{\link[stats]{AIC}} and
+  \code{\link{sar_power}} are comparable, these values are not
+  comparable with the AIC / AICc values presented in Proença,
+  V. & Pereira (2013) and related studies, due to the
+  different information criteria equations used (although the
+  delta values (calculated using a given equation) are
+  comparable across equations). For more information, see the
+  package vignette.
 }
 \examples{
 data(countryside)
@@ -165,9 +178,9 @@ data(countryside)
 #Use the function’s starting parameter value selection procedure.
 #Abbreviations: AG = agricultural land, SH = shrubland, F =
 #oak forest, UB = ubiquitous species.
-s3 <- sar_countryside(data = countryside, modType = "power",
-gridStart = "partial", habNam = c("AG", "SH",
-"F"), spNam = c("AG_Sp", "SH_Sp", "F_Sp", "UB_Sp"))
+ s3 <- sar_countryside(data = countryside, modType = "power",
+ gridStart = "partial", habNam = c("AG", "SH",
+ "F"), spNam = c("AG_Sp", "SH_Sp", "F_Sp", "UB_Sp"))
 
 #Predict the richness of a site which comprises 1000 area units
 #of agricultural land, 1000 of shrubland and 1000 of forest.
@@ -191,6 +204,14 @@ plot(s3, type = 1, powFit = TRUE)
  plot(s3, type = 3, lcol = c("black", "aquamarine4",
 "#CC661AB3" , "darkblue"), pLeg = TRUE, lwd = 1.5, 
  ModTitle = c("Agricultural land", "Shrubland", "Forest"))
+ 
+#Calculate AIC for a component model and compare with the 
+#power model
+ AIC(s3$fits$AG_Sp)
+ SA <- rowSums(countryside[,1:3])#total site area
+ SR <- countryside[,4] #agriculture column
+ SP <- sar_power(data.frame(SA, SR))
+ SP$AIC
 
 #Provide starting parameter estimates for the component models
 #instead of using gridStart

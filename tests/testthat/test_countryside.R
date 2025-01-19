@@ -51,7 +51,22 @@ test_that("sar_countryside power returns correct values", {
                c(5256, 10573))
   expect_equal(round(sum(s$fits$Sp_grp1$m$resid()^2),0),
                2590)
-
+  
+  expect_equal(round(sum(s$fits$Sp_grp3$m$resid()^2),
+                    0),1084)
+  
+  #Calculate AICc using Proenca approach (our old approach)
+  nc1 <- nrow(countryside)
+  kc1 <- 5
+  RSSc <- sum(s$fits$Sp_grp3$m$resid()^2)
+  AICC <- (nc1 * log(RSSc/nc1)) + (2*kc1)*(nc1 / (nc1 - kc1 - 1))
+  expect_equal(round(AICC,0), 408) 
+  aa <- rowSums(countryside[,1:3])
+  df <- data.frame(aa, countryside[,6])
+  sss <- sar_power(df)
+  aiccP <- (nc1 * log(sss$value/nc1)) +  (2*3)*(nc1 / (nc1 - 3 - 1))
+  expect_equal(round(aiccP,0), 1156)
+  
   expect_no_error(plot(s, type = 1))
   #Circle CI doesn't work with the Enter Return plots, so
   #have to use which
@@ -198,39 +213,42 @@ test_that("sar_countryside logarithmic returns correct values", {
   expect_false(b$Failed_mods)
 })
 
-# ##Tested on second dataset: hashed out for speed
+##Tested on second dataset: hashed out for speed
 # test_that("sar_countryside power works with 2nd dataset", {
 #   skip_on_cran()
-#    
+# 
 #   #In Henrique_tests drive
 #   guillerme <- read.csv("guilherme.csv")
-#   
+# 
 #   sg <- sar_countryside(data = guillerme,
-#                        habNam = c("AG", "SH","F"), 
-#                        spNam = c("AG_Sp", "SH_Sp", 
+#                        habNam = c("AG", "SH","F"),
+#                        spNam = c("AG_Sp", "SH_Sp",
 #                                  "F_Sp", "UB_Sp"))
 #   expect_equal(length(capture_output_lines(sg, print = TRUE)),
-#                91)
+#                90)
 #   expect_equal(length(sg), 8)
 #   expect_equal(class(sg), c("habitat", "sars","list"))
 #   expect_equal(attributes(sg)$modType, "power")
-#   
+# 
 #   expect_equal(as.vector(round(sg$c, 1)),
 #                c(0.1, 0.4, 0.6, 0.7))
-#   
+# 
 #   expect_equal(as.vector(c(round(sg$affinity$AG_Sp[1], 1),
 #                            round(sg$affinity$SH_Sp[3], 7),
 #                            round(sg$affinity$F_Sp[2], 8),
 #                            round(sg$affinity$UB_Sp[1], 2))),
 #                c(1, 0.001008, 7.85e-06 , 0.91 ))
-#   
+# 
+#   # #Calculate AICc using Proenca approach (our old approach)
+#   # nc1 <- nrow(guillerme)
+#   # kc1 <- 5
+#   # RSSc <- sum(sg$fits$AG_Sp$m$resid()^2)
+#   # AICC <- (nc1 * log(RSSc/nc1)) + 
+#   #   (2*kc1)*(nc1 / (nc1 - kc1 - 1))
+#  # expect_equal(round(AICC,0), 408) 
+# 
 #   expect_no_error(plot(sg, type = 1))
 # 
-#   expect_no_error(plot(sg, type = 2,
-#                        lcol = c("black", "aquamarine4",
-#                                 "#CC661AB3", "darkblue"),
-#                        pLeg = TRUE, lwd = 1.5,
-#                        legPos = "topright"))
 #   expect_no_error(plot(sg, type = 2,
 #                        lcol = c("black", "aquamarine4",
 #                                 "#CC661AB3", "darkblue"),
@@ -241,23 +259,12 @@ test_that("sar_countryside logarithmic returns correct values", {
 #                       lcol = c("black", "aquamarine4"),
 #                       pLeg = TRUE, lwd = 1.5,
 #                       legPos = "topright", which = 1))
-#   
-#   expect_no_error(plot(sg, type = 3,
-#                        lcol = c("black", "aquamarine4",
-#                                 "#CC661AB3", "darkblue"),
-#                        pLeg = TRUE, lwd = 1.5,
-#                        legPos = "topright"))
+# 
 #   expect_no_error(plot(sg, type = 3,
 #                        lcol = c("black", "aquamarine4",
 #                                 "#CC661AB3", "darkblue"),
 #                        pLeg = TRUE, lwd = 1.5,
 #                        legPos = "topright",
-#                        which = 3, 
+#                        which = 3,
 #                        ModTitle = "F"))
-# 
-#   #Check countryside_extrap
-#   expect_error(countryside_extrap(s, area = 1:5))
-#   b <- countryside_extrap(s, area = 1:3)
-#   expect_equal(round(b$Total,2), 23.64)
-#   expect_false(b$Failed_mods)
 # })
