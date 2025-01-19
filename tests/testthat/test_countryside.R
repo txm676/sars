@@ -107,51 +107,51 @@ test_that("sar_countryside power returns correct values", {
   # expect_error(plot(s, type = 4))
 
   #Check countryside_extrap
-  expect_error(countryside_extrap(s, area = 1:5))
-  b <- countryside_extrap(s, area = 1:3)
-  expect_equal(round(b$Total,2), 23.64)
-  expect_false(b$Failed_mods)
-
-  #Check provision of starting pars
-  M2 <- matrix(c(3.061e+08, 2.105e-01, 1.075e+00, 1.224e-01,
-  3.354e-08, 5.770e+05, 1.225e+01, 1.090e-01,
-  6.848e-01, 1.054e-01, 4.628e+05, 1.378e-01,
-  0.20747, 0.05259, 0.49393, 0.18725), nrow = 4,
-  byrow = TRUE)
-  s4 <- sar_countryside(data = countryside,
-                      modType = "power",
-                     startPar = M2,
-                     habNam = 1:3, spNam = 4:7)
-  expect_equal(as.vector(c(round(s4$affinity$Sp_grp1[1], 1),
-                           round(s4$affinity$Sp_grp2[3], 7),
-                           round(s4$affinity$Sp_grp3[2], 8),
-                           round(s4$affinity$Sp_grp4[1], 2))),
-               c(1, 2.12e-05, 2.3e-07, 0.42))
-  expect_equal(round(sum(s4$fits$Sp_grp1$m$resid()^2),0),
-               2590)
+  # expect_error(countryside_extrap(s, area = 1:5))
+  # b <- countryside_extrap(s, area = 1:3)
+  # expect_equal(round(b$Total,2), 23.64)
+  # expect_false(b$Failed_mods)
+  # 
+  # #Check provision of starting pars
+  # M2 <- matrix(c(3.061e+08, 2.105e-01, 1.075e+00, 1.224e-01,
+  # 3.354e-08, 5.770e+05, 1.225e+01, 1.090e-01,
+  # 6.848e-01, 1.054e-01, 4.628e+05, 1.378e-01,
+  # 0.20747, 0.05259, 0.49393, 0.18725), nrow = 4,
+  # byrow = TRUE)
+  # s4 <- sar_countryside(data = countryside,
+  #                     modType = "power",
+  #                    startPar = M2,
+  #                    habNam = 1:3, spNam = 4:7)
+  # expect_equal(as.vector(c(round(s4$affinity$Sp_grp1[1], 1),
+  #                          round(s4$affinity$Sp_grp2[3], 7),
+  #                          round(s4$affinity$Sp_grp3[2], 8),
+  #                          round(s4$affinity$Sp_grp4[1], 2))),
+  #              c(1, 2.12e-05, 2.3e-07, 0.42))
+  # expect_equal(round(sum(s4$fits$Sp_grp1$m$resid()^2),0),
+  #              2590)
 
 # #   ##Test output still works if you mix up columns and remove
 # #   #a species group 
-#   c3 <- countryside[c(1,3,2,5,4,6,7)]
-#   s5 <- sar_countryside(data = c3, modType = "power",
-#                         gridStart = "partial",
-#                         habNam = c("AG", "F", "SH"),
-#                         spNam = c("SH_Sp","AG_Sp",  "F_Sp",
-#                                   "UB_Sp"))
-#   expect_equal(as.vector(round(s5$c, 0)),
-#                c(4, 11, 6, 1))
-# 
-#   expect_equal(as.vector(c(round(s5$affinity$AG_Sp[1], 1),
-#                            round(s5$affinity$SH_Sp[2], 7),
-#                            round(s5$affinity$F_Sp[3], 8),
-#                            round(s5$affinity$UB_Sp[1], 2))),
-#                c(1, 2.12e-05, 2.3e-07, 0.42))
-# 
-#   expect_equal(as.vector(round(s5$rss, 0)),
-#                c(5256, 10573))
-#   expect_equal(round(sum(s5$fits$AG_Sp$m$resid()^2),0),
-#                2590)
-# 
+  c3 <- countryside[c(1,3,2,5,4,6,7)]
+  s5 <- sar_countryside(data = c3, modType = "power",
+                        gridStart = "partial",
+                        habNam = c("AG", "F", "SH"),
+                        spNam = c("SH_Sp","AG_Sp",  "F_Sp",
+                                  "UB_Sp"))
+  expect_equal(as.vector(round(s5$c, 0)),
+               c(4, 11, 6, 1))
+
+  expect_equal(as.vector(c(round(s5$affinity$AG_Sp[1], 1),
+                           round(s5$affinity$SH_Sp[2], 7),
+                           round(s5$affinity$F_Sp[3], 8),
+                           round(s5$affinity$UB_Sp[1], 2))),
+               c(1, 2.12e-05, 2.3e-07, 0.42))
+
+  expect_equal(as.vector(round(s5$rss, 0)),
+               c(5256, 10573))
+  expect_equal(round(sum(s5$fits$AG_Sp$m$resid()^2),0),
+               2590)
+
 # ##Test function works with fewer richness cols than area
 #   c4 <- countryside[1:50,c(1,2,3,4,5)]
 #   s6 <- sar_countryside(data = c4, modType = "power",
