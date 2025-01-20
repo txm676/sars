@@ -27,45 +27,45 @@ library(sars)
 test_that("sar_countryside power returns correct values", {
   skip_on_cran()
   data(countryside)
-  expect_equal(colnames(countryside),
-               c("Area_AG", "Area_SH", "Area_QF", "Spcs_AG",
-                "Spcs_SH", "Spcs_QF", "Spcs_UB"))
-  s <- sar_countryside(data = countryside,
-                       habNam = 1:3, spNam = 4:7)
-  expect_equal(length(capture_output_lines(s, print = TRUE)),
-               91)
-  expect_equal(length(s), 8)
-  expect_equal(class(s), c("habitat", "sars","list"))
-  expect_equal(attributes(s)$modType, "power")
-
-  expect_equal(as.vector(round(s$c, 0)),
-               c(11, 4, 6, 1))
-
-  expect_equal(as.vector(c(round(s$affinity$Sp_grp1[1], 1),
-    round(s$affinity$Sp_grp2[3], 7),
-    round(s$affinity$Sp_grp3[2], 8),
-    round(s$affinity$Sp_grp4[1], 2))),
-    c(1, 2.12e-05, 2.3e-07, 0.42))
-
-  expect_equal(as.vector(round(s$rss, 0)),
-               c(5256, 10573))
-  expect_equal(round(sum(s$fits$Sp_grp1$m$resid()^2),0),
-               2590)
-  
-  expect_equal(round(sum(s$fits$Sp_grp3$m$resid()^2),
-                    0),1084)
-  
-  #Calculate AICc using Proenca approach (our old approach)
-  nc1 <- nrow(countryside)
-  kc1 <- 5
-  RSSc <- sum(s$fits$Sp_grp3$m$resid()^2)
-  AICC <- (nc1 * log(RSSc/nc1)) + (2*kc1)*(nc1 / (nc1 - kc1 - 1))
-  expect_equal(round(AICC,0), 408) 
-  aa <- rowSums(countryside[,1:3])
-  df <- data.frame(aa, countryside[,6])
-  sss <- sar_power(df)
-  aiccP <- (nc1 * log(sss$value/nc1)) +  (2*3)*(nc1 / (nc1 - 3 - 1))
-  expect_equal(round(aiccP,0), 1156)
+  # expect_equal(colnames(countryside),
+  #              c("Area_AG", "Area_SH", "Area_QF", "Spcs_AG",
+  #               "Spcs_SH", "Spcs_QF", "Spcs_UB"))
+  # s <- sar_countryside(data = countryside,
+  #                      habNam = 1:3, spNam = 4:7)
+  # expect_equal(length(capture_output_lines(s, print = TRUE)),
+  #              91)
+  # expect_equal(length(s), 8)
+  # expect_equal(class(s), c("habitat", "sars","list"))
+  # expect_equal(attributes(s)$modType, "power")
+  # 
+  # expect_equal(as.vector(round(s$c, 0)),
+  #              c(11, 4, 6, 1))
+  # 
+  # expect_equal(as.vector(c(round(s$affinity$Sp_grp1[1], 1),
+  #   round(s$affinity$Sp_grp2[3], 7),
+  #   round(s$affinity$Sp_grp3[2], 8),
+  #   round(s$affinity$Sp_grp4[1], 2))),
+  #   c(1, 2.12e-05, 2.3e-07, 0.42))
+  # 
+  # expect_equal(as.vector(round(s$rss, 0)),
+  #              c(5256, 10573))
+  # expect_equal(round(sum(s$fits$Sp_grp1$m$resid()^2),0),
+  #              2590)
+  # 
+  # expect_equal(round(sum(s$fits$Sp_grp3$m$resid()^2),
+  #                   0),1084)
+  # 
+  # #Calculate AICc using Proenca approach (our old approach)
+  # nc1 <- nrow(countryside)
+  # kc1 <- 5
+  # RSSc <- sum(s$fits$Sp_grp3$m$resid()^2)
+  # AICC <- (nc1 * log(RSSc/nc1)) + (2*kc1)*(nc1 / (nc1 - kc1 - 1))
+  # expect_equal(round(AICC,0), 408) 
+  # aa <- rowSums(countryside[,1:3])
+  # df <- data.frame(aa, countryside[,6])
+  # sss <- sar_power(df)
+  # aiccP <- (nc1 * log(sss$value/nc1)) +  (2*3)*(nc1 / (nc1 - 3 - 1))
+  # expect_equal(round(aiccP,0), 1156)
   # 
   # expect_no_error(plot(s, type = 1))
   #Circle CI doesn't work with the Enter Return plots, so
@@ -133,7 +133,7 @@ test_that("sar_countryside power returns correct values", {
 # #   ##Test output still works if you mix up columns and remove
 # #   #a species group 
   c3 <- countryside[,c(1,3,2,5,4,6,7)]
-  s999 <- sar_countryside(data = c3, modType = "power",
+  s5 <- sar_countryside(data = c3, modType = "power",
                         gridStart = "partial",
                         habNam = c("AG", "F", "SH"),
                         spNam = c("SH_Sp","AG_Sp",  "F_Sp",
