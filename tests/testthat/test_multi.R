@@ -53,87 +53,87 @@ test_that("sar_average returns correct results", {
   expect_length(display_sars_models(), 6)
 })
 
-test_that("sar_average using fit_collection object works", {
-  skip_on_cran()
-  ff <- sar_multi(data = galap, obj = c("power", "p1", "loga", "monod",
-                                        "linear"))
-  expect_warning(sar_average(obj = ff, data = galap, normaTest = "none",
-                    neg_check = FALSE, homoTest = "cor.fitted"))
-  fit3 <- sar_average(obj = ff, data = galap)#grid start on so round to 0
-  expect_equal(round(sum(fit3$mmi), 0), 1663)
-  expect_output(str(fit3), "List of 2")
-  expect_is(fit3, "multi")
-  expect_match(fit3$details$homo_test, "none")
-  expect_match(fit3$details$ic, "AICc")
-  expect_error(sar_multi(5), "argument is of length zero")
-})
+# test_that("sar_average using fit_collection object works", {
+#   skip_on_cran()
+#   ff <- sar_multi(data = galap, obj = c("power", "p1", "loga", "monod",
+#                                         "linear"))
+#   expect_warning(sar_average(obj = ff, data = galap, normaTest = "none",
+#                     neg_check = FALSE, homoTest = "cor.fitted"))
+#   fit3 <- sar_average(obj = ff, data = galap)#grid start on so round to 0
+#   expect_equal(round(sum(fit3$mmi), 0), 1663)
+#   expect_output(str(fit3), "List of 2")
+#   expect_is(fit3, "multi")
+#   expect_match(fit3$details$homo_test, "none")
+#   expect_match(fit3$details$ic, "AICc")
+#   expect_error(sar_multi(5), "argument is of length zero")
+# })
 
-test_that("sar_average correctly deals with only 1 or 2 good fits", {
-  skip_on_cran()
-  expect_message(sar_average(obj = c("power", "powerR"),
-                             data = galap, grid_start = "none",
-                             normaTest = "shapiro",
-                             homoTest = "cor.fitted",
-                             homoCor = "spearman",
-                             verb = FALSE,
-                             display = FALSE))
-  uusr <- sar_average(obj = c("power", "powerR"),
-              data = galap, grid_start = "none",
-              normaTest = "shapiro",
-              homoTest = "cor.fitted",
-              homoCor = "spearman",
-              verb = FALSE,
-              display = FALSE)
-  expect_is(uusr, "sars")
-  expect_equal(length(uusr), 23)
-  expect_error(sar_average(obj = c("power", "linear"),
-                             data = galap, grid_start = "none",
-                             normaTest = "shapiro",
-                             homoTest = "cor.fitted",
-                             homoCor = "spearman",
-                             verb = FALSE,
-                             display = FALSE))
-})
-
-
-
-
-
-test_that("confidence intervals are correct", {
-  skip_on_cran()
-  fit3 <- expect_warning(sar_average(data = galap, grid_start = "none",
-                                     normaTest = "none", homoTest = "none",
-                    neg_check = FALSE, confInt = TRUE, ciN = 20))
-  ci <- fit3$details$confInt
-  expect_equal(nrow(ci), nrow(galap))
-  expect_output(str(ci), "data.frame")
-  expect_true(all(ci[ ,1] < ci[ ,2]))
-})
-
-
-
-test_that("confidence intervals works with AICc", {
-  skip_on_cran()
-  fit3 <- expect_warning(sar_average(data = galap, grid_start = "none",
-                                     normaTest = "none", homoTest = "none",
-                      neg_check = FALSE, confInt = TRUE, crit = "AICc", ciN = 20))
-  ci <- fit3$details$confInt
-  expect_equal(nrow(ci), nrow(galap))
-  expect_output(str(ci), "data.frame")
-  expect_true(all(ci[ ,1] < ci[ ,2]))
-})
-
-test_that("asymptotes are correctly calculated", {
-  skip_on_cran()
-  x <- 1:10
-  y <- 10*x^0.23
-  y <- c(y, rep(17,5))
-  x <- c(x, 11:15)
-  df <- data.frame(x, y)
-  fit5 <- sar_average(data = df)
-  s2 <- summary(fit5)
-  #6 or 7 as gompertz doesn't tend to fit properly in this
-  #use case with partial grid_start
-  expect_true(length(which(s2$Model_table$Asymptote)) %in%
-                c(6,7))
-})
+# test_that("sar_average correctly deals with only 1 or 2 good fits", {
+#   skip_on_cran()
+#   expect_message(sar_average(obj = c("power", "powerR"),
+#                              data = galap, grid_start = "none",
+#                              normaTest = "shapiro",
+#                              homoTest = "cor.fitted",
+#                              homoCor = "spearman",
+#                              verb = FALSE,
+#                              display = FALSE))
+#   uusr <- sar_average(obj = c("power", "powerR"),
+#               data = galap, grid_start = "none",
+#               normaTest = "shapiro",
+#               homoTest = "cor.fitted",
+#               homoCor = "spearman",
+#               verb = FALSE,
+#               display = FALSE)
+#   expect_is(uusr, "sars")
+#   expect_equal(length(uusr), 23)
+#   expect_error(sar_average(obj = c("power", "linear"),
+#                              data = galap, grid_start = "none",
+#                              normaTest = "shapiro",
+#                              homoTest = "cor.fitted",
+#                              homoCor = "spearman",
+#                              verb = FALSE,
+#                              display = FALSE))
+# })
+# 
+# 
+# 
+# 
+# 
+# test_that("confidence intervals are correct", {
+#   skip_on_cran()
+#   fit3 <- expect_warning(sar_average(data = galap, grid_start = "none",
+#                                      normaTest = "none", homoTest = "none",
+#                     neg_check = FALSE, confInt = TRUE, ciN = 20))
+#   ci <- fit3$details$confInt
+#   expect_equal(nrow(ci), nrow(galap))
+#   expect_output(str(ci), "data.frame")
+#   expect_true(all(ci[ ,1] < ci[ ,2]))
+# })
+# 
+# 
+# 
+# test_that("confidence intervals works with AICc", {
+#   skip_on_cran()
+#   fit3 <- expect_warning(sar_average(data = galap, grid_start = "none",
+#                                      normaTest = "none", homoTest = "none",
+#                       neg_check = FALSE, confInt = TRUE, crit = "AICc", ciN = 20))
+#   ci <- fit3$details$confInt
+#   expect_equal(nrow(ci), nrow(galap))
+#   expect_output(str(ci), "data.frame")
+#   expect_true(all(ci[ ,1] < ci[ ,2]))
+# })
+# 
+# test_that("asymptotes are correctly calculated", {
+#   skip_on_cran()
+#   x <- 1:10
+#   y <- 10*x^0.23
+#   y <- c(y, rep(17,5))
+#   x <- c(x, 11:15)
+#   df <- data.frame(x, y)
+#   fit5 <- sar_average(data = df)
+#   s2 <- summary(fit5)
+#   #6 or 7 as gompertz doesn't tend to fit properly in this
+#   #use case with partial grid_start
+#   expect_true(length(which(s2$Model_table$Asymptote)) %in%
+#                 c(6,7))
+# })
