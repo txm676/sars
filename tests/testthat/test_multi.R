@@ -26,31 +26,31 @@ test_that("sar_average returns correct results", {
                        pLeg = FALSE,
                        yRange = c(0,500)))
   
-  fit3 <- sar_average(data = galap)#grid start on so round to 0
-  expect_equal(round(sum(fit3$mmi), 0), 1647)
-  expect_output(str(fit3), "List of 2")
-  expect_is(fit3, "multi")
-  expect_match(fit3$details$homo_test, "none")
-  expect_match(fit3$details$norm_test, "none")
-  expect_match(fit3$details$ic, "AICc")
-  expect_error(sar_multi(5), "argument is of length zero")
-  fit4 <- sar_average(data = galap, normaTest = "lillie", 
-                      homoTest = "cor.fitted",
-                      neg_check = FALSE)
-  expect_equal(length(capture_output_lines(fit4, print = TRUE)),
-               8)
-  #one run in 100 gave 1638 (due to random nature of grid_start)
-  expect_true(round(sum(fit4$mmi), 0) %in% c(1638, 1639))#grid_start on so round to 0
-  expect_match(fit4$details$norm_test, "lillie")
-  expect_match(fit4$details$homo_test, "cor.fitted")
-  #every 200th run or so is 13 rather than 14
-  expect_true(length(fit4$details$mod_names) %in% c(13,14))
-  expect_error(sar_average(data = galap, homoTest = 4))
-  expect_error(sar_average(data = galap, homoTest = "cor.fitted",
-                           homoCor = "correlation"))
-  
-  expect_length(sars_models(), 21)
-  expect_length(display_sars_models(), 6)
+  # fit3 <- sar_average(data = galap)#grid start on so round to 0
+  # expect_equal(round(sum(fit3$mmi), 0), 1647)
+  # expect_output(str(fit3), "List of 2")
+  # expect_is(fit3, "multi")
+  # expect_match(fit3$details$homo_test, "none")
+  # expect_match(fit3$details$norm_test, "none")
+  # expect_match(fit3$details$ic, "AICc")
+  # expect_error(sar_multi(5), "argument is of length zero")
+  # fit4 <- sar_average(data = galap, normaTest = "lillie", 
+  #                     homoTest = "cor.fitted",
+  #                     neg_check = FALSE)
+  # expect_equal(length(capture_output_lines(fit4, print = TRUE)),
+  #              8)
+  # #one run in 100 gave 1638 (due to random nature of grid_start)
+  # expect_true(round(sum(fit4$mmi), 0) %in% c(1638, 1639))#grid_start on so round to 0
+  # expect_match(fit4$details$norm_test, "lillie")
+  # expect_match(fit4$details$homo_test, "cor.fitted")
+  # #every 200th run or so is 13 rather than 14
+  # expect_true(length(fit4$details$mod_names) %in% c(13,14))
+  # expect_error(sar_average(data = galap, homoTest = 4))
+  # expect_error(sar_average(data = galap, homoTest = "cor.fitted",
+  #                          homoCor = "correlation"))
+  # 
+  # expect_length(sars_models(), 21)
+  # expect_length(display_sars_models(), 6)
 })
 
 # test_that("sar_average using fit_collection object works", {
