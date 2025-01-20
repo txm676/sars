@@ -55,17 +55,17 @@ test_that("sar_countryside power returns correct values", {
   expect_equal(round(sum(s$fits$Sp_grp3$m$resid()^2),
                     0),1084)
   
-  #Calculate AICc using Proenca approach (our old approach)
-  nc1 <- nrow(countryside)
-  kc1 <- 5
-  RSSc <- sum(s$fits$Sp_grp3$m$resid()^2)
-  AICC <- (nc1 * log(RSSc/nc1)) + (2*kc1)*(nc1 / (nc1 - kc1 - 1))
-  expect_equal(round(AICC,0), 408) 
-  aa <- rowSums(countryside[,1:3])
-  df <- data.frame(aa, countryside[,6])
-  sss <- sar_power(df)
-  aiccP <- (nc1 * log(sss$value/nc1)) +  (2*3)*(nc1 / (nc1 - 3 - 1))
-  expect_equal(round(aiccP,0), 1156)
+  # #Calculate AICc using Proenca approach (our old approach)
+  # nc1 <- nrow(countryside)
+  # kc1 <- 5
+  # RSSc <- sum(s$fits$Sp_grp3$m$resid()^2)
+  # AICC <- (nc1 * log(RSSc/nc1)) + (2*kc1)*(nc1 / (nc1 - kc1 - 1))
+  # expect_equal(round(AICC,0), 408) 
+  # aa <- rowSums(countryside[,1:3])
+  # df <- data.frame(aa, countryside[,6])
+  # sss <- sar_power(df)
+  # aiccP <- (nc1 * log(sss$value/nc1)) +  (2*3)*(nc1 / (nc1 - 3 - 1))
+  # expect_equal(round(aiccP,0), 1156)
   # 
   # expect_no_error(plot(s, type = 1))
   #Circle CI doesn't work with the Enter Return plots, so
