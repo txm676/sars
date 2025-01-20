@@ -30,8 +30,8 @@ test_that("sar_countryside power returns correct values", {
   # expect_equal(colnames(countryside),
   #              c("Area_AG", "Area_SH", "Area_QF", "Spcs_AG",
   #               "Spcs_SH", "Spcs_QF", "Spcs_UB"))
-  s <- sar_countryside(data = countryside,
-                       habNam = 1:3, spNam = 4:7)
+  # s <- sar_countryside(data = countryside,
+  #                      habNam = 1:3, spNam = 4:7)
   # expect_equal(length(capture_output_lines(s, print = TRUE)),
   #              91)
   # expect_equal(length(s), 8)
@@ -132,12 +132,12 @@ test_that("sar_countryside power returns correct values", {
 
 # #   ##Test output still works if you mix up columns and remove
 # #   #a species group 
-  # c3 <- countryside[,c(1,3,2,5,4,6,7)]
-  # s5 <- sar_countryside(data = c3, modType = "power",
-  #                       gridStart = "partial",
-  #                       habNam = c("AG", "F", "SH"),
-  #                       spNam = c("SH_Sp","AG_Sp",  "F_Sp",
-  #                                 "UB_Sp"))
+  c3 <- countryside[,c(1,3,2,5,4,6,7)]
+  s5 <- sar_countryside(data = c3, modType = "power",
+                        gridStart = "partial",
+                        habNam = c("AG", "F", "SH"),
+                        spNam = c("SH_Sp","AG_Sp",  "F_Sp",
+                                  "UB_Sp"))
   # expect_equal(as.vector(round(s5$c, 0)),
   #              c(4, 11, 6, 1))
   # 
