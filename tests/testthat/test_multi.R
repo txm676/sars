@@ -3,37 +3,37 @@ context("sar_average")
 test_that("sar_average returns correct results", {
   skip_on_cran()
 
-  fit2 <- sar_average(data = galap, grid_start = "none")
-  expect_equal(length(capture_output_lines(fit2, print = TRUE)),
-               6)
-  sfit2 <- summary(fit2)
-  expect_equal(length(capture_output_lines(sfit2, print = T)),
-               30)
-  expect_equal(round(sum(fit2$mmi), 1), 1647.2)
-  expect_no_error(plot(fit2))
-  expect_no_error(plot(fit2, type = "bar"))
-  expect_no_error(plot(fit2, type = "bar", 
-                       subset_weights = 0.1))
-  expect_no_error(plot(fit2, allCurves = FALSE))
-  expect_no_error(plot(fit2, mmSep = TRUE,
-                       col.Sep = "orange", 
-                       lwd.Sep = 4))
-  expect_no_error(plot(fit2, pcol = "red",
-                       ModTitle = "A",
-                       TiAdj = 0,
-                       cex.main = 5,
-                       cex.axis = 4,
-                       pLeg = FALSE,
-                       yRange = c(0,500)))
-  
-  # fit3 <- sar_average(data = galap)#grid start on so round to 0
-  # expect_equal(round(sum(fit3$mmi), 0), 1647)
-  # expect_output(str(fit3), "List of 2")
-  # expect_is(fit3, "multi")
-  # expect_match(fit3$details$homo_test, "none")
-  # expect_match(fit3$details$norm_test, "none")
-  # expect_match(fit3$details$ic, "AICc")
-  # expect_error(sar_multi(5), "argument is of length zero")
+  # fit2 <- sar_average(data = galap, grid_start = "none")
+  # expect_equal(length(capture_output_lines(fit2, print = TRUE)),
+  #              6)
+  # sfit2 <- summary(fit2)
+  # expect_equal(length(capture_output_lines(sfit2, print = T)),
+  #              30)
+  # expect_equal(round(sum(fit2$mmi), 1), 1647.2)
+  # expect_no_error(plot(fit2))
+  # expect_no_error(plot(fit2, type = "bar"))
+  # expect_no_error(plot(fit2, type = "bar", 
+  #                      subset_weights = 0.1))
+  # expect_no_error(plot(fit2, allCurves = FALSE))
+  # expect_no_error(plot(fit2, mmSep = TRUE,
+  #                      col.Sep = "orange", 
+  #                      lwd.Sep = 4))
+  # expect_no_error(plot(fit2, pcol = "red",
+  #                      ModTitle = "A",
+  #                      TiAdj = 0,
+  #                      cex.main = 5,
+  #                      cex.axis = 4,
+  #                      pLeg = FALSE,
+  #                      yRange = c(0,500)))
+  # 
+  fit3 <- sar_average(data = galap)#grid start on so round to 0
+  expect_equal(round(sum(fit3$mmi), 0), 1647)
+  expect_output(str(fit3), "List of 2")
+  expect_is(fit3, "multi")
+  expect_match(fit3$details$homo_test, "none")
+  expect_match(fit3$details$norm_test, "none")
+  expect_match(fit3$details$ic, "AICc")
+  expect_error(sar_multi(5), "argument is of length zero")
   # fit4 <- sar_average(data = galap, normaTest = "lillie", 
   #                     homoTest = "cor.fitted",
   #                     neg_check = FALSE)
