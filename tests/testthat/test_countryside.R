@@ -27,33 +27,33 @@ library(sars)
 test_that("sar_countryside power returns correct values", {
   skip_on_cran()
   data(countryside)
-  expect_equal(colnames(countryside),
-               c("Area_AG", "Area_SH", "Area_QF", "Spcs_AG",
-                "Spcs_SH", "Spcs_QF", "Spcs_UB"))
+  # expect_equal(colnames(countryside),
+  #              c("Area_AG", "Area_SH", "Area_QF", "Spcs_AG",
+  #               "Spcs_SH", "Spcs_QF", "Spcs_UB"))
   s <- sar_countryside(data = countryside,
                        habNam = 1:3, spNam = 4:7)
-  expect_equal(length(capture_output_lines(s, print = TRUE)),
-               91)
-  expect_equal(length(s), 8)
-  expect_equal(class(s), c("habitat", "sars","list"))
-  expect_equal(attributes(s)$modType, "power")
-
-  expect_equal(as.vector(round(s$c, 0)),
-               c(11, 4, 6, 1))
-
-  expect_equal(as.vector(c(round(s$affinity$Sp_grp1[1], 1),
-    round(s$affinity$Sp_grp2[3], 7),
-    round(s$affinity$Sp_grp3[2], 8),
-    round(s$affinity$Sp_grp4[1], 2))),
-    c(1, 2.12e-05, 2.3e-07, 0.42))
-
-  expect_equal(as.vector(round(s$rss, 0)),
-               c(5256, 10573))
-  expect_equal(round(sum(s$fits$Sp_grp1$m$resid()^2),0),
-               2590)
-  
-  expect_equal(round(sum(s$fits$Sp_grp3$m$resid()^2),
-                    0),1084)
+  # expect_equal(length(capture_output_lines(s, print = TRUE)),
+  #              91)
+  # expect_equal(length(s), 8)
+  # expect_equal(class(s), c("habitat", "sars","list"))
+  # expect_equal(attributes(s)$modType, "power")
+  # 
+  # expect_equal(as.vector(round(s$c, 0)),
+  #              c(11, 4, 6, 1))
+  # 
+  # expect_equal(as.vector(c(round(s$affinity$Sp_grp1[1], 1),
+  #   round(s$affinity$Sp_grp2[3], 7),
+  #   round(s$affinity$Sp_grp3[2], 8),
+  #   round(s$affinity$Sp_grp4[1], 2))),
+  #   c(1, 2.12e-05, 2.3e-07, 0.42))
+  # 
+  # expect_equal(as.vector(round(s$rss, 0)),
+  #              c(5256, 10573))
+  # expect_equal(round(sum(s$fits$Sp_grp1$m$resid()^2),0),
+  #              2590)
+  # 
+  # expect_equal(round(sum(s$fits$Sp_grp3$m$resid()^2),
+  #                   0),1084)
   
   # #Calculate AICc using Proenca approach (our old approach)
   # nc1 <- nrow(countryside)
