@@ -18,9 +18,12 @@ requires a specific column order (see 'Details' below).}
 
 \item{gridStart}{The type of grid search procedure to be
 implemented to test multiple starting parameter values: can
-be one of \code{partial} (default) or \code{exhaustive}. If
-\code{startPar} is provided, this argument is ignored. Note
-that \code{exhaustive} can be quite time consuming to run.}
+be one of \code{partial} (default), \code{exhaustive} or
+\code{none}. If \code{startPar} is provided, this argument
+is ignored. Note that \code{exhaustive} can be quite time
+consuming to run. In contrast, \code{none} is much quicker
+but only checks a very small number of starting paramter
+values (technically not "none").}
 
 \item{startPar}{Optional (default = NULL) starting parameter
 estimates for the constituent models. Must be a numeric
@@ -133,6 +136,16 @@ The provided input dataset (\code{data}) will
   
   Note that the logarithmic model can generate negative fitted
   richness values for small areas in some cases.
+  
+  If you find some or all of your component models are not
+  fitting / converging, you can try using \code{gridStart =
+  "exhaustive} to undertake a wider search of parameter space.
+  If that still doesn't work you will need to provide a wide
+  range of starting parameter values manually using the
+  \code{startPar} argument. To speed up, you can try
+  \code{gridStart = "none"}, which typically runs in seconds,
+  but does not provide much of a search of starting parameter
+  values.
 
   For \code{startPar}, if not NULL, it needs to be a numeric
   matrix, where number of rows = number of species groups, and
@@ -141,7 +154,7 @@ The provided input dataset (\code{data}) will
   \code{data}, and matrix column order matches the order of
   habitat columns in \code{data} + 1 extra final column for
   the z-parameter estimate.
-
+  
   Three different types of plot can be generated with the
   output, using \code{\link{plot.habitat}}. The
   \code{\link{countryside_extrap}} function can be used with
@@ -214,7 +227,7 @@ plot(s3, type = 1, powFit = TRUE)
  SP$AIC
 
 #Provide starting parameter estimates for the component models
-#instead of using gridStart
+#instead of using gridStart.
 M2 <- matrix(c(3.061e+08, 2.105e-01, 1.075e+00, 1.224e-01,
 3.354e-08, 5.770e+05, 1.225e+01, 1.090e-01,
 6.848e-01, 1.054e-01, 4.628e+05, 1.378e-01,
@@ -226,6 +239,11 @@ s4 <- sar_countryside(data = countryside,
                     modType = "power",
                    startPar = M2,
                    habNam = 1:3, spNam = 4:7)
+                   
+#Speed up by trying gridStart = "none"
+ s5 <- sar_countryside(data = countryside, modType = "power",
+ gridStart = "none", habNam = c("AG", "SH",
+ "F"), spNam = c("AG_Sp", "SH_Sp", "F_Sp", "UB_Sp"))
 }
 }
 \references{
