@@ -26,7 +26,7 @@ test_that("sar_average returns correct results", {
                        pLeg = FALSE,
                        yRange = c(0,500)))
 
-  fit3n <- sar_average(data = galap)#grid start on so round to 0
+  fit3 <- sar_average(data = galap)#grid start on so round to 0
   expect_equal(round(sum(fit3$mmi), 0), 1647)
   expect_output(str(fit3), "List of 2")
   expect_is(fit3, "multi")
@@ -94,10 +94,6 @@ test_that("sar_average using fit_collection object works", {
                              verb = FALSE,
                              display = FALSE))
 })
-
-
-
-
 
 test_that("confidence intervals are correct", {
   skip_on_cran()
