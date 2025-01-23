@@ -68,7 +68,7 @@ test_that("sar_average using fit_collection object works", {
   expect_error(sar_multi(5), "argument is of length zero")
 })
 
-# test_that("sar_average correctly deals with only 1 or 2 good fits", {
+ test_that("sar_average correctly deals with only 1 or 2 good fits", {
   skip_on_cran()
   expect_message(sar_average(obj = c("power", "powerR"),
                              data = galap, grid_start = "none",
