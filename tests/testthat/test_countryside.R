@@ -151,7 +151,7 @@ test_that("sar_countryside power returns correct values", {
                c(5256, 10573))
   expect_equal(round(sum(s5$fits$AG_Sp$m$resid()^2),0),
                2590)
-  #To try solve weird fails I was getting on Circle-CI
+  ##To try solve weird fails I was getting on Circle-CI
   Ff <- NULL
   s5 <- NULL
 
