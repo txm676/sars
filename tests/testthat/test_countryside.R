@@ -2,27 +2,27 @@
 context("sar_countryside")
 library(sars)
 
-# test_that("sar_countryside errors where it should", {
-#   skip_on_cran()
-#   data(countryside)
-#   expect_error(sar_countryside(countryside, modType = "expo"),
-#                "modType should be one of power or logarithmic")
-#   expect_error(sar_countryside(countryside, zLower = 1:4))
-#   c2 <- countryside[,1:6]
-#   expect_error(sar_countryside(c2, habNam = NULL))
-#   expect_error(sar_countryside(c2, habNam = 1:3,spNam = NULL))
-#   expect_error(sar_countryside(c2, habNam = 1:3, spNam = TRUE))
-#   expect_error(sar_countryside(c2, 
-#                                habNam = letters[1:5], spNam = 6:7))
-#   expect_error(sar_countryside(countryside, 
-#                                habNam = letters[1:5], spNam = 1:2))
-#   c2[1,1:3] <- 0
-#   expect_error(sar_countryside(c2, modType = "logarithmic"))
-#   c2 <- c2[1:10,]
-#   expect_warning(sar_countryside(c2, modType = "power",
-#                     habNam = letters[1:3], spNam = 4:6),
-#                  "Some sites have total area equal to zero")
-# })
+test_that("sar_countryside errors where it should", {
+  skip_on_cran()
+  data(countryside)
+  expect_error(sar_countryside(countryside, modType = "expo"),
+               "modType should be one of power or logarithmic")
+  expect_error(sar_countryside(countryside, zLower = 1:4))
+  c2 <- countryside[,1:6]
+  expect_error(sar_countryside(c2, habNam = NULL))
+  expect_error(sar_countryside(c2, habNam = 1:3,spNam = NULL))
+  expect_error(sar_countryside(c2, habNam = 1:3, spNam = TRUE))
+  expect_error(sar_countryside(c2,
+                               habNam = letters[1:5], spNam = 6:7))
+  expect_error(sar_countryside(countryside,
+                               habNam = letters[1:5], spNam = 1:2))
+  c2[1,1:3] <- 0
+  expect_error(sar_countryside(c2, modType = "logarithmic"))
+  c2 <- c2[1:10,]
+  expect_warning(sar_countryside(c2, modType = "power",
+                    habNam = letters[1:3], spNam = 4:6),
+                 "Some sites have total area equal to zero")
+})
 
 test_that("sar_countryside power returns correct values", {
   skip_on_cran()
@@ -226,17 +226,19 @@ test_that("sar_countryside power returns correct values", {
   expect_false(b$Failed_mods)
 })
 
-##Tested on second dataset: hashed out for speed
+# #Tested on second dataset: hashed out for speed
 # test_that("sar_countryside power works with 2nd dataset", {
 #   skip_on_cran()
 # 
 #   #In Henrique_tests drive
 #   guillerme <- read.csv("guilherme.csv")
 # 
+#   #This version works with gridStart = "none"
 #   sg <- sar_countryside(data = guillerme,
 #                        habNam = c("AG", "SH","F"),
 #                        spNam = c("AG_Sp", "SH_Sp",
-#                                  "F_Sp", "UB_Sp"))
+#                                  "F_Sp", "UB_Sp"),
+#                        gridStart = "none")
 #   expect_equal(length(capture_output_lines(sg, print = TRUE)),
 #                90)
 #   expect_equal(length(sg), 8)
@@ -253,12 +255,12 @@ test_that("sar_countryside power returns correct values", {
 #                c(1, 0.001008, 7.85e-06 , 0.91 ))
 # 
 #   # #Calculate AICc using Proenca approach (our old approach)
-#   # nc1 <- nrow(guillerme)
-#   # kc1 <- 5
-#   # RSSc <- sum(sg$fits$AG_Sp$m$resid()^2)
-#   # AICC <- (nc1 * log(RSSc/nc1)) + 
-#   #   (2*kc1)*(nc1 / (nc1 - kc1 - 1))
-#  # expect_equal(round(AICC,0), 408) 
+#  nc1 <- 125 #HP confirmed this was the actual N used
+#  kc1 <- 5
+#  RSSc <- sum(sg$fits$AG_Sp$m$resid()^2)
+#  AICC <- (nc1 * log(RSSc/nc1)) +
+#    (2*kc1)*(nc1 / (nc1 - kc1 - 1))
+#  expect_equal(round(AICC,0), -8)
 # 
 #   expect_no_error(plot(sg, type = 1))
 # 
