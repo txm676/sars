@@ -29,7 +29,9 @@ abundance-site matrix, and extrapolating fitted SAR models to predict
 richness on larger islands / sample areas. Version 1.3.0 has added
 functions for fitting, evaluating and plotting a range of commonly used
 piecewise SAR models (see Matthews and Rigal (2021) for details on these
-functions).
+functions). Version 2.0.0 has added functions to fit a range of habitat
+and countryside SAR models, along with associated plot and prediction
+functions.
 
 Please report any bugs or issues to us via GitHub.
 

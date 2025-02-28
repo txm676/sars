@@ -40,9 +40,13 @@ test_that("lin_pow log-transformation works",{
 
 test_that("lin_pow returns warning for all identical species", {
   d <- data.frame("A" = 1:4, "S" = 0)
-  expect_warning(lin_pow(d, compare = TRUE), "All richness values are zero: ",
+  #Note in R-devel 4.5.0, there is a change inside grepl, which 
+  #made this warning matching no longer work unless the long string, 
+  #which is split across lines, is put inside paste0()
+  expect_warning(lin_pow(d, compare = TRUE), paste0("All richness",
+                 " values are zero: ",
                  "parameter estimates of non-linear models should be ",
-                 "interpreted with caution")
+                 "interpreted with caution"))
   expect_warning(lin_pow(d, compare = FALSE), "All richness values identical")
   d$S <- 1
   expect_warning(lin_pow(d), "All richness values identical")
