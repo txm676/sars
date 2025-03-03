@@ -25,6 +25,7 @@ jobs:
           command: R CMD build .
       - run:
           name: Check package
+          no_output_timeout: 30m
           command: R CMD check *tar.gz --no-manual
       - run:
           name: Calculate code coverage
