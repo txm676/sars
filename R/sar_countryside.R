@@ -248,7 +248,7 @@ countryside_affinity <- function(mods, modType,
 #'   which the richness columns, using the \code{habNam} and
 #'   \code{spNam} arguments. These can either provide habitat and
 #'   species group names (e.g., \code{habNam = c("Forest",
-#'   "Other"))} or the column numbers in \code{data} (e.g.,
+#'   "Other")}) or the column numbers in \code{data} (e.g.,
 #'   \code{spNam = 4:6}). If names are provided, note that these 
 #'   names can be different to the column names in \code{data},
 #'   but they need to be in the same order as their respective 
@@ -283,7 +283,7 @@ countryside_affinity <- function(mods, modType,
 #'   
 #'   If you find some or all of your component models are not
 #'   fitting / converging, you can try using \code{gridStart =
-#'   "exhaustive} to undertake a wider search of parameter space.
+#'   "exhaustive"} to undertake a wider search of parameter space.
 #'   If that still doesn't work you will need to provide a wide
 #'   range of starting parameter values manually using the
 #'   \code{startPar} argument. To speed up, you can try

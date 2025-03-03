@@ -1,12 +1,12 @@
 ##Version 2.0.0
-*Added major new functionality to fit multi-habitat
-SAR models: sar_habitat(), sar_countryside() & countryside_extrap()
-*Updated the plot.threshold and sar_threshold examples to
-show how to include a legend when plotting multiple model
-fits on the same plot (i.e., multPlot = FALSE)
-*Changed how a fitted asymptote is calculated (a slightly more 
-liberal approach)
-*Updated some tests to match with changes to base R in development version
+  *Added major new functionality to fit multi-habitat
+  SAR models: sar_habitat(), sar_countryside() & countryside_extrap()
+  *Updated the plot.threshold and sar_threshold examples to
+  show how to include a legend when plotting multiple model
+  fits on the same plot (i.e., multPlot = FALSE)
+  *Changed how a fitted asymptote is calculated (a slightly more 
+  liberal approach)
+  *Updated some tests to match with changes to base R in development version
 
 ## Version 1.3.7
   *small roxygen updates to pass new CRAN checks
