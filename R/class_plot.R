@@ -1040,19 +1040,23 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
 #' @param IC The information criterion weights to present (must
 #'   be one of 'AIC', 'BIC' or 'AICc'), if plotting a
 #'   \code{\link{sar_habitat}} object.
-#' @param type Whether a Type 1, 2 or 3 plot should be
+#' @param type Whether a Type 1, 2, 3 or 4 plot should be
 #'   generated, if plotting a \code{\link{sar_countryside}}
 #'   object (see details).
 #' @param powFit For Type 1 plots, should the predicted total
 #'   richness values of the power (or logarithmic) model be
 #'   included as red points (logical argument).
+#' @param totSp For Type 2 and 3 plots, should a total species
+#'   curve be added which is the sum of the individual species
+#'   group curves for a given plot (default = FALSE).
 #' @param xlab Title for x-axis (default titles are used if not provided).
 #' @param ylab Title for y-axis (default titles are used if not provided).
 #' @param lcol For Type 2 & 3 plots: the colours of the fitted
 #'   lines, for each component model. Should be a vector, the
 #'   length (and order) of which should match the number of
-#'   species groups in \code{x}. If not included, randomly
-#'   selected colours are used.
+#'   species groups in \code{x}, including the total species
+#'   group (last in the order) if \code{totSp == TRUE}. If not
+#'   included, randomly selected colours are used.
 #' @param pLeg For Type 2 & 3 plots: should a legend be included
 #'   (logical argument), showing the line colours and
 #'   corresponding species groups.
@@ -1067,13 +1071,18 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
 #' @param ModTitle For Type 2 & 3 plots: a vector of plot titles,
 #'   which should have the same length as the number of habitats
 #'   used in the original model fit. If NULL (default), the
-#'   habitat names used in the original model fit are used. If no
-#'   plot titles are wanted, use \code{ModTitle = "none"}.
-#' @param which For Type 2 & 3 plots: select an individual plot to
-#'   generate, rather than generating the plots for all habitats.
-#'   If not NULL (the default) should be a numeric vector of
-#'   length 1; the order of plots matches the order of habitats
-#'   in the original data used to fit the model.
+#'   habitat names used in the original model fit are used. For
+#'   Type 4 plots: a vector of plot titles, which should have the
+#'   same length as the number of species groups used in the
+#'   original model fit. If NULL (default), the species group
+#'   names used in the original model fit are used. If no plot
+#'   titles are wanted, use \code{ModTitle = "none"}.
+#' @param which For Type 2 - 4 plots: select an individual plot
+#'   to generate, rather than generating the plots for all
+#'   habitats. If not NULL (the default) should be a numeric
+#'   vector of length 1; the order of plots matches the order of
+#'   habitats / species groups in the original data used to fit
+#'   the model.
 #' @param \dots Further graphical parameters may be supplied as
 #'   arguments.
 #' @details
@@ -1084,7 +1093,7 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
 #'  use is chosen using the \code{IC} argument.
 #'  
 #'  If \code{x} is the fit object from
-#'  \code{\link{sar_countryside}}, three plot types can be produced
+#'  \code{\link{sar_countryside}}, four plot types can be produced
 #'  (selected using the \code{type} argument). A Type 1 plot
 #'  plots the predicted total richness values (from both
 #'  countryside and Arrhenius power (or logarithmic) SAR models)
@@ -1118,8 +1127,33 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
 #' area values, so the minimum area value of the 'hypothetical'
 #' sites used to generate the fitted curves in a Type 2 or 3 plot
 #' is set to 0.01 if this model is used.
+#' 
+#' A Type 4 plot represents the effective area plots used in
+#' Merckx et al. (2019). The “effective area” for species group i
+#' in a site comprising j habitats is given by Ai=Σ hij*Aj
+#' (summed across the j habitats in the site), where hij is the
+#' affinity of species group i to habitat j and is taken from the
+#' fitted \code{sar_countryside} model. The effective area of
+#' each site in the dataset is then calculated for species group
+#' i, and the SAR plotted using the effective area values instead
+#' of standard area. If the power form of the countryside model
+#' was fitted, the effective area plot is generated in log-log
+#' space and a standard log-log power model is also generated for
+#' comparison. If the logarithmic form was used, linear-log plots
+#' (i.e, just log-transformation of area) are used instead. In
+#' both cases, a linear model is fitted to the relationships and
+#' the R2 value presented on the plots. Similarly to Type 2 and 3
+#' plots, these plots are generated separately for each species
+#' group; the user can choose to generate the plot for a specific
+#' species group using the \code{which} argument.
+#'  
 #' @references Matthews et al. (2025) An R package for fitting
 #'   multi-habitat species–area relationship models. In prep.
+#'   
+#'   Merckx, T., Dantas de Miranda, M. & Pereira, H.M. (2019)
+#'   Habitat amount, not patch size and isolation, drives species
+#'   richness of macro-moth communities in countryside
+#'   landscapes. Journal of Biogeography, 46, 956–967.
 #' @examples
 #' #Run the sar_habitat function and generate a barplot of the AICc
 #' #values
@@ -1172,10 +1206,15 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
 #' 
 #' dev.off()
 #' 
-#' #Generate Type 3 plots (here only displaying the first)
-#' plot(s3, type = 3, lcol = c("black", "aquamarine4",
-#' "#CC661AB3" , "darkblue"), pLeg = TRUE, lwd = 1.5, ModTitle =
-#' c("Agricultural land", "Shrubland", "Forest"), which =1)
+#' #Generate Type 3 plots (here only displaying the first), including
+#' #a total species richness curve
+#' plot(s3, totSp = TRUE, type = 3, lcol = c("black",
+#' "aquamarine4", "#CC661AB3" , "darkblue", "darkgrey"), pLeg =
+#' TRUE, lwd = 1.5, ModTitle = c("Agricultural land",
+#' "Shrubland", "Forest"), which =1)
+#' 
+#' #Generate Type 4 plots (here only displaying the first)
+#' plot(s3, type = 4, which =1)
 #' 
 #' }
 #' @importFrom graphics barplot abline par axis
@@ -1186,6 +1225,7 @@ plot.habitat <- function(x,
                         IC = "AICc",
                         type = 1,
                         powFit = TRUE,
+                        totSp = FALSE,
                         xlab = NULL,
                         ylab = NULL,
                         lcol = NULL,
@@ -1215,6 +1255,15 @@ plot.habitat <- function(x,
       return("Plot not generated as some models could not be fitted")
     }
     
+    if (!is.null(which)){
+      if (!is.numeric(which) | length(which) > 1){
+        stop("'which' should be a numeric vector of length 1")
+      }
+      if (which > length(x$Group.Names[[2]])){
+        stop("'which' is larger than the number of species groups")
+      }
+    }
+    
     dd <- x[[6]]
     
     dd_Area <- length(which(grepl("Area", 
@@ -1226,7 +1275,44 @@ plot.habitat <- function(x,
     
     #rowSums to get total site area (i.e., summed 
     #across habitats)
-    dd_Ran <- range(rowSums(dd[,1:dd_Area]))
+    dd_totArea <- rowSums(dd[,1:dd_Area])
+    dd_Ran <- range(dd_totArea)
+    
+    ##If type 2-4, check and format plot titles
+    if (type %in% 2:4){
+      if (type %in% 2:3){
+        nn <- x[[8]][[2]]
+        nna <- names(x$affinity[[1]])
+      }
+    if (is.null(ModTitle)){
+      if (type == 4){
+        ModTitle2 <- x$Group.Names[[2]]
+      } else {
+        ModTitle2 <- nna
+      }
+    } else if (length(ModTitle) == 1 & "none" %in% ModTitle){
+      if (type == 4){
+        ModTitle2 <- rep("", length(x$Group.Names[[2]]))
+      } else {
+        ModTitle2 <- rep("", dd_Area)
+      }
+    } else {
+      dd_len <- ifelse(type == 4, length(x$Group.Names[[2]]), dd_Area)
+      if (is.null(which)){
+        if (length(ModTitle) != dd_len){
+          stop("ModTitle should either be NULL, 'none', or be a vector of\n",
+               "titles equal in length to the number of habitats (Type 2 and 3) or\n",
+               "species groups (Type 4)")
+        }
+      } else {
+        if (length(ModTitle) != 1 & length(ModTitle) != dd_len){
+          stop("ModTitle should either be NULL, 'none', or be a vector of\n",
+               "titles equal in length to the number of habitats (Type 2 and 3) or\n",
+               "species groups (Type 4), or of length 1 if 'which' is used")
+        } 
+      }
+      ModTitle2 <- ModTitle
+    }} #eo if Modtitle
     
     if (type == 1){
     
@@ -1289,9 +1375,6 @@ plot.habitat <- function(x,
     ar_ls <- vector("list", length = dd_Area)
     names(ar_ls) <- colnames(dd2_Area)
     
-    nn <- x[[8]][[2]]
-    nna <- names(x$affinity[[1]])
-
     for (i in 1:dd_Area){
       m_ls <- matrix(0, ncol = dd_Area,
                      nrow = length(Ar_seq))
@@ -1326,6 +1409,10 @@ plot.habitat <- function(x,
                      nn)) stop("Error Type23 C")
       totR_R <- cbind("Area" = Ar_seq, totR_R)
       totR_R <- as.data.frame(totR_R)
+      #if totSp, add a total species curve
+      if (totSp){
+        totR_R$Tot_sp <- rowSums(totR_R[,2:ncol(totR_R)]) 
+      }
       ar_ls[[i]] <- totR_R
     }#eo for i
     
@@ -1333,6 +1420,7 @@ plot.habitat <- function(x,
               "brown", "cornflowerblue","darkorange4",
               "deeppink4", "gold4", "gray16", "lightgreen")
     
+    if (totSp) dd_SR <- dd_SR + 1
     spC <- dd_SR
     
     if (length(lcol) > 1){
@@ -1349,24 +1437,6 @@ plot.habitat <- function(x,
       stop("which should be NULL or of length 1")
     }
     
-    if (is.null(ModTitle)){
-      ModTitle2 <- nna
-    } else if ("none" %in% ModTitle){
-      ModTitle2 <- rep("", dd_Area)
-    } else {
-      if (is.null(which)){
-        if (length(ModTitle) != dd_Area){
-          stop("ModTitle should either be NULL, none, or be a vector of\n",
-              "titles equal in length the the number of habitats")
-        }
-        } else {
-          if (length(ModTitle) != 1 & length(ModTitle) != dd_Area){
-            stop("ModTitle should either be NULL, none, or be a vector of\n",
-              "titles equal in length the the number of habitats")
-          } 
-        }
-      ModTitle2 <- ModTitle
-    }
     p <- 1
     
     #if legInset not changed by user, extend x-axis to
@@ -1433,8 +1503,94 @@ plot.habitat <- function(x,
              inset = legInset)
     }#eo pLeg
    }))#eo lapply
+  } else if (type == 4) {
+    ########IF TYPE 4
+    t4_SRi <- vector("list", length = dd_SR)
+    dd4_SR <- dd2_SR
+    for (i in 1:dd_SR){
+      #plot has log-transformed richness for power;
+      #so if any zeros add 1 to all
+      if (x$pow.model$model$name == "Power"){
+        if (any(dd4_SR[,i] == 0)){
+          dd4_SR[,i] <- dd4_SR[,i] + 1
+        }
+      }#eo if power
+      t4_SRj <- matrix(ncol = 3, nrow = nrow(dd2_Area))
+      #calculate for each species group
+      t4_aff <- x$affinity[[i]]
+      if (length(t4_aff) != ncol(dd2_Area)){
+        stop("Uno dos tres")
+      }
+      for (j in 1:nrow(dd2_Area)){
+        #first col = effective area for group i
+        t4_SRj[j,1] <- log(sum(t4_aff * dd2_Area[j,]))
+        #second is richness of species group i
+        colom <- dd4_SR[j,i]
+        if (x$pow.model$model$name == "Power"){
+          t4_SRj[j,2] <- log(colom)
+        } else {
+          t4_SRj[j,2] <- colom
+        }
+        #third is total site area
+        t4_SRj[j,3] <- log(sum(dd2_Area[j,]))
+      }#eo j
+      t4_SRi[[i]] <- t4_SRj
+    }#eo i
+    
+    #If user selects to plot a single plot, subset ar_ls to
+    #this plot
+    if (!is.null(which)){
+      t4_SRi <- t4_SRi[which]
+      if (length(ModTitle2) > 1) ModTitle2 <- ModTitle2[which]
+    }
+    
+    if (is.null(xlab)) xlab <- "log(Effective area)"
+    if (is.null(ylab)){
+      if (x$pow.model$model$name == "Power"){
+        ylab <- "log(Species richness)"
+      } else {
+        ylab <- "Species richness"
+        }
+      }#eo if ylab
+    xlab2 <- "log(Total area)"
+    
+    if (is.null(which)){
+      devAskNewPage(TRUE)
+      on.exit(devAskNewPage(FALSE))
+      on.exit(par(mfrow = c(1,1)), add = TRUE)
+    } else {
+      on.exit(par(mfrow = c(1,1)))
+    }
+  
+    k <- 1
+    invisible(lapply(t4_SRi, function(z){
+      
+      l4EA <- lm(z[,2] ~ z[,1])
+      r2EA <- round(summary(l4EA)$r.squared,2)
+      titEA <- paste0(ModTitle2[k],"\n",
+                     "R\u00b2", " = ",  r2EA)
+      
+      l4TA <- lm(z[,2] ~ z[,3])
+      r2TA <- round(summary(l4TA)$r.squared,2)
+      titTA <- paste("R\u00b2", "=",  r2TA)
+      
+      par(mfrow = c(1,2))
+      plot(z[,1], z[,2],
+           xlab = xlab, ylab = ylab, ...)
+      title(titEA, line = 0.5, adj = 0,
+            cex.main = 1)
+      lines(z[,1], fitted(l4EA), ...)
+      
+      plot(z[,3], z[,2],
+           xlab = xlab2, ylab = ylab, ...)
+      title(titTA, line = 0.5, adj = 0,
+            cex.main = 1)
+      lines(z[,3], fitted(l4TA), ...)
+      
+      k <<- k + 1
+    }))#eo lapply
   } else {
-      stop("Type should be either 1, 2 or 3")
+      stop("Type should be either 1, 2, 3 or 4")
   }#eo if type 1
 }#eo if countryside
 }

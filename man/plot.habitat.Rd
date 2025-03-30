@@ -9,6 +9,7 @@
   IC = "AICc",
   type = 1,
   powFit = TRUE,
+  totSp = FALSE,
   xlab = NULL,
   ylab = NULL,
   lcol = NULL,
@@ -27,13 +28,17 @@
 be one of 'AIC', 'BIC' or 'AICc'), if plotting a
 \code{\link{sar_habitat}} object.}
 
-\item{type}{Whether a Type 1, 2 or 3 plot should be
+\item{type}{Whether a Type 1, 2, 3 or 4 plot should be
 generated, if plotting a \code{\link{sar_countryside}}
 object (see details).}
 
 \item{powFit}{For Type 1 plots, should the predicted total
 richness values of the power (or logarithmic) model be
 included as red points (logical argument).}
+
+\item{totSp}{For Type 2 and 3 plots, should a total species
+curve be added which is the sum of the individual species
+group curves for a given plot (default = FALSE).}
 
 \item{xlab}{Title for x-axis (default titles are used if not provided).}
 
@@ -42,8 +47,9 @@ included as red points (logical argument).}
 \item{lcol}{For Type 2 & 3 plots: the colours of the fitted
 lines, for each component model. Should be a vector, the
 length (and order) of which should match the number of
-species groups in \code{x}. If not included, randomly
-selected colours are used.}
+species groups in \code{x}, including the total species
+group (last in the order) if \code{totSp == TRUE}. If not
+included, randomly selected colours are used.}
 
 \item{pLeg}{For Type 2 & 3 plots: should a legend be included
 (logical argument), showing the line colours and
@@ -62,14 +68,19 @@ to manually change their graphical margin parameters).}
 \item{ModTitle}{For Type 2 & 3 plots: a vector of plot titles,
 which should have the same length as the number of habitats
 used in the original model fit. If NULL (default), the
-habitat names used in the original model fit are used. If no
-plot titles are wanted, use \code{ModTitle = "none"}.}
+habitat names used in the original model fit are used. For
+Type 4 plots: a vector of plot titles, which should have the
+same length as the number of species groups used in the
+original model fit. If NULL (default), the species group
+names used in the original model fit are used. If no plot
+titles are wanted, use \code{ModTitle = "none"}.}
 
-\item{which}{For Type 2 & 3 plots: select an individual plot to
-generate, rather than generating the plots for all habitats.
-If not NULL (the default) should be a numeric vector of
-length 1; the order of plots matches the order of habitats
-in the original data used to fit the model.}
+\item{which}{For Type 2 - 4 plots: select an individual plot
+to generate, rather than generating the plots for all
+habitats. If not NULL (the default) should be a numeric
+vector of length 1; the order of plots matches the order of
+habitats / species groups in the original data used to fit
+the model.}
 
 \item{\dots}{Further graphical parameters may be supplied as
 arguments.}
@@ -89,7 +100,7 @@ The exact plot that is generated depends on the input data. If
  use is chosen using the \code{IC} argument.
  
  If \code{x} is the fit object from
- \code{\link{sar_countryside}}, three plot types can be produced
+ \code{\link{sar_countryside}}, four plot types can be produced
  (selected using the \code{type} argument). A Type 1 plot
  plots the predicted total richness values (from both
  countryside and Arrhenius power (or logarithmic) SAR models)
@@ -123,6 +134,25 @@ Note that the logarithmic SAR model doesn't work with zero
 area values, so the minimum area value of the 'hypothetical'
 sites used to generate the fitted curves in a Type 2 or 3 plot
 is set to 0.01 if this model is used.
+
+A Type 4 plot represents the effective area plots used in
+Merckx et al. (2019). The “effective area” for species group i
+in a site comprising j habitats is given by Ai=Σ hij*Aj
+(summed across the j habitats in the site), where hij is the
+affinity of species group i to habitat j and is taken from the
+fitted \code{sar_countryside} model. The effective area of
+each site in the dataset is then calculated for species group
+i, and the SAR plotted using the effective area values instead
+of standard area. If the power form of the countryside model
+was fitted, the effective area plot is generated in log-log
+space and a standard log-log power model is also generated for
+comparison. If the logarithmic form was used, linear-log plots
+(i.e, just log-transformation of area) are used instead. In
+both cases, a linear model is fitted to the relationships and
+the R2 value presented on the plots. Similarly to Type 2 and 3
+plots, these plots are generated separately for each species
+group; the user can choose to generate the plot for a specific
+species group using the \code{which} argument.
 }
 \examples{
 #Run the sar_habitat function and generate a barplot of the AICc
@@ -176,14 +206,24 @@ which = 3)
 
 dev.off()
 
-#Generate Type 3 plots (here only displaying the first)
-plot(s3, type = 3, lcol = c("black", "aquamarine4",
-"#CC661AB3" , "darkblue"), pLeg = TRUE, lwd = 1.5, ModTitle =
-c("Agricultural land", "Shrubland", "Forest"), which =1)
+#Generate Type 3 plots (here only displaying the first), including
+#a total species richness curve
+plot(s3, totSp = TRUE, type = 3, lcol = c("black",
+"aquamarine4", "#CC661AB3" , "darkblue", "darkgrey"), pLeg =
+TRUE, lwd = 1.5, ModTitle = c("Agricultural land",
+"Shrubland", "Forest"), which =1)
+
+#Generate Type 4 plots (here only displaying the first)
+plot(s3, type = 4, which =1)
 
 }
 }
 \references{
 Matthews et al. (2025) An R package for fitting
   multi-habitat species–area relationship models. In prep.
+  
+  Merckx, T., Dantas de Miranda, M. & Pereira, H.M. (2019)
+  Habitat amount, not patch size and isolation, drives species
+  richness of macro-moth communities in countryside
+  landscapes. Journal of Biogeography, 46, 956–967.
 }
