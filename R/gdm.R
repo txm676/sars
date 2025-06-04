@@ -167,7 +167,7 @@ gdm <- function(data, model = "linear", mod_sel = FALSE, AST = c(1, 2, 3),
   if (anyNA(data)) stop("NAs present in data")
   if (!(is.matrix(data) | is.data.frame(data))) 
     stop("data must be a matrix or dataframe")
-  if (is.matrix(data)) data <- as.data.frame(data)
+  data <- as.data.frame(data)
   if (ncol(data) < 3) stop("Not enough columns/variables to fit GDM")
   if (ncol(data) > 3) {
     warning("More than three columns in dataframe: using the first three")

@@ -432,7 +432,7 @@ sar_countryside <- function(data,
   
   if (!(is.matrix(data) | is.data.frame(data)))
     stop('data must be a matrix or dataframe')
-  if (is.matrix(data)) data <- as.data.frame(data)
+  data <- as.data.frame(data)
   if (anyNA(data)) stop('NAs present in data')
   if (length(zLower) != 1 | !is.numeric(zLower)){
     stop("zLower should be a numeric vector of length 1")

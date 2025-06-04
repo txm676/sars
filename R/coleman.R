@@ -58,7 +58,7 @@ coleman <- function(data, area){
   if (anyNA(data) | anyNA(area)) stop("NAs present in data")
   if (!(is.matrix(data) | is.data.frame(data)))
     stop("data must be a matrix or dataframe")
-  if (is.matrix(data)) data <- as.data.frame(data)
+  data <- as.data.frame(data)
 
   ##check each species has 1 or more individuals/each sites as at
   #least one species present

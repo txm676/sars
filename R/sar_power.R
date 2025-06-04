@@ -88,7 +88,7 @@ normaTest =  "none", homoTest =
 "none", homoCor = "spearman", verb = TRUE){
 if (!(is.matrix(data) | is.data.frame(data)))  
 stop('data must be a matrix or dataframe')
-if (is.matrix(data)) data <- as.data.frame(data)
+data <- as.data.frame(data)
 if (anyNA(data)) stop('NAs present in data')
 normaTest <- match.arg(normaTest, c('none', 'shapiro', 'kolmo',
 'lillie')) 

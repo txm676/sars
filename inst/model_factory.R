@@ -246,7 +246,7 @@ model_factory <- function(f, overwrite = FALSE){
   #checks
   cat1("if (!(is.matrix(data) | is.data.frame(data)))", 
        " \nstop('data must be a matrix or dataframe')\n")
-  cat1("if (is.matrix(data)) data <- as.data.frame(data)\n")
+  cat1("data <- as.data.frame(data)\n")
   cat1("if (anyNA(data)) stop('NAs present in data')\n")
   cat1("normaTest <- match.arg(normaTest, c('none', 'shapiro', 'kolmo',\n")
   cat1("'lillie'))","\n")
@@ -320,6 +320,3 @@ model_factory <- function(f, overwrite = FALSE){
 #setwd("C:/Users/Tom/Desktop/sars")
 modFiles <- list.files(file.path("C:/Users/Tom/Desktop/sars","inst","non_lin_models"))
 lapply(modFiles, model_factory, overwrite = TRUE)
-
-
-

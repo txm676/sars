@@ -104,6 +104,11 @@ sar_multi <- function(data,
                       verb = TRUE,
                       display = TRUE){
   
+  if (!(is.matrix(data) | is.data.frame(data))){
+      stop('data must be a matrix or dataframe')
+  }
+  data <- as.data.frame(data)
+  
   if ("mmf" %in% obj){
     warning("mmf has been deprecated, see News")
   }
@@ -488,6 +493,13 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   if (is.character(obj) & is.null(data))
     stop("if obj is character then data should be provided")
   
+  if (!is.null(data)){
+    if (!(is.matrix(data) | is.data.frame(data))){
+      stop('if not NULL, data must be a matrix or dataframe')
+    }
+  data <- as.data.frame(data)
+  }
+  
   if (is.character(obj)) {
     if (any(!(obj %in% c("linear","power","powerR","epm1","epm2","p1",
                          "p2","loga","koba","mmf","monod","negexpo",
@@ -597,7 +609,6 @@ sar_average <- function(obj = c("power", "powerR","epm1","epm2","p1","p2",
   }
 
   bml <- length(badMods)
-
 
   if ((normaTest != "none" | homoTest != "none" | neg_check) & display){
     if (is.character(obj)){

@@ -33,7 +33,10 @@ test_that("sar_average returns correct results", {
   expect_match(fit3$details$homo_test, "none")
   expect_match(fit3$details$norm_test, "none")
   expect_match(fit3$details$ic, "AICc")
-  expect_error(sar_multi(5), "argument is of length zero")
+  expect_error(sar_multi(5), "data must be a matrix or dataframe")
+  #check works with tibble
+  gp2 <- tibble::as_tibble(galap)
+  expect_no_error(sar_average(data = gp2, grid_start = "none"))
   fit4 <- sar_average(data = galap, normaTest = "lillie",
                       homoTest = "cor.fitted",
                       neg_check = FALSE)
@@ -65,7 +68,7 @@ test_that("sar_average using fit_collection object works", {
   expect_is(fit3, "multi")
   expect_match(fit3$details$homo_test, "none")
   expect_match(fit3$details$ic, "AICc")
-  expect_error(sar_multi(5), "argument is of length zero")
+  expect_error(sar_multi(5), "data must be a matrix or dataframe")
 })
 
  test_that("sar_average correctly deals with only 1 or 2 good fits", {

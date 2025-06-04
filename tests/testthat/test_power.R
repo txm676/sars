@@ -14,6 +14,9 @@ test_that("sar_power returns correct results", {
   expect_no_error(plot(fit))
   expect_no_error(plot(fit, lcol = "black"))
   expect_error(plot(fit, col = "black"))
+  #check works with tibble
+  gp2 <- tibble::as_tibble(galap)
+  expect_no_error(sar_power(data = gp2, grid_start = "none"))
 })
 
 
