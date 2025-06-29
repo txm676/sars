@@ -495,6 +495,47 @@ summary(fit)
 plot(fit, cex = 0.8, cex.main = 1, cex.lab = 0.8, pcol = "grey") 
 ```
 
+## Multi-habitat and countryside species–area relationship models
+Detailed information on fitting and plotting the multi-habitat and countryside species–area relationship models can be found in @Matthews2025.
+
+The last twenty years has seen an increased focus on developing SAR models that explicitly account for habitat diversity (i.e., ‘multi-habitat’ models). These models can be coarsely be placed into two groups: those that (i) model species richness simply as some function of area and habitat diversity (here, termed ‘habitat-heterogeneity’ SAR models), and (ii) account for species affinities to different habitat types (often called ‘countryside’ SAR models).
+
+### Habitat-heterogeneity SAR models
+Functionality has been provided to fit three habitat-heterogeneity SAR models: the (i) choros model, (ii) Kallimanis model, and (iii) jigsaw model. 
+
+The main function for fitting the habitat-heterogeneity models is 'sar_habitat', which takes as its first argument a dataset in the form of a data frame with three columns: the first with island/site areas, the second with island/site habitat diversity, and the third with the species richness of each island/site. The models can be fitted in three different forms (selected using the modType argument): a power form (modType = “power”), a logarithmic form (“logarithmic”) or a log–log power form (“power_log”). sar_habitat fits all three habitat-heterogeneity models (i.e., the choros, Kallimanis and jigsaw models), in addition to a standard SAR model, the identity of which depends on the 'modType' argument (i.e., an Arrhenius power model, a logarithmic model, or a log–log power model). 
+
+The non-linear regression models are fitted using non-linear regression and the 'nlsLM' function in the 'minpack.lm' R package. This function was used rather than the standard 'nls' function that is used elsewhere in the sars package, as we found that this resulted in better searches of the parameter space for the habitat models (and fewer convergence errors), particularly for the logarithmic models. It returns a standard ‘nls’ object and thus all the normal associated nls R functions can be used. The linear models are all fitted using standard linear regression.
+
+The output of 'sar_habitat' is a list of class ‘habitat’ and class ‘sars’, containing the ‘nls’ and/or ‘lm’ model fit objects. Summary and plot generic method functions are provided, with the former generating a model summary table containing all parameter values, as well as model fit metrics (R2 and adjusted R2 [pseudo values are calculated for the non-linear models], and AIC, BIC and AICc), enabling the models to be easily compared. The plot function generates a bar plot of user-selected information criteria weights.
+
+To illustrate the 'sar_habitat' function, we use a dataset describing the number of habitats and land snail species (richness range = 2 – 33) on 12 islands of varying size (area range = 0.002 km2 – 208 km2) in the Skyros Archipelago, Greece (Triantis et al., 2005). The dataset has been saved within the package as a data object.
+
+```{r, fig.width=6, fig.height=6}
+
+#Load the dataset and fit the three habitat-heterogeneity models
+#(power model form) alongside the Arrhenius power model, and view
+#the raw model fit objects
+data(habitat)
+s <- sar_habitat(data = habitat, modType = "power")
+s
+
+#Fit the three habitat-heterogeneity models in log–log power
+#model form alongside the linear (log–log) power model, and
+#compare the model fits using information criteria
+s2 <- sar_habitat(data = habitat, modType = "power_log")
+summary(s2)
+
+#Generate barplot of model AICc weights
+plot(s2) 
+```
+
+### Countryside SAR models
+Countryside SAR models are an extension of habitat-heterogeneity models, built on the idea that species respond differently to land-use change due to interspecific differences in the affinity to different land-use types. Countryside SAR models aim to incorporate the differential affinities of species to different habitat / land-use types (here, these two terms are used interchangeably), in addition to the existence of different habitats in a landscape (Pereira & Daily, 2006). To achieve this, species are typically grouped on the basis of habitat affinity (e.g., forest species, shrubland species).
+
+
+To illustrate the 'sar_countryside' function, we use a dataset of vascular plants (excluding adult trees) sampled in a multi-habitat landscape in Portugal (from Proença & Pereira, 2013). A nested sampling scheme was used and the resultant SAR is similar to a Type IIIA curve (Scheiner, 2003). Sites were divided into three main land use types: agricultural land, shrub land, and oak forest. Species were grouped based on their affinity to those three land use types, with a fourth group containing ubiquitous species. The dataset has been saved within the package as a data object. 
+
 ## On the calculation of information criteria
 There are different ways to calculate the various information criteria (IC) used
 for model comparison (e.g. AIC, BIC).  One difference relates to whether the
