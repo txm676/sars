@@ -166,5 +166,5 @@ Furness, E.N., Saupe, E.E., Garwood, R.J., Mannion, P.D. &
   19–27.
 }
 \author{
-Euan N. Furness and Thomas J. Matthews
+Hidden
 }

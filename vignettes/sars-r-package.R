@@ -177,6 +177,7 @@ plot(s3, type = 3, totSp = TRUE,
 ## ----fig.width=12, fig.height=6-----------------------------------------------
 # Generate an effective area plot (Type 4 plot), customising point type and size
 # etc 
+par(mar=c(5.1, 4.1, 4.1, 2.1), xpd=FALSE)
 plot(s3, type = 4, pch = 16, lwd = 2, cex  = 0.75, cex.axis = 0.75, 
      cex.lab = 0.9, ModTitle = c("Agricultural species"), which = 1)
 

@@ -58,5 +58,5 @@ countryside_extrap(s3, area = c(1000, 1000, 1000))
 }
 }
 \author{
-Thomas J. Matthews
+Hidden
 }

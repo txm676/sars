@@ -173,7 +173,7 @@ habitat_optim <- function(mod_nam, data){
 #'   Triantis, K.A., Mylonas, M., Lika, K. & Vardinoyannis, K. (2003) A model
 #'   for the species-area-habitat relationship. Journal of Biogeography, 30,
 #'   19–27.
-#' @author Euan N. Furness and Thomas J. Matthews
+#' @author Hidden
 #' @examples
 #' data(habitat)
 #' #Fit the models in log-log space

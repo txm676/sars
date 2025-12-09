@@ -356,8 +356,7 @@ countryside_affinity <- function(mods, modType,
 #'   assess biodiversity change in multi-habitat landscapes: the
 #'   importance of species habitat affinity. Basic and Applied
 #'   Ecology, 14, 102–114.
-#' @author Thomas J. Matthews, Inês Santos Martins, Vânia Proença 
-#' and Henrique Pereira
+#' @author  Hidden
 #' @examples
 #' data(countryside)
 #' \dontrun{
@@ -630,7 +629,7 @@ sar_countryside <- function(data,
 #'   the third is a logical value highlighting whether there were
 #'   any failed models in \code{fits}, i.e., component models
 #'   that could not be fitted in \code{\link{sar_countryside}}.
-#' @author Thomas J. Matthews
+#' @author Hidden
 #' @examples
 #' \dontrun{
 #' data(countryside)

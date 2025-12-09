@@ -258,6 +258,5 @@ dynamics in countryside landscapes. Ecology, 87, 1877–1885.
   Ecology, 14, 102–114.
 }
 \author{
-Thomas J. Matthews, Inês Santos Martins, Vânia Proença 
-and Henrique Pereira
+Hidden
 }
