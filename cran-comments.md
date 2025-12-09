@@ -6,7 +6,7 @@ but this seems to be due to a broken url in the checks
 
 ##Test environments
 *local Windows 10 install, R 4.4.2
-*Ubuntu 24.04 LTS (64-bit), R 4.5.2 and R (development) (via Circle CI)
+*Ubuntu 24.04 LTS (64-bit), R 4.5.2 and R development (via Circle CI)
  
 ##R CMD check results
 0 errors | 0 warnings | 1 note
