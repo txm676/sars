@@ -496,7 +496,7 @@ plot(fit, cex = 0.8, cex.main = 1, cex.lab = 0.8, pcol = "grey")
 ```
 
 ## Multi-habitat and countryside species–area relationship models
-Detailed information on fitting and plotting the multi-habitat and countryside species–area relationship models can be found in @Matthews2025.
+Detailed information on fitting and plotting the multi-habitat and countryside species–area relationship models can be found in @Matthews2025. Further details on the models can be found in @Furness2023, @Pereira2006 and @Proenca2013.
 
 The last twenty years has seen an increased focus on developing SAR models that explicitly account for habitat diversity (i.e., ‘multi-habitat’ models). These models can be coarsely be placed into two groups: those that (i) model species richness simply as some function of area and habitat diversity (here, termed ‘habitat-heterogeneity’ SAR models), and (ii) account for species affinities to different habitat types (often called ‘countryside’ SAR models).
 
@@ -533,8 +533,73 @@ plot(s2)
 ### Countryside SAR models
 Countryside SAR models are an extension of habitat-heterogeneity models, built on the idea that species respond differently to land-use change due to interspecific differences in the affinity to different land-use types. Countryside SAR models aim to incorporate the differential affinities of species to different habitat / land-use types (here, these two terms are used interchangeably), in addition to the existence of different habitats in a landscape (Pereira & Daily, 2006). To achieve this, species are typically grouped on the basis of habitat affinity (e.g., forest species, shrubland species).
 
+The main function is 'sar_countryside', which takes as its first argument a dataset, where rows are sites, and columns contain the areas of different habitats (e.g., forest, farmland, grassland) and then the number of species in each species group (e.g., forest species, farmland species, grassland species). The function has been developed to automatically work with any number of habitats and species groups, but the user must ensure that the order of the area and species richness columns are correct (see the package documentation for further information). Typically, the species groups match the sampled habitats, occasionally with a ‘ubiquitous’ species group also included (i.e., true habitat generalists). However, the model is flexible and species can be classified into any number of groups. Note that species must be classified into groups prior to fitting the model, either using a priori knowledge (e.g., from habitat preference studies), and/or information in the sample data (see @Proenca2013).
 
-To illustrate the 'sar_countryside' function, we use a dataset of vascular plants (excluding adult trees) sampled in a multi-habitat landscape in Portugal (from Proença & Pereira, 2013). A nested sampling scheme was used and the resultant SAR is similar to a Type IIIA curve (Scheiner, 2003). Sites were divided into three main land use types: agricultural land, shrub land, and oak forest. Species were grouped based on their affinity to those three land use types, with a fourth group containing ubiquitous species. The dataset has been saved within the package as a data object. 
+As default, 'sar_countryside' fits the power form of the countryside SAR model, although functionality has been added to enable the logarithmic form to be fitted instead (controlled using the 'modType' argument). The model is fitted using the same non-linear regression approach as outlined for sar_habitat. As with any non-linear regression model, the convergence of the fitting algorithm is dependent on the use of sensible starting parameter estimates. Within the 'sar_countryside' function, we have incorporated a set of internal functions to select reasonable starting parameter estimates based on the results of previous studies (e.g., @Proenca2013). This is controlled through the 'gridStart' argument. This argument has three options which are, in order of decreasing speed but increasing sampling of parameter space, “none”, “partial” (the default) and “exhaustive”. Alternatively, the user can provide a set of starting parameters using the 'startPar' argument.
+
+The 'sar_countryside' function returns a list (of class ‘habitat’ and ‘sars’; and with a ‘type’ attribute of ‘countryside’) with eight elements, including: (i) a list of the non-linear regression model fits for each of the i species groups; (ii) the normalized habitat affinity values for each of the models in (i); (iii) the c-parameter values for each of the models in (i); and (iv) the predicted total richness values (calculated by summing the predictions for each constituent countryside model) for each site in the dataset. 
+
+The 'countryside_extrap' function can be used with the output of sar_countryside to predict the species richness of landscapes with varying areas of the analysed habitats (provided by the user using the 'area' argument). 
+
+An associated generic plot method has been provided that works with the output of 'sar_countryside', allowing the user to generate four different plots to help model validation and interpretation. The first (generated by setting the 'type' argument to 1) plots the predicted total richness values (from both countryside and Arrhenius power [or logarithmic] SAR models) against the observed total richness values, with a regression line (intercept = 0, slope = 1) to aid interpretation. The second ('type' = 2) uses countryside_extrap internally to generate separate fitted SAR curves for each of the modelled species groups, for each habitat individually, using a set of hypothetical sites in which the percentage of the site covered by a given habitat is always 100%. For some habitats, depending on the sampling design used, this means the associated model(s) may be extrapolating outside of the area range in the data. To see how this (i.e., Type 2 plots) works, we can imagine a dataset comprising a set of sites sampled in a two-habitat landscape (habitats A and B) with three species groups. Each site will thus have given amounts of habitat A and B that sum to the site area. The sar_countryside function fits three component models, one for each species group. The plot method function (type = 2) then creates a vector of hypothetical sites with area values ranging from zero to the maximum observed site area value (i.e., the summed habitat areas for each site) across all sites. For all of these hypothetical sites, the proportion of habitat represented by habitat A is set to 100% (and by extension the proportion represented by habitat B is always 0%). This vector is then used alongside our fitted countryside model in countryside_extrap to estimate the number of species in the three species groups in each hypothetical site, with these values used to plot the fitted curves for each species group on the same plot (i.e., the plot for habitat A). This process is then repeated for habitat B, and so on.
+
+The third ('type' = 3) follows a similar approach as for Type 2 plots, but instead varies the proportion of a given habitat while fixing site area. The area of the largest site is used, and for a given (focal) habitat, the proportion of the site represented by the focal habitat is varied from zero up to one. As site area is fixed, as the proportion of the focal habitat increases, the proportions of the other habitats decrease. This decrease is fixed to occur at an equal rate. For example, if there are three habitats and the focal habitat is at 50% of the site, the other two habitats will have values of 25%. This process is then repeated using the next habitat as the focal habitat, and so on.
+While we provide three plotting options associated with sar_countryside, it should be noted that it is not straightforward to generate standard SAR model plots (i.e., with the fitted curve displayed alongside the observed data points) for countryside models as the same total habitat area (i.e., the total area of a given site) can be made up of different amounts of component habitats (e.g., 50% agriculture and 50% forest vs. 90% agriculture and 10% forest).
+
+Finally, the fourth ('type' = 4) generates the “effective area” plots presented in @Merckx2019. The “effective area” for species group i in a site comprising j habitats is given by Ai = ∑j hijAj, where hij is the affinity of species group i to habitat j and is taken from the fitted sar_countryside model.
+
+To illustrate the 'sar_countryside' function and associated plots, we use a dataset of vascular plants (excluding adult trees) sampled in a multi-habitat landscape in Portugal (from @Proenca2013). A nested sampling scheme was used and the resultant SAR is similar to a Type IIIA curve. Sites were divided into three main land use types: agricultural land, shrub land, and oak forest. Species were grouped based on their affinity to those three land use types, with a fourth group containing ubiquitous species. The dataset has been saved within the package as a data object. 
+
+
+```{r, fig.width=7.5, fig.height=6}
+# Fit the countryside SAR model (power form) to the data, and use the function’s
+# starting parameter value selection procedure (setting 'gridStart' here to
+# "none" just for speed). Abbreviations: AG = agricultural land, SH = shrubland,
+# F = oak forest, UB = ubiquitous species.data(countryside)
+s3 <- sar_countryside(data = countryside, modType = "power",
+                      gridStart = "none", 
+                      habNam = c("AG", "SH", "F"), 
+                      spNam = c("AG_Sp", "SH_Sp", "F_Sp", "UB_Sp"))
+
+# Use the fitted models to predict the richness of a site with given amounts of
+# agricultural land, shrub land and forest. The ‘Indiv_mods’ element shows the
+# predicted number of species (based on the given model) in a given group in the
+# site, while the ‘Total’ element is the predicted total number of species
+# across all groups.
+countryside_extrap(s3, area = c(1000, 1000, 1000))
+
+#Plot the fitted individual SAR curves for each species group (Type 2 plot),
+#including a total species richness curve, modifying various aspects of the
+#plot (e.g., legend position). Use the ‘which’ argument to only generate the
+#second plot (i.e., the plot for shrubland)
+par(mar=c(5.1, 4.1, 4.1, 7.5), xpd=TRUE)
+plot(s3, type = 2, totSp = TRUE,
+     lcol = c("black", "aquamarine4", "#CC661AB3",
+              "darkblue", "darkgrey"), pLeg = TRUE,
+     legPos ="topright", legInset = c(-0.27,0.3), 
+     lwd = 1.5, ModTitle = c("Agricultural land", 
+                             "Shrubland", "Forest"),
+     which = 2)
+
+# For a given habitat and a fixed site area, plot the number of species in each
+# species group as a function of the proportion of the given habitat in the site
+# (Type 3 plot).  Use the ‘which’ argument to only generate the first plot
+# (i.e., the plot for agricultural land)
+plot(s3, type = 3, totSp = TRUE, 
+     lcol = c("black", "aquamarine4","#CC661AB3",
+              "darkblue", "darkgrey"), pLeg = TRUE, 
+     legPos ="topright", legInset = c(-0.27,0.3), 
+     lwd = 1.5, ModTitle = c("Agricultural land", 
+                             "Shrubland", "Forest"), 
+     which = 1)
+```
+
+```{r, fig.width=12, fig.height=6}
+# Generate an effective area plot (Type 4 plot), customising point type and size
+# etc 
+plot(s3, type = 4, pch = 16, lwd = 2, cex  = 0.75, cex.axis = 0.75, 
+     cex.lab = 0.9, ModTitle = c("Agricultural species"), which = 1)
+```
 
 ## On the calculation of information criteria
 There are different ways to calculate the various information criteria (IC) used
@@ -551,7 +616,7 @@ formulas. For example, in the nls (the main function for non-linear regression
 in R) and lm functions in the stats R package, a ll approach is used, meaning IC
 values from models fitted using nls could not be compared with IC values from
 sars models. To re-iterate, the parameter estimates are comparable, it is simply
-that the IC values will differ. In version of ‘sars’ (version 1.2.2) we changed
+that the IC values will differ. In sars version 1.2.2 we changed
 our IC formulas to match those in nls and lm. Thus, if users have built their
 own models using nls (or lm) and wish to compare IC values with models fitted in
 ‘sars’, this is now straightforward. To re-create IC values from previous

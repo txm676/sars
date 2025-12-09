@@ -30,13 +30,15 @@ richness on larger islands / sample areas. Version 1.3.0 has added
 functions for fitting, evaluating and plotting a range of commonly used
 piecewise SAR models (see Matthews and Rigal (2021) for details on these
 functions). Version 2.0.0 has added functions to fit a range of habitat
-and countryside SAR models, along with associated plot and prediction
-functions.
+and countryside SAR models (see Furness et al. (2023), Pereira and Daily
+(2006) and Proenca and Pereira (2013)), along with associated plot and
+prediction functions.
 
 Please report any bugs or issues to us via GitHub.
 
 The package has an associated vignette that provides examples of how to
-use the package, and an accompanying paper (Matthews et al. 2019).
+use the package, and three accompanying papers (Matthews et al. (2019),
+Matthews and Rigal (2021) and Matthews et al. (2025) In review).
 
 A website for the package can be found here:
 <https://txm676.github.io/sars/>
@@ -197,10 +199,25 @@ To fit the two-threshold continuous model to the ‘aegean2’ dataset
 fit <- sar_threshold(data = aegean2, mod = c("ContTwo"), interval = 0.1, 
                      non_th_models = FALSE, logAxes = "area", con = 1,
                      logT = log10, nisl = NULL)
-plot(fit, cex = 0.8, cex.main = 1.1, cex.lab = 1.1, pcol = "grey") #Figure 1
+plot(fit, cex = 0.8, cex.main = 1.1, cex.lab = 1.1, pcol = "grey") 
 ```
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+
+Fit the countryside SAR model (power form) to the ‘countryside’ dataset
+and generate one of a range different plots of the model fit that can be
+generated
+
+``` r
+s3 <- sar_countryside(data = countryside, modType = "power",
+ gridStart = "none", habNam = c("AG", "SH","F"), spNam = c("AG_Sp", "SH_Sp", "F_Sp", "UB_Sp"))
+
+par(mar=c(5.1, 4.1, 4.1, 7.5), xpd=TRUE)
+plot(s3, type = 2, totSp = TRUE, lcol = c("black", "aquamarine4",
+"#CC661AB3" , "darkblue", "darkgrey"), pLeg = TRUE,  legPos ="topright", legInset = c(-0.27,0.3), lwd = 1.5, ModTitle = c("Agricultural land", "Shrubland", "Forest"), which = 2)
+```
+
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
 ## References
 
@@ -211,6 +228,15 @@ entry-spacing="0">
 
 Arrhenius, O. 1921. “<span class="nocase">Species and Area</span>.” *The
 Journal of Ecology* 9 (1): 95. <https://doi.org/10.2307/2255763>.
+
+</div>
+
+<div id="ref-Furness2023" class="csl-entry">
+
+Furness, E. N., E. E. Saupe, R. J. Garwood, P. D Mannion, and M. D
+Sutton. 2023. “<span class="nocase">The jigsaw model: a biogeographic
+model that partitions habitat heterogeneity from area</span>.”
+*Frontiers of Biogeography* 15: e58477.
 
 </div>
 
@@ -240,11 +266,28 @@ and comparing species–area relationship models</span>.” *Ecography* 42:
 
 </div>
 
+<div id="ref-Pereira2006" class="csl-entry">
+
+Pereira, H. M., and G. C. Daily. 2006. “<span class="nocase">Modelling
+biodiversity dynamics in countryside landscapes</span>.” *Ecology* 87:
+1877–85.
+
+</div>
+
 <div id="ref-Preston1962" class="csl-entry">
 
 Preston, F. W. 1962. “<span class="nocase">The Canonical Distribution of
 Commonness and Rarity: Part I</span>.” *Ecology* 43 (2): 185.
 <https://doi.org/10.2307/1931976>.
+
+</div>
+
+<div id="ref-Proenca2013" class="csl-entry">
+
+Proenca, V., and H. M. Pereira. 2013. “<span class="nocase">Species–area
+models to assess biodiversity change in multi-habitat landscapes: The
+importance of species habitat affinity</span>.” *Basic and Applied
+Ecology* 14: 102–14.
 
 </div>
 

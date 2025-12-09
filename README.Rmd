@@ -33,13 +33,13 @@ include fitting the linear version of the power model and comparing parameters w
 the general dynamic model of island biogeography, fitting the random placement model to a species abundance-site matrix, and extrapolating fitted SAR models to predict richness on larger islands / sample areas. Version 1.3.0
 has added functions for fitting, evaluating and plotting a range of commonly used piecewise SAR models (see 
 @Matthews2020 for details on these functions). Version 2.0.0 has added functions 
-to fit a range of habitat and countryside SAR models, along with associated plot 
+to fit a range of habitat and countryside SAR models (see @Furness2023, @Pereira2006 and @Proenca2013), along with associated plot 
 and prediction functions.
 
 Please report any bugs or issues to us via GitHub.
 
-The package has an associated vignette that provides examples of how to use the package, and an accompanying 
-paper [@Matthews2019].
+The package has an associated vignette that provides examples of how to use the package, and three accompanying 
+papers (@Matthews2019, @Matthews2020 and Matthews et al. (2025) In review).
 
 A website for the package can be found here: https://txm676.github.io/sars/
 
@@ -108,7 +108,20 @@ To fit the two-threshold continuous model to the 'aegean2' dataset
 fit <- sar_threshold(data = aegean2, mod = c("ContTwo"), interval = 0.1, 
                      non_th_models = FALSE, logAxes = "area", con = 1,
                      logT = log10, nisl = NULL)
-plot(fit, cex = 0.8, cex.main = 1.1, cex.lab = 1.1, pcol = "grey") #Figure 1
+plot(fit, cex = 0.8, cex.main = 1.1, cex.lab = 1.1, pcol = "grey") 
+```
+
+Fit the countryside SAR model (power form) to the 'countryside' dataset and
+generate one of a range different plots of the model fit that can be 
+generated
+```{r}
+s3 <- sar_countryside(data = countryside, modType = "power",
+ gridStart = "none", habNam = c("AG", "SH","F"), spNam = c("AG_Sp", "SH_Sp", "F_Sp", "UB_Sp"))
+
+par(mar=c(5.1, 4.1, 4.1, 7.5), xpd=TRUE)
+plot(s3, type = 2, totSp = TRUE, lcol = c("black", "aquamarine4",
+"#CC661AB3" , "darkblue", "darkgrey"), pLeg = TRUE,  legPos ="topright", legInset = c(-0.27,0.3), lwd = 1.5, ModTitle = c("Agricultural land", "Shrubland", "Forest"), which = 2)
+
 ```
 
 ## References

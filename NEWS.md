@@ -1,3 +1,9 @@
+
+##Version 2.1.0
+  *Finished the multi-habitat functions and associated method
+  functions
+  *Added info on these to the vignette
+
 ##Version 2.0.0
   *Added major new functionality to fit multi-habitat
   SAR models: sar_habitat(), sar_countryside() & countryside_extrap()
