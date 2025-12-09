@@ -136,6 +136,7 @@ plot(s2)
 # starting parameter value selection procedure (setting 'gridStart' here to
 # "none" just for speed). Abbreviations: AG = agricultural land, SH = shrubland,
 # F = oak forest, UB = ubiquitous species.data(countryside)
+data(countryside)
 s3 <- sar_countryside(data = countryside, modType = "power",
                       gridStart = "none", 
                       habNam = c("AG", "SH", "F"), 

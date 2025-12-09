@@ -111,8 +111,8 @@ fit <- sar_threshold(data = aegean2, mod = c("ContTwo"), interval = 0.1,
 plot(fit, cex = 0.8, cex.main = 1.1, cex.lab = 1.1, pcol = "grey") 
 ```
 
-Fit the countryside SAR model (power form) to the 'countryside' dataset and
-generate one of a range different plots of the model fit that can be 
+To fit the countryside SAR model (power form) to the 'countryside' dataset and
+generate one of a range of different plots of the model fit that can be 
 generated
 ```{r}
 s3 <- sar_countryside(data = countryside, modType = "power",

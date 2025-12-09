@@ -10,7 +10,7 @@ jobs:
         
   build:
     docker:
-      - image: rocker/verse:latest
+      - image: rocker/verse:devel
         environment:
           NOT_CRAN: true
     steps:
