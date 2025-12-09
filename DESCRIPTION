@@ -28,9 +28,6 @@ Imports:
     parallel,
     AICcmodavg,
     minpack.lm,
-    purrr,
-    sf,
-    terra
 Depends: R(>= 4.0.0)
 Encoding: UTF-8
 LazyData: true

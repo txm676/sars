@@ -113,3 +113,21 @@ summary(fit)
 #Plot the resultant model fit 
 plot(fit, cex = 0.8, cex.main = 1, cex.lab = 0.8, pcol = "grey") 
 
+## ----fig.width=6, fig.height=6------------------------------------------------
+
+#Load the dataset and fit the three habitat-heterogeneity models
+#(power model form) alongside the Arrhenius power model, and view
+#the raw model fit objects
+data(habitat)
+s <- sar_habitat(data = habitat, modType = "power")
+s
+
+#Fit the three habitat-heterogeneity models in log–log power
+#model form alongside the linear (log–log) power model, and
+#compare the model fits using information criteria
+s2 <- sar_habitat(data = habitat, modType = "power_log")
+summary(s2)
+
+#Generate barplot of model AICc weights
+plot(s2) 
+
