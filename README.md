@@ -10,7 +10,7 @@ downloads](http://cranlogs.r-pkg.org/badges/grand-total/sars)](https://cran.r-pr
 [![CRAN](https://www.r-pkg.org/badges/version/sars)](https://cran.r-project.org/package=sars)
 [![DOI](https://zenodo.org/badge/95295704.svg)](https://zenodo.org/badge/latestdoi/95295704)
 [![License: GPL
-v3](https://img.shields.io/badge/License-GPLv3-yellow.svg)](https://www.gnu.org/licenses/gpl-3.0)
+v3](https://img.shields.io/badge/License-GPLv3-yellow.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
 [![Codecov test
 coverage](https://codecov.io/gh/txm676/sars/branch/master/graph/badge.svg)](https://app.codecov.io/gh/txm676/sars?branch=master)
 
@@ -204,9 +204,9 @@ plot(fit, cex = 0.8, cex.main = 1.1, cex.lab = 1.1, pcol = "grey")
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
 
-Fit the countryside SAR model (power form) to the ‘countryside’ dataset
-and generate one of a range different plots of the model fit that can be
-generated
+To fit the countryside SAR model (power form) to the ‘countryside’
+dataset and generate one of a range of different plots of the model fit
+that can be generated
 
 ``` r
 s3 <- sar_countryside(data = countryside, modType = "power",
@@ -237,6 +237,7 @@ Furness, E. N., E. E. Saupe, R. J. Garwood, P. D Mannion, and M. D
 Sutton. 2023. “<span class="nocase">The jigsaw model: a biogeographic
 model that partitions habitat heterogeneity from area</span>.”
 *Frontiers of Biogeography* 15: e58477.
+<https://doi.org/10.21425/F5FBG58477>.
 
 </div>
 
@@ -271,6 +272,7 @@ and comparing species–area relationship models</span>.” *Ecography* 42:
 Pereira, H. M., and G. C. Daily. 2006. “<span class="nocase">Modelling
 biodiversity dynamics in countryside landscapes</span>.” *Ecology* 87:
 1877–85.
+[https://doi.org/10.1890/0012-9658(2006)87\[1877:MBDICL\]2.0.CO;2](https://doi.org/10.1890/0012-9658(2006)87[1877:MBDICL]2.0.CO;2).
 
 </div>
 
@@ -287,7 +289,7 @@ Commonness and Rarity: Part I</span>.” *Ecology* 43 (2): 185.
 Proenca, V., and H. M. Pereira. 2013. “<span class="nocase">Species–area
 models to assess biodiversity change in multi-habitat landscapes: The
 importance of species habitat affinity</span>.” *Basic and Applied
-Ecology* 14: 102–14.
+Ecology* 14: 102–14. <https://doi.org/10.1016/j.baae.2012.10.010>.
 
 </div>
 

@@ -3,8 +3,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
-^_pkgdown\.yml$
-^docs$
 ^cran-comments\.md$
 ^README-.*\.png$
 

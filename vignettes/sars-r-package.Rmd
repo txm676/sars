@@ -18,12 +18,18 @@ options(cli.unicode = FALSE)
 
 
 
-This vignette is heavily based on the paper that accompanies the package
-[@Matthews2019]. To cite this vignette, please cite the corresponding paper:
+This vignette is heavily based on three papers that accompany the
+package. To cite this vignette, please cite the
+relevant corresponding paper(s):
 
-Matthews, T.J., Triantis, K., Whittaker, R.J. and Guilhaumon, F. (2019) sars:
-an R package for fitting, evaluating and comparing species–area relationship
-models. Ecography, 42, 1446-1455.
+Matthews, T.J., Triantis, K., Whittaker, R.J. and Guilhaumon, F.
+(2019) sars: an R package for fitting, evaluating and comparing
+species–area relationship models. Ecography, 42, 1446-1455.
+
+Matthews, T. J., and F. Rigal. 2021. Thresholds and the
+species–area relationship: a set of functions for fitting,
+evaluating and plotting a range of commonly used piecewise models
+in R. Frontiers of Biogeography, 13, e49404.
 
 Version 1.1.1 of the package has been archived on the Zenodo research data
 repository (DOI: 10.5281/zenodo.2573067).
@@ -545,7 +551,7 @@ An associated generic plot method has been provided that works with the output o
 
 The third ('type' = 3) follows a similar approach as for Type 2 plots, but instead varies the proportion of a given habitat while fixing site area. The area of the largest site is used, and for a given (focal) habitat, the proportion of the site represented by the focal habitat is varied from zero up to one. As site area is fixed, as the proportion of the focal habitat increases, the proportions of the other habitats decrease. This decrease is fixed to occur at an equal rate. For example, if there are three habitats and the focal habitat is at 50% of the site, the other two habitats will have values of 25%. This process is then repeated using the next habitat as the focal habitat, and so on.
 
-Finally, the fourth ('type' = 4) generates the “effective area” plots presented in @Merckx2019. The “effective area” for species group i in a site comprising j habitats is given by Ai = ∑j hijAj, where hij is the affinity of species group i to habitat j and is taken from the fitted 'sar_countryside' model.
+Finally, the fourth ('type' = 4) generates the “effective area” plots presented in @Merckx2019. The “effective area” for species group i in a site comprising j habitats is given by Ai = Sum over j of hij*Aj, where hij is the affinity of species group i to habitat j and is taken from the fitted 'sar_countryside' model.
 
 To illustrate the 'sar_countryside' function and associated plots, we use a dataset of vascular plants (excluding adult trees) sampled in a multi-habitat landscape in Portugal (from @Proenca2013). A nested sampling scheme was used and the resultant SAR is similar to a Type IIIA curve. Sites were divided into three main land use types: agricultural land, shrub land, and oak forest. Species were grouped based on their affinity to those three land use types, with a fourth group containing ubiquitous species. The dataset has been saved within the package as a data object. 
 
