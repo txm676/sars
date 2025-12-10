@@ -1,8 +1,11 @@
 
-##This is a new submission
+##This is a re-submission
 *version 2.1.0 of sars package
 *R CMD check throws one note about not accessing the correct time 
 but this seems to be due to a broken url in the checks
+*I have fixed the license URL and removed the problematic 
+unicode character from the vignette
+
 
 ##Test environments
 *local Windows 10 install, R 4.4.2 and R development
