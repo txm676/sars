@@ -40,9 +40,6 @@ The package has an associated vignette that provides examples of how to
 use the package, and three accompanying papers (Matthews et al. (2019),
 Matthews and Rigal (2021) and Matthews et al. (2025) In review).
 
-A website for the package can be found here:
-<https://txm676.github.io/sars/>
-
 Version 1.1.1 of the package has been archived on the Zenodo research
 data repository (DOI: 10.5281/zenodo.2573067).
 

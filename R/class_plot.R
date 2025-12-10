@@ -1130,22 +1130,23 @@ plot.threshold <- function(x, xlab = NULL, ylab = NULL, multPlot = TRUE,
 #' 
 #' A Type 4 plot represents the effective area plots used in
 #' Merckx et al. (2019). The “effective area” for species group i
-#' in a site comprising j habitats is given by Ai=Σ hij*Aj
-#' (summed across the j habitats in the site), where hij is the
-#' affinity of species group i to habitat j and is taken from the
-#' fitted \code{sar_countryside} model. The effective area of
-#' each site in the dataset is then calculated for species group
-#' i, and the SAR plotted using the effective area values instead
-#' of standard area. If the power form of the countryside model
-#' was fitted, the effective area plot is generated in log-log
-#' space and a standard log-log power model is also generated for
-#' comparison. If the logarithmic form was used, linear-log plots
-#' (i.e, just log-transformation of area) are used instead. In
-#' both cases, a linear model is fitted to the relationships and
-#' the R2 value presented on the plots. Similarly to Type 2 and 3
-#' plots, these plots are generated separately for each species
-#' group; the user can choose to generate the plot for a specific
-#' species group using the \code{which} argument.
+#' in a site comprising j habitats is given by Ai= Sum over j of
+#' hij*Aj (summed across the j habitats in the site), where hij
+#' is the affinity of species group i to habitat j and is taken
+#' from the fitted \code{sar_countryside} model. The effective
+#' area of each site in the dataset is then calculated for
+#' species group i, and the SAR plotted using the effective area
+#' values instead of standard area. If the power form of the
+#' countryside model was fitted, the effective area plot is
+#' generated in log-log space and a standard log-log power model
+#' is also generated for comparison. If the logarithmic form was
+#' used, linear-log plots (i.e, just log-transformation of area)
+#' are used instead. In both cases, a linear model is fitted to
+#' the relationships and the R2 value presented on the plots.
+#' Similarly to Type 2 and 3 plots, these plots are generated
+#' separately for each species group; the user can choose to
+#' generate the plot for a specific species group using the
+#' \code{which} argument.
 #'  
 #' @references Matthews et al. (2025) An R package for fitting
 #'   multi-habitat species–area relationship models. In prep.
