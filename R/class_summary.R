@@ -120,7 +120,7 @@ extr_fit <- function(obj){
 #' #Get a summary of the fit of the linear power model
 #' fit <- lin_pow(galap, con = 1, compare = TRUE)
 #' summary(fit)
-#' @importFrom stats logLik
+#' @importFrom stats logLik AIC BIC
 #' @export
 
 summary.sars <- function(object, ...){
@@ -252,12 +252,10 @@ summary.sars <- function(object, ...){
     }
     #New logLik.thresholdInt function should mean these are 
     #now identical
-    if (!identical(round(sapply(mods, AIC),1),
-              round(ICs$AIC, 1))){
+    if (any((sapply(mods, AIC) - ICs$AIC) > 0.015)){
       stop("Information criteria calculation error: contact package maintainer")
     }
-    if (!identical(round(sapply(mods, BIC),1),
-                   round(ICs$BIC, 1))){
+    if (any((sapply(mods, BIC) - ICs$BIC) > 0.015)){
       stop("Information criteria calculation error: contact package maintainer")
     }
     # if (!identical(round(sapply(mods, 

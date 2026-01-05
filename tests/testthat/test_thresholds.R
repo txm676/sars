@@ -63,8 +63,7 @@ test_that("sar_threshold returns correct results", {
   obj <- xd2[[1]][[1]]
   n <- length(obj$residuals)
   val <- logLik(obj)
-  expect_equal(attributes(val)$df, 7)#lm doesn't account for two threshold parameters
-  attr(val, 'df') <- 9 #so need to add these two in for this model
+  expect_equal(attributes(val)$df, 9)
   P <- 9
   lAIC2 <- (2 * P) - (2 * val)
   lBIC2 <- (-2 * val) + (P * log(n))

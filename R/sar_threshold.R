@@ -208,6 +208,59 @@ fct_disc_two <- function(th, th2, x, y) {
 } # modified
 
 
+###################################################
+####logLik.thresholdInt###############################
+#####################################################
+#'  Extract Log-Likelihood for the thresholdInt class
+#' 
+#' @description Extract the log-likelihood of sar_threshold
+#'   model fits, adjusting the number of parameters to account
+#'   for the breakpoint search. This is a method function for the 
+#'   \code{\link[stats]{logLik}} generic.
+#' @param object Threshold model fits of class \code{thresholdInt}.
+#' @param ... Additional arguments.
+#' @details There has been considerable debate regarding the
+#'   number of parameters that are included in different
+#'   piecewise models. Here (and thus in our calculation of AIC,
+#'   AICc, BIC etc) we consider ContOne to have five parameters,
+#'   ZslopeOne - 4, DiscOne - 6, ContTwo - 7, ZslopeTwo - 6,
+#'   DiscTwo
+#'   - 9. This function
+#'   adjusts the degrees of freedom associated with the log
+#'   likelihood to match the number of parameters listed above.
+#'   See Matthews & Rigal (2021) for more information.
+#' @return Returns an object of class \code{logLik}, where the
+#'   "df" (degrees of freedom) attribute has been adjusted to
+#'   account for the breakpoint search. See
+#'   \code{\link[stats]{logLik}} for more details on objects of
+#'   class \code{logLik}.
+#' @references Matthews, T.J. & Rigal, F. (2021) Thresholds and
+#'   the species–area relationship: a set of functions for
+#'   fitting, evaluating and plotting a range of commonly used
+#'   piecewise models. Frontiers of Biogeography, 13, e49404.
+#' @author Thomas J. Matthews
+#' @examples
+#' data(aegean2)
+#' a2 <- aegean2[1:168,]
+#' fitT <- sar_threshold(data = a2, mod = c("ContOne", "DiscOne"), 
+#' interval = 0.1, non_th_models = TRUE, logAxes = "area", logT = log10)
+#' logLik(fitT[[1]][[1]])
+#' @method logLik thresholdInt
+#' @export
+logLik.thresholdInt <- function(object, ...) {
+  ll <- NextMethod()
+  if (attr(object, "model") %in% 
+      c("ContOne", "ZslopeOne", "DiscOne")){
+    attr(ll, "df") <- attr(ll, "df") + 1
+  } else if (attr(object, "model") %in% 
+             c("ContTwo", "ZslopeTwo", "DiscTwo")){
+    attr(ll, "df") <- attr(ll, "df") + 2
+  } else {
+    stop("class thresholdInt model attribute not recognised")
+  }
+  return(ll)
+}
+
 #' Fit threshold SAR models
 #'
 #' @description Fit up to six piecewise (threshold) regression models to SAR
@@ -251,56 +304,66 @@ fct_disc_two <- function(th, th2, x, y) {
 #'   two-threshold models are being fitted.
 #' @param cores Number of cores to use. Only applicable when \code{parallel =
 #'   TRUE}.
-#' @details This function is described in more detail in the accompanying paper
-#'   (Matthews & Rigal, 2020).
+#' @details This function is described in more detail in the
+#'   accompanying paper (Matthews & Rigal, 2020).
 #'
-#'   Fitting the continuous and left-horizontal piecewise models (particularly
-#'   the two-threshold models) can be time consuming if the range in area is
-#'   large and/or the \code{interval} argument is small. For the two-threshold
-#'   continuous slope and left-horizontal models, the use of parallel processing
-#'   (using the \code{parallel} argument) is recommended. The number of cores
-#'   (\code{cores}) must be provided.
+#'   Fitting the continuous and left-horizontal piecewise models
+#'   (particularly the two-threshold models) can be time
+#'   consuming if the range in area is large and/or the
+#'   \code{interval} argument is small. For the two-threshold
+#'   continuous slope and left-horizontal models, the use of
+#'   parallel processing (using the \code{parallel} argument) is
+#'   recommended. The number of cores (\code{cores}) must be
+#'   provided.
 #'
-#'   Note that the interval argument is not used to fit discontinuous models,
-#'   as, in these cases, the breakpoint must be at a datapoint.
+#'   Note that the interval argument is not used to fit
+#'   discontinuous models, as, in these cases, the breakpoint
+#'   must be at a datapoint.
 #'
-#'   There has been considerable debate regarding the number of parameters that
-#'   are included in different piecewise models. Here (and thus in our
-#'   calculation of AIC, AICc, BIC etc) we consider ContOne to have five
-#'   parameters, ZslopeOne - 4, DiscOne - 6, ContTwo - 7, ZslopeTwo - 6, DiscTwo
+#'   There has been considerable debate regarding the number of
+#'   parameters that are included in different piecewise models.
+#'   Here (and thus in our calculation of AIC, AICc, BIC etc) we
+#'   consider ContOne to have five parameters, ZslopeOne - 4,
+#'   DiscOne - 6, ContTwo - 7, ZslopeTwo - 6, DiscTwo
 #'   - 9. The standard linear model and the intercept model are considered to
-#'   have 3 and 2 parameters, respectively. The raw \code{\link{lm}} model fits
-#'   are provided in the output, which are also of class \code{thresholdInt};
-#'   this class has a method for the generic function \code{\link{logLik}} which
-#'   adjusts the degrees of freedom associated with the log likelihood to match
-#'   the number of parameters listed above.
-#'   
-#'   The raw \code{\link{lm}} model fits can also be used to explore classic
-#'   diagnostic plots for linear regression analysis in R using the function
-#'   \code{\link{plot}} or other diagnostic tests such \code{outlierTest},
-#'   \code{leveragePlots} or \code{influencePlot}, available in the \code{car}
-#'   package. This is advised as currently there are no model validation checks
-#'   undertaken automatically, unlike elsewhere in the sars package. 
-#'   
-#'   Confidence intervals around the breakpoints in the one-threshold continuous
-#'   and left- horizontal models can be calculated using the
-#'   \code{\link{threshold_ci}} function. The intercepts and slopes of the
-#'   different segments in the fitted breakpoint models can be calculated using
-#'   the \code{\link{get_coef}} function.
-#'   
-#'   Rarely, multiple breakpoint values can return the same minimum rss (for a
-#'   given model fit). In these cases, we just randomly choose and return one
-#'   and also produce a warning. If this occurs it is worth checking the data
-#'   and model fits carefully.
-#'   
-#'   The \code{nisl} argument can be useful to avoid situations where a segment
-#'   contains only one island, for example. However, setting strict criteria on
-#'   the number of data points to be included in segments could be seen as
-#'   "forcing" the fit of the model, and arguably if a model fit is not
-#'   interpretable, it is simply that the model does not provide a good
-#'   representation of the data. Thus, it should not be used without careful
-#'   thought.
-#'   
+#'   have 3 and 2 parameters, respectively. The raw
+#'   \code{\link{lm}} model fits are provided in the output,
+#'   which are also of class \code{thresholdInt}; this class has
+#'   a method for the generic function \code{\link{logLik}} which
+#'   adjusts the degrees of freedom associated with the log
+#'   likelihood to match the number of parameters listed above.
+#'
+#'   The raw \code{\link{lm}} model fits can also be used to
+#'   explore classic diagnostic plots for linear regression
+#'   analysis in R using the function \code{\link{plot}} or other
+#'   diagnostic tests such \code{outlierTest},
+#'   \code{leveragePlots} or \code{influencePlot}, available in
+#'   the \code{car} package. This is advised as currently there
+#'   are no model validation checks undertaken automatically,
+#'   unlike elsewhere in the sars package.
+#'
+#'   Confidence intervals around the breakpoints in the
+#'   one-threshold continuous and left- horizontal models can be
+#'   calculated using the \code{\link{threshold_ci}} function.
+#'   The intercepts and slopes of the different segments in the
+#'   fitted breakpoint models can be calculated using the
+#'   \code{\link{get_coef}} function.
+#'
+#'   Rarely, multiple breakpoint values can return the same
+#'   minimum rss (for a given model fit). In these cases, we just
+#'   randomly choose and return one and also produce a warning.
+#'   If this occurs it is worth checking the data and model fits
+#'   carefully.
+#'
+#'   The \code{nisl} argument can be useful to avoid situations
+#'   where a segment contains only one island, for example.
+#'   However, setting strict criteria on the number of data
+#'   points to be included in segments could be seen as "forcing"
+#'   the fit of the model, and arguably if a model fit is not
+#'   interpretable, it is simply that the model does not provide
+#'   a good representation of the data. Thus, it should not be
+#'   used without careful thought.
+#' 
 #' @return A list of class "threshold" and "sars" with five elements. The first
 #'   element contains the different model fits (lm objects). The second element
 #'   contains the names of the fitted models, the third  contains the threshold
@@ -539,21 +602,6 @@ sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
   class(res2) <- c("threshold", "sars", "list")
   attr(res2, "type") <- "threshold"
   return(res2)
-}
-
-#' @export
-logLik.thresholdInt <- function(object, ...) {
-  ll <- NextMethod()
-  if (attr(object, "model") %in% 
-      c("ContOne", "ZslopeOne", "DiscOne")){
-  attr(ll, "df") <- attr(ll, "df") + 1
-  } else if (attr(object, "model") %in% 
-             c("ContTwo", "ZslopeTwo", "DiscTwo")){
-    attr(ll, "df") <- attr(ll, "df") + 2
-  } else {
-    stop("class thresholdInt model attribute not recognised")
-  }
-  return(ll)
 }
 
 
