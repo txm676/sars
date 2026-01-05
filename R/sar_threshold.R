@@ -268,10 +268,12 @@ fct_disc_two <- function(th, th2, x, y) {
 #'   are included in different piecewise models. Here (and thus in our
 #'   calculation of AIC, AICc, BIC etc) we consider ContOne to have five
 #'   parameters, ZslopeOne - 4, DiscOne - 6, ContTwo - 7, ZslopeTwo - 6, DiscTwo
-#'   - 8. The standard linear model and the intercept model are considered to
+#'   - 9. The standard linear model and the intercept model are considered to
 #'   have 3 and 2 parameters, respectively. The raw \code{\link{lm}} model fits
-#'   are provided in the output, however, if users want to calculate information
-#'   criteria using different numbers of parameters.
+#'   are provided in the output, which are also of class \code{thresholdInt};
+#'   this class has a method for the generic function \code{\link{logLik}} which
+#'   adjusts the degrees of freedom associated with the log likelihood to match
+#'   the number of parameters listed above.
 #'   
 #'   The raw \code{\link{lm}} model fits can also be used to explore classic
 #'   diagnostic plots for linear regression analysis in R using the function
@@ -444,6 +446,8 @@ sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
     #                                  "z2")
     names[r] <- "ContOne"
     th[[r]] <- threshold_cont
+    class(res[[r]]) <- c("thresholdInt", "lm")
+    attr(res[[r]], "model") <- "ContOne"
     r <- r + 1
   }
   #one breakpoint zero slope
@@ -455,6 +459,8 @@ sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
    # names(res[[r]]$coefficients) <- c("Intercept", "z2")
     names[r] <- "ZslopeOne"
     th[[r]] <- threshold_zslope
+    class(res[[r]]) <- c("thresholdInt", "lm")
+    attr(res[[r]], "model") <- "ZslopeOne"
     r <- r + 1
   }
   
@@ -466,6 +472,8 @@ sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
     
     names[r] <- "DiscOne"
     th[[r]] <- threshold_disc
+    class(res[[r]]) <- c("thresholdInt", "lm")
+    attr(res[[r]], "model") <- "DiscOne"
     r <- r + 1
   }
   #two threshold continuous
@@ -481,6 +489,8 @@ sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
                          as.numeric(x > threshold_two_cont[2])))
     names[r] <- "ContTwo"
     th[[r]] <- threshold_two_cont
+    class(res[[r]]) <- c("thresholdInt", "lm")
+    attr(res[[r]], "model") <- "ContTwo"
     r <- r + 1
   }
   #two threshold zero slope
@@ -496,6 +506,8 @@ sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
                          as.numeric(x > threshold_two_zslope[2])))
     names[r] <- "ZslopeTwo"
     th[[r]] <- threshold_two_zslope
+    class(res[[r]]) <- c("thresholdInt", "lm")
+    attr(res[[r]], "model") <- "ZslopeTwo"
     r <- r + 1
   }
   
@@ -508,9 +520,11 @@ sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
                      x * (x > threshold_two_disc[2]))
     names[r] <- "DiscTwo"
     th[[r]] <- threshold_two_disc
+    class(res[[r]]) <- c("thresholdInt", "lm")
+    attr(res[[r]], "model") <- "ZslopeTwo"
     r <- r + 1
   }
-
+  
   ##fit the final non-threshold models for comparison
   if (non_th_models){
     res[[r]] <- model_lm <- lm(y ~ x)
@@ -525,6 +539,21 @@ sar_threshold <- function(data, mod = "All", interval = NULL, nisl = NULL,
   class(res2) <- c("threshold", "sars", "list")
   attr(res2, "type") <- "threshold"
   return(res2)
+}
+
+#' @export
+logLik.thresholdInt <- function(object, ...) {
+  ll <- NextMethod()
+  if (attr(object, "model") %in% 
+      c("ContOne", "ZslopeOne", "DiscOne")){
+  attr(ll, "df") <- attr(ll, "df") + 1
+  } else if (attr(object, "model") %in% 
+             c("ContTwo", "ZslopeTwo", "DiscTwo")){
+    attr(ll, "df") <- attr(ll, "df") + 2
+  } else {
+    stop("class thresholdInt model attribute not recognised")
+  }
+  return(ll)
 }
 
 

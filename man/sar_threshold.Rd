@@ -87,10 +87,12 @@ This function is described in more detail in the accompanying paper
   are included in different piecewise models. Here (and thus in our
   calculation of AIC, AICc, BIC etc) we consider ContOne to have five
   parameters, ZslopeOne - 4, DiscOne - 6, ContTwo - 7, ZslopeTwo - 6, DiscTwo
-  - 8. The standard linear model and the intercept model are considered to
+  - 9. The standard linear model and the intercept model are considered to
   have 3 and 2 parameters, respectively. The raw \code{\link{lm}} model fits
-  are provided in the output, however, if users want to calculate information
-  criteria using different numbers of parameters.
+  are provided in the output, which are also of class \code{thresholdInt};
+  this class has a method for the generic function \code{\link{logLik}} which
+  adjusts the degrees of freedom associated with the log likelihood to match
+  the number of parameters listed above.
   
   The raw \code{\link{lm}} model fits can also be used to explore classic
   diagnostic plots for linear regression analysis in R using the function

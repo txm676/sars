@@ -478,10 +478,21 @@ together), a separate function (‘get_coef’) can be used to calculate these. 
 separate function (‘threshold_ci’) generates the confidence intervals around the
 breakpoints of the one-threshold continuous and left-horizontal models.
 
+There has been considerable debate regarding the number of parameters that are
+included in different piecewise models. Here (and thus in our calculation of
+AIC, AICc, BIC etc) we consider ContOne to have five parameters, ZslopeOne -
+4, DiscOne - 6, ContTwo - 7, ZslopeTwo - 6, DiscTwo
+- 9. The standard linear model and the intercept model are considered to
+have 3 and 2 parameters, respectively. The raw 'lm' model fits are
+provided in the output, which are also of class 'thresholdInt'; this
+class has a method for the generic function 'logLik' which adjusts
+the degrees of freedom associated with the log likelihood to match the number
+of parameters listed above.
+
 Detailed information on fitting and plotting the threshold models, as well as
 the additional functions for calculating model slopes and intercepts, and
 generating confidence intervals around the threshold estimates, can be found in
-@Matthews2020.
+@Matthews2020. See also the documentation for 'sar_threshold'.
 
 
 ```{r, fig.width=6, fig.height=6}

@@ -1,4 +1,10 @@
 
+##Version 2.1.1
+  *Added logLik.thresholdInt method to adjust the degrees of freedom
+  associated with the log likelihood of the individual piecewise 
+  regression fits
+  *Updated the vignette to discuss piecewise model parameter numbers
+
 ##Version 2.1.0
   *Finished the multi-habitat functions and associated method
   functions
@@ -122,7 +128,6 @@
   * unit testing added
   * functions added to bring up a list of all models with information
   * bug fixes
-  
   
 ## Version 1.0.0
 

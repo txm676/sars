@@ -250,7 +250,21 @@ summary.sars <- function(object, ...){
     if (any(is.infinite(ICs$AICc))){
       warning("AICc not calculated for some models due to small sample size")
     }
-    
+    #New logLik.thresholdInt function should mean these are 
+    #now identical
+    if (!identical(round(sapply(mods, AIC),1),
+              round(ICs$AIC, 1))){
+      stop("Information criteria calculation error: contact package maintainer")
+    }
+    if (!identical(round(sapply(mods, BIC),1),
+                   round(ICs$BIC, 1))){
+      stop("Information criteria calculation error: contact package maintainer")
+    }
+    # if (!identical(round(sapply(mods, 
+    #                             AICcmodavg::AICc),1),
+    #                round(ICs$AICc, 1))){
+    #   stop("Information criteria calculation error: contact package maintainer")
+    # }
     #get thresholds
     tdf <- matrix(NA, nrow = length(names), ncol = 2)
     for (i in 1:length(th)){
