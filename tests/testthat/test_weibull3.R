@@ -29,7 +29,9 @@ test_that("gompertz summary returns correct results", {
                11)
   expect_equal(length(capture_output_lines(fs, print = TRUE)),
                       23)
-  expect_equal(round(sum(fs$residuals),0), 2)
+  #one in every 1000 runs is 3 (due to stochastic nature 
+  #of grid_start), so using %in% rather than =
+  expect_true(round(sum(fs$residuals),0) %in% c(2,3))
   expect_output(str(fs), "List of 16")
   expect_is(fs, "summary.sars")
   expect_equal(round(fs$normaTest[[2]]$p.value, 2), 0.05)
