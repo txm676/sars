@@ -41,11 +41,13 @@ find_one_threshold_disc <- function(x, y, fct, nisl = NULL){
     } else {
     n <- nisl - 1
     if (n == 0) {n <- 1}
-    x1 <- x[x >= min(sort(x)[-(1:n)]) & x <= max(rev(sort(x))[-(1:n)])]
+    #a breakpoint is a data point and goes in the left segment (x <= th),
+    #so the nisl largest islands are excluded to leave nisl on the right
+    x1 <- x[x >= min(sort(x)[-(1:n)]) & x <= max(rev(sort(x))[-(1:nisl)])]
   }
   rss <- vector(length = length(x1))
   for (i in 1:length(x1)){
-    rss[i] <- fct(x[i], x, y)
+    rss[i] <- fct(x1[i], x, y)
   }
   #if multiple identical min values, which.min just returns the first one,
   #so need to check manually for equal cases
@@ -134,7 +136,9 @@ find_two_thresholds_disc <- function(x, y, fct, nisl = NULL){
     } else {
     n <- nisl - 1
     if (n == 0) {n <- 1}
-    x1 <- x[x >= min(sort(x)[-(1:n)]) & x <= max(rev(sort(x))[-(1:n)])]
+    #a breakpoint is a data point and goes in the left segment (x <= th),
+    #so the nisl largest islands are excluded to leave nisl on the right
+    x1 <- x[x >= min(sort(x)[-(1:n)]) & x <= max(rev(sort(x))[-(1:nisl)])]
   }
   N <- length(x1)
   ssr_t1 <-  vector("list", length = (N - 1))
