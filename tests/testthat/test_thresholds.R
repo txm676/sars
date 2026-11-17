@@ -102,6 +102,25 @@ test_that("nisl argument returns correct results", {
 })
 
 
+test_that("discontinuous models search within the nisl window", {
+  data(galap)
+  x <- sort(log(galap$a))
+  y <- galap$s[order(galap$a)]
+  #candidate breakpoints leaving at least 3 islands in each segment
+  cand <- x[3:(length(x) - 3)]
+  rss <- sapply(cand, fct_disc_one, x = x, y = y)
+  fit <- sar_threshold(galap, mod = "DiscOne", non_th_models = FALSE,
+                       nisl = 3)
+  expect_equal(fit[[3]][[1]], cand[which.min(rss)])
+  expect_equal(sum(residuals(fit[[1]][[1]])^2), min(rss))
+  fit2 <- sar_threshold(galap, mod = "DiscTwo", non_th_models = FALSE,
+                        nisl = 3)
+  th2 <- fit2[[3]][[1]]
+  expect_true(sum(x <= th2[1]) >= 3)
+  expect_true(sum(x > th2[2]) >= 3)
+})
+
+
 test_that("threshold_ci returns correct results", {
   skip_on_cran()
   data(aegean2)

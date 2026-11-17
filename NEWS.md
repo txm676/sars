@@ -1,3 +1,9 @@
+##Development version
+  *Fixed the discontinuous threshold models' breakpoint search when nisl
+  is set: DiscOne now returns the breakpoint it scored (it returned the
+  one nisl - 1 places higher), and DiscOne and DiscTwo keep at least nisl
+  islands in the last segment (they allowed nisl - 1)
+
 
 ##Version 2.1.1
   *Added logLik.thresholdInt method to adjust the degrees of freedom
